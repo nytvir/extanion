@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nytvir Motion</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+:root {
+  --bg: #141416; --panel: #1c1c1f; --card: #222226;
+  --border: #2e2e33; --accent: #7c5cfc; --accent2: #fc5c7d;
+  --gold: #f5a623; --text: #e0e0e8; --muted: #666680;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; user-select: none; }
+
+/* SIDEBAR */
+.sidebar { width: 70px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 2px; overflow-y: auto; }
+.sidebar::-webkit-scrollbar { width: 0; }
+.logo { font-size: 20px; margin-bottom: 8px; }
+.nav { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 9px 0; cursor: pointer; color: var(--muted); border-left: 2px solid transparent; transition: all .2s; }
+.nav:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.nav.active { color: var(--accent); border-left-color: var(--accent); background: rgba(124,92,252,.08); }
+.nav .ic { font-size: 19px; margin-bottom: 3px; }
+.nav .lb { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.sep { width: 36px; height: 1px; background: var(--border); margin: 6px 0; flex-shrink: 0; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.topbar { height: 46px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 14px; flex-shrink: 0; gap: 8px; }
+.topbar-title { font-size: 13px; font-weight: 700; letter-spacing: .5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.badge { font-size: 9px; background: var(--accent); color: #fff; padding: 2px 7px; border-radius: 20px; font-weight: 700; flex-shrink: 0; }
+
+/* SEARCH */
+.searchwrap { padding: 10px 14px 0; flex-shrink: 0; }
+.searchwrap input { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 7px; color: var(--text); font-family: inherit; font-size: 11px; padding: 8px 12px; outline: none; transition: border-color .2s; }
+.searchwrap input:focus { border-color: var(--accent); }
+.searchwrap input::placeholder { color: var(--muted); }
+
+.content { flex: 1; overflow-y: auto; padding: 14px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+/* CARDS */
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; transition: all .2s; position: relative; }
+.card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,92,252,.15); }
+.thumb { height: 80px; display: flex; align-items: center; justify-content: center; font-size: 28px; position: relative; }
+.play-hint { position: absolute; inset: 0; background: rgba(124,92,252,.2); display: flex; align-items: center; justify-content: center; opacity: 0; transition: .2s; }
+.card:hover .play-hint { opacity: 1; }
+.apply-btn { background: var(--accent); color: #fff; padding: 5px 14px; border-radius: 5px; font-size: 10px; font-weight: 700; border: none; cursor: pointer; letter-spacing: .5px; }
+.cinfo { padding: 10px; }
+.ctitle { font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+.cdesc { font-size: 9px; color: var(--muted); }
+.fav { position: absolute; top: 5px; right: 7px; z-index: 2; font-size: 13px; color: rgba(255,255,255,.45); cursor: pointer; text-shadow: 0 1px 3px rgba(0,0,0,.6); transition: transform .15s, color .15s; }
+.fav:hover { transform: scale(1.25); color: var(--gold); }
+.fav.on { color: var(--gold); }
+.tab-chip { position: absolute; top: 6px; left: 7px; z-index: 2; font-size: 7px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; background: rgba(0,0,0,.45); color: #ccc; padding: 2px 6px; border-radius: 8px; }
+
+/* SECTION LABEL */
+.sec-label { font-size: 9px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin: 14px 0 8px; }
+.sec-label:first-child { margin-top: 0; }
+
+/* STATUS */
+.statusbar { height: 26px; background: var(--accent); display: flex; align-items: center; padding: 0 12px; font-size: 10px; font-weight: 600; color: #fff; transition: background .3s; flex-shrink: 0; white-space: nowrap; overflow: hidden; }
+
+/* EDIT PANEL */
+#edit-content { display: flex; flex-direction: column; gap: 12px; }
+.edit-header { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: space-between; }
+.edit-layer-name { font-size: 11px; font-weight: 700; color: var(--accent); }
+.edit-refresh { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: 9px; padding: 4px 10px; border-radius: 4px; cursor: pointer; transition: .2s; font-family: inherit; }
+.edit-refresh:hover { border-color: var(--accent); color: var(--accent); }
+
+.ctrl-block { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 13px; }
+.ctrl-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.ctrl-name { font-size: 11px; font-weight: 600; color: var(--text); }
+.ctrl-val { font-size: 11px; font-weight: 700; color: var(--accent); }
+input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; height: 4px; }
+input[type=color] { width: 100%; height: 36px; border: none; background: transparent; cursor: pointer; border-radius: 6px; }
+
+/* CURVE SELECTOR */
+.curve-title { font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.curves-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.curve-card { border: 2px solid var(--border); border-radius: 7px; padding: 10px 8px 7px; cursor: pointer; text-align: center; transition: all .15s; background: var(--bg); }
+.curve-card:hover { border-color: #555; }
+.curve-card.active { background: #111; }
+.curve-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-top: 6px; }
+.curve-card.active .curve-lbl { color: #fff; }
+
+/* GRAPH (J-FLOW) THUMB */
+.jthumb { height: 70px; display: flex; align-items: center; justify-content: center; background: var(--bg); position: relative; }
+
+/* EMPTY STATE */
+.empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+.empty-icon { font-size: 36px; margin-bottom: 12px; }
+.empty-text { font-size: 11px; line-height: 1.6; }
+
+/* FOOTER VERSION */
+.foot { text-align: center; font-size: 8px; color: var(--muted); padding: 16px 0 4px; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo">⚡</div>
+  <div class="nav active" data-tab="pro"><div class="ic">💎</div><div class="lb">Pro</div></div>
+  <div class="nav" data-tab="favs"><div class="ic">⭐</div><div class="lb">Favs</div></div>
+  <div class="sep"></div>
+  <div class="nav" data-tab="trans"><div class="ic">🎬</div><div class="lb">Trans</div></div>
+  <div class="nav" data-tab="shapes"><div class="ic">🔮</div><div class="lb">Shape</div></div>
+  <div class="nav" data-tab="ui"><div class="ic">🪟</div><div class="lb">UI</div></div>
+  <div class="nav" data-tab="jflow"><div class="ic">📈</div><div class="lb">Graph</div></div>
+  <div class="nav" data-tab="vfx"><div class="ic">✨</div><div class="lb">VFX</div></div>
+  <div class="sep"></div>
+  <div class="nav" data-tab="edit" style="color:#7c5cfc;"><div class="ic">🎛️</div><div class="lb">Edit</div></div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Camera Transitions</div>
+    <div class="badge">NYTVIR PRO v2</div>
+  </div>
+  <div class="searchwrap"><input id="search" placeholder="🔍 Effekt qidirish... (zoom, glow, shake...)"></div>
+  <div class="content" id="content"></div>
+  <div class="statusbar" id="status">⚡ Nytvir Motion v2.0 — Ready</div>
+</div>
+
+<script src="CSInterface.js"></script>
+<script>
+var cs = null;
+try { cs = new CSInterface(); } catch(e){}
+
+var TAB_TITLES = {
+  pro: '💎 Pro — eng zo\'r UIlar',
+  favs: '⭐ Sevimlilar',
+  trans: 'Camera Transitions',
+  shapes: 'Shape Morphs',
+  ui: 'UI Animations',
+  jflow: 'Graph Easing — Jerry Flow',
+  vfx: 'Optical VFX',
+  edit: 'Layer Editor'
+};
+
+// ======================= EFFECT REGISTRY =======================
+var FX = [
+  // --- 💎 PRO: curated best, glass-grade ---
+  {id:'claudeIntro', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'✴️', bg:'linear-gradient(135deg,#15110d,#D97757)', title:'Claude Intro', desc:'Cinematic Opus 4.8 motion-ad · Uzbek'},
+  {id:'chatGptCard', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🤖', bg:'linear-gradient(135deg,#0b0b0c,#10a37f)', title:'ChatGPT GPT', desc:'Custom-GPT interface (Power Word GPT)'},
+  {id:'appleBooks', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📖', bg:'linear-gradient(135deg,#f3f4f7,#dfe3ea)', title:'Apple Books', desc:'Light reading card · cover + controls'},
+  {id:'rechargeMeter', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🔋', bg:'linear-gradient(135deg,#100808,#ff3a14,#ff7a2a)', title:'Recharge Meter', desc:'Glowing capsule charge widget'},
+  {id:'glowRing', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🎯', bg:'linear-gradient(135deg,#08122e,#1d6cff)', title:'Glow Ring · Blue', desc:'Neon progress ring + comet tip + counter'},
+  {id:'glowRingPurple', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🎯', bg:'linear-gradient(135deg,#160a2e,#7c3cff)', title:'Glow Ring · Purple', desc:'Neon progress ring + comet tip + counter'},
+  {id:'glowRingGreen', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🎯', bg:'linear-gradient(135deg,#05200f,#16c466)', title:'Glow Ring · Green', desc:'Neon progress ring + comet tip + counter'},
+  {id:'glowStat', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📈', bg:'linear-gradient(135deg,#0a1430,#1d6cff,#5c8cff)', title:'Glow Stat · Blue', desc:'Milestone counter, glass + neon + morph'},
+  {id:'glowStatPurple', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📈', bg:'linear-gradient(135deg,#170a30,#7c3cff,#a07cff)', title:'Glow Stat · Purple', desc:'Milestone counter, glass + neon + morph'},
+  {id:'glowStatGreen', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📈', bg:'linear-gradient(135deg,#06200f,#16c466,#5cf2a0)', title:'Glow Stat · Green', desc:'Milestone counter, glass + neon + morph'},
+  {id:'glowWave', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📉', bg:'linear-gradient(135deg,#0a1430,#1d6cff,#5c8cff)', title:'Glow Wave · Blue', desc:'Neon growth line draws + comet tip + counter'},
+  {id:'glowWavePurple', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📉', bg:'linear-gradient(135deg,#170a30,#7c3cff,#a07cff)', title:'Glow Wave · Purple', desc:'Neon growth line draws + comet tip + counter'},
+  {id:'glowWaveGreen', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📉', bg:'linear-gradient(135deg,#06200f,#16c466,#5cf2a0)', title:'Glow Wave · Green', desc:'Neon growth line draws + comet tip + counter'},
+  {id:'glowBars', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📊', bg:'linear-gradient(135deg,#0a1430,#1d6cff,#5c8cff)', title:'Glow Bars · Blue', desc:'Neon revenue bars rise, tallest highlighted'},
+  {id:'glowBarsPurple', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📊', bg:'linear-gradient(135deg,#170a30,#7c3cff,#a07cff)', title:'Glow Bars · Purple', desc:'Neon revenue bars rise, tallest highlighted'},
+  {id:'glowBarsGreen', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📊', bg:'linear-gradient(135deg,#06200f,#16c466,#5cf2a0)', title:'Glow Bars · Green', desc:'Neon revenue bars rise, tallest highlighted'},
+  {id:'glowList', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'✨', bg:'linear-gradient(135deg,#0a1430,#1d6cff,#5c8cff)', title:'Glow List · Blue', desc:'Goals checklist, neon seals pop in sequence'},
+  {id:'glowListPurple', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'✨', bg:'linear-gradient(135deg,#170a30,#7c3cff,#a07cff)', title:'Glow List · Purple', desc:'Goals checklist, neon seals pop in sequence'},
+  {id:'glowListGreen', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'✨', bg:'linear-gradient(135deg,#06200f,#16c466,#5cf2a0)', title:'Glow List · Green', desc:'Goals checklist, neon seals pop in sequence'},
+  {id:'glowQuote', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'❝', bg:'linear-gradient(135deg,#0a1430,#1d6cff,#5c8cff)', title:'Glow Quote · Blue', desc:'Quote card, glowing mark + line draw'},
+  {id:'glowQuotePurple', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'❝', bg:'linear-gradient(135deg,#170a30,#7c3cff,#a07cff)', title:'Glow Quote · Purple', desc:'Quote card, glowing mark + line draw'},
+  {id:'glowQuoteGreen', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'❝', bg:'linear-gradient(135deg,#06200f,#16c466,#5cf2a0)', title:'Glow Quote · Green', desc:'Quote card, glowing mark + line draw'},
+  {id:'glowIntro', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'👤', bg:'linear-gradient(135deg,#0a1430,#1d6cff,#5c8cff)', title:'Glow Intro · Blue', desc:'Name reveal, avatar + underline draw'},
+  {id:'glowIntroPurple', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'👤', bg:'linear-gradient(135deg,#170a30,#7c3cff,#a07cff)', title:'Glow Intro · Purple', desc:'Name reveal, avatar + underline draw'},
+  {id:'glowIntroGreen', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'👤', bg:'linear-gradient(135deg,#06200f,#16c466,#5cf2a0)', title:'Glow Intro · Green', desc:'Name reveal, avatar + underline draw'},
+  {id:'glowSteps', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🪜', bg:'linear-gradient(135deg,#0a1430,#1d6cff,#5c8cff)', title:'Glow Steps · Blue', desc:'3-step roadmap, numbers light + connector fills'},
+  {id:'glowStepsPurple', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🪜', bg:'linear-gradient(135deg,#170a30,#7c3cff,#a07cff)', title:'Glow Steps · Purple', desc:'3-step roadmap, numbers light + connector fills'},
+  {id:'glowStepsGreen', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🪜', bg:'linear-gradient(135deg,#06200f,#16c466,#5cf2a0)', title:'Glow Steps · Green', desc:'3-step roadmap, numbers light + connector fills'},
+  {id:'glowProfile', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🪪', bg:'linear-gradient(135deg,#0a1430,#1d6cff,#5c8cff)', title:'Glow Profile · Blue', desc:'Glass ID card + neon + light beam'},
+  {id:'glowProfilePurple', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🪪', bg:'linear-gradient(135deg,#170a30,#7c3cff,#a07cff)', title:'Glow Profile · Purple', desc:'Glass ID card + neon + light beam'},
+  {id:'glowProfileGreen', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🪪', bg:'linear-gradient(135deg,#06200f,#16c466,#5cf2a0)', title:'Glow Profile · Green', desc:'Glass ID card + neon + light beam'},
+  {id:'cryptoWatchlist', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📋', bg:'linear-gradient(135deg,#15151a,#23232b)', title:'Watchlist', desc:'Apple Stocks coin list · glass'},
+  {id:'portfolioBalance', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🥧', bg:'linear-gradient(135deg,#15151a,#f7941e,#5c6cf2)', title:'Portfolio Balance', desc:'Total + allocation · glass'},
+  {id:'cryptoTicker', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'₿', bg:'linear-gradient(135deg,#15151a,#f7941e)', title:'Price Ticker', desc:'Live price card · glass'},
+  {id:'tradeProfit', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'💹', bg:'linear-gradient(135deg,#15151a,#33cc66)', title:'Trade Profit', desc:'P&L close card · glass'},
+  {id:'orderFilled', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'✅', bg:'linear-gradient(135deg,#15151a,#33cc66)', title:'Order Filled', desc:'Green check confirm · glass'},
+  {id:'candleChart', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📊', bg:'linear-gradient(135deg,#15151a,#33cc66)', title:'Candle Chart', desc:'Candlesticks uptrend'},
+  {id:'notifyStack', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'💸', bg:'linear-gradient(135deg,#15151a,#4b46e0,#39ff5a)', title:'Money Rain', desc:'Payment alerts stack'},
+  {id:'tweetCard', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🐦', bg:'linear-gradient(135deg,#000,#1d9bf0)', title:'Tweet / X Post', desc:'Verified post · glass'},
+  {id:'statsDashboard', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'📊', bg:'linear-gradient(135deg,#15151a,#5fe88a)', title:'Stats Dashboard', desc:'2x2 metric cards count up'},
+  {id:'aiGenerating', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🤖', bg:'linear-gradient(135deg,#15151a,#7c5cfc)', title:'AI Generating', desc:'Steps check off, bar fills'},
+
+  // --- TRANSITIONS ---
+  {id:'zoomIn',     tab:'trans', sec:'Seamless Cuts', icon:'🔍', bg:'linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)', title:'Zoom In',     desc:'Optic zoom cut'},
+  {id:'zoomOut',    tab:'trans', sec:'Seamless Cuts', icon:'🔎', bg:'linear-gradient(135deg,#0f3460,#16213e,#1a1a2e)', title:'Zoom Out',    desc:'Pull back lens'},
+  {id:'panRight',   tab:'trans', sec:'Seamless Cuts', icon:'➡️', bg:'linear-gradient(135deg,#fc5c7d,#6a3093)',         title:'Whip Right',  desc:'High velocity pan'},
+  {id:'panLeft',    tab:'trans', sec:'Seamless Cuts', icon:'⬅️', bg:'linear-gradient(135deg,#6a3093,#fc5c7d)',         title:'Whip Left',   desc:'High velocity pan'},
+  {id:'spinRight',  tab:'trans', sec:'Seamless Cuts', icon:'↻',  bg:'linear-gradient(135deg,#2d1b69,#7c5cfc)',         title:'Spin Right',  desc:'Rotation warp'},
+  {id:'spinLeft',   tab:'trans', sec:'Seamless Cuts', icon:'↺',  bg:'linear-gradient(135deg,#7c5cfc,#2d1b69)',         title:'Spin Left',   desc:'Rotation warp'},
+  {id:'cameraShake',tab:'trans', sec:'Impact Tools',  icon:'📳', bg:'linear-gradient(135deg,#232526,#414345)',         title:'Camera Shake',desc:'Wiggle handheld hit'},
+  {id:'flashCut',   tab:'trans', sec:'Impact Tools',  icon:'⚡', bg:'linear-gradient(135deg,#f8b500,#fceabb)',          title:'Flash Cut',   desc:'White flash impact'},
+
+  // --- SHAPES ---
+  {id:'silkFlow', tab:'shapes', sec:'✨ Signature', icon:'🫧', bg:'linear-gradient(135deg,#f2eee6,#d9c7a7,#8c8178,#1f1d1b)', title:'Silk Flow', desc:'Buttery band-train sweep'},
+  {id:'arcReveal', tab:'shapes', sec:'✨ Signature', icon:'🌖', bg:'linear-gradient(135deg,#f2eee6,#d9c7a7 55%,#1f1d1b)', title:'Arc Reveal', desc:'Corner bloom tonal reveal'},
+  {id:'softBlinds', tab:'shapes', sec:'✨ Signature', icon:'🪟', bg:'repeating-linear-gradient(-6deg,#f2eee6 0 12px,#d9c7a7 12px 24px)', title:'Soft Blinds', desc:'Woven capsule band reveal'},
+  {id:'crestRise', tab:'shapes', sec:'✨ Signature', icon:'🌊', bg:'linear-gradient(180deg,#f2eee6,#d9c7a7 55%,#1f1d1b)', title:'Crest Rise', desc:'Curved wave dome pass'},
+  {id:'irisPass', tab:'shapes', sec:'✨ Signature', icon:'⭕', bg:'radial-gradient(circle,#1f1d1b 35%,#d9c7a7 55%,#f2eee6)', title:'Iris Pass', desc:'Radial iris tonal reveal'},
+  {id:'splitSlide', tab:'shapes', sec:'✨ Signature', icon:'◧', bg:'linear-gradient(104deg,#e3e8ec 49%,#191c20 51%)', title:'Split Slide', desc:'Crossing panels, center reveal'},
+  {id:'rollSweep', tab:'shapes', sec:'✨ Signature', icon:'🍂', bg:'linear-gradient(135deg,#f5eee1,#cc7354,#291a14)', title:'Roll Sweep', desc:'Terracotta bar rolls through'},
+  {id:'windowZoom', tab:'shapes', sec:'✨ Signature', icon:'🚪', bg:'linear-gradient(135deg,#eee3d6,#9e8066,#211a14)', title:'Window Zoom', desc:'Mocha window opens through'},
+  {id:'pendulumSwipe', tab:'shapes', sec:'✨ Signature', icon:'🕰️', bg:'linear-gradient(135deg,#f0efde,#8c916b,#1f2017)', title:'Pendulum Swipe', desc:'Olive capsule swings across'},
+  {id:'petalSpin', tab:'shapes', sec:'✨ Signature', icon:'🌸', bg:'linear-gradient(135deg,#eeC9c7,#3d1f29)', title:'Petal Spin', desc:'Blush flower spins open'},
+  {id:'dripMelt', tab:'shapes', sec:'✨ Signature', icon:'🍯', bg:'linear-gradient(180deg,#f8f0db,#e3b866,#2e1f10)', title:'Drip Melt', desc:'Honey columns pour down'},
+  {id:'auroraVeil', tab:'shapes', sec:'✨ Signature', icon:'🎐', bg:'linear-gradient(180deg,#a8edea,#fed6e3)', title:'Aurora Veil', desc:'Silk curtains rise & lift away'},
+  {id:'softBloom', tab:'shapes', sec:'✨ Signature', icon:'🌸', bg:'radial-gradient(circle,#ffdde1,#ee9ca7)', title:'Soft Bloom', desc:'Pastel petals bloom & drift'},
+  {id:'glassSweep', tab:'shapes', sec:'✨ Signature', icon:'🧊', bg:'linear-gradient(135deg,#e0eafc,#cfdef3)', title:'Glass Sweep', desc:'Frosted glass light pass'},
+  {id:'fractalMandala', tab:'shapes', sec:'God Tier', icon:'🌺', bg:'linear-gradient(135deg,#f12711,#f5af19)',          title:'Fractal Mandala', desc:'Sacred geometry bloom'},
+  {id:'hyperTunnel',    tab:'shapes', sec:'God Tier', icon:'🌌', bg:'linear-gradient(135deg,#8E2DE2,#4A00E0)',          title:'Hyper Tunnel',    desc:'Infinite 3D wormhole'},
+  {id:'dotMatrix',      tab:'shapes', sec:'God Tier', icon:'🔲', bg:'linear-gradient(135deg,#ff0844,#ffb199)',          title:'Dot Matrix',      desc:'Voxel grid collapse'},
+  {id:'cyberShards',    tab:'shapes', sec:'God Tier', icon:'🔷', bg:'linear-gradient(135deg,#0f0c29,#302b63,#24243e)',  title:'Cyber Shards',    desc:'Layered poly slam'},
+  {id:'velocityBurst',  tab:'shapes', sec:'Premium Morphs', icon:'💥', bg:'linear-gradient(135deg,#ff0844,#ffb199)',    title:'Velocity Burst',  desc:'AMV impact shockwave'},
+  {id:'portalRift',     tab:'shapes', sec:'Premium Morphs', icon:'🌀', bg:'linear-gradient(135deg,#12c2e9,#c471ed,#f64f59)', title:'Portal Rift', desc:'Sacred geometry tunnel'},
+  {id:'liquidGlitch',   tab:'shapes', sec:'Premium Morphs', icon:'🧪', bg:'linear-gradient(135deg,#11998e,#38ef7d)',    title:'Liquid Glitch',   desc:'Wobbling slice elastic'},
+  {id:'liquidWipe',     tab:'shapes', sec:'Standard Morphs', icon:'💧', bg:'linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d)', title:'Liquid Wipe', desc:'Organic gooey morph'},
+  {id:'bounceMorph',    tab:'shapes', sec:'Standard Morphs', icon:'🟣', bg:'linear-gradient(135deg,#8E2DE2,#4A00E0)',   title:'Bounce Morph',    desc:'Impact shape bounce'},
+  {id:'elasticStretch', tab:'shapes', sec:'Standard Morphs', icon:'〰️', bg:'linear-gradient(135deg,#11998e,#38ef7d)',   title:'Elastic Line',    desc:'Rubber band snap'},
+  {id:'spiralWipe',     tab:'shapes', sec:'Standard Morphs', icon:'🎯', bg:'linear-gradient(135deg,#1fa2ff,#12d8fa,#1ee6a0)', title:'Spiral Wipe', desc:'Spinning circle reveal'},
+
+  // --- UI ---
+  {id:'uiPayNotify', tab:'ui', sec:'🖤 Edouard — Notifications', icon:'💳', bg:'linear-gradient(135deg,#1a1a22,#4b46e0)', title:'Payment Notify', desc:'Stripe-style cash alert'},
+  {id:'notifySubscriber', tab:'ui', sec:'🖤 Edouard — Notifications', icon:'🔴', bg:'linear-gradient(135deg,#1a1a22,#d11)', title:'Subscriber Hit', desc:'YT milestone alert'},
+  {id:'titlePunch', tab:'ui', sec:'🔠 Edouard — Titles', icon:'🔡', bg:'linear-gradient(135deg,#111,#f2f2f2)', title:'Punch Title', desc:'Huge bold text slam'},
+  {id:'titleChrome', tab:'ui', sec:'🔠 Edouard — Titles', icon:'🔷', bg:'linear-gradient(135deg,#1a1a22,#7a8aa8)', title:'Chrome Title', desc:'Glossy metallic text'},
+  {id:'titleNeon', tab:'ui', sec:'🔠 Edouard — Titles', icon:'🟢', bg:'linear-gradient(135deg,#0a1a0a,#39ff5a)', title:'Neon Title', desc:'Green LED glow text'},
+  {id:'titleHighlight', tab:'ui', sec:'🔠 Edouard — Titles', icon:'🖍️', bg:'linear-gradient(135deg,#1a1a22,#5fe88a)', title:'Highlight Title', desc:'Marker swipes behind word'},
+  {id:'titleRedAlert', tab:'ui', sec:'🔠 Edouard — Titles', icon:'🛑', bg:'linear-gradient(135deg,#1a1a22,#f23)', title:'Red Alert Title', desc:'Bold red shake punch'},
+  {id:'countdownTimer', tab:'ui', sec:'📊 Edouard — Proof & Data', icon:'⏱️', bg:'linear-gradient(135deg,#0a1a0a,#39ff5a)', title:'Countdown Timer', desc:'Neon ring + ticking number'},
+  {id:'moneyCounter', tab:'ui', sec:'📊 Edouard — Proof & Data', icon:'💵', bg:'linear-gradient(135deg,#0d0d12,#5fe88a)', title:'Money Counter', desc:'$ rolls up from zero'},
+  {id:'growthChart', tab:'ui', sec:'📊 Edouard — Proof & Data', icon:'📈', bg:'linear-gradient(135deg,#0d0d12,#39ff5a)', title:'Growth Chart', desc:'Line draws up, value ticks'},
+  {id:'lowerThird', tab:'ui', sec:'✏️ Edouard — Lower-thirds & Marks', icon:'🏷️', bg:'linear-gradient(135deg,#0d0d12,#5fe88a)', title:'Lower Third', desc:'Name + handle slide in'},
+  {id:'arrowCallout', tab:'ui', sec:'✏️ Edouard — Lower-thirds & Marks', icon:'↘️', bg:'linear-gradient(135deg,#1a1a22,#f23)', title:'Arrow Callout', desc:'Hand-drawn circle + arrow'},
+  {id:'notifyStack', tab:'ui', sec:'🔥 Edouard — Hero Overlays', icon:'💸', bg:'linear-gradient(135deg,#13131a,#4b46e0,#39ff5a)', title:'Money Rain', desc:'Payment alerts cascade & stack'},
+  {id:'statsDashboard', tab:'ui', sec:'🔥 Edouard — Hero Overlays', icon:'📊', bg:'linear-gradient(135deg,#13131a,#5fe88a)', title:'Stats Dashboard', desc:'2x2 metric cards count up'},
+  {id:'imessageChat', tab:'ui', sec:'🔥 Edouard — Hero Overlays', icon:'💬', bg:'linear-gradient(135deg,#13131a,#0a84ff)', title:'iMessage Chat', desc:'Typing dots then bubbles'},
+  {id:'tweetCard', tab:'ui', sec:'🔥 Edouard — Hero Overlays', icon:'🐦', bg:'linear-gradient(135deg,#000,#1d9bf0)', title:'Tweet / X Post', desc:'Verified post, likes count up'},
+  {id:'aiGenerating', tab:'ui', sec:'🔥 Edouard — Hero Overlays', icon:'🤖', bg:'linear-gradient(135deg,#13131a,#7c5cfc)', title:'AI Generating', desc:'Steps check off, bar fills'},
+  {id:'cryptoTicker', tab:'ui', sec:'📈 Crypto — Apple Minimal', icon:'₿', bg:'linear-gradient(135deg,#1a1a1d,#f7941e)', title:'Price Ticker', desc:'Apple Stocks-style price card'},
+  {id:'tradeProfit', tab:'ui', sec:'📈 Crypto — Apple Minimal', icon:'💹', bg:'linear-gradient(135deg,#1a1a1d,#33cc66)', title:'Trade Profit', desc:'Clean P&L close card'},
+  {id:'portfolioBalance', tab:'ui', sec:'📈 Crypto — Apple Minimal', icon:'🥧', bg:'linear-gradient(135deg,#1a1a1d,#f7941e,#5c6cf2)', title:'Portfolio Balance', desc:'Total + allocation bar'},
+  {id:'candleChart', tab:'ui', sec:'📈 Crypto — Apple Minimal', icon:'📊', bg:'linear-gradient(135deg,#1a1a1d,#33cc66)', title:'Candle Chart', desc:'Candlesticks build, uptrend'},
+  {id:'cryptoWatchlist', tab:'ui', sec:'📈 Crypto — Apple Minimal', icon:'📋', bg:'linear-gradient(135deg,#1a1a1d,#2a2a30)', title:'Watchlist', desc:'Apple Stocks coin list'},
+  {id:'orderFilled', tab:'ui', sec:'📈 Crypto — Apple Minimal', icon:'✅', bg:'linear-gradient(135deg,#1a1a1d,#33cc66)', title:'Order Filled', desc:'Green check confirmation'},
+  {id:'uiMusicPlayer', tab:'ui', sec:'✨ Overlay Kit — reels uchun', icon:'🎵', bg:'linear-gradient(135deg,#f5f3ef,#d9c7a7)', title:'Music Player', desc:'Now-playing card, live progress'},
+  {id:'uiNotifyPop', tab:'ui', sec:'✨ Overlay Kit — reels uchun', icon:'🔔', bg:'linear-gradient(135deg,#f5f3ef,#e8ddc8)', title:'Notification', desc:'Banner drops in & hovers'},
+  {id:'uiChatBubbles', tab:'ui', sec:'✨ Overlay Kit — reels uchun', icon:'💬', bg:'linear-gradient(135deg,#f0ece5,#d9c7a7)', title:'Chat Bubbles', desc:'Typing dots, then messages'},
+  {id:'uiSearchType', tab:'ui', sec:'✨ Overlay Kit — reels uchun', icon:'🔍', bg:'linear-gradient(135deg,#f7f5f1,#ddd3c0)', title:'Search Typing', desc:'Query types itself, live cursor'},
+  {id:'uiLikeBurst', tab:'ui', sec:'✨ Overlay Kit — reels uchun', icon:'❤️', bg:'linear-gradient(135deg,#f5dada,#d97272)', title:'Like Burst', desc:'Heart pops, counter ticks up'},
+  {id:'uiProductCard',   tab:'ui', sec:'God Tier Aesthetic UI', icon:'🛒', bg:'linear-gradient(135deg,#e6d0ce,#e3e3e3)', title:'Product Card',   desc:'E-commerce mockup display'},
+  {id:'uiGlowingProfile',tab:'ui', sec:'God Tier Aesthetic UI', icon:'👤', bg:'linear-gradient(135deg,#0052D4,#4364F7,#6FB1FC)', title:'Glowing Profile', desc:'Neon ID card reveal'},
+  {id:'uiMinimalCard',   tab:'ui', sec:'God Tier Aesthetic UI', icon:'🏷️', bg:'linear-gradient(135deg,#fdfbfb,#ebedee)', title:'Minimal Card',   desc:'Clean rounded modern tag'},
+  {id:'popIn',   tab:'ui', sec:'Layer Animators — qatlam tanlang', icon:'🎈', bg:'linear-gradient(135deg,#42275a,#734b6d)', title:'Pop In',   desc:'Elastic scale entrance'},
+  {id:'slideIn', tab:'ui', sec:'Layer Animators — qatlam tanlang', icon:'📥', bg:'linear-gradient(135deg,#283c86,#45a247)', title:'Slide In', desc:'Directional slide entrance'},
+
+  // --- GRAPH EASING ---
+  {id:'curveSmooth', tab:'jflow', sec:'Keyframe Easing — keyframe tanlang', curve:{path:'M0,48 C85,48 15,2 100,2', color:'#7c5cfc'}, title:'Smooth Flow',  desc:'85 In / 85 Out — AMV standard', ease:[85,0,85,0]},
+  {id:'curveWhip',   tab:'jflow', sec:'Keyframe Easing — keyframe tanlang', curve:{path:'M0,48 C100,48 100,2 100,2', color:'#fc5c7d'}, title:'Whip Impact', desc:'100 In / 0.1 Out — Hard cut',  ease:[100,0,0.1,0]},
+  {id:'curveSoft',   tab:'jflow', sec:'Keyframe Easing — keyframe tanlang', curve:{path:'M0,48 C60,48 40,2 100,2', color:'#f5a623'},  title:'Soft Flow',   desc:'75 In / 75 Out — Gentle',      ease:[75,0,75,0]},
+  {id:'curveDeep',   tab:'jflow', sec:'Keyframe Easing — keyframe tanlang', curve:{path:'M0,48 C100,48 0,2 100,2', color:'#38ef7d'},  title:'Deep Smooth', desc:'100 In / 100 Out — Max soft',  ease:[100,0,100,0]},
+  {id:'curveIn',     tab:'jflow', sec:'Keyframe Easing — keyframe tanlang', curve:{path:'M0,48 C50,48 100,2 100,2', color:'#00d2ff'}, title:'Ease In Only', desc:'50 In / 0.1 Out',             ease:[50,0,0.1,0]},
+  {id:'curveOut',    tab:'jflow', sec:'Keyframe Easing — keyframe tanlang', curve:{path:'M0,48 C0,48 50,2 100,2', color:'#a855f7'},   title:'Ease Out Only', desc:'0.1 In / 50 Out',            ease:[0.1,0,50,0]},
+
+  // --- VFX ---
+  {id:'deepGlow',   tab:'vfx', sec:'Optical VFX — qatlam tanlang', icon:'🔮', bg:'radial-gradient(circle,#ff00cc,#333399)', title:'Deep Glow',   desc:'3-layer exponential glow'},
+  {id:'rgbSplit',   tab:'vfx', sec:'Optical VFX — qatlam tanlang', icon:'🌈', bg:'linear-gradient(90deg,rgba(255,0,0,.6),rgba(0,255,0,.6),rgba(0,0,255,.6))', title:'RGB Split', desc:'Chromatic aberration'},
+  {id:'echoTrails', tab:'vfx', sec:'Optical VFX — qatlam tanlang', icon:'👻', bg:'linear-gradient(135deg,#360033,#0b8793)', title:'Echo Trails', desc:'Ghosting motion echoes'},
+  {id:'lensDistort',tab:'vfx', sec:'Adjustment VFX', icon:'👁️', bg:'radial-gradient(circle,#000 30%,#434343)', title:'Lens Distort', desc:'Optics warp hit'}
+];
+
+// ======================= STATE =======================
+var currentTab = 'pro';
+
+function getFavs() {
+  try { return JSON.parse(localStorage.getItem('nytvir_favs') || '[]'); } catch(e) { return []; }
+}
+function setFavs(f) { try { localStorage.setItem('nytvir_favs', JSON.stringify(f)); } catch(e) {} }
+function isFav(id) { return getFavs().indexOf(id) > -1; }
+function toggleFav(id) {
+  var f = getFavs(); var i = f.indexOf(id);
+  if (i > -1) f.splice(i, 1); else f.push(id);
+  setFavs(f);
+}
+
+// ======================= RENDERING =======================
+function cardHTML(e, showTabChip) {
+  var fav = isFav(e.id);
+  var html = '<div class="card" data-id="' + e.id + '">';
+  if (e.curve) {
+    html += '<div class="jthumb"><svg width="100" height="50" viewBox="0 0 100 50"><path d="' + e.curve.path + '" stroke="' + e.curve.color + '" stroke-width="3" fill="none"/><circle cx="0" cy="48" r="3" fill="' + e.curve.color + '"/><circle cx="100" cy="2" r="3" fill="' + e.curve.color + '"/></svg>';
+  } else {
+    html += '<div class="thumb" style="background:' + e.bg + ';">' + e.icon;
+  }
+  html += '<div class="play-hint"><button class="apply-btn">Apply</button></div></div>';
+  html += '<div class="fav' + (fav ? ' on' : '') + '" data-fav="' + e.id + '">' + (fav ? '★' : '☆') + '</div>';
+  if (showTabChip) html += '<div class="tab-chip">' + (TAB_TITLES[e.tab] || e.tab).replace(/^[^A-Za-z⭐]*/, '') + '</div>';
+  html += '<div class="cinfo"><div class="ctitle">' + e.title + '</div><div class="cdesc">' + e.desc + '</div></div></div>';
+  return html;
+}
+
+function renderCards(list, showTabChip) {
+  if (!list.length) return '';
+  // group by section preserving order
+  var html = '', lastSec = null, open = false;
+  list.forEach(function(e) {
+    if (e.sec !== lastSec) {
+      if (open) html += '</div>';
+      html += '<div class="sec-label">' + (e.sec || '') + '</div><div class="grid">';
+      lastSec = e.sec; open = true;
+    }
+    html += cardHTML(e, showTabChip);
+  });
+  if (open) html += '</div>';
+  return html;
+}
+
+function renderTab(tab) {
+  currentTab = tab;
+  document.getElementById('topbar-title').innerText = TAB_TITLES[tab] || tab;
+  document.querySelectorAll('.nav').forEach(function(n) {
+    n.classList.toggle('active', n.getAttribute('data-tab') === tab);
+  });
+  var c = document.getElementById('content');
+
+  if (tab === 'edit') {
+    c.innerHTML = '<div id="edit-content"></div>';
+    loadControls();
+    return;
+  }
+
+  if (tab === 'favs') {
+    var favs = FX.filter(function(e) { return isFav(e.id); });
+    if (!favs.length) {
+      c.innerHTML = '<div class="empty"><div class="empty-icon">⭐</div><div class="empty-text">Sevimlilar bo\'sh.<br>Istalgan effekt kartasidagi <b>☆</b> yulduzchani bosing —<br>u shu yerda saqlanadi.</div></div>';
+      return;
+    }
+    // flatten into one section
+    var items = favs.map(function(e) { var copy = {}; for (var k in e) copy[k] = e[k]; copy.sec = 'Saqlangan effektlar'; return copy; });
+    c.innerHTML = renderCards(items, true) + '<div class="foot">NYTVIR MOTION v2.0</div>';
+    return;
+  }
+
+  var items = FX.filter(function(e) { return e.tab === tab; });
+  c.innerHTML = renderCards(items, false) + '<div class="foot">NYTVIR MOTION v2.0</div>';
+}
+
+function renderSearch(q) {
+  var c = document.getElementById('content');
+  q = q.toLowerCase();
+  var hits = FX.filter(function(e) {
+    return (e.title + ' ' + e.desc + ' ' + e.id + ' ' + (e.sec || '')).toLowerCase().indexOf(q) > -1;
+  });
+  document.getElementById('topbar-title').innerText = '🔍 Qidiruv: ' + hits.length + ' ta natija';
+  if (!hits.length) {
+    c.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Hech narsa topilmadi: <b>' + q + '</b></div></div>';
+    return;
+  }
+  var items = hits.map(function(e) { var copy = {}; for (var k in e) copy[k] = e[k]; copy.sec = 'Natijalar'; return copy; });
+  c.innerHTML = renderCards(items, true);
+}
+
+// ======================= ACTIONS =======================
+function setStatus(msg, color, dur) {
+  var s = document.getElementById('status');
+  s.innerText = msg;
+  s.style.background = color;
+  if (dur) setTimeout(function() { s.innerText = '⚡ Nytvir Motion v2.0 — Ready'; s.style.background = '#7c5cfc'; }, dur);
+}
+
+function execute(e) {
+  if (!cs) { setStatus('⚠️ Run inside After Effects!', '#e74c3c', 4000); return; }
+  setStatus('⏳ Applying ' + e.title + '...', '#e67e22');
+  if (e.ease) {
+    cs.evalScript('_applyEase(' + e.ease.join(',') + ')', function() {
+      setStatus('✅ Curve applied to selected keyframes!', '#2ecc71', 3000);
+    });
+    return;
+  }
+  cs.evalScript('nytvir_execute("' + e.id + '")', function(res) {
+    if (res === 'OK') setStatus('✅ Applied! Edit tabida sozlang.', '#2ecc71', 4000);
+    else setStatus('❌ ' + res, '#e74c3c', 6000);
+  });
+}
+
+// Delegated clicks: favorites star vs card body
+document.getElementById('content').addEventListener('click', function(ev) {
+  var favEl = ev.target.closest ? ev.target.closest('[data-fav]') : null;
+  if (favEl) {
+    ev.stopPropagation();
+    toggleFav(favEl.getAttribute('data-fav'));
+    var q = document.getElementById('search').value.trim();
+    if (q) renderSearch(q); else renderTab(currentTab);
+    return;
+  }
+  var card = ev.target.closest ? ev.target.closest('.card[data-id]') : null;
+  if (card) {
+    var id = card.getAttribute('data-id');
+    var e = null;
+    FX.forEach(function(x) { if (x.id === id) e = x; });
+    if (e) execute(e);
+  }
+});
+
+// Sidebar navigation
+document.querySelectorAll('.nav').forEach(function(n) {
+  n.addEventListener('click', function() {
+    document.getElementById('search').value = '';
+    renderTab(n.getAttribute('data-tab'));
+  });
+});
+
+// Search
+document.getElementById('search').addEventListener('input', function() {
+  var q = this.value.trim();
+  if (q.length) renderSearch(q);
+  else renderTab(currentTab);
+});
+
+// ======================= EDIT PANEL =======================
+var CURVES = [
+  {val:1, name:'Smooth', path:'M0,48 C85,48 15,2 100,2', color:'#7c5cfc'},
+  {val:2, name:'Impact', path:'M0,48 C100,48 100,2 100,2', color:'#fc5c7d'},
+  {val:3, name:'Bounce', path:'M0,48 Q40,2 60,20 T100,5', color:'#f5a623'},
+  {val:4, name:'Linear', path:'M0,48 L100,2', color:'#38ef7d'}
+];
+
+function loadControls() {
+  var ec = document.getElementById('edit-content');
+  if (!ec) return;
+  ec.innerHTML = '<div class="empty"><div class="empty-icon">⏳</div><div class="empty-text">Loading layer data...</div></div>';
+  if (!cs) {
+    ec.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">Only works inside After Effects.</div></div>';
+    return;
+  }
+  cs.evalScript('nytvir_getControls()', function(res) {
+    try {
+      var data = JSON.parse(res);
+      if (data.error) {
+        ec.innerHTML = '<div class="empty"><div class="empty-icon">🎛️</div><div class="empty-text">' + data.error + '</div><br><button class="edit-refresh" onclick="loadControls()" style="padding:8px 20px;font-size:10px;">🔄 Refresh</button></div>';
+        return;
+      }
+      var html = '';
+      html += '<div class="edit-header"><div><div style="font-size:9px;color:var(--muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:1px;">Active Layer</div><div class="edit-layer-name">' + data.layerName + '</div></div><button class="edit-refresh" onclick="loadControls()">🔄 Refresh</button></div>';
+
+      var hasCurve = data.controls.some(function(c) { return c.name === 'Curve Type'; });
+      if (hasCurve) {
+        html += '<div class="ctrl-block"><div class="curve-title">📉 Animation Curve</div><div class="curves-grid">';
+        var curveVal = 1;
+        data.controls.forEach(function(c) { if (c.name === 'Curve Type') curveVal = Math.round(c.value); });
+        CURVES.forEach(function(cv) {
+          var isActive = (curveVal === cv.val);
+          html += '<div class="curve-card' + (isActive ? ' active' : '') + '" style="' + (isActive ? 'border-color:' + cv.color + ';' : '') + '" onclick="updateControl(\'Curve Type\',\'slider\',' + cv.val + ');setTimeout(loadControls,300);">';
+          html += '<svg width="100%" height="28" viewBox="0 0 100 50" preserveAspectRatio="none"><path d="' + cv.path + '" stroke="' + cv.color + '" stroke-width="4" fill="none"/></svg>';
+          html += '<div class="curve-lbl" style="' + (isActive ? 'color:' + cv.color + ';' : '') + '">' + cv.name + '</div></div>';
+        });
+        html += '</div></div>';
+      }
+
+      data.controls.forEach(function(c) {
+        if (c.name === 'Curve Type') return;
+        html += '<div class="ctrl-block">';
+        if (c.type === 'slider') {
+          var max = 300;
+          if (c.name.indexOf('Power') > -1 || c.name.indexOf('Width') > -1 || c.name.indexOf('Distance') > -1 || c.name.indexOf('Height') > -1) max = 2000;
+          if (c.name.indexOf('Angle') > -1) max = 720;
+          if (c.name.indexOf('Gooey') > -1 || c.name.indexOf('Strength') > -1 || c.name.indexOf('Size') > -1) max = 200;
+          if (c.name.indexOf('Count') > -1 || c.name.indexOf('Spacing') > -1 || c.name.indexOf('Petals') > -1 || c.name.indexOf('Rows') > -1 || c.name.indexOf('Cols') > -1 || c.name.indexOf('Depth') > -1) max = 60;
+          if (c.name.indexOf('Speed') > -1 && c.name.indexOf('Transition') === -1 && c.name.indexOf('Animation') === -1) max = 60;
+          var sid = 'v' + c.name.replace(/[^a-zA-Z0-9]/g, '');
+          html += '<div class="ctrl-label"><span class="ctrl-name">' + c.name + '</span><span class="ctrl-val" id="' + sid + '">' + parseFloat(c.value).toFixed(1) + '</span></div>';
+          html += '<input type="range" min="0" max="' + max + '" step="0.5" value="' + Math.min(parseFloat(c.value), max) + '" oninput="document.getElementById(\'' + sid + '\').innerText=parseFloat(this.value).toFixed(1);updateControl(\'' + c.name.replace(/'/g, "\\'") + '\',\'slider\',this.value)">';
+        } else if (c.type === 'color') {
+          html += '<div class="ctrl-label"><span class="ctrl-name">' + c.name + '</span></div>';
+          html += '<input type="color" value="' + c.value + '" oninput="updateControl(\'' + c.name.replace(/'/g, "\\'") + '\',\'color\',this.value)">';
+        }
+        html += '</div>';
+      });
+
+      if (data.controls.filter(function(c) { return c.name !== 'Curve Type'; }).length === 0) {
+        html += '<div class="empty"><div class="empty-text">Bu qatlamda qo\'shimcha sozlamalar yo\'q.</div></div>';
+      }
+
+      ec.innerHTML = html;
+    } catch(e) {
+      ec.innerHTML = '<div class="empty"><div class="empty-icon">❌</div><div class="empty-text">Parse error. [Nytvir] qatlamini tanlang.</div><br><button class="edit-refresh" onclick="loadControls()">🔄 Refresh</button></div>';
+    }
+  });
+}
+
+function updateControl(name, type, val) {
+  if (cs) cs.evalScript('nytvir_setControl("' + name.replace(/"/g, '\\"') + '","' + type + '","' + val + '")');
+}
+
+// ======================= INIT =======================
+renderTab('pro');
+</script>
+</body>
+</html>
