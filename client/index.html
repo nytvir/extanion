@@ -141,6 +141,42 @@ var TAB_TITLES = {
 
 // ======================= EFFECT REGISTRY =======================
 var FX = [
+  // --- 🎨 UI CARDS — Premium replicas ---
+  {id:'uiBudgetCard', tab:'pro', sec:'🎨 UI Cards — Premium Replicas', icon:'💰', bg:'linear-gradient(135deg,#ffffff,#e8ecf5,#5c6cff)', title:'Budget Card', desc:'Count-up + area chart draw + Wed callout ($30,739)'},
+  {id:'uiOrbitalMenu', tab:'pro', sec:'🎨 UI Cards — Premium Replicas', icon:'🌌', bg:'linear-gradient(135deg,#020208,#1a1a25,#4a4a60)', title:'Orbital Menu', desc:'Portrait + orbit rings + service pills (dark cosmic)'},
+
+  // --- 🔤 TEXT FX PACK (30) ---
+  {id:'txFx01', tab:'ui', sec:'🔤 Text FX (30) — Kinetic', icon:'💥', bg:'linear-gradient(135deg,#1a1a22,#ff3355)', title:'Word Slam', desc:'Har so\'z 300%→100% impact bilan tushadi'},
+  {id:'txFx02', tab:'ui', sec:'🔤 Text FX (30) — Kinetic', icon:'⬆️', bg:'linear-gradient(135deg,#1a1a22,#5c8cff)', title:'Letter Rise', desc:'Harflar pastdan blur bilan ko\'tariladi'},
+  {id:'txFx03', tab:'ui', sec:'🔤 Text FX (30) — Kinetic', icon:'⬇️', bg:'linear-gradient(135deg,#1a1a22,#7c3cff)', title:'Letter Drop', desc:'Harflar tepadan tushadi'},
+  {id:'txFx04', tab:'ui', sec:'🔤 Text FX (30) — Kinetic', icon:'💫', bg:'linear-gradient(135deg,#1a1a22,#ff9900)', title:'Letter Scatter', desc:'Tasodifiy tarafdan uchib keladi'},
+  {id:'txFx05', tab:'ui', sec:'🔤 Text FX (30) — Typewriter', icon:'⌨️', bg:'linear-gradient(135deg,#0d0d12,#33ff99)', title:'Typewriter', desc:'Klassik yozuv mashinasi + cursor'},
+  {id:'txFx06', tab:'ui', sec:'🔤 Text FX (30) — Typewriter', icon:'⚡', bg:'linear-gradient(135deg,#0d0d12,#22ffcc)', title:'Fast Typewriter', desc:'Tez yozuv, cursor yo\'q'},
+  {id:'txFx07', tab:'ui', sec:'🔤 Text FX (30) — Reveal', icon:'🌫️', bg:'linear-gradient(135deg,#1a1a22,#88aaff)', title:'Blur Wave', desc:'Blur to\'lqin bilan ochilish'},
+  {id:'txFx08', tab:'ui', sec:'🔤 Text FX (30) — Scale', icon:'🔼', bg:'linear-gradient(135deg,#1a1a22,#5fe88a)', title:'Scale Up Elastic', desc:'0→100%, overshoot bilan'},
+  {id:'txFx09', tab:'ui', sec:'🔤 Text FX (30) — Scale', icon:'🔥', bg:'linear-gradient(135deg,#1a1a22,#f23)', title:'Impact Zoom', desc:'300%→100% blur impact'},
+  {id:'txFx10', tab:'ui', sec:'🔤 Text FX (30) — Reveal', icon:'↔️', bg:'linear-gradient(135deg,#1a1a22,#a07cff)', title:'Split Wide', desc:'Vertikal squeeze + tracking'},
+  {id:'txFx11', tab:'ui', sec:'🔤 Text FX (30) — Cinematic', icon:'🤫', bg:'linear-gradient(135deg,#0d0d12,#c4a878)', title:'Whisper Fade', desc:'Italik, blur, iliq glow (jane vibe)'},
+  {id:'txFx12', tab:'ui', sec:'🔤 Text FX (30) — Cinematic', icon:'🎬', bg:'linear-gradient(135deg,#0d0d12,#e8ddc8)', title:'Hero Title', desc:'Katta title + slow push-in'},
+  {id:'txFx13', tab:'ui', sec:'🔤 Text FX (30) — Special', icon:'🌆', bg:'linear-gradient(135deg,#150015,#ff2288)', title:'Neon Flicker', desc:'Neon signboard yorug\'lik flicker'},
+  {id:'txFx14', tab:'ui', sec:'🔤 Text FX (30) — Special', icon:'🌈', bg:'linear-gradient(135deg,#000,#ff00ff,#00ffff)', title:'Glitch RGB', desc:'Chromatic aberration + wiggle'},
+  {id:'txFx15', tab:'ui', sec:'🔤 Text FX (30) — 3D', icon:'🔄', bg:'linear-gradient(135deg,#1a1a22,#4b46e0)', title:'Letter Flip 3D', desc:'Har harf Y ekseda aylanib chiqadi'},
+  {id:'txFx16', tab:'ui', sec:'🔤 Text FX (30) — Slide', icon:'⬅️', bg:'linear-gradient(135deg,#1a1a22,#5c8cff)', title:'Slide Left', desc:'O\'ngdan kiradi'},
+  {id:'txFx17', tab:'ui', sec:'🔤 Text FX (30) — Slide', icon:'🔼', bg:'linear-gradient(135deg,#1a1a22,#88ff88)', title:'Slide Up', desc:'Pastdan kiradi'},
+  {id:'txFx18', tab:'ui', sec:'🔤 Text FX (30) — Kinetic', icon:'💥', bg:'linear-gradient(135deg,#1a1a22,#ff5522)', title:'Text Shatter', desc:'Buzilib qayta yig\'iladi'},
+  {id:'txFx19', tab:'ui', sec:'🔤 Text FX (30) — Wave', icon:'🌊', bg:'linear-gradient(135deg,#0a1a30,#5cf2c8)', title:'Wave Motion', desc:'Line-by-line reveal + davomiy wave'},
+  {id:'txFx20', tab:'ui', sec:'🔤 Text FX (30) — Reveal', icon:'🎲', bg:'linear-gradient(135deg,#1a1a22,#f5a623)', title:'Random Order', desc:'Harflar random tartibda paydo'},
+  {id:'txFx21', tab:'ui', sec:'🔤 Text FX (30) — Style', icon:'🌑', bg:'linear-gradient(135deg,#1a1a22,#4a4a4a)', title:'Shadow Build', desc:'Drop shadow o\'sadi'},
+  {id:'txFx22', tab:'ui', sec:'🔤 Text FX (30) — Style', icon:'✏️', bg:'linear-gradient(135deg,#0d0d12,#ffffff)', title:'Stroke Draw', desc:'Kontur chizib chiqadi, keyin fill'},
+  {id:'txFx23', tab:'ui', sec:'🔤 Text FX (30) — Reveal', icon:'🎭', bg:'linear-gradient(135deg,#1a1a22,#8c1a2e)', title:'Curtain Reveal', desc:'Vertikal squeeze reveal'},
+  {id:'txFx24', tab:'ui', sec:'🔤 Text FX (30) — Scale', icon:'🌱', bg:'linear-gradient(135deg,#1a1a22,#88ff44)', title:'Grow From Dot', desc:'Nuqtadan katta bo\'lib chiqadi'},
+  {id:'txFx25', tab:'ui', sec:'🔤 Text FX (30) — Cinematic', icon:'🎈', bg:'linear-gradient(135deg,#0d0d12,#ffcc88)', title:'Float Letters', desc:'Suzuvchi harflar, davomiy nafas'},
+  {id:'txFx26', tab:'ui', sec:'🔤 Text FX (30) — Kinetic', icon:'🎈', bg:'linear-gradient(135deg,#1a1a22,#ff44aa)', title:'Bouncy Elastic', desc:'Spring bounce overshoot'},
+  {id:'txFx27', tab:'ui', sec:'🔤 Text FX (30) — Special', icon:'👻', bg:'linear-gradient(135deg,#0a1a1a,#22ffcc)', title:'Hologram', desc:'Cyan hologram scanline flicker'},
+  {id:'txFx28', tab:'ui', sec:'🔤 Text FX (30) — Special', icon:'🟢', bg:'linear-gradient(135deg,#000,#33ff44)', title:'Matrix Code', desc:'ASCII scramble → to\'g\'ri harf'},
+  {id:'txFx29', tab:'ui', sec:'🔤 Text FX (30) — Style', icon:'🔦', bg:'linear-gradient(135deg,#1a1a22,#f5c000)', title:'Spotlight Sweep', desc:'Fade + glow build up'},
+  {id:'txFx30', tab:'ui', sec:'🔤 Text FX (30) — Kinetic', icon:'💣', bg:'linear-gradient(135deg,#1a1a22,#ff2200)', title:'Impact Drop', desc:'Tepadan squash + flash + shadow'},
+
   // --- 💎 PRO: curated best, glass-grade ---
   {id:'claudeIntro', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'✴️', bg:'linear-gradient(135deg,#15110d,#D97757)', title:'Claude Intro', desc:'Cinematic Opus 4.8 motion-ad · Uzbek'},
   {id:'chatGptCard', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'🤖', bg:'linear-gradient(135deg,#0b0b0c,#10a37f)', title:'ChatGPT GPT', desc:'Custom-GPT interface (Power Word GPT)'},
@@ -193,6 +229,23 @@ var FX = [
   {id:'spinLeft',   tab:'trans', sec:'Seamless Cuts', icon:'↺',  bg:'linear-gradient(135deg,#7c5cfc,#2d1b69)',         title:'Spin Left',   desc:'Rotation warp'},
   {id:'cameraShake',tab:'trans', sec:'Impact Tools',  icon:'📳', bg:'linear-gradient(135deg,#232526,#414345)',         title:'Camera Shake',desc:'Wiggle handheld hit'},
   {id:'flashCut',   tab:'trans', sec:'Impact Tools',  icon:'⚡', bg:'linear-gradient(135deg,#f8b500,#fceabb)',          title:'Flash Cut',   desc:'White flash impact'},
+
+  // --- 🔥 AMV TRANSITIONS (15) — high-energy ---
+  {id:'amv01', tab:'trans', sec:'🔥 AMV Transitions — Whip & Slam', icon:'⬅️', bg:'linear-gradient(135deg,#0a0a15,#ff2288,#5c8cff)', title:'Whip Left',       desc:'Motion blur + slam left'},
+  {id:'amv02', tab:'trans', sec:'🔥 AMV Transitions — Whip & Slam', icon:'➡️', bg:'linear-gradient(135deg,#0a0a15,#5c8cff,#ff2288)', title:'Whip Right',      desc:'Motion blur + slam right'},
+  {id:'amv03', tab:'trans', sec:'🔥 AMV Transitions — Whip & Slam', icon:'⬆️', bg:'linear-gradient(135deg,#0a0a15,#88ff44,#5c8cff)', title:'Whip Up',         desc:'Vertical motion blur up'},
+  {id:'amv04', tab:'trans', sec:'🔥 AMV Transitions — Whip & Slam', icon:'⬇️', bg:'linear-gradient(135deg,#0a0a15,#5c8cff,#88ff44)', title:'Whip Down',       desc:'Vertical motion blur down'},
+  {id:'amv05', tab:'trans', sec:'🔥 AMV Transitions — Zoom & Warp', icon:'🎯', bg:'linear-gradient(135deg,#0a0a15,#ff5522)',        title:'Zoom Punch',      desc:'Fast zoom in + radial blur'},
+  {id:'amv06', tab:'trans', sec:'🔥 AMV Transitions — Zoom & Warp', icon:'🔎', bg:'linear-gradient(135deg,#0a0a15,#22ffcc)',        title:'Zoom Out Punch',  desc:'Fast zoom out warp'},
+  {id:'amv11', tab:'trans', sec:'🔥 AMV Transitions — Zoom & Warp', icon:'🌪️', bg:'linear-gradient(135deg,#0a0a15,#a07cff)',        title:'Warp Zoom',       desc:'Optics warp + zoom'},
+  {id:'amv10', tab:'trans', sec:'🔥 AMV Transitions — Zoom & Warp', icon:'🌀', bg:'linear-gradient(135deg,#0a0a15,#f5a623,#7c3cff)', title:'Twirl Cut',       desc:'Spiral twirl + zoom'},
+  {id:'amv07', tab:'trans', sec:'🔥 AMV Transitions — Impact', icon:'💥', bg:'linear-gradient(135deg,#000,#ff00ff,#00ffff)',       title:'RGB Slam',        desc:'Chromatic burst + shake'},
+  {id:'amv08', tab:'trans', sec:'🔥 AMV Transitions — Impact', icon:'🔊', bg:'linear-gradient(135deg,#0a0a15,#ff2200)',            title:'Bass Shake',      desc:'Bass-hit shake + zoom pulse'},
+  {id:'amv14', tab:'trans', sec:'🔥 AMV Transitions — Impact', icon:'🚀', bg:'linear-gradient(135deg,#0a0a15,#ff5522,#ffcc00)',    title:'Camera Ram',      desc:'Heavy zoom + shake + spin blur'},
+  {id:'amv15', tab:'trans', sec:'🔥 AMV Transitions — Impact', icon:'💠', bg:'linear-gradient(135deg,#0a0a15,#5c8cff,#ff2288)',    title:'Shatter Impact',  desc:'Turbulent displace burst'},
+  {id:'amv09', tab:'trans', sec:'🔥 AMV Transitions — Special', icon:'💫', bg:'linear-gradient(135deg,#0a0a15,#ffffff)',           title:'Radial Burst',    desc:'CC Radial Blur center-out'},
+  {id:'amv12', tab:'trans', sec:'🔥 AMV Transitions — Special', icon:'⚡', bg:'linear-gradient(135deg,#0a0a15,#ffffff,#5c8cff)',    title:'Speed Lines',     desc:'Anime speed line streaks'},
+  {id:'amv13', tab:'trans', sec:'🔥 AMV Transitions — Special', icon:'⚪', bg:'linear-gradient(135deg,#0a0a15,#ffffff)',           title:'White Flash',     desc:'Impact frame add blend'},
 
   // --- SHAPES ---
   {id:'silkFlow', tab:'shapes', sec:'✨ Signature', icon:'🫧', bg:'linear-gradient(135deg,#f2eee6,#d9c7a7,#8c8178,#1f1d1b)', title:'Silk Flow', desc:'Buttery band-train sweep'},

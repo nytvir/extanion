@@ -149,6 +149,13 @@ function nytvir_execute(cmd) {
         else if (cmd === "rgbSplit") { _rgbSplit(); }
         else if (cmd === "lensDistort") { _lensDistort(); }
         else if (cmd === "deepGlow") { _deepGlow(); }
+        else if (cmd === "janeSrtImport") { _janeSrtImport(); }
+        else if (cmd === "janeVibeGrade") { _janeVibeGrade(); }
+        else if (cmd === "janeFullSetup") { _janeVibeGrade(); _janeSrtImport(); }
+        else if (cmd.indexOf("txFx") === 0) { _txDispatch(cmd); }
+        else if (cmd === "uiBudgetCard") { _uiBudgetCard(); }
+        else if (cmd === "uiOrbitalMenu") { _uiOrbitalMenu(); }
+        else if (cmd.indexOf("amv") === 0) { _amvDispatch(cmd); }
 
         app.endUndoGroup();
         return "OK";
@@ -7148,6 +7155,1447 @@ function nytvir_getControls() {
         }
     }
     return '{"layerName": "' + _jsonEscape(L.name) + '", "controls": [' + controls.join(',') + ']}';
+}
+
+// ============================================================
+// AMV TRANSITIONS (15) — high-energy adjustment layers
+// ============================================================
+function _amvSetup(name, dur) {
+    var comp = app.project.activeItem;
+    if (!comp) return null;
+    var d = dur || 0.5;
+    var L = comp.layers.addSolid([0, 0, 0], "[Nytvir AMV] " + name, comp.width, comp.height, comp.pixelAspect, d);
+    L.adjustmentLayer = true;
+    L.motionBlur = true;
+    try { comp.motionBlur = true; } catch(e){}
+    L.inPoint = comp.time - (d / 2);
+    var tile = _addFx(L, "ADBE Tile");
+    tile.property(4).setValue(300);
+    tile.property(5).setValue(300);
+    tile.property(6).setValue(1);
+    _addSlider(L, "Transition Speed %", 100);
+    return L;
+}
+// Smooth sine peak: 0 at start, 1 at middle, 0 at end. Feels like a real cinema whip.
+var _AMV_BASE =
+    "var spd = effect('Transition Speed %')(1)/100;\n" +
+    "var t = (time - inPoint) * spd;\n" +
+    "var dur = outPoint - inPoint;\n" +
+    "var mid = dur/2;\n" +
+    "function peak() {\n" +
+    "  var p = Math.max(0, Math.min(1, t / dur));\n" +
+    "  return Math.sin(Math.PI * p);\n" +
+    "}\n" +
+    "function easeIn(x) { return x*x*x; }\n" +
+    "function easeOut(x) { return 1 - Math.pow(1-x, 3); }\n" +
+    "function easeInOut(x) { return x<0.5 ? 4*x*x*x : 1 - Math.pow(-2*x+2,3)/2; }\n";
+
+function _amv01_WhipLeft() {
+    var L = _amvSetup("Whip Left", 0.4); if (!L) return;
+    _addSlider(L, "Blur", 400);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(2).expression = _AMV_BASE +
+        "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
+        "var dist = " + L.containingComp.width + " * 0.6;" +
+        "var res; if(t<mid){var p=t/mid; res=[cx - dist*easeIn(p), cy];} else {var p=(t-mid)/mid; res=[cx + dist - dist*easeOut(p), cy];} res;";
+    var db = _addFx(L, "ADBE Directional Blur");
+    db.property(1).setValue(90); // horizontal
+    db.property(2).expression = _AMV_BASE + "peak() * effect('Blur')(1);";
+}
+function _amv02_WhipRight() {
+    var L = _amvSetup("Whip Right", 0.4); if (!L) return;
+    _addSlider(L, "Blur", 400);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(2).expression = _AMV_BASE +
+        "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
+        "var dist = " + L.containingComp.width + " * 0.6;" +
+        "var res; if(t<mid){var p=t/mid; res=[cx + dist*easeIn(p), cy];} else {var p=(t-mid)/mid; res=[cx - dist + dist*easeOut(p), cy];} res;";
+    var db = _addFx(L, "ADBE Directional Blur");
+    db.property(1).setValue(90);
+    db.property(2).expression = _AMV_BASE + "peak() * effect('Blur')(1);";
+}
+function _amv03_WhipUp() {
+    var L = _amvSetup("Whip Up", 0.4); if (!L) return;
+    _addSlider(L, "Blur", 400);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(2).expression = _AMV_BASE +
+        "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
+        "var dist = " + L.containingComp.height + " * 0.6;" +
+        "var res; if(t<mid){var p=t/mid; res=[cx, cy - dist*easeIn(p)];} else {var p=(t-mid)/mid; res=[cx, cy + dist - dist*easeOut(p)];} res;";
+    var db = _addFx(L, "ADBE Directional Blur");
+    db.property(1).setValue(0);
+    db.property(2).expression = _AMV_BASE + "peak() * effect('Blur')(1);";
+}
+function _amv04_WhipDown() {
+    var L = _amvSetup("Whip Down", 0.4); if (!L) return;
+    _addSlider(L, "Blur", 400);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(2).expression = _AMV_BASE +
+        "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
+        "var dist = " + L.containingComp.height + " * 0.6;" +
+        "var res; if(t<mid){var p=t/mid; res=[cx, cy + dist*easeIn(p)];} else {var p=(t-mid)/mid; res=[cx, cy - dist + dist*easeOut(p)];} res;";
+    var db = _addFx(L, "ADBE Directional Blur");
+    db.property(1).setValue(0);
+    db.property(2).expression = _AMV_BASE + "peak() * effect('Blur')(1);";
+}
+function _amv05_ZoomPunch() {
+    var L = _amvSetup("Zoom Punch", 0.5); if (!L) return;
+    _addSlider(L, "Zoom", 300);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * effect('Zoom')(1);";
+    var rb = _addFx(L, "CC Radial Fast Blur");
+    rb.property(2).expression = _AMV_BASE + "peak() * 40;";
+}
+function _amv06_ZoomOutPunch() {
+    var L = _amvSetup("Zoom Out Punch", 0.5); if (!L) return;
+    _addSlider(L, "Zoom", 150);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 - peak() * effect('Zoom')(1) * 0.5;";
+    var rb = _addFx(L, "CC Radial Fast Blur");
+    rb.property(2).expression = _AMV_BASE + "peak() * 30;";
+}
+function _amv07_RGBSlam() {
+    var L = _amvSetup("RGB Slam", 0.4); if (!L) return;
+    _addSlider(L, "Split Amount", 40);
+    // 3-copy channel offset via CC Vector Blur or per-channel Displace — use "CC Composite" trick with Radial Blur+Set Channels
+    // Simple: use "Shift Channels" trio + Directional Blur — complex. Use "CC Kaleida"? No.
+    // Practical: CC Radial Blur + Curves per channel offset via CC Composite. Use built-in ADBE Chromatic Aberration if exists:
+    try {
+        var ca = _addFx(L, "ADBE CamLensBlur"); // not correct
+    } catch(e){}
+    // Fallback: use Displacement Map with per-channel offset simulated by 3-solid layered — too complex for adjustment
+    // Simplest AMV RGB: apply "CC Composite" with radial blur on each channel — too heavy
+    // Use "ADBE Displacement Map" — needs matte
+    // Working alternative: Turbulent Displace + slight shake — visually similar RGB "vibrating" look via Camera Shake + Blur
+    var sh = _addFx(L, "ADBE Camera Lens Blur");
+    // If not available, skip
+    try {
+        var td = _addFx(L, "ADBE Turbulent Displace");
+        td.property("Amount").expression = _AMV_BASE + "peak() * effect('Split Amount')(1) * 3;";
+        td.property("Size").setValue(120);
+        td.property("Evolution").expression = "time * 60;";
+    } catch(e){}
+    // Add slight scale pulse
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 12;";
+}
+function _amv08_BassShake() {
+    var L = _amvSetup("Bass Shake", 0.5); if (!L) return;
+    _addSlider(L, "Shake Amount", 30);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(2).expression = _AMV_BASE +
+        "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
+        "var sh = effect('Shake Amount')(1) * peak();" +
+        "seedRandom(1, false);" +
+        "var jx = (noise(time*30)-0.5) * sh * 2;" +
+        "var jy = (noise(time*30+50)-0.5) * sh * 2;" +
+        "[cx + jx, cy + jy];";
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 8 * Math.abs(Math.sin(time*35));";
+}
+function _amv09_RadialBurst() {
+    var L = _amvSetup("Radial Burst", 0.5); if (!L) return;
+    _addSlider(L, "Blur", 100);
+    var rb = _addFx(L, "CC Radial Fast Blur");
+    rb.property(2).expression = _AMV_BASE + "peak() * effect('Blur')(1);";
+    try { rb.property(3).setValue(1); } catch(e){} // Zoom
+}
+function _amv10_TwirlCut() {
+    var L = _amvSetup("Twirl Cut", 0.5); if (!L) return;
+    _addSlider(L, "Angle", 180);
+    var tw = _addFx(L, "ADBE Twirl");
+    tw.property(1).expression = _AMV_BASE + "peak() * effect('Angle')(1);";
+    tw.property(2).setValue(Math.min(L.containingComp.width, L.containingComp.height) * 0.6);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 60;";
+}
+function _amv11_WarpZoom() {
+    var L = _amvSetup("Warp Zoom", 0.5); if (!L) return;
+    _addSlider(L, "Warp", 150);
+    var oc = _addFx(L, "ADBE Optics Compensation");
+    oc.property(2).setValue(1);
+    oc.property(1).expression = _AMV_BASE + "peak() * effect('Warp')(1);";
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 80;";
+}
+function _amv12_SpeedLines() {
+    var L = _amvSetup("Speed Lines", 0.4); if (!L) return;
+    // Use CC Rain / anime speed lines fake via CC Radial Blur on threshold noise
+    var fn = _addFx(L, "ADBE Fractal Noise");
+    fn.property("Fractal Type").setValue(5);
+    fn.property("Contrast").setValue(800);
+    fn.property("Brightness").setValue(-200);
+    fn.property("Scale").setValue([300, 40]);
+    fn.property("Complexity").setValue(2);
+    fn.property("Evolution").expression = "time * 40;";
+    var rb = _addFx(L, "CC Radial Fast Blur");
+    rb.property(2).setValue(90);
+    var op = L.property("Transform").property("Opacity");
+    op.expression = _AMV_BASE + "peak() * 55;";
+    L.blendingMode = BlendingMode.SCREEN;
+}
+function _amv13_WhiteFlash() {
+    var comp = app.project.activeItem;
+    if (!comp) return;
+    var dur = 0.3;
+    var f = comp.layers.addSolid([1, 1, 1], "[Nytvir AMV] White Flash", comp.width, comp.height, comp.pixelAspect, dur);
+    f.inPoint = comp.time - dur/2;
+    _addSlider(f, "Transition Speed %", 100);
+    _addSlider(f, "Curve Type", 2);
+    var op = f.property("Transform").property("Opacity");
+    op.expression = _AMV_BASE + "peak() * 100;";
+    f.blendingMode = BlendingMode.ADD;
+}
+function _amv14_CameraRam() {
+    var L = _amvSetup("Camera Ram", 0.6); if (!L) return;
+    _addSlider(L, "Ram Power", 200);
+    _addSlider(L, "Shake", 40);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * effect('Ram Power')(1);";
+    tr.property(2).expression = _AMV_BASE +
+        "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
+        "var sh = effect('Shake')(1) * peak();" +
+        "[cx + (noise(time*40)-0.5)*sh*2, cy + (noise(time*40+30)-0.5)*sh*2];";
+    var db = _addFx(L, "ADBE Directional Blur");
+    db.property(1).expression = "time*720;";
+    db.property(2).expression = _AMV_BASE + "peak() * 60;";
+}
+function _amv15_ShatterImpact() {
+    var L = _amvSetup("Shatter Impact", 0.5); if (!L) return;
+    _addSlider(L, "Displace", 200);
+    var td = _addFx(L, "ADBE Turbulent Displace");
+    td.property("Amount").expression = _AMV_BASE + "peak() * effect('Displace')(1);";
+    td.property("Size").setValue(40);
+    td.property("Complexity").setValue(8);
+    td.property("Evolution").expression = "time * 200;";
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 30;";
+}
+
+function _amvDispatch(cmd) {
+    var m = {
+        amv01:_amv01_WhipLeft, amv02:_amv02_WhipRight, amv03:_amv03_WhipUp, amv04:_amv04_WhipDown,
+        amv05:_amv05_ZoomPunch, amv06:_amv06_ZoomOutPunch, amv07:_amv07_RGBSlam, amv08:_amv08_BassShake,
+        amv09:_amv09_RadialBurst, amv10:_amv10_TwirlCut, amv11:_amv11_WarpZoom, amv12:_amv12_SpeedLines,
+        amv13:_amv13_WhiteFlash, amv14:_amv14_CameraRam, amv15:_amv15_ShatterImpact
+    };
+    if (m[cmd]) m[cmd]();
+}
+
+// ============================================================
+// UI CARDS — Premium dashboard replicas
+// ============================================================
+function _uiHelperShape(comp, name, dur) {
+    var s = comp.layers.addShape();
+    s.name = name;
+    s.inPoint = 0; s.outPoint = dur;
+    return s;
+}
+function _uiRRect(shape, w, h, round, colorArr, fillOrStroke, strokeW) {
+    var g = shape.property("Contents").addProperty("ADBE Vector Group");
+    var c = g.property("Contents");
+    var r = c.addProperty("ADBE Vector Shape - Rect");
+    r.property("Size").setValue([w, h]);
+    r.property("Roundness").setValue(round);
+    if (fillOrStroke !== "strokeOnly") {
+        var f = c.addProperty("ADBE Vector Graphic - Fill");
+        f.property("Color").setValue(colorArr);
+    }
+    if (fillOrStroke === "strokeOnly" || fillOrStroke === "both") {
+        var st = c.addProperty("ADBE Vector Graphic - Stroke");
+        st.property("Color").setValue(colorArr);
+        st.property("Stroke Width").setValue(strokeW || 2);
+    }
+    return g;
+}
+function _uiEllipse(shape, w, h, colorArr, fillOrStroke, strokeW) {
+    var g = shape.property("Contents").addProperty("ADBE Vector Group");
+    var c = g.property("Contents");
+    var e = c.addProperty("ADBE Vector Shape - Ellipse");
+    e.property("Size").setValue([w, h]);
+    if (fillOrStroke !== "strokeOnly") {
+        var f = c.addProperty("ADBE Vector Graphic - Fill");
+        f.property("Color").setValue(colorArr);
+    }
+    if (fillOrStroke === "strokeOnly" || fillOrStroke === "both") {
+        var st = c.addProperty("ADBE Vector Graphic - Stroke");
+        st.property("Color").setValue(colorArr);
+        st.property("Stroke Width").setValue(strokeW || 2);
+    }
+    return g;
+}
+function _uiText(comp, str, fontSize, colorArr, bold, dur) {
+    var tl = comp.layers.addText(str);
+    var td = tl.property("Source Text").value;
+    td.fontSize = fontSize;
+    td.fillColor = colorArr;
+    td.applyStroke = false;
+    td.applyFill = true;
+    td.justification = ParagraphJustification.LEFT_JUSTIFY;
+    if (bold) { try { td.fauxBold = true; } catch(e){} }
+    tl.property("Source Text").setValue(td);
+    tl.inPoint = 0; tl.outPoint = dur;
+    return tl;
+}
+
+// -------------- BUDGET CARD --------------
+function _uiBudgetCard() {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) return;
+    var dur = 5, cx = comp.width/2, cy = comp.height/2;
+    var W = 620, H = 720;
+
+    // Card background — white rounded
+    var card = _uiHelperShape(comp, "[Nytvir] Budget Card BG", dur);
+    _uiRRect(card, W, H, 42, [1,1,1,1], "fill");
+    card.property("Transform").property("Position").setValue([cx, cy]);
+    // shadow via drop shadow effect
+    try {
+        var ds = card.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+        ds.property("Opacity").setValue(80);
+        ds.property("Distance").setValue(0);
+        ds.property("Softness").setValue(60);
+    } catch(e){}
+    // Card entrance
+    var sc = card.property("Transform").property("Scale");
+    sc.setValueAtTime(0, [95, 95]);
+    sc.setValueAtTime(0.5, [100, 100]);
+    var op = card.property("Transform").property("Opacity");
+    op.setValueAtTime(0, 0); op.setValueAtTime(0.3, 100);
+
+    // "Budget" label (top-left of card)
+    var lbl = _uiText(comp, "Budget", 32, [0.42,0.42,0.5,1], false, dur);
+    lbl.property("Transform").property("Position").setValue([cx - W/2 + 60, cy - H/2 + 100]);
+    lbl.inPoint = 0.4;
+    var lblOp = lbl.property("Transform").property("Opacity");
+    lblOp.setValueAtTime(0.4, 0); lblOp.setValueAtTime(0.7, 100);
+
+    // Big price — count-up
+    var price = _uiText(comp, "$0", 84, [0.05,0.05,0.1,1], true, dur);
+    price.property("Transform").property("Position").setValue([cx - W/2 + 60, cy - H/2 + 180]);
+    price.inPoint = 0.5;
+    var ptxt = price.property("Source Text");
+    ptxt.expression =
+        "var t = time - inPoint;\n" +
+        "var target = 30739;\n" +
+        "var dur = 1.5;\n" +
+        "var p = ease(t, 0, dur, 0, target);\n" +
+        "var s = Math.floor(p).toString();\n" +
+        "if (s.length > 3) s = s.substr(0, s.length-3) + ',' + s.substr(s.length-3);\n" +
+        "'$' + s;";
+
+    // "+ $317" growth pill
+    var pill = _uiHelperShape(comp, "[Nytvir] Growth Pill", dur);
+    _uiRRect(pill, 200, 52, 26, [0.94,0.94,0.96,1], "fill");
+    pill.property("Transform").property("Position").setValue([cx - W/2 + 160, cy - H/2 + 260]);
+    pill.inPoint = 1.5;
+    var pillOp = pill.property("Transform").property("Opacity");
+    pillOp.setValueAtTime(1.5, 0); pillOp.setValueAtTime(1.8, 100);
+    var pillTxt = _uiText(comp, "+ $317  📈", 22, [0.12,0.12,0.2,1], true, dur);
+    pillTxt.property("Transform").property("Position").setValue([cx - W/2 + 80, cy - H/2 + 269]);
+    pillTxt.inPoint = 1.5;
+    pillTxt.property("Transform").property("Opacity").setValueAtTime(1.5, 0);
+    pillTxt.property("Transform").property("Opacity").setValueAtTime(1.8, 100);
+    pillTxt.parent = pill;
+    pillTxt.property("Transform").property("Position").setValue([-70, 8]);
+
+    // Chart area — under card
+    var chartBaseY = cy + H/2 - 200;
+    var chartLeft = cx - W/2 + 40;
+    var chartRight = cx + W/2 - 40;
+    var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    var vals = [0.2, 0.3, 0.42, 0.68, 0.55, 0.72, 0.90]; // relative heights
+    var chartHeight = 220;
+    var stepX = (chartRight - chartLeft) / 6;
+
+    // Area shape (filled path from bottom to line)
+    var chart = _uiHelperShape(comp, "[Nytvir] Chart Area", dur);
+    var chartG = chart.property("Contents").addProperty("ADBE Vector Group");
+    var chartContents = chartG.property("Contents");
+    var pathProp = chartContents.addProperty("ADBE Vector Shape - Group");
+    var sh = new Shape();
+    var verts = [];
+    for (var i=0; i<7; i++) {
+        verts.push([chartLeft + i*stepX, chartBaseY - vals[i]*chartHeight]);
+    }
+    // close area down to base
+    verts.push([chartRight, chartBaseY]);
+    verts.push([chartLeft, chartBaseY]);
+    sh.vertices = verts;
+    var tans = [];
+    for (var j=0; j<verts.length; j++) tans.push([0,0]);
+    sh.inTangents = tans; sh.outTangents = tans;
+    sh.closed = true;
+    pathProp.property("Path").setValue(sh);
+
+    // Gradient fill (blue → transparent) — use solid fill with opacity mask via linear grad
+    var gradF = chartContents.addProperty("ADBE Vector Graphic - G-Fill");
+    gradF.property("Type").setValue(1); // linear
+    gradF.property("Start Point").setValue([0, chartBaseY - chartHeight]);
+    gradF.property("End Point").setValue([0, chartBaseY]);
+    try {
+        // Set gradient stops via encoded string
+        var gradStr = "1,0.28,0.34,1,1, 0,0.28,0.34,1,0";
+        gradF.property("Colors").setValue([0, 0.28, 0.34, 1,   0.35, 0.28, 0.34, 1,   0.7, 0.28, 0.34, 1,   1, 0.28, 0.34, 1]);
+    } catch(gerr) {
+        // fallback: solid fill
+        var solidF = chartContents.addProperty("ADBE Vector Graphic - Fill");
+        solidF.property("Color").setValue([0.28, 0.34, 1, 1]);
+        solidF.property("Opacity").setValue(65);
+    }
+
+    // Chart stroke on top — animated draw with Trim Paths
+    var line = _uiHelperShape(comp, "[Nytvir] Chart Line", dur);
+    var lineG = line.property("Contents").addProperty("ADBE Vector Group");
+    var lineC = lineG.property("Contents");
+    var lineP = lineC.addProperty("ADBE Vector Shape - Group");
+    var sh2 = new Shape();
+    var lVerts = [];
+    for (var k=0; k<7; k++) lVerts.push([chartLeft + k*stepX, chartBaseY - vals[k]*chartHeight]);
+    sh2.vertices = lVerts;
+    var lTans = []; for (var m=0; m<lVerts.length; m++) lTans.push([0,0]);
+    sh2.inTangents = lTans; sh2.outTangents = lTans;
+    sh2.closed = false;
+    lineP.property("Path").setValue(sh2);
+    var lineStroke = lineC.addProperty("ADBE Vector Graphic - Stroke");
+    lineStroke.property("Color").setValue([0.28, 0.36, 1, 1]);
+    lineStroke.property("Stroke Width").setValue(6);
+    // Line cap: round
+    try { lineStroke.property("Line Cap").setValue(2); lineStroke.property("Line Join").setValue(2); } catch(e){}
+    // Trim paths for draw-on
+    var trim = lineG.property("Contents").addProperty("ADBE Vector Filter - Trim");
+    var trimEnd = trim.property("End");
+    trimEnd.setValueAtTime(0.8, 0);
+    trimEnd.setValueAtTime(2.4, 100);
+    var eZ = new KeyframeEase(0, 66);
+    trimEnd.setTemporalEaseAtKey(1, [eZ], [eZ]);
+    trimEnd.setTemporalEaseAtKey(2, [eZ], [eZ]);
+
+    // Callout on Wednesday ($750 pill)
+    var callX = chartLeft + 3*stepX;
+    var callY = chartBaseY - vals[3]*chartHeight;
+    var dot = _uiHelperShape(comp, "[Nytvir] Wed Dot", dur);
+    _uiEllipse(dot, 24, 24, [1,1,1,1], "fill");
+    _uiEllipse(dot, 16, 16, [0.28,0.36,1,1], "fill");
+    dot.property("Transform").property("Position").setValue([callX, callY]);
+    dot.inPoint = 2.2;
+    var dotSc = dot.property("Transform").property("Scale");
+    dotSc.setValueAtTime(2.2, [0,0]);
+    dotSc.setValueAtTime(2.5, [120,120]);
+    dotSc.setValueAtTime(2.7, [100,100]);
+
+    var callPill = _uiHelperShape(comp, "[Nytvir] Wed Callout", dur);
+    _uiRRect(callPill, 130, 46, 23, [0.35, 0.32, 0.98, 1], "fill");
+    callPill.property("Transform").property("Position").setValue([callX, callY - 45]);
+    callPill.inPoint = 2.5;
+    var cpOp = callPill.property("Transform").property("Opacity");
+    cpOp.setValueAtTime(2.5, 0); cpOp.setValueAtTime(2.8, 100);
+    var cpY = callPill.property("Transform").property("Position");
+    cpY.setValueAtTime(2.5, [callX, callY - 25]);
+    cpY.setValueAtTime(2.8, [callX, callY - 55]);
+    var callTxt = _uiText(comp, "$750", 22, [1,1,1,1], true, dur);
+    callTxt.property("Transform").property("Position").setValue([-30, 8]);
+    callTxt.parent = callPill;
+    callTxt.inPoint = 2.5;
+    callTxt.property("Transform").property("Opacity").setValueAtTime(2.5, 0);
+    callTxt.property("Transform").property("Opacity").setValueAtTime(2.8, 100);
+
+    // Day labels
+    for (var d = 0; d < days.length; d++) {
+        var dt = _uiText(comp, days[d], 20, [0.55,0.55,0.62,1], false, dur);
+        var dPos = [chartLeft + d*stepX - 20, chartBaseY + 40];
+        dt.property("Transform").property("Position").setValue(dPos);
+        dt.inPoint = 1.0 + d * 0.05;
+        var dOp = dt.property("Transform").property("Opacity");
+        dOp.setValueAtTime(1.0 + d*0.05, 0);
+        dOp.setValueAtTime(1.3 + d*0.05, 100);
+    }
+}
+
+// -------------- ORBITAL MENU --------------
+function _uiOrbitalMenu() {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) return;
+    var dur = 6, cx = comp.width/2, cy = comp.height/2;
+
+    // Dark background
+    var bg = comp.layers.addSolid([0.02, 0.02, 0.03], "[Nytvir] Orbit BG", comp.width, comp.height, 1, dur);
+
+    // Center portrait circle (placeholder — user replaces with image)
+    var portrait = _uiHelperShape(comp, "[Nytvir] Portrait", dur);
+    _uiEllipse(portrait, 260, 260, [0.10, 0.15, 0.25, 1], "fill");
+    portrait.property("Transform").property("Position").setValue([cx, cy]);
+    // Soft glow ring around portrait
+    var glowRing = _uiHelperShape(comp, "[Nytvir] Portrait Glow", dur);
+    _uiEllipse(glowRing, 300, 300, [1,1,1,1], "fill");
+    glowRing.property("Transform").property("Position").setValue([cx, cy]);
+    try {
+        var gg = glowRing.property("ADBE Effect Parade").addProperty("ADBE Fast Blur");
+        gg.property("Blurriness").setValue(30);
+    } catch(e){}
+    glowRing.property("Transform").property("Opacity").setValue(50);
+    glowRing.moveAfter(portrait);
+
+    // 3 orbit rings (thin white strokes, low opacity, slight ellipse)
+    var radii = [220, 340, 460];
+    for (var r = 0; r < radii.length; r++) {
+        var ring = _uiHelperShape(comp, "[Nytvir] Orbit " + (r+1), dur);
+        _uiEllipse(ring, radii[r]*2, radii[r]*2 * 0.7, [1,1,1,1], "strokeOnly", 1);
+        ring.property("Transform").property("Position").setValue([cx, cy]);
+        ring.property("Transform").property("Opacity").setValue(25 - r*4);
+        // slow continuous rotation
+        var rr = ring.property("Transform").property("Rotation");
+        rr.expression = "time * " + (2 + r * 1.5) + " * (" + (r % 2 === 0 ? "1" : "-1") + ");";
+    }
+
+    // Service pill labels (6 pills orbiting)
+    var labels = ["CRIATIVOS", "SOCIAL MEDIA", "PÁGINA DE CAPTURA", "PÁGINA DE VENDAS", "DESIGN DE EBOOKS", "IDENTIDADE VISUAL"];
+    var angleStart = -Math.PI/2;
+    for (var p = 0; p < labels.length; p++) {
+        var ang = angleStart + (p / labels.length) * Math.PI * 2;
+        var ringR = radii[p % 3];
+        var px = cx + Math.cos(ang) * ringR;
+        var py = cy + Math.sin(ang) * ringR * 0.7;
+
+        var pill = _uiHelperShape(comp, "[Nytvir] Pill " + labels[p], dur);
+        _uiRRect(pill, 220, 46, 23, [0.15, 0.15, 0.18, 1], "fill");
+        // stroke as second group
+        _uiRRect(pill, 220, 46, 23, [0.4, 0.4, 0.5, 1], "strokeOnly", 1);
+        pill.property("Transform").property("Position").setValue([px, py]);
+        pill.inPoint = 0.3 + p * 0.25;
+        var pOp = pill.property("Transform").property("Opacity");
+        pOp.setValueAtTime(0.3 + p*0.25, 0);
+        pOp.setValueAtTime(0.7 + p*0.25, 100);
+        var pSc = pill.property("Transform").property("Scale");
+        pSc.setValueAtTime(0.3 + p*0.25, [70, 70]);
+        pSc.setValueAtTime(0.7 + p*0.25, [100, 100]);
+
+        var ptxt = _uiText(comp, labels[p], 16, [0.85, 0.85, 0.9, 1], false, dur);
+        ptxt.parent = pill;
+        ptxt.property("Transform").property("Position").setValue([-70, 6]);
+        ptxt.inPoint = 0.3 + p*0.25;
+        ptxt.property("Transform").property("Opacity").setValueAtTime(0.3 + p*0.25, 0);
+        ptxt.property("Transform").property("Opacity").setValueAtTime(0.7 + p*0.25, 100);
+    }
+
+    // Bottom tagline
+    var tag = _uiText(comp, "Har birini batafsil ko'rsatishga tayyorman", 22, [0.85, 0.85, 0.9, 1], false, dur);
+    tag.property("Transform").property("Position").setValue([cx - 300, cy + 480]);
+    tag.inPoint = 2.5;
+    var tOp = tag.property("Transform").property("Opacity");
+    tOp.setValueAtTime(2.5, 0); tOp.setValueAtTime(3.0, 100);
+
+    // Small orbit dots (decoration)
+    for (var od = 0; od < 8; od++) {
+        var oa = od * Math.PI / 4;
+        var or = radii[od % 3];
+        var odot = _uiHelperShape(comp, "[Nytvir] OrbitDot " + od, dur);
+        _uiEllipse(odot, 8, 8, [0.6, 0.6, 0.7, 1], "fill");
+        odot.property("Transform").property("Position").setValue([cx + Math.cos(oa) * or, cy + Math.sin(oa) * or * 0.7]);
+        odot.property("Transform").property("Opacity").setValue(60);
+    }
+}
+
+function _placeholderRemove() {
+    try {
+        var comp = app.project.activeItem;
+        if (!comp || !(comp instanceof CompItem)) return '{"error":"Kompozitsiya ochilmagan"}';
+        if (comp.selectedLayers.length === 0) return '{"error":"Personaj qatlamini tanlang"}';
+        var L = comp.selectedLayers[0];
+
+        // FAST PATH: if layer is a file-backed footage (PNG/JPG), use that file directly
+        var directPath = null;
+        try {
+            if (L.source && L.source.mainSource && L.source.mainSource.file) {
+                var sf = L.source.mainSource.file;
+                if (sf.exists) {
+                    var nm = sf.fsName.toLowerCase();
+                    if (nm.match(/\.(png|jpg|jpeg|webp)$/)) directPath = sf.fsName;
+                }
+            }
+        } catch (fe) {}
+
+        // temp PNG path (used only if not direct)
+        var tempFolder = Folder(Folder.temp.fsName + "/nytvir_autorig");
+        if (!tempFolder.exists) tempFolder.create();
+        var pngFile = new File(tempFolder.fsName + "/frame_" + (new Date()).getTime() + ".png");
+
+        var srcW = comp.width, srcH = comp.height;
+        var usedPath = "";
+        var pngSize = 0;
+        var mode = "";
+
+        if (directPath) {
+            // Direct file path — no re-render needed
+            usedPath = directPath;
+            var df = new File(directPath);
+            pngSize = df.length;
+            if (L.source) { srcW = L.source.width; srcH = L.source.height; }
+            mode = "direct";
+        } else {
+            // Fallback: render current comp frame
+            try {
+                comp.saveFrameToPng(comp.time, pngFile);
+            } catch (se) {
+                return '{"error":"saveFrameToPng xato: ' + _jsonEscape(se.toString()) + '"}';
+            }
+            if (!pngFile.exists) return '{"error":"PNG yaratilmadi: ' + _jsonEscape(pngFile.fsName) + '"}';
+            pngSize = pngFile.length;
+            if (pngSize < 100) return '{"error":"PNG juda kichik (' + pngSize + ' bayt)"}';
+            usedPath = pngFile.fsName;
+            mode = "compRender";
+        }
+
+        // Return path + layer metadata for coordinate mapping
+        var lPos = L.property("Transform").property("Position").value;
+        var lAnc = L.property("Transform").property("Anchor Point").value;
+        var lScl = L.property("Transform").property("Scale").value;
+
+        return '{"path":"' + _jsonEscape(usedPath) +
+               '","mode":"' + mode + '"' +
+               ',"pngSize":' + pngSize +
+               ',"layerIdx":' + L.index +
+               ',"compW":' + comp.width + ',"compH":' + comp.height +
+               ',"srcW":' + srcW + ',"srcH":' + srcH +
+               ',"posX":' + lPos[0] + ',"posY":' + lPos[1] +
+               ',"ancX":' + lAnc[0] + ',"ancY":' + lAnc[1] +
+               ',"sclX":' + lScl[0] + ',"sclY":' + lScl[1] + '}';
+    } catch (e) {
+        return '{"error":"' + _jsonEscape(e.toString()) + '"}';
+    }
+}
+
+function nytvir_autoRigApply(jsonStr) {
+    try {
+        var comp = app.project.activeItem;
+        if (!comp || !(comp instanceof CompItem)) return "Comp yo'q";
+        // parse minimal: eval is safe here since we control the source
+        var data = eval("(" + jsonStr + ")");
+        if (!data || !data.keypoints) return "Keypoints yo'q";
+
+        var kps = data.keypoints; // array of {name, x, y, score}
+        var srcW = data.srcW, srcH = data.srcH;
+        var posX = data.posX, posY = data.posY;
+        var ancX = data.ancX, ancY = data.ancY;
+        var sclX = data.sclX / 100, sclY = data.sclY / 100;
+
+        var L = comp.layer(data.layerIdx);
+        if (!L) return "Qatlam topilmadi";
+
+        // Clean previous auto-rig
+        for (var i = comp.numLayers; i >= 1; i--) {
+            var nm = comp.layer(i).name;
+            if (nm.indexOf("[RIG]") === 0) comp.layer(i).remove();
+        }
+
+        // Master root null at character's anchor
+        var root = comp.layers.addNull(comp.duration);
+        root.name = "[RIG] Root";
+        root.label = 11;
+        root.property("Transform").property("Position").setValue([posX, posY]);
+        // Move above the character layer
+        root.moveBefore(L);
+
+        // Add idle controls
+        var eff = root.property("ADBE Effect Parade");
+        var spd = eff.addProperty("ADBE Slider Control"); spd.name = "Idle Speed"; spd.property(1).setValue(100);
+        var brt = eff.addProperty("ADBE Slider Control"); brt.name = "Breath Amount"; brt.property(1).setValue(3);
+        var sway = eff.addProperty("ADBE Slider Control"); sway.name = "Sway Amount"; sway.property(1).setValue(1.5);
+        var jit = eff.addProperty("ADBE Slider Control"); jit.name = "Micro Jitter"; jit.property(1).setValue(1);
+
+        // Apply idle expressions to root
+        var rPos = root.property("Transform").property("Position");
+        rPos.expression =
+            "var s = effect(\"Idle Speed\")(1) / 100;\n" +
+            "var b = effect(\"Breath Amount\")(1);\n" +
+            "var j = effect(\"Micro Jitter\")(1);\n" +
+            "var t = time * s;\n" +
+            "var breath = Math.sin(t * Math.PI / 2) * b;\n" +
+            "seedRandom(1, true);\n" +
+            "var jx = (noise(t * 4) - 0.5) * j * 2;\n" +
+            "var jy = (noise(t * 4 + 100) - 0.5) * j * 2;\n" +
+            "[value[0] + jx, value[1] + breath + jy];";
+        var rRot = root.property("Transform").property("Rotation");
+        rRot.expression =
+            "var s = effect(\"Idle Speed\")(1) / 100;\n" +
+            "var sw = effect(\"Sway Amount\")(1);\n" +
+            "Math.sin(time * s * Math.PI / 3) * sw;";
+
+        // Character layer parented to root, anchored properly
+        L.parent = root;
+
+        // Coordinate mapping depends on export mode
+        // - "compRender": keypoints in comp pixel space → use directly
+        // - "direct": keypoints in source pixel space → map through layer transform
+        var mode = data.mode || "compRender";
+        function toCompCoord(px, py) {
+            if (mode === "compRender") return [px, py];
+            // direct: relative to anchor, scaled, offset by layer position
+            var relX = (px - ancX) * sclX;
+            var relY = (py - ancY) * sclY;
+            return [posX + relX, posY + relY];
+        }
+
+        // Create child null for each keypoint (score > 0.3 only)
+        var created = 0;
+        for (var k = 0; k < kps.length; k++) {
+            var kp = kps[k];
+            if (kp.score < 0.3) continue;
+            var n = comp.layers.addNull(comp.duration);
+            n.name = "[RIG] " + kp.name;
+            n.label = 14;
+            var xy = toCompCoord(kp.x, kp.y);
+            n.property("Transform").property("Position").setValue(xy);
+            n.parent = root;
+            // small size for nulls
+            try { n.property("ADBE AV Layer Overrides Group").property("ADBE Null Size Property").setValue([50, 50]); } catch (ee) {}
+            created++;
+        }
+
+        return "Rig yaratildi: " + created + " joint. Root null = [RIG] Root. Idle animatsiyasi qo'llandi.";
+    } catch (e) {
+        return "Xato: " + e.toString() + (e.line ? " @" + e.line : "");
+    }
+}
+
+// ============================================================
+// TEXT FX PACK — 30 cinematic text animations
+// ============================================================
+function _txBase(str, size, bold, dur) {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) return null;
+    var tl = comp.layers.addText(str || "YOUR TEXT");
+    var td = tl.property("Source Text").value;
+    td.fontSize = size || 96;
+    td.fillColor = [1, 1, 1];
+    td.applyStroke = false;
+    td.applyFill = true;
+    td.justification = ParagraphJustification.CENTER_JUSTIFY;
+    if (bold) { try { td.fauxBold = true; } catch (e) {} }
+    tl.property("Source Text").setValue(td);
+    tl.property("Transform").property("Position").setValue([comp.width / 2, comp.height / 2]);
+    tl.motionBlur = true;
+    tl.inPoint = comp.time;
+    tl.outPoint = comp.time + (dur || 4);
+    tl.name = "[Nytvir Text] " + (str || "text");
+    return tl;
+}
+function _txAnim(tl, nm) {
+    var a = tl.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");
+    a.name = nm || "Anim";
+    return a;
+}
+function _txSel(anim, based, shape) {
+    var s = anim.property("ADBE Text Selectors").addProperty("ADBE Text Selector");
+    var adv = s.property("ADBE Text Range Advanced");
+    if (based) { try { adv.property("ADBE Text Range Type2").setValue(based); } catch (e) {} }
+    if (shape) { try { adv.property("ADBE Text Range Shape").setValue(shape); } catch (e) {} }
+    return s;
+}
+// range shrinks Start 0→100 with End=100 → chars reveal L→R
+function _txReveal(sel, t0, t1, ease) {
+    sel.property("ADBE Text Percent End").setValue(100);
+    var p = sel.property("ADBE Text Percent Start");
+    p.setValueAtTime(t0, 0);
+    p.setValueAtTime(t1, 100);
+    var e = new KeyframeEase(0, ease == null ? 75 : ease);
+    p.setTemporalEaseAtKey(1, [e], [e]);
+    p.setTemporalEaseAtKey(2, [e], [e]);
+    return p;
+}
+function _txFade(tl, t0, dIn, dOut) {
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(t0, 0);
+    op.setValueAtTime(t0 + dIn, 100);
+    op.setValueAtTime(tl.outPoint - dOut, 100);
+    op.setValueAtTime(tl.outPoint, 0);
+}
+function _txDrop(tl, dist, soft, opa) {
+    try {
+        var ds = tl.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+        ds.property("Distance").setValue(dist == null ? 0 : dist);
+        ds.property("Softness").setValue(soft == null ? 30 : soft);
+        ds.property("Opacity").setValue(opa == null ? 220 : opa);
+        ds.property("Direction").setValue(0);
+    } catch (e) {}
+}
+function _txGlow(tl, thr, rad, inten) {
+    var g = null;
+    try {
+        g = tl.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+        g.property("Glow Threshold").setValue(thr);
+        g.property("Glow Radius").setValue(rad);
+        g.property("Glow Intensity").setValue(inten);
+    } catch (e) {
+        try {
+            g = tl.property("ADBE Effect Parade").addProperty("ADBE Glow");
+            g.property(1).setValue(thr);
+            g.property(2).setValue(rad);
+            g.property(3).setValue(inten);
+        } catch (e2) {}
+    }
+    return g;
+}
+
+// ---------- 30 animations ----------
+function _txFx01_WordSlam() {
+    var tl = _txBase("WORD SLAM", 140, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Slam"); var s = _txSel(a, 3, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.4, 85);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Scale").setValue([300, 300]); } catch(e){}
+    try { p.addProperty("ADBE Text Blur").setValue([25, 25]); } catch(e){}
+    _txDrop(tl, 0, 30, 230);
+}
+function _txFx02_LetterRise() {
+    var tl = _txBase("LETTER RISE", 96, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Rise"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.5, 75);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 70]); } catch(e){}
+    try { p.addProperty("ADBE Text Blur").setValue([12, 12]); } catch(e){}
+}
+function _txFx03_LetterDrop() {
+    var tl = _txBase("LETTER DROP", 96, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Drop"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.4, 65);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, -90]); } catch(e){}
+}
+function _txFx04_LetterScatter() {
+    var tl = _txBase("SCATTER", 110, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Scatter"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.8, 60);
+    try { s.property("ADBE Text Randomize Order").setValue(1); } catch(e){}
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([220, -160]); } catch(e){}
+    try { p.addProperty("ADBE Text Rotation").setValue(120); } catch(e){}
+    try { p.addProperty("ADBE Text Scale").setValue([50, 50]); } catch(e){}
+}
+function _txFx05_Typewriter() {
+    var tl = _txBase("Typewriter effect...", 72, false, 4); if (!tl) return;
+    var a = _txAnim(tl, "Type"); var s = _txSel(a, 1, 1);
+    s.property("ADBE Text Percent End").setValue(100);
+    var p = s.property("ADBE Text Percent Start");
+    p.setValueAtTime(tl.inPoint, 0);
+    p.setValueAtTime(tl.inPoint + 2.4, 100);
+    a.property("ADBE Text Animator Properties").addProperty("ADBE Text Opacity").setValue(0);
+    // Cursor "|" appended layer
+    var comp = app.project.activeItem;
+    var cur = comp.layers.addText("|");
+    cur.name = "[Nytvir Text] cursor";
+    var ctd = cur.property("Source Text").value;
+    ctd.fontSize = 72; ctd.fillColor = [1,1,1]; ctd.justification = ParagraphJustification.LEFT_JUSTIFY;
+    cur.property("Source Text").setValue(ctd);
+    cur.property("Transform").property("Position").setValue([comp.width/2, comp.height/2]);
+    cur.inPoint = tl.inPoint; cur.outPoint = tl.outPoint;
+    cur.property("Transform").property("Opacity").expression = "Math.floor(time*2.5)%2==0 ? 100 : 0;";
+    cur.parent = tl;
+}
+function _txFx06_TypewriterFast() {
+    var tl = _txBase("FAST TYPE", 100, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "FastType"); var s = _txSel(a, 1, 1);
+    s.property("ADBE Text Percent End").setValue(100);
+    var p = s.property("ADBE Text Percent Start");
+    p.setValueAtTime(tl.inPoint, 0);
+    p.setValueAtTime(tl.inPoint + 0.5, 100);
+    a.property("ADBE Text Animator Properties").addProperty("ADBE Text Opacity").setValue(0);
+}
+function _txFx07_BlurWave() {
+    var tl = _txBase("BLUR WAVE", 110, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "BlurWave"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.8, 80);
+    var p = a.property("ADBE Text Animator Properties");
+    try { p.addProperty("ADBE Text Blur").setValue([45, 45]); } catch(e){}
+    p.addProperty("ADBE Text Opacity").setValue(0);
+}
+function _txFx08_ScaleUp() {
+    var tl = _txBase("SCALE UP", 96, true, 3); if (!tl) return;
+    var t = tl.inPoint;
+    var sc = tl.property("Transform").property("Scale");
+    sc.setValueAtTime(t, [0, 0]);
+    sc.setValueAtTime(t + 0.55, [115, 115]);
+    sc.setValueAtTime(t + 0.9, [100, 100]);
+    var e0 = new KeyframeEase(0, 33); var e1 = new KeyframeEase(0, 90);
+    sc.setTemporalEaseAtKey(1, [e0, e0], [e0, e0]);
+    sc.setTemporalEaseAtKey(2, [e0, e0], [e1, e1]);
+    sc.setTemporalEaseAtKey(3, [e1, e1], [e1, e1]);
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(t, 0); op.setValueAtTime(t + 0.3, 100);
+}
+function _txFx09_ScaleDown() {
+    var tl = _txBase("IMPACT!", 140, true, 3); if (!tl) return;
+    var t = tl.inPoint;
+    var sc = tl.property("Transform").property("Scale");
+    sc.setValueAtTime(t, [280, 280]);
+    sc.setValueAtTime(t + 0.4, [100, 100]);
+    sc.setValueAtTime(t + 0.55, [108, 108]);
+    sc.setValueAtTime(t + 0.75, [100, 100]);
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(t, 0); op.setValueAtTime(t + 0.1, 100);
+    try {
+        var b = tl.property("ADBE Effect Parade").addProperty("ADBE Fast Blur");
+        b.property("Blurriness").setValueAtTime(t, 40);
+        b.property("Blurriness").setValueAtTime(t + 0.4, 0);
+    } catch(e){}
+}
+function _txFx10_SplitReveal() {
+    var tl = _txBase("SPLIT WIDE", 110, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Split"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.4, 80);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Scale").setValue([0, 100]); } catch(e){}
+    try { p.addProperty("ADBE Text Tracking Amount").setValue(200); } catch(e){}
+}
+function _txFx11_WhisperFade() {
+    var tl = _txBase("whisper", 88, false, 4); if (!tl) return;
+    var td = tl.property("Source Text").value;
+    try { td.fauxItalic = true; } catch(e){}
+    td.fillColor = [0.94, 0.90, 0.82];
+    td.tracking = 80;
+    tl.property("Source Text").setValue(td);
+    _txFade(tl, tl.inPoint, 1.2, 1.3);
+    var a = _txAnim(tl, "Whisper"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 2.0, 82);
+    var p = a.property("ADBE Text Animator Properties");
+    try { p.addProperty("ADBE Text Blur").setValue([30, 30]); } catch(e){}
+    _txGlow(tl, 40, 25, 0.9);
+    _txDrop(tl, 0, 45, 210);
+}
+function _txFx12_HeroTitle() {
+    var tl = _txBase("HERO TITLE", 130, true, 4); if (!tl) return;
+    var t = tl.inPoint;
+    var a = _txAnim(tl, "Hero"); var s = _txSel(a, 1, 6);
+    _txReveal(s, t, t + 1.2, 85);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 30]); } catch(e){}
+    try { p.addProperty("ADBE Text Scale").setValue([110, 110]); } catch(e){}
+    var sc = tl.property("Transform").property("Scale");
+    sc.setValueAtTime(t, [100, 100]);
+    sc.setValueAtTime(tl.outPoint, [107, 107]);
+    _txDrop(tl, 0, 40, 200);
+}
+function _txFx13_NeonFlicker() {
+    var tl = _txBase("NEON", 130, true, 3); if (!tl) return;
+    var td = tl.property("Source Text").value;
+    td.fillColor = [1, 0.15, 0.55];
+    tl.property("Source Text").setValue(td);
+    var op = tl.property("Transform").property("Opacity");
+    var t = tl.inPoint;
+    // flicker keys
+    var flicks = [0,15,0,80,0,60,100,40,100,20,100];
+    for (var i=0; i<flicks.length; i++) op.setValueAtTime(t + i*0.08, flicks[i]);
+    op.setValueAtTime(tl.outPoint-0.3, 100); op.setValueAtTime(tl.outPoint, 0);
+    _txGlow(tl, 20, 60, 1.6);
+}
+function _txFx14_GlitchRGB() {
+    var tl = _txBase("GLITCH", 130, true, 3); if (!tl) return;
+    try {
+        var sc = tl.property("ADBE Effect Parade").addProperty("ADBE Shift Channels");
+        sc.property("Take Red From").setValue(1);
+    } catch(e){}
+    // Wiggle position
+    var pos = tl.property("Transform").property("Position");
+    pos.expression = "wiggle(15, 12);";
+    var op = tl.property("Transform").property("Opacity");
+    op.expression = "seedRandom(1,true); Math.random()>0.15 ? 100 : 30;";
+}
+function _txFx15_LetterFlip() {
+    var tl = _txBase("FLIP", 120, true, 3); if (!tl) return;
+    tl.threeDLayer = true;
+    var a = _txAnim(tl, "Flip"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.6, 75);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Rotation Y").setValue(90); } catch(e){}
+    try { p.addProperty("ADBE Text Position 3D").setValue([0, 0, -80]); } catch(e){}
+}
+function _txFx16_SlideLeft() {
+    var tl = _txBase("SLIDE LEFT", 96, true, 3); if (!tl) return;
+    var comp = app.project.activeItem;
+    var t = tl.inPoint;
+    var pos = tl.property("Transform").property("Position");
+    pos.setValueAtTime(t, [comp.width * 1.4, comp.height/2]);
+    pos.setValueAtTime(t + 0.8, [comp.width/2, comp.height/2]);
+    var e = new KeyframeEase(0, 88);
+    pos.setTemporalEaseAtKey(1, [e,e], [e,e]);
+    pos.setTemporalEaseAtKey(2, [e,e], [e,e]);
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(t, 0); op.setValueAtTime(t + 0.25, 100);
+}
+function _txFx17_SlideUp() {
+    var tl = _txBase("SLIDE UP", 96, true, 3); if (!tl) return;
+    var comp = app.project.activeItem;
+    var t = tl.inPoint;
+    var pos = tl.property("Transform").property("Position");
+    pos.setValueAtTime(t, [comp.width/2, comp.height + 100]);
+    pos.setValueAtTime(t + 0.9, [comp.width/2, comp.height/2]);
+    var e = new KeyframeEase(0, 85);
+    pos.setTemporalEaseAtKey(1, [e,e], [e,e]);
+    pos.setTemporalEaseAtKey(2, [e,e], [e,e]);
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(t, 0); op.setValueAtTime(t + 0.3, 100);
+}
+function _txFx18_TextShatter() {
+    var tl = _txBase("SHATTER", 120, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Shatter"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.6, 65);
+    try { s.property("ADBE Text Randomize Order").setValue(1); } catch(e){}
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([160, -180]); } catch(e){}
+    try { p.addProperty("ADBE Text Rotation").setValue(180); } catch(e){}
+    try { p.addProperty("ADBE Text Scale").setValue([30, 30]); } catch(e){}
+    try { p.addProperty("ADBE Text Blur").setValue([25, 25]); } catch(e){}
+}
+function _txFx19_WaveReveal() {
+    var tl = _txBase("WAVE MOTION", 96, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Wave"); var s = _txSel(a, 1, 4);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.8, 70);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 60]); } catch(e){}
+    // Second wiggle animator for continuous wave
+    var a2 = _txAnim(tl, "WaveIdle");
+    var s2 = _txSel(a2, 1);
+    s2.property("ADBE Text Percent Start").setValue(0);
+    s2.property("ADBE Text Percent End").setValue(100);
+    var p2 = a2.property("ADBE Text Animator Properties");
+    var pos2 = p2.addProperty("ADBE Text Position");
+    pos2.expression = "var i = textIndex; [0, Math.sin(time*3 + i*0.6)*10];";
+}
+function _txFx20_RandomOrder() {
+    var tl = _txBase("RANDOM ORDER", 96, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Random"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.6, 70);
+    try { s.property("ADBE Text Randomize Order").setValue(1); } catch(e){}
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Blur").setValue([20, 20]); } catch(e){}
+    try { p.addProperty("ADBE Text Scale").setValue([50, 50]); } catch(e){}
+}
+function _txFx21_ShadowBuild() {
+    var tl = _txBase("SHADOW BUILD", 96, true, 3); if (!tl) return;
+    var t = tl.inPoint;
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(t, 0); op.setValueAtTime(t + 0.4, 100);
+    try {
+        var ds = tl.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+        ds.property("Direction").setValue(135);
+        ds.property("Opacity").setValue(220);
+        var dist = ds.property("Distance");
+        dist.setValueAtTime(t, 0);
+        dist.setValueAtTime(t + 0.9, 25);
+        var soft = ds.property("Softness");
+        soft.setValueAtTime(t, 0);
+        soft.setValueAtTime(t + 0.9, 45);
+    } catch(e){}
+}
+function _txFx22_StrokeDraw() {
+    var tl = _txBase("STROKE DRAW", 130, true, 3); if (!tl) return;
+    var td = tl.property("Source Text").value;
+    td.applyStroke = true;
+    td.strokeColor = [1, 1, 1];
+    td.strokeWidth = 3;
+    td.fillColor = [1, 1, 1];
+    td.applyFill = false; // start stroke only
+    tl.property("Source Text").setValue(td);
+    var t = tl.inPoint;
+    // Reveal stroke via animator on opacity
+    var a = _txAnim(tl, "Draw"); var s = _txSel(a, 1, 6);
+    _txReveal(s, t, t + 1.2, 75);
+    a.property("ADBE Text Animator Properties").addProperty("ADBE Text Opacity").setValue(0);
+    // fill fades in after
+    // No direct animatable fill toggle — use second text layer with fill
+    var comp = app.project.activeItem;
+    var tl2 = comp.layers.addText(tl.property("Source Text").value.text);
+    tl2.name = "[Nytvir Text] fill";
+    var td2 = tl2.property("Source Text").value;
+    td2.fontSize = 130; td2.applyStroke = false; td2.applyFill = true; td2.fillColor = [1,1,1];
+    td2.justification = ParagraphJustification.CENTER_JUSTIFY;
+    try { td2.fauxBold = true; } catch(e){}
+    tl2.property("Source Text").setValue(td2);
+    tl2.property("Transform").property("Position").setValue([comp.width/2, comp.height/2]);
+    tl2.inPoint = t + 1.1; tl2.outPoint = tl.outPoint;
+    var op2 = tl2.property("Transform").property("Opacity");
+    op2.setValueAtTime(t + 1.1, 0); op2.setValueAtTime(t + 1.6, 100);
+}
+function _txFx23_Curtain() {
+    var tl = _txBase("CURTAIN", 130, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Curtain"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.4, 80);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Scale").setValue([100, 0]); } catch(e){}
+}
+function _txFx24_GrowFromDot() {
+    var tl = _txBase("GROW", 130, true, 3); if (!tl) return;
+    var t = tl.inPoint;
+    var sc = tl.property("Transform").property("Scale");
+    sc.setValueAtTime(t, [1, 1]);
+    sc.setValueAtTime(t + 0.7, [110, 110]);
+    sc.setValueAtTime(t + 1.0, [100, 100]);
+    var e = new KeyframeEase(0, 85);
+    sc.setTemporalEaseAtKey(1, [e,e], [e,e]);
+    sc.setTemporalEaseAtKey(2, [e,e], [e,e]);
+    sc.setTemporalEaseAtKey(3, [e,e], [e,e]);
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(t, 0); op.setValueAtTime(t + 0.2, 100);
+    try {
+        var b = tl.property("ADBE Effect Parade").addProperty("ADBE Fast Blur");
+        b.property("Blurriness").setValueAtTime(t, 30);
+        b.property("Blurriness").setValueAtTime(t + 0.7, 0);
+    } catch(e2){}
+}
+function _txFx25_FloatLetters() {
+    var tl = _txBase("FLOAT", 110, true, 4); if (!tl) return;
+    var a = _txAnim(tl, "Float"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.4, 75);
+    try { s.property("ADBE Text Randomize Order").setValue(1); } catch(e){}
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 40]); } catch(e){}
+    try { p.addProperty("ADBE Text Rotation").setValue(15); } catch(e){}
+    // Continuous float wiggle
+    var a2 = _txAnim(tl, "Idle"); var s2 = _txSel(a2, 1);
+    s2.property("ADBE Text Percent Start").setValue(0);
+    s2.property("ADBE Text Percent End").setValue(100);
+    var pos2 = a2.property("ADBE Text Animator Properties").addProperty("ADBE Text Position");
+    pos2.expression = "var i=textIndex; [Math.sin(time*1.5 + i)*3, Math.cos(time*1.2 + i*0.7)*4];";
+}
+function _txFx26_BouncyElastic() {
+    var tl = _txBase("BOUNCE", 120, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Bounce"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.4, 40);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Scale").setValue([160, 160]); } catch(e){}
+    try { p.addProperty("ADBE Text Position").setValue([0, -50]); } catch(e){}
+    // overshoot elastic via layer scale wiggle after
+    var sc = tl.property("Transform").property("Scale");
+    sc.expression = "amp=6; freq=2; decay=3.5; t=time - inPoint; s=100 + amp*Math.sin(freq*Math.PI*t)*Math.exp(-decay*t); [s,s];";
+}
+function _txFx27_Hologram() {
+    var tl = _txBase("HOLOGRAM", 120, true, 4); if (!tl) return;
+    var td = tl.property("Source Text").value;
+    td.fillColor = [0.4, 1.0, 0.9];
+    tl.property("Source Text").setValue(td);
+    var a = _txAnim(tl, "Holo"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.4, 75);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Blur").setValue([25, 8]); } catch(e){}
+    // Scanline flicker
+    var op = tl.property("Transform").property("Opacity");
+    op.expression = "80 + 20 * Math.sin(time*30);";
+    _txGlow(tl, 30, 40, 1.4);
+}
+function _txFx28_MatrixCode() {
+    var tl = _txBase("MATRIX", 130, true, 3); if (!tl) return;
+    var td = tl.property("Source Text").value;
+    td.fillColor = [0.3, 1.0, 0.4];
+    tl.property("Source Text").setValue(td);
+    var a = _txAnim(tl, "Matrix"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 2.0, 70);
+    try { s.property("ADBE Text Randomize Order").setValue(1); } catch(e){}
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try {
+        var ch = p.addProperty("ADBE Text Character Value");
+        ch.setValue(48); // ASCII scramble
+        try { p.addProperty("ADBE Text Character Change Type").setValue(1); } catch(e){}
+        try { p.addProperty("ADBE Text Character Alignment").setValue(1); } catch(e){}
+    } catch(e){}
+    _txGlow(tl, 30, 20, 1.2);
+}
+function _txFx29_SpotlightSweep() {
+    var tl = _txBase("SPOTLIGHT", 120, true, 3); if (!tl) return;
+    var a = _txAnim(tl, "Sweep"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.4, 70);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    // Show base text at low opacity always
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(tl.inPoint, 30);
+    op.setValueAtTime(tl.inPoint + 1.4, 100);
+    _txGlow(tl, 40, 30, 1.3);
+}
+function _txFx30_ImpactDrop() {
+    var tl = _txBase("IMPACT DROP", 140, true, 3); if (!tl) return;
+    var t = tl.inPoint;
+    var comp = app.project.activeItem;
+    var pos = tl.property("Transform").property("Position");
+    pos.setValueAtTime(t, [comp.width/2, -100]);
+    pos.setValueAtTime(t + 0.5, [comp.width/2, comp.height/2 + 30]);
+    pos.setValueAtTime(t + 0.7, [comp.width/2, comp.height/2]);
+    var e0 = new KeyframeEase(0, 33); var e1 = new KeyframeEase(0, 90);
+    pos.setTemporalEaseAtKey(1, [e0,e0], [e0,e0]);
+    pos.setTemporalEaseAtKey(2, [e1,e1], [e0,e0]);
+    pos.setTemporalEaseAtKey(3, [e0,e0], [e1,e1]);
+    var sc = tl.property("Transform").property("Scale");
+    sc.setValueAtTime(t + 0.5, [130, 80]);
+    sc.setValueAtTime(t + 0.7, [100, 100]);
+    _txDrop(tl, 0, 40, 240);
+    // Add white flash layer
+    var flash = comp.layers.addSolid([1,1,1], "[Nytvir Text] flash", comp.width, comp.height, comp.pixelAspect, 0.4);
+    flash.inPoint = t + 0.5; flash.outPoint = t + 0.9;
+    var fop = flash.property("Transform").property("Opacity");
+    fop.setValueAtTime(t + 0.5, 60);
+    fop.setValueAtTime(t + 0.9, 0);
+    flash.blendingMode = BlendingMode.SCREEN;
+}
+
+function _txDispatch(cmd) {
+    var m = {
+        txFx01:_txFx01_WordSlam, txFx02:_txFx02_LetterRise, txFx03:_txFx03_LetterDrop,
+        txFx04:_txFx04_LetterScatter, txFx05:_txFx05_Typewriter, txFx06:_txFx06_TypewriterFast,
+        txFx07:_txFx07_BlurWave, txFx08:_txFx08_ScaleUp, txFx09:_txFx09_ScaleDown,
+        txFx10:_txFx10_SplitReveal, txFx11:_txFx11_WhisperFade, txFx12:_txFx12_HeroTitle,
+        txFx13:_txFx13_NeonFlicker, txFx14:_txFx14_GlitchRGB, txFx15:_txFx15_LetterFlip,
+        txFx16:_txFx16_SlideLeft, txFx17:_txFx17_SlideUp, txFx18:_txFx18_TextShatter,
+        txFx19:_txFx19_WaveReveal, txFx20:_txFx20_RandomOrder, txFx21:_txFx21_ShadowBuild,
+        txFx22:_txFx22_StrokeDraw, txFx23:_txFx23_Curtain, txFx24:_txFx24_GrowFromDot,
+        txFx25:_txFx25_FloatLetters, txFx26:_txFx26_BouncyElastic, txFx27:_txFx27_Hologram,
+        txFx28:_txFx28_MatrixCode, txFx29:_txFx29_SpotlightSweep, txFx30:_txFx30_ImpactDrop
+    };
+    if (m[cmd]) m[cmd]();
+}
+
+// ----------------------------------------------------
+// JANE.AEP — SRT IMPORT + CINEMATIC EMOTIONAL GRADE
+// ----------------------------------------------------
+function _janeSrtTime(str) {
+    var parts = str.split(':');
+    var h = parseFloat(parts[0]);
+    var m = parseFloat(parts[1]);
+    var s = parseFloat((parts[2] || "0").replace(',', '.'));
+    return h * 3600 + m * 60 + s;
+}
+
+function _janeReadSrt(path) {
+    var f = new File(path);
+    if (!f.exists) return [];
+    f.encoding = "UTF-8";
+    f.open("r");
+    var content = f.read();
+    f.close();
+    content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    var blocks = content.split(/\n\n+/);
+    var cues = [];
+    for (var i = 0; i < blocks.length; i++) {
+        var raw = blocks[i].split('\n');
+        var clean = [];
+        for (var j = 0; j < raw.length; j++) {
+            var s = raw[j].replace(/^\s+|\s+$/g, '');
+            if (s !== '') clean.push(s);
+        }
+        if (clean.length < 2) continue;
+        var startIdx = 0;
+        if (/^\d+$/.test(clean[0])) startIdx = 1;
+        if (!clean[startIdx]) continue;
+        var m = clean[startIdx].match(/(\d\d:\d\d:\d\d[,.]\d+)\s*-->\s*(\d\d:\d\d:\d\d[,.]\d+)/);
+        if (!m) continue;
+        var txt = '';
+        for (var k = startIdx + 1; k < clean.length; k++) {
+            if (txt) txt += '\n';
+            txt += clean[k];
+        }
+        cues.push({ start: _janeSrtTime(m[1]), end: _janeSrtTime(m[2]), text: txt });
+    }
+    return cues;
+}
+
+function _janeSrtImport() {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) return;
+    var srtPath = "D:\\srt projects\\0801.srt";
+    var cues = _janeReadSrt(srtPath);
+    if (!cues.length) { alert("SRT topilmadi yoki bo'sh:\n" + srtPath); return; }
+
+    var maxEnd = 0;
+    for (var q = 0; q < cues.length; q++) if (cues[q].end > maxEnd) maxEnd = cues[q].end;
+    if (comp.duration < maxEnd + 1) comp.duration = maxEnd + 1;
+
+    // Parent NULL to keep captions together for later re-position
+    var nullL = comp.layers.addNull(comp.duration);
+    nullL.name = "[Nytvir] SRT Anchor";
+    nullL.property("Transform").property("Position").setValue([comp.width / 2, comp.height * 0.82]);
+    nullL.enabled = false;
+    nullL.moveToBeginning();
+
+    for (var i = 0; i < cues.length; i++) {
+        var c = cues[i];
+        var tl = comp.layers.addText(c.text);
+        tl.name = "[Nytvir] SRT " + (i + 1);
+        var td = tl.property("Source Text").value;
+        td.font = "Georgia";
+        td.fontSize = 62;
+        td.fillColor = [0.96, 0.94, 0.88];
+        td.applyStroke = false;
+        td.applyFill = true;
+        td.justification = ParagraphJustification.CENTER_JUSTIFY;
+        td.tracking = 30;
+        td.leading = 76;
+        tl.property("Source Text").setValue(td);
+
+        // Position via parent — captions anchored to null
+        var pos = tl.property("Transform").property("Position");
+        pos.setValue([0, 0]);
+        tl.parent = nullL;
+
+        tl.inPoint = c.start;
+        tl.outPoint = c.end + 0.35;
+
+        // Opacity fade
+        var op = tl.property("Transform").property("Opacity");
+        var fadeIn = 0.35, fadeOut = 0.5;
+        var t0 = c.start;
+        var t1 = c.start + fadeIn;
+        var t3 = c.end + 0.35;
+        var t2 = t3 - fadeOut;
+        if (t2 <= t1) { t2 = (t1 + t3) / 2; }
+        op.setValuesAtTimes([t0, t1, t2, t3], [0, 100, 100, 0]);
+        var e66 = new KeyframeEase(0, 66);
+        for (var k = 1; k <= 4; k++) op.setTemporalEaseAtKey(k, [e66], [e66]);
+
+        // Subtle rise-in via scale
+        var scl = tl.property("Transform").property("Scale");
+        scl.setValueAtTime(t0, [98, 98]);
+        scl.setValueAtTime(t1, [100, 100]);
+        scl.setTemporalEaseAtKey(1, [e66, e66], [e66, e66]);
+        scl.setTemporalEaseAtKey(2, [e66, e66], [e66, e66]);
+
+        // Soft glow: Drop Shadow (0 distance = glow-ish) + slight blur pass
+        try {
+            var ds = tl.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+            ds.property("Opacity").setValue(210);
+            ds.property("Direction").setValue(0);
+            ds.property("Distance").setValue(0);
+            ds.property("Softness").setValue(38);
+            ds.property("Shadow Color").setValue([0, 0, 0, 1]);
+        } catch (e) {}
+    }
+}
+
+function _janeAddEllipseMask(L, cx, cy, rx, ry) {
+    var mask = L.property("ADBE Mask Parade").addProperty("ADBE Mask Atom");
+    var shape = new Shape();
+    var c = 0.5522847498;
+    shape.vertices = [[cx, cy - ry], [cx + rx, cy], [cx, cy + ry], [cx - rx, cy]];
+    shape.inTangents = [[-rx * c, 0], [0, -ry * c], [rx * c, 0], [0, ry * c]];
+    shape.outTangents = [[rx * c, 0], [0, ry * c], [-rx * c, 0], [0, -ry * c]];
+    shape.closed = true;
+    mask.property("ADBE Mask Shape").setValue(shape);
+    return mask;
+}
+
+function _janeVibeGrade() {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) return;
+
+    // 1) Main grade adjustment layer
+    var grade = comp.layers.addSolid([0.5, 0.5, 0.5], "[Nytvir] Jane Grade", comp.width, comp.height, comp.pixelAspect, comp.duration);
+    grade.adjustmentLayer = true;
+
+    // Lifted blacks + softened highlights (Levels)
+    try {
+        var lv = grade.property("ADBE Effect Parade").addProperty("ADBE Pro Levels2");
+        lv.property("Output Black").setValue(22 / 255);
+        lv.property("Output White").setValue(238 / 255);
+        lv.property("Gamma").setValue(0.98);
+    } catch (e) {}
+
+    // Cool shadows / warm highlights (Color Balance)
+    try {
+        var cbal = grade.property("ADBE Effect Parade").addProperty("ADBE Color Balance 2");
+        cbal.property("Shadow Blue Balance").setValue(18);
+        cbal.property("Shadow Red Balance").setValue(-10);
+        cbal.property("Highlight Red Balance").setValue(14);
+        cbal.property("Highlight Blue Balance").setValue(-8);
+        cbal.property("Midtone Red Balance").setValue(6);
+    } catch (e) {}
+
+    // Muted saturation + slight lightness drop
+    try {
+        var cbhls = grade.property("ADBE Effect Parade").addProperty("ADBE Color Balance (HLS)");
+        cbhls.property("Saturation").setValue(-22);
+        cbhls.property("Lightness").setValue(-4);
+    } catch (e) {}
+
+    // Warming photo filter for skin/warmth
+    try {
+        var pf = grade.property("ADBE Effect Parade").addProperty("ADBE Photo Filter");
+        pf.property("Filter").setValue(1);
+        pf.property("Density").setValue(14);
+        pf.property("Preserve Luminosity").setValue(1);
+    } catch (e) {}
+
+    // Contrast bump
+    try {
+        var bc = grade.property("ADBE Effect Parade").addProperty("ADBE Brightness & Contrast 2");
+        bc.property("Brightness").setValue(-6);
+        bc.property("Contrast").setValue(16);
+    } catch (e) {}
+
+    // 2) Vignette
+    var vig = comp.layers.addSolid([0, 0, 0], "[Nytvir] Vignette", comp.width, comp.height, comp.pixelAspect, comp.duration);
+    var vmask = _janeAddEllipseMask(vig, comp.width / 2, comp.height / 2, comp.width * 0.62, comp.height * 0.72);
+    vmask.inverted = true;
+    vmask.property("ADBE Mask Feather").setValue([comp.width * 0.38, comp.width * 0.38]);
+    vmask.property("ADBE Mask Opacity").setValue(72);
+
+    // 3) Grain layer
+    var grain = comp.layers.addSolid([0.5, 0.5, 0.5], "[Nytvir] Grain", comp.width, comp.height, comp.pixelAspect, comp.duration);
+    grain.adjustmentLayer = true;
+    try {
+        var noise = grain.property("ADBE Effect Parade").addProperty("ADBE Noise");
+        noise.property("Amount of Noise").setValue(0.055);
+        noise.property("Noise Type").setValue(1);
+        noise.property("Clipping").setValue(0);
+    } catch (e) {}
+
+    // 4) Letterbox 2.35:1 (only if comp is wider than 2.35)
+    var target = comp.width / 2.35;
+    if (comp.height > target + 6) {
+        var barH = Math.round((comp.height - target) / 2);
+        var barTop = comp.layers.addSolid([0, 0, 0], "[Nytvir] Bar Top", comp.width, barH, comp.pixelAspect, comp.duration);
+        barTop.property("Transform").property("Position").setValue([comp.width / 2, barH / 2]);
+        var barBot = comp.layers.addSolid([0, 0, 0], "[Nytvir] Bar Bot", comp.width, barH, comp.pixelAspect, comp.duration);
+        barBot.property("Transform").property("Position").setValue([comp.width / 2, comp.height - barH / 2]);
+    }
+
+    // Move grade/vignette/grain/bars to top so they affect all footage below
+    // Order desired top→bottom: Grain, Vignette, Bars, Grade, (footage)
+    try {
+        // Reordering — grab by name
+        for (var i = comp.numLayers; i >= 1; i--) {
+            var L = comp.layer(i);
+            if (L.name === "[Nytvir] Jane Grade") { L.moveToBeginning(); }
+        }
+        // Vignette above grade
+        for (var i = comp.numLayers; i >= 1; i--) {
+            var L2 = comp.layer(i);
+            if (L2.name === "[Nytvir] Vignette") { L2.moveToBeginning(); }
+        }
+        // Grain on top
+        for (var i = comp.numLayers; i >= 1; i--) {
+            var L3 = comp.layer(i);
+            if (L3.name === "[Nytvir] Grain") { L3.moveToBeginning(); }
+        }
+    } catch (e) {}
 }
 
 function nytvir_setControl(name, type, val) {
