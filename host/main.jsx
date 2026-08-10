@@ -152,6 +152,8 @@ function nytvir_execute(cmd) {
         else if (cmd === "janeSrtImport") { _janeSrtImport(); }
         else if (cmd === "janeVibeGrade") { _janeVibeGrade(); }
         else if (cmd === "janeFullSetup") { _janeVibeGrade(); _janeSrtImport(); }
+        else if (cmd.indexOf("cap") === 0) { _capDispatch(cmd); }
+        else if (cmd.indexOf("txPro") === 0) { _txProDispatch(cmd); }
         else if (cmd.indexOf("txFx") === 0) { _txDispatch(cmd); }
         else if (cmd === "uiBudgetCard") { _uiBudgetCard(); }
         else if (cmd === "uiOrbitalMenu") { _uiOrbitalMenu(); }
@@ -8372,6 +8374,409 @@ function _txDispatch(cmd) {
         txFx28:_txFx28_MatrixCode, txFx29:_txFx29_SpotlightSweep, txFx30:_txFx30_ImpactDrop
     };
     if (m[cmd]) m[cmd]();
+}
+
+// ============================================================
+// TEXT ANIMATIONS PRO — 12 smooth product-level animations
+// Works on the SELECTED text layer; creates demo text if none.
+// ============================================================
+function _txProTarget(demoStr, size) {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) return null;
+    // prefer selected text layer — apply to user's own text
+    for (var i = 0; i < comp.selectedLayers.length; i++) {
+        if (comp.selectedLayers[i] instanceof TextLayer) {
+            var sel = comp.selectedLayers[i];
+            sel.motionBlur = true;
+            return sel;
+        }
+    }
+    return _txBase(demoStr || "SMOOTH TITLE", size || 96, true, 4);
+}
+function _txProSmooth(prop, infl) {
+    for (var k = 1; k <= prop.numKeys; k++) {
+        try {
+            prop.setInterpolationTypeAtKey(k, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER);
+            var dims = 1;
+            try { dims = prop.value.length || 1; } catch (e0) { dims = 1; }
+            var ea = [];
+            for (var d = 0; d < dims; d++) ea.push(new KeyframeEase(0, infl == null ? 85 : infl));
+            prop.setTemporalEaseAtKey(k, ea, ea);
+        } catch (e) {}
+    }
+}
+// animator property with keyframed value (in -> settled)
+function _txProKey(animProps, matchName, v0, v1, t0, t1, infl) {
+    try {
+        var p = animProps.addProperty(matchName);
+        p.setValueAtTime(t0, v0);
+        p.setValueAtTime(t1, v1);
+        _txProSmooth(p, infl == null ? 85 : infl);
+        return p;
+    } catch (e) { return null; }
+}
+
+// 01 — Soft Rise: words float up through gentle blur
+function _txPro01_SoftRise() {
+    var tl = _txProTarget("SOFT RISE"); if (!tl) return;
+    var a = _txAnim(tl, "Pro Soft Rise"); var s = _txSel(a, 3, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.1, 88);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 45]); } catch (e) {}
+    try { p.addProperty("ADBE Text Blur").setValue([9, 9]); } catch (e) {}
+}
+// 02 — Word Cascade: caption-style word-by-word (viral reel look)
+function _txPro02_WordCascade() {
+    var tl = _txProTarget("word by word cascade", 72); if (!tl) return;
+    var a = _txAnim(tl, "Pro Cascade"); var s = _txSel(a, 3, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.4, 82);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 26]); } catch (e) {}
+}
+// 03 — Focus In: lens focus (blur + tracking settle)
+function _txPro03_FocusIn() {
+    var tl = _txProTarget("FOCUS IN"); if (!tl) return;
+    var a = _txAnim(tl, "Pro Focus");
+    _txSel(a, 1, 6); // full range
+    var p = a.property("ADBE Text Animator Properties");
+    _txProKey(p, "ADBE Text Blur", [26, 26], [0, 0], tl.inPoint, tl.inPoint + 1.0, 88);
+    _txProKey(p, "ADBE Text Tracking Amount", 24, 0, tl.inPoint, tl.inPoint + 1.1, 88);
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(tl.inPoint, 0);
+    op.setValueAtTime(tl.inPoint + 0.55, 100);
+    _txProSmooth(op, 80);
+}
+// 04 — Line Rise: whole lines lift from below (multi-line hero)
+function _txPro04_LineRise() {
+    var tl = _txProTarget("LINE ONE\rLINE TWO"); if (!tl) return;
+    var a = _txAnim(tl, "Pro Line Rise"); var s = _txSel(a, 4, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.2, 90);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 80]); } catch (e) {}
+    try { p.addProperty("ADBE Text Blur").setValue([6, 6]); } catch (e) {}
+}
+// 05 — Char Drift: characters drift in, barely-there (Apple keynote)
+function _txPro05_CharDrift() {
+    var tl = _txProTarget("character drift", 84); if (!tl) return;
+    var a = _txAnim(tl, "Pro Char Drift"); var s = _txSel(a, 1, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.3, 80);
+    try { s.property("ADBE Text Selector Smoothness").setValue(80); } catch (e) {}
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 16]); } catch (e) {}
+    try { p.addProperty("ADBE Text Blur").setValue([4, 4]); } catch (e) {}
+}
+// 06 — Tracking Air: luxury brand settle (wide -> tight)
+function _txPro06_TrackingAir() {
+    var tl = _txProTarget("L U X U R Y"); if (!tl) return;
+    var a = _txAnim(tl, "Pro Air");
+    _txSel(a, 1, 6);
+    var p = a.property("ADBE Text Animator Properties");
+    _txProKey(p, "ADBE Text Tracking Amount", 34, 0, tl.inPoint, tl.inPoint + 1.4, 90);
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(tl.inPoint, 0);
+    op.setValueAtTime(tl.inPoint + 0.9, 100);
+    _txProSmooth(op, 85);
+}
+// 07 — Soft Pop: 92 -> 100 with one gentle overshoot
+function _txPro07_SoftPop() {
+    var tl = _txProTarget("SOFT POP"); if (!tl) return;
+    var sc = tl.property("Transform").property("Scale");
+    var v = sc.value;
+    sc.setValueAtTime(tl.inPoint, [v[0] * 0.92, v[1] * 0.92]);
+    sc.setValueAtTime(tl.inPoint + 0.5, [v[0] * 1.015, v[1] * 1.015]);
+    sc.setValueAtTime(tl.inPoint + 0.78, [v[0], v[1]]);
+    _txProSmooth(sc, 70);
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(tl.inPoint, 0);
+    op.setValueAtTime(tl.inPoint + 0.35, 100);
+    _txProSmooth(op, 80);
+}
+// 08 — Line Slide: slides in from left, buttery stop
+function _txPro08_LineSlide() {
+    var tl = _txProTarget("LINE SLIDE"); if (!tl) return;
+    tl.motionBlur = true;
+    var pos = tl.property("Transform").property("Position");
+    var pv = pos.value;
+    pos.setValueAtTime(tl.inPoint, [pv[0] - 70, pv[1]]);
+    pos.setValueAtTime(tl.inPoint + 0.9, [pv[0], pv[1]]);
+    _txProSmooth(pos, 92);
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(tl.inPoint, 0);
+    op.setValueAtTime(tl.inPoint + 0.5, 100);
+    _txProSmooth(op, 85);
+}
+// 09 — Whisper Blur: full in-and-out breath (fade through blur)
+function _txPro09_WhisperBlur() {
+    var tl = _txProTarget("whisper", 84); if (!tl) return;
+    var a = _txAnim(tl, "Pro Whisper");
+    _txSel(a, 1, 6);
+    var p = a.property("ADBE Text Animator Properties");
+    try {
+        var bl = p.addProperty("ADBE Text Blur");
+        bl.setValueAtTime(tl.inPoint, [20, 20]);
+        bl.setValueAtTime(tl.inPoint + 1.2, [0, 0]);
+        bl.setValueAtTime(tl.outPoint - 0.9, [0, 0]);
+        bl.setValueAtTime(tl.outPoint, [18, 18]);
+        _txProSmooth(bl, 85);
+    } catch (e) {}
+    var op = tl.property("Transform").property("Opacity");
+    op.setValueAtTime(tl.inPoint, 0);
+    op.setValueAtTime(tl.inPoint + 1.1, 100);
+    op.setValueAtTime(tl.outPoint - 0.85, 100);
+    op.setValueAtTime(tl.outPoint, 0);
+    _txProSmooth(op, 80);
+}
+// 10 — Word Tilt: words settle with tiny rotation
+function _txPro10_WordTilt() {
+    var tl = _txProTarget("WORD TILT SETTLE"); if (!tl) return;
+    var a = _txAnim(tl, "Pro Tilt"); var s = _txSel(a, 3, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.2, 85);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Rotation").setValue(-5); } catch (e) {}
+    try { p.addProperty("ADBE Text Position").setValue([0, 30]); } catch (e) {}
+}
+// 11 — Settle Bounce: one restrained landing bounce
+function _txPro11_SettleBounce() {
+    var tl = _txProTarget("SETTLE"); if (!tl) return;
+    var a = _txAnim(tl, "Pro Settle"); var s = _txSel(a, 3, 6);
+    _txReveal(s, tl.inPoint, tl.inPoint + 0.9, 75);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    var sc = tl.property("Transform").property("Scale");
+    var v2 = sc.value;
+    sc.setValueAtTime(tl.inPoint, [v2[0] * 1.06, v2[1] * 1.06]);
+    sc.setValueAtTime(tl.inPoint + 0.55, [v2[0] * 0.995, v2[1] * 0.995]);
+    sc.setValueAtTime(tl.inPoint + 0.85, [v2[0], v2[1]]);
+    _txProSmooth(sc, 65);
+}
+// 12 — Exit Soft: smooth OUT animation (rise + blur + fade away)
+function _txPro12_ExitSoft() {
+    var tl = _txProTarget("EXIT SOFT"); if (!tl) return;
+    var t1 = tl.outPoint, t0 = t1 - 0.75;
+    var pos = tl.property("Transform").property("Position");
+    var pv = pos.valueAtTime(t0, false);
+    pos.setValueAtTime(t0, pv);
+    pos.setValueAtTime(t1, [pv[0], pv[1] - 36]);
+    _txProSmooth(pos, 88);
+    var op = tl.property("Transform").property("Opacity");
+    var ov = op.valueAtTime(t0, false);
+    op.setValueAtTime(t0, ov);
+    op.setValueAtTime(t1, 0);
+    _txProSmooth(op, 80);
+    var a = _txAnim(tl, "Pro Exit");
+    _txSel(a, 1, 6);
+    var p = a.property("ADBE Text Animator Properties");
+    _txProKey(p, "ADBE Text Blur", [0, 0], [16, 16], t0, t1, 85);
+}
+
+function _txProDispatch(cmd) {
+    var m = {
+        txPro01:_txPro01_SoftRise, txPro02:_txPro02_WordCascade, txPro03:_txPro03_FocusIn,
+        txPro04:_txPro04_LineRise, txPro05:_txPro05_CharDrift, txPro06:_txPro06_TrackingAir,
+        txPro07:_txPro07_SoftPop, txPro08:_txPro08_LineSlide, txPro09:_txPro09_WhisperBlur,
+        txPro10:_txPro10_WordTilt, txPro11:_txPro11_SettleBounce, txPro12:_txPro12_ExitSoft
+    };
+    if (m[cmd]) m[cmd]();
+}
+
+// ============================================================
+// CAPTION STUDIO — SRT dan uzbekcha/istalgan tildagi captionlar
+// 3 style: TikTok Bold / Aesthetic Serif / Word Reveal
+// ============================================================
+function _capWrap(s, maxLen) {
+    var lines = s.split('\n');
+    var out = [];
+    for (var li = 0; li < lines.length; li++) {
+        var words = lines[li].split(' ');
+        var cur = '';
+        for (var w = 0; w < words.length; w++) {
+            if (cur.length === 0) cur = words[w];
+            else if ((cur + ' ' + words[w]).length <= maxLen) cur += ' ' + words[w];
+            else { out.push(cur); cur = words[w]; }
+        }
+        if (cur.length) out.push(cur);
+    }
+    return out.join('\r');
+}
+function _capSmoothK(prop, infl) {
+    for (var k = 1; k <= prop.numKeys; k++) {
+        try {
+            prop.setInterpolationTypeAtKey(k, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER);
+            var dims = 1;
+            try { dims = prop.value.length || 1; } catch (e0) { dims = 1; }
+            var ea = [];
+            for (var d = 0; d < dims; d++) ea.push(new KeyframeEase(0, infl == null ? 80 : infl));
+            prop.setTemporalEaseAtKey(k, ea, ea);
+        } catch (e) {}
+    }
+}
+function _capBuild(styleName, srtPath) {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return; }
+    var srtFile = srtPath ? new File(srtPath) : File.openDialog("SRT faylni tanlang", "SRT:*.srt");
+    if (!srtFile || !srtFile.exists) return;
+    var cues = _janeReadSrt(srtFile.fsName);
+    if (!cues.length) { alert("SRT bo'sh yoki o'qilmadi:\n" + srtFile.fsName); return; }
+
+    var maxEnd = 0;
+    for (var q = 0; q < cues.length; q++) if (cues[q].end > maxEnd) maxEnd = cues[q].end;
+    if (comp.duration < maxEnd + 0.5) comp.duration = maxEnd + 0.5;
+
+    var posY = comp.height * 0.78;   // safe zone: yuzdan past, TikTok UI'dan teppa
+    var fs = Math.round(comp.width * 0.054);
+
+    for (var i = 0; i < cues.length; i++) {
+        var c = cues[i];
+        if (c.start >= comp.duration) continue;
+        var tl = comp.layers.addText(_capWrap(c.text, 22));
+        tl.name = "[Cap] " + (i + 1);
+        tl.inPoint = c.start;
+        tl.outPoint = Math.min(c.end, comp.duration);
+        tl.label = 11;
+        var td = tl.property("Source Text").value;
+        td.applyFill = true;
+        td.fillColor = [1, 1, 1];
+        td.justification = ParagraphJustification.CENTER_JUSTIFY;
+
+        if (styleName === "tiktok") {
+            var fT = ["Arial-BoldMT", "SegoeUI-Bold", "ArialMT"];
+            for (var t1 = 0; t1 < fT.length; t1++) { try { td.font = fT[t1]; break; } catch (ef) {} }
+            td.fontSize = fs;
+            td.applyStroke = true;
+            td.strokeColor = [0.02, 0.03, 0.07];
+            td.strokeWidth = Math.max(2.5, Math.round(fs * 0.045));
+            td.strokeOverFill = false;
+            td.tracking = 0;
+        } else if (styleName === "serif") {
+            var fS = ["TimesNewRomanPS-ItalicMT", "Georgia-Italic", "TimesNewRomanPSMT"];
+            for (var t2 = 0; t2 < fS.length; t2++) { try { td.font = fS[t2]; break; } catch (ef2) {} }
+            td.fontSize = Math.round(fs * 0.92);
+            td.applyStroke = false;
+            td.tracking = 40;
+        } else { // reveal
+            var fR = ["SegoeUI-Semibold", "SegoeUI", "ArialMT"];
+            for (var t3 = 0; t3 < fR.length; t3++) { try { td.font = fR[t3]; break; } catch (ef3) {} }
+            td.fontSize = fs;
+            td.applyStroke = false;
+            td.tracking = 0;
+        }
+        tl.property("Source Text").setValue(td);
+        tl.property("Transform").property("Position").setValue([comp.width / 2, posY]);
+
+        // drop shadow (hamma style uchun o'qilish)
+        try {
+            var ds = tl.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+            ds.property("ADBE Drop Shadow-0002").setValue((styleName === "serif" ? 0.75 : 0.6) * 255);
+            ds.property("ADBE Drop Shadow-0004").setValue(4);
+            ds.property("ADBE Drop Shadow-0005").setValue(styleName === "serif" ? 20 : 12);
+        } catch (eds) {}
+
+        var dur = tl.outPoint - tl.inPoint;
+        if (styleName === "tiktok") {
+            // CapCut pop-in
+            var sc = tl.property("Transform").property("Scale");
+            sc.setValueAtTime(c.start, [82, 82]);
+            sc.setValueAtTime(c.start + 0.1, [104, 104]);
+            sc.setValueAtTime(c.start + 0.18, [100, 100]);
+            _capSmoothK(sc, 60);
+        } else if (styleName === "serif") {
+            // soft fade + glow
+            try {
+                var g = tl.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+                g.property(2).setValue(55);
+                g.property(3).setValue(30);
+                g.property(4).setValue(0.7);
+            } catch (eg) {}
+            var op = tl.property("Transform").property("Opacity");
+            op.setValueAtTime(c.start, 0);
+            op.setValueAtTime(c.start + Math.min(0.35, dur * 0.3), 100);
+            op.setValueAtTime(Math.max(tl.outPoint - 0.3, c.start + dur * 0.6), 100);
+            op.setValueAtTime(tl.outPoint, 0);
+            _capSmoothK(op, 75);
+        } else {
+            // word-by-word reveal, birinchi so'z darhol ko'rinadi
+            var words = c.text.replace(/\n/g, ' ').split(' ');
+            var wc = 0;
+            for (var w2 = 0; w2 < words.length; w2++) if (words[w2].length > 0) wc++;
+            if (wc < 1) wc = 1;
+            var an = tl.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");
+            an.name = "Word Reveal";
+            an.property("ADBE Text Animator Properties").addProperty("ADBE Text Opacity").setValue(0);
+            var sel = an.property("ADBE Text Selectors").addProperty("ADBE Text Selector");
+            try { sel.property("ADBE Text Range Advanced").property("ADBE Text Range Type2").setValue(3); } catch (ea2) {}
+            var st = sel.property("ADBE Text Percent Start");
+            st.setValueAtTime(c.start, Math.min(100 / wc + 2, 100));
+            st.setValueAtTime(c.start + Math.min(dur * 0.7, dur - 0.15), 100);
+            try { sel.property("ADBE Text Percent End").setValue(100); } catch (ee2) {}
+        }
+    }
+    return cues.length;
+}
+// ---------- AUTO CAPTION: video ovozidan avtomatik (Whisper AI, lokal) ----------
+var CAP_FFMPEG  = "C:\\Users\\nytvi\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.1.2-full_build\\bin\\ffmpeg.exe";
+var CAP_WHISPER = "C:\\Users\\nytvi\\NytvirTools\\whisper\\Release\\whisper-cli.exe";
+var CAP_MODEL_TURBO = "C:\\Users\\nytvi\\NytvirTools\\whisper\\ggml-large-v3-turbo.bin";
+var CAP_MODEL_SMALL = "C:\\Users\\nytvi\\NytvirTools\\whisper\\ggml-small.bin";
+var CAP_MODEL = (new File(CAP_MODEL_TURBO)).exists ? CAP_MODEL_TURBO : CAP_MODEL_SMALL;
+
+function _capFindSourceVideo(comp) {
+    // selected layer first, else topmost footage layer with audio
+    var cands = [];
+    for (var i = 0; i < comp.selectedLayers.length; i++) cands.push(comp.selectedLayers[i]);
+    for (var li = 1; li <= comp.numLayers; li++) cands.push(comp.layer(li));
+    for (var c = 0; c < cands.length; c++) {
+        var L = cands[c];
+        try {
+            if (L.source && L.source.file && L.hasAudio) return L.source.file.fsName;
+        } catch (e) {}
+    }
+    return null;
+}
+function _capAuto(styleName, lang) {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return; }
+    var src = _capFindSourceVideo(comp);
+    if (!src) { alert("Video topilmadi — audio bor video qatlamni tanlang."); return; }
+    if (!(new File(CAP_WHISPER)).exists) { alert("Whisper o'rnatilmagan:\n" + CAP_WHISPER); return; }
+    if (!(new File(CAP_MODEL)).exists) { alert("Whisper modeli topilmadi:\n" + CAP_MODEL); return; }
+
+    var tmp = Folder.temp.fsName;
+    var wav = tmp + "\\nytvir_cap.wav";
+    var srtBase = tmp + "\\nytvir_cap";
+    var srt = srtBase + ".srt";
+    try { var oldSrt = new File(srt); if (oldSrt.exists) oldSrt.remove(); } catch (e) {}
+
+    // build a .bat (avoids callSystem quoting issues)
+    var bat = new File(tmp + "\\nytvir_cap.bat");
+    bat.encoding = "UTF-8";
+    bat.open("w");
+    bat.writeln('@echo off');
+    bat.writeln('"' + CAP_FFMPEG + '" -y -i "' + src + '" -vn -ar 16000 -ac 1 -c:a pcm_s16le "' + wav + '"');
+    bat.writeln('"' + CAP_WHISPER + '" -m "' + CAP_MODEL + '" -f "' + wav + '" -l ' + (lang || "uz") + ' -osrt -of "' + srtBase + '"');
+    bat.close();
+
+    // synchronous — AE waits while Whisper listens (30-90s odatda)
+    system.callSystem('cmd.exe /c "' + bat.fsName + '"');
+
+    var srtFile = new File(srt);
+    if (!srtFile.exists) { alert("Whisper SRT yozmadi. Video ovozini tekshiring."); return; }
+    var n = _capBuild(styleName, srt);
+    return n;
+}
+
+function _capDispatch(cmd) {
+    if (cmd === "capTikTok") _capBuild("tiktok");
+    else if (cmd === "capSerif") _capBuild("serif");
+    else if (cmd === "capReveal") _capBuild("reveal");
+    else if (cmd === "capAutoTikTok") _capAuto("tiktok", "uz");
+    else if (cmd === "capAutoSerif") _capAuto("serif", "uz");
+    else if (cmd === "capAutoReveal") _capAuto("reveal", "uz");
+    else if (cmd === "capAutoRu") _capAuto("tiktok", "ru");
 }
 
 // ----------------------------------------------------
