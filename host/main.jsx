@@ -8716,10 +8716,11 @@ function _capBuild(styleName, srtPath, posMode, sizeMul) {
                 advR.property("ADBE Text Range Shape").setValue(2);        // Shape: Ramp Up
                 advR.property("ADBE Text Levels Max Ease").setValue(-50);  // Ease High
                 advR.property("ADBE Text Levels Min Ease").setValue(100);  // Ease Low
-                var off = advR.property("ADBE Text Percent Offset");
-                off.setValueAtTime(c.start, -100);
-                off.setValueAtTime(c.start + Math.min(dur * 0.65, 1.2), 100);
             } catch (ear) {}
+            // Offset selektorning o'zida (Advanced ichida EMAS)
+            var offR = selR.property("ADBE Text Percent Offset");
+            offR.setValueAtTime(c.start, -100);
+            offR.setValueAtTime(c.start + Math.min(dur * 0.65, 1.2), 100);
         } else {
             // word-by-word reveal, birinchi so'z darhol ko'rinadi
             var words = c.text.replace(/\n/g, ' ').split(' ');
