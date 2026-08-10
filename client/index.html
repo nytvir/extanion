@@ -120,6 +120,11 @@ input[type=color] { width: 100%; height: 36px; border: none; background: transpa
 .pv-reveal span:nth-child(2) { animation-delay: .5s; }
 .pv-reveal span:nth-child(3) { animation-delay: 1s; }
 @keyframes capWord { 0% { opacity: .12; } 15%, 80% { opacity: 1; } 95%, 100% { opacity: .12; } }
+.pv-ramp { font-family: Inter, sans-serif; font-weight: 700; font-size: 12px; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.8); }
+.pv-ramp span { display: inline-block; opacity: 0; animation: capRamp 3s infinite; }
+.pv-ramp span:nth-child(2) { animation-delay: .35s; }
+.pv-ramp span:nth-child(3) { animation-delay: .7s; }
+@keyframes capRamp { 0% { opacity: 0; transform: translateY(12px); } 20%, 78% { opacity: 1; transform: translateY(0); } 92%, 100% { opacity: 0; transform: translateY(12px); } }
 .cap-opts { display: flex; gap: 8px; }
 .cap-opt-col { flex: 1; }
 .cap-chips { display: flex; gap: 5px; }
@@ -493,6 +498,10 @@ function renderCaptionStudio(c) {
         '<div class="cap-style" data-capstyle="reveal">' +
           '<div class="cap-prev"><div class="pv-reveal"><span>salom</span> <span>salom</span> <span>bro</span></div></div>' +
           '<div class="cap-style-info"><div class="cap-style-name">Word Reveal</div><div class="cap-style-desc">So\'zma-so\'z ochiladi — viral uslub</div></div>' +
+        '</div>' +
+        '<div class="cap-style" data-capstyle="ramp">' +
+          '<div class="cap-prev"><div class="pv-ramp"><span>salom</span> <span>salom</span> <span>bro</span></div></div>' +
+          '<div class="cap-style-info"><div class="cap-style-name">Word Ramp 🔥</div><div class="cap-style-desc">So\'zlar pastdan suzib chiqadi — trend</div></div>' +
         '</div>' +
       '</div></div>' +
 

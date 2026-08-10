@@ -8701,6 +8701,25 @@ function _capBuild(styleName, srtPath, posMode, sizeMul) {
             op.setValueAtTime(Math.max(tl.outPoint - 0.3, c.start + dur * 0.6), 100);
             op.setValueAtTime(tl.outPoint, 0);
             _capSmoothK(op, 75);
+        } else if (styleName === "ramp") {
+            // Marketing Demons "Word Ramp": so'zlar pastdan ko'tarilib fade bo'ladi
+            // Animator: Opacity 0 + Position +100; Selector: Words, Ramp Up, EaseHi -50, EaseLo 100; Offset -100 -> 100
+            var anR = tl.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");
+            anR.name = "Word Ramp";
+            var pR = anR.property("ADBE Text Animator Properties");
+            pR.addProperty("ADBE Text Opacity").setValue(0);
+            try { pR.addProperty("ADBE Text Position").setValue([0, 100]); } catch (epr) {}
+            var selR = anR.property("ADBE Text Selectors").addProperty("ADBE Text Selector");
+            try {
+                var advR = selR.property("ADBE Text Range Advanced");
+                advR.property("ADBE Text Range Type2").setValue(3);        // Based On: Words
+                advR.property("ADBE Text Range Shape").setValue(2);        // Shape: Ramp Up
+                advR.property("ADBE Text Levels Max Ease").setValue(-50);  // Ease High
+                advR.property("ADBE Text Levels Min Ease").setValue(100);  // Ease Low
+                var off = advR.property("ADBE Text Percent Offset");
+                off.setValueAtTime(c.start, -100);
+                off.setValueAtTime(c.start + Math.min(dur * 0.65, 1.2), 100);
+            } catch (ear) {}
         } else {
             // word-by-word reveal, birinchi so'z darhol ko'rinadi
             var words = c.text.replace(/\n/g, ' ').split(' ');
