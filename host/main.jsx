@@ -8615,7 +8615,7 @@ function _capSmoothK(prop, infl) {
         } catch (e) {}
     }
 }
-function _capBuild(styleName, srtPath) {
+function _capBuild(styleName, srtPath, posMode, sizeMul) {
     var comp = app.project.activeItem;
     if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return; }
     var srtFile = srtPath ? new File(srtPath) : File.openDialog("SRT faylni tanlang", "SRT:*.srt");
@@ -8627,8 +8627,11 @@ function _capBuild(styleName, srtPath) {
     for (var q = 0; q < cues.length; q++) if (cues[q].end > maxEnd) maxEnd = cues[q].end;
     if (comp.duration < maxEnd + 0.5) comp.duration = maxEnd + 0.5;
 
-    var posY = comp.height * 0.78;   // safe zone: yuzdan past, TikTok UI'dan teppa
-    var fs = Math.round(comp.width * 0.054);
+    var posFactor = 0.78;                              // default: past (safe zone)
+    if (posMode === "center") posFactor = 0.5;
+    else if (posMode === "top") posFactor = 0.22;
+    var posY = comp.height * posFactor;
+    var fs = Math.round(comp.width * 0.054 * (sizeMul || 1));
 
     for (var i = 0; i < cues.length; i++) {
         var c = cues[i];
@@ -8737,7 +8740,7 @@ function _capFindSourceVideo(comp) {
     }
     return null;
 }
-function _capAuto(styleName, lang) {
+function _capAuto(styleName, lang, posMode, sizeMul) {
     var comp = app.project.activeItem;
     if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return; }
     var src = _capFindSourceVideo(comp);
@@ -8757,7 +8760,16 @@ function _capAuto(styleName, lang) {
     bat.open("w");
     bat.writeln('@echo off');
     bat.writeln('"' + CAP_FFMPEG + '" -y -i "' + src + '" -vn -ar 16000 -ac 1 -c:a pcm_s16le "' + wav + '"');
-    bat.writeln('"' + CAP_WHISPER + '" -m "' + CAP_MODEL + '" -f "' + wav + '" -l ' + (lang || "uz") + ' -osrt -of "' + srtBase + '"');
+    // orfografiya prompti: Whisper'ni to'g'ri lotin-o'zbek imlosiga yo'naltiradi ("ə" harflarini kamaytiradi)
+    var promptTxt = "";
+    if ((lang || "uz") === "uz") {
+        promptTxt = "Assalomu alaykum do'stlar, bugun sizlarga bozor va treyding strategiyasi haqida gapirib beraman. Balansdan bir foiz yoki nol butun besh foiz ishlatish kerak, chunki foyda va zarar har doim bo'ladi, eng zo'r strategiya shu.";
+    } else if (lang === "ru") {
+        promptTxt = "Привет, ребята, сегодня расскажу про рынок и стратегию трейдинга, проценты и прибыль.";
+    }
+    var promptArg = promptTxt ? ' --prompt "' + promptTxt + '"' : '';
+    // -sow -ml 38: so'z chegarasida qisqa segmentlar — har caption gapirish paytiga mos tushadi
+    bat.writeln('"' + CAP_WHISPER + '" -m "' + CAP_MODEL + '" -f "' + wav + '" -l ' + (lang || "uz") + promptArg + ' -sow -ml 38 -osrt -of "' + srtBase + '"');
     bat.close();
 
     // synchronous — AE waits while Whisper listens (30-90s odatda)
@@ -8765,8 +8777,30 @@ function _capAuto(styleName, lang) {
 
     var srtFile = new File(srt);
     if (!srtFile.exists) { alert("Whisper SRT yozmadi. Video ovozini tekshiring."); return; }
-    var n = _capBuild(styleName, srt);
+    var n = _capBuild(styleName, srt, posMode, sizeMul);
     return n;
+}
+
+// Panel'dan to'g'ridan-to'g'ri chaqiriladi (Caption Studio UI)
+function nytvir_capRun(autoFlag, style, lang, posMode, sizeMul) {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) return "Avval kompozitsiya oching!";
+    try { if (app.project.expressionEngine !== "javascript-1.0") app.project.expressionEngine = "javascript-1.0"; } catch (e) {}
+    app.beginUndoGroup("Nytvir Caption Studio");
+    var n = null;
+    try {
+        if (autoFlag === "1" || autoFlag === 1 || autoFlag === true) {
+            n = _capAuto(style, lang, posMode, parseFloat(sizeMul) || 1);
+        } else {
+            n = _capBuild(style, null, posMode, parseFloat(sizeMul) || 1);
+        }
+        app.endUndoGroup();
+        if (n) return "OK:" + n;
+        return "Bekor qilindi yoki caption chiqmadi";
+    } catch (err) {
+        app.endUndoGroup();
+        return "Xato: " + err.toString();
+    }
 }
 
 function _capDispatch(cmd) {

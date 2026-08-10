@@ -96,6 +96,41 @@ input[type=color] { width: 100%; height: 36px; border: none; background: transpa
 
 /* FOOTER VERSION */
 .foot { text-align: center; font-size: 8px; color: var(--muted); padding: 16px 0 4px; letter-spacing: 1px; }
+
+/* CAPTION STUDIO */
+.cap-wrap { display: flex; flex-direction: column; gap: 12px; }
+.cap-block { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 13px; }
+.cap-label { font-size: 9px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 9px; }
+.cap-langs { display: flex; gap: 8px; }
+.cap-lang { flex: 1; text-align: center; padding: 9px 0; border: 1.5px solid var(--border); border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--muted); transition: all .15s; }
+.cap-lang.on { border-color: var(--accent); color: #fff; background: rgba(124,92,252,.14); }
+.cap-styles { display: flex; flex-direction: column; gap: 8px; }
+.cap-style { display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--border); border-radius: 9px; padding: 8px; cursor: pointer; transition: all .15s; background: var(--bg); }
+.cap-style.on { border-color: var(--accent); background: rgba(124,92,252,.1); }
+.cap-prev { width: 108px; height: 52px; border-radius: 6px; background: #08080c; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; }
+.cap-style-info { min-width: 0; }
+.cap-style-name { font-size: 11.5px; font-weight: 700; color: #fff; }
+.cap-style-desc { font-size: 9px; color: var(--muted); margin-top: 2px; }
+@keyframes capPop { 0%,12% { transform: scale(.6); opacity: 0; } 22% { transform: scale(1.07); opacity: 1; } 30%, 78% { transform: scale(1); opacity: 1; } 90%, 100% { transform: scale(1); opacity: 0; } }
+.pv-tiktok { font-family: Inter, sans-serif; font-weight: 800; font-size: 13px; color: #fff; -webkit-text-stroke: .6px #05070f; text-shadow: 0 2px 5px rgba(0,0,0,.8); animation: capPop 2.6s infinite; }
+@keyframes capSerif { 0% { opacity: 0; filter: blur(5px); letter-spacing: 1px; } 35%, 75% { opacity: 1; filter: blur(0); letter-spacing: 2.5px; } 100% { opacity: 0; filter: blur(4px); } }
+.pv-serif { font-family: Georgia, serif; font-style: italic; font-size: 12.5px; color: #fff; text-shadow: 0 0 9px rgba(255,255,255,.8); animation: capSerif 3.2s infinite; }
+.pv-reveal { font-family: Inter, sans-serif; font-weight: 600; font-size: 12px; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.8); }
+.pv-reveal span { opacity: .12; animation: capWord 3s infinite; }
+.pv-reveal span:nth-child(2) { animation-delay: .5s; }
+.pv-reveal span:nth-child(3) { animation-delay: 1s; }
+@keyframes capWord { 0% { opacity: .12; } 15%, 80% { opacity: 1; } 95%, 100% { opacity: .12; } }
+.cap-opts { display: flex; gap: 8px; }
+.cap-opt-col { flex: 1; }
+.cap-chips { display: flex; gap: 5px; }
+.cap-chip { flex: 1; text-align: center; padding: 7px 0; border: 1.5px solid var(--border); border-radius: 7px; font-size: 10px; font-weight: 700; cursor: pointer; color: var(--muted); transition: all .15s; }
+.cap-chip.on { border-color: var(--accent); color: #fff; background: rgba(124,92,252,.14); }
+.cap-run { width: 100%; border: none; border-radius: 10px; padding: 14px 0; font-family: inherit; font-size: 13px; font-weight: 800; letter-spacing: .5px; cursor: pointer; color: #fff; background: linear-gradient(135deg, #7c5cfc, #fc5c7d); transition: transform .12s, opacity .2s; }
+.cap-run:hover { transform: translateY(-1px); }
+.cap-run:disabled { opacity: .55; cursor: wait; transform: none; }
+.cap-srt { width: 100%; border: 1.5px solid var(--border); background: transparent; border-radius: 10px; padding: 10px 0; font-family: inherit; font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; margin-top: 8px; transition: all .15s; }
+.cap-srt:hover { border-color: var(--accent); color: #fff; }
+.cap-note { font-size: 9px; color: var(--muted); line-height: 1.5; margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -107,6 +142,7 @@ input[type=color] { width: 100%; height: 36px; border: none; background: transpa
   <div class="nav" data-tab="trans"><div class="ic">🎬</div><div class="lb">Trans</div></div>
   <div class="nav" data-tab="shapes"><div class="ic">🔮</div><div class="lb">Shape</div></div>
   <div class="nav" data-tab="ui"><div class="ic">🪟</div><div class="lb">UI</div></div>
+  <div class="nav" data-tab="caption"><div class="ic">🎙️</div><div class="lb">Caption</div></div>
   <div class="nav" data-tab="jflow"><div class="ic">📈</div><div class="lb">Graph</div></div>
   <div class="nav" data-tab="vfx"><div class="ic">✨</div><div class="lb">VFX</div></div>
   <div class="sep"></div>
@@ -136,6 +172,7 @@ var TAB_TITLES = {
   ui: 'UI Animations',
   jflow: 'Graph Easing — Jerry Flow',
   vfx: 'Optical VFX',
+  caption: '🎙️ Caption Studio — Auto o\'zbekcha',
   edit: 'Layer Editor'
 };
 
@@ -409,6 +446,11 @@ function renderTab(tab) {
     return;
   }
 
+  if (tab === 'caption') {
+    renderCaptionStudio(c);
+    return;
+  }
+
   if (tab === 'favs') {
     var favs = FX.filter(function(e) { return isFav(e.id); });
     if (!favs.length) {
@@ -423,6 +465,106 @@ function renderTab(tab) {
 
   var items = FX.filter(function(e) { return e.tab === tab; });
   c.innerHTML = renderCards(items, false) + '<div class="foot">NYTVIR MOTION v2.0</div>';
+}
+
+// ======================= CAPTION STUDIO =======================
+var capState = { lang: 'uz', style: 'reveal', pos: 'bottom', size: '1' };
+
+function renderCaptionStudio(c) {
+  c.innerHTML =
+    '<div class="cap-wrap">' +
+
+    '<div class="cap-block"><div class="cap-label">Til</div>' +
+      '<div class="cap-langs">' +
+        '<div class="cap-lang" data-caplang="uz">🇺🇿 O\'zbekcha</div>' +
+        '<div class="cap-lang" data-caplang="ru">🇷🇺 Ruscha</div>' +
+      '</div></div>' +
+
+    '<div class="cap-block"><div class="cap-label">Style — preview jonli</div>' +
+      '<div class="cap-styles">' +
+        '<div class="cap-style" data-capstyle="tiktok">' +
+          '<div class="cap-prev"><div class="pv-tiktok">SALOM BRO</div></div>' +
+          '<div class="cap-style-info"><div class="cap-style-name">TikTok Bold</div><div class="cap-style-desc">Oq bold + kontur + pop-in zarba</div></div>' +
+        '</div>' +
+        '<div class="cap-style" data-capstyle="serif">' +
+          '<div class="cap-prev"><div class="pv-serif">salom bro</div></div>' +
+          '<div class="cap-style-info"><div class="cap-style-name">Aesthetic Serif</div><div class="cap-style-desc">Italik + glow + yumshoq fade</div></div>' +
+        '</div>' +
+        '<div class="cap-style" data-capstyle="reveal">' +
+          '<div class="cap-prev"><div class="pv-reveal"><span>salom</span> <span>salom</span> <span>bro</span></div></div>' +
+          '<div class="cap-style-info"><div class="cap-style-name">Word Reveal</div><div class="cap-style-desc">So\'zma-so\'z ochiladi — viral uslub</div></div>' +
+        '</div>' +
+      '</div></div>' +
+
+    '<div class="cap-block"><div class="cap-opts">' +
+      '<div class="cap-opt-col"><div class="cap-label">Joylashuv</div>' +
+        '<div class="cap-chips">' +
+          '<div class="cap-chip" data-cappos="bottom">Past</div>' +
+          '<div class="cap-chip" data-cappos="center">Markaz</div>' +
+          '<div class="cap-chip" data-cappos="top">Tepa</div>' +
+        '</div></div>' +
+      '<div class="cap-opt-col"><div class="cap-label">O\'lcham</div>' +
+        '<div class="cap-chips">' +
+          '<div class="cap-chip" data-capsize="0.8">S</div>' +
+          '<div class="cap-chip" data-capsize="1">M</div>' +
+          '<div class="cap-chip" data-capsize="1.25">L</div>' +
+        '</div></div>' +
+    '</div></div>' +
+
+    '<button class="cap-run" id="cap-run">🎙️ AUTO CAPTION — videoni eshit</button>' +
+    '<button class="cap-srt" id="cap-srt">📄 Tayyor SRT fayldan</button>' +
+    '<div class="cap-note">Auto rejim: tanlangan video qatlam ovozini Whisper AI eshitadi (lokal, 30–90s) va tanlangan style\'da caption qo\'yadi. Matnda xato bo\'lsa — SRT\'ni tuzatib "SRT fayldan" bilan qayta qo\'llang.</div>' +
+    '<div class="foot">NYTVIR MOTION v2.2 — CAPTION STUDIO</div>' +
+    '</div>';
+
+  syncCapUI();
+
+  c.querySelectorAll('[data-caplang]').forEach(function(el) {
+    el.addEventListener('click', function() { capState.lang = el.getAttribute('data-caplang'); syncCapUI(); });
+  });
+  c.querySelectorAll('[data-capstyle]').forEach(function(el) {
+    el.addEventListener('click', function() { capState.style = el.getAttribute('data-capstyle'); syncCapUI(); });
+  });
+  c.querySelectorAll('[data-cappos]').forEach(function(el) {
+    el.addEventListener('click', function() { capState.pos = el.getAttribute('data-cappos'); syncCapUI(); });
+  });
+  c.querySelectorAll('[data-capsize]').forEach(function(el) {
+    el.addEventListener('click', function() { capState.size = el.getAttribute('data-capsize'); syncCapUI(); });
+  });
+  document.getElementById('cap-run').addEventListener('click', function() { runCaption(true); });
+  document.getElementById('cap-srt').addEventListener('click', function() { runCaption(false); });
+}
+
+function syncCapUI() {
+  document.querySelectorAll('[data-caplang]').forEach(function(el) { el.classList.toggle('on', el.getAttribute('data-caplang') === capState.lang); });
+  document.querySelectorAll('[data-capstyle]').forEach(function(el) { el.classList.toggle('on', el.getAttribute('data-capstyle') === capState.style); });
+  document.querySelectorAll('[data-cappos]').forEach(function(el) { el.classList.toggle('on', el.getAttribute('data-cappos') === capState.pos); });
+  document.querySelectorAll('[data-capsize]').forEach(function(el) { el.classList.toggle('on', el.getAttribute('data-capsize') === capState.size); });
+}
+
+function runCaption(auto) {
+  if (!cs) { setStatus('⚠️ Faqat After Effects ichida ishlaydi!', '#e74c3c', 4000); return; }
+  var btn = document.getElementById('cap-run');
+  var btnSrt = document.getElementById('cap-srt');
+  if (btn) btn.disabled = true;
+  if (btnSrt) btnSrt.disabled = true;
+  if (auto) {
+    if (btn) btn.innerText = '🎧 Whisper eshitmoqda... (30–90s)';
+    setStatus('🎙️ Audio ajratilmoqda → Whisper eshitmoqda... AE biroz qotib turadi, normal.', '#e67e22');
+  } else {
+    setStatus('📄 SRT tanlang...', '#e67e22');
+  }
+  var call = 'nytvir_capRun("' + (auto ? '1' : '0') + '","' + capState.style + '","' + capState.lang + '","' + capState.pos + '","' + capState.size + '")';
+  cs.evalScript(call, function(res) {
+    if (btn) { btn.disabled = false; btn.innerText = '🎙️ AUTO CAPTION — videoni eshit'; }
+    if (btnSrt) btnSrt.disabled = false;
+    res = res || '';
+    if (res.indexOf('OK:') === 0) {
+      setStatus('✅ ' + res.substring(3) + ' ta caption qo\'yildi!', '#2ecc71', 6000);
+    } else {
+      setStatus('❌ ' + res, '#e74c3c', 7000);
+    }
+  });
 }
 
 function renderSearch(q) {
