@@ -76,6 +76,9 @@ function nytvir_execute(cmd) {
         else if (cmd === "glowStat") { _glowStat("blue"); }
         else if (cmd === "glowStatPurple") { _glowStat("purple"); }
         else if (cmd === "glowStatGreen") { _glowStat("green"); }
+        else if (cmd === "glowPeak") { _glowPeak("blue"); }
+        else if (cmd === "glowPeakPurple") { _glowPeak("purple"); }
+        else if (cmd === "glowPeakGreen") { _glowPeak("green"); }
         else if (cmd === "glowRing") { _glowRing("blue"); }
         else if (cmd === "glowRingPurple") { _glowRing("purple"); }
         else if (cmd === "glowRingGreen") { _glowRing("green"); }
@@ -4516,6 +4519,274 @@ function _glowCtext(comp, ctrl, str, fs, col, bold, dur){
     tl.property("ADBE Transform Group").property("ADBE Anchor Point").expression =
         "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
     return tl;
+}
+
+// --- GLOW PEAK: dashboard stat card, glowing peak line + pulsing dot + count-up number
+function _glowPeak(colorName) {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return; }
+
+    var COLORS = {
+        blue:   [0.298, 0.553, 1.0],
+        purple: [0.608, 0.420, 1.0],
+        green:  [0.180, 0.827, 0.478]
+    };
+    var tint = COLORS[colorName] || COLORS.blue;
+    var W = 480, H = 600;
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var tIn = comp.time, dur = 3.2;
+
+    // container null so the whole card moves as one unit
+    var root = comp.layers.addNull(dur);
+    root.name = "[GlowPeak] Root";
+    root.property("Transform").property("Position").setValue([cx, cy]);
+    root.inPoint = tIn; root.outPoint = tIn + dur;
+
+    // 1) panel background — vector rounded rect with radial tint
+    var panel = comp.layers.addShape();
+    panel.name = "[GlowPeak] Panel";
+    panel.parent = root;
+    panel.property("Transform").property("Position").setValue([0, 0]);
+    panel.inPoint = tIn; panel.outPoint = tIn + dur;
+    var pg = panel.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var pc = pg.property("ADBE Vectors Group");
+    var prect = pc.addProperty("ADBE Vector Shape - Rect");
+    prect.property("ADBE Vector Rect Size").setValue([W, H]);
+    prect.property("ADBE Vector Rect Position").setValue([0, 0]);
+    prect.property("ADBE Vector Rect Roundness").setValue(22);
+    var pfill = pc.addProperty("ADBE Vector Graphic - Fill");
+    pfill.property("ADBE Vector Fill Color").setValue([0.047, 0.078, 0.141]);
+    try {
+        var grad = panel.property("ADBE Effect Parade").addProperty("ADBE Ramp");
+        grad.property("Start Color").setValue([tint[0]*0.35, tint[1]*0.35, tint[2]*0.35]);
+        grad.property("End Color").setValue([0.031, 0.047, 0.086]);
+        grad.property("Start of Ramp").setValue([W/2, H*1.05]);
+        grad.property("End of Ramp").setValue([W/2, H*0.35]);
+        grad.property("Ramp Shape").setValue(2);
+        grad.property("Blend With Original").setValue(45);
+    } catch (e2) {}
+
+    // grid overlay, masked to the same rounded-rect shape
+    var gridLines = comp.layers.addShape();
+    gridLines.name = "[GlowPeak] Grid";
+    gridLines.parent = root;
+    gridLines.property("Transform").property("Position").setValue([0, 0]);
+    gridLines.property("Transform").property("Opacity").setValue(28);
+    gridLines.inPoint = tIn; gridLines.outPoint = tIn + dur;
+    var glg = gridLines.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var glc = glg.property("ADBE Vectors Group");
+    var step = 30;
+    for (var gx = -Math.floor(W/2/step)*step; gx <= W/2; gx += step) {
+        var vsh = new Shape();
+        vsh.vertices = [[gx, -H/2], [gx, H/2]];
+        vsh.closed = false;
+        glc.addProperty("ADBE Vector Shape - Group").property("ADBE Vector Shape").setValue(vsh);
+    }
+    for (var gy = -H/2; gy <= H/2; gy += step) {
+        var hsh = new Shape();
+        hsh.vertices = [[-W/2, gy], [W/2, gy]];
+        hsh.closed = false;
+        glc.addProperty("ADBE Vector Shape - Group").property("ADBE Vector Shape").setValue(hsh);
+    }
+    var gstroke = glc.addProperty("ADBE Vector Graphic - Stroke");
+    gstroke.property("ADBE Vector Stroke Color").setValue([0.09, 0.125, 0.20]);
+    gstroke.property("ADBE Vector Stroke Width").setValue(1);
+    try {
+        var gm2 = gridLines.property("ADBE Mask Parade").addProperty("ADBE Mask Atom");
+        var gs2 = new Shape();
+        var hw2 = W/2, hh2 = H/2, r2 = 22;
+        gs2.vertices = [[-hw2+r2,-hh2],[hw2-r2,-hh2],[hw2,-hh2+r2],[hw2,hh2-r2],[hw2-r2,hh2],[-hw2+r2,hh2],[-hw2,hh2-r2],[-hw2,-hh2+r2]];
+        gs2.inTangents = [[-r2*0.55,0],[0,0],[0,-r2*0.55],[0,0],[r2*0.55,0],[0,0],[0,r2*0.55],[0,0]];
+        gs2.outTangents = [[0,0],[r2*0.55,0],[0,0],[0,r2*0.55],[0,0],[-r2*0.55,0],[0,0],[0,-r2*0.55]];
+        gs2.closed = true;
+        gm2.property("ADBE Mask Shape").setValue(gs2);
+    } catch (e6) {}
+
+    // 2) top row: eyebrow label + "Bu oy" pill
+    var eyebrow = comp.layers.addText("WIN RATE");
+    eyebrow.parent = root;
+    eyebrow.inPoint = tIn; eyebrow.outPoint = tIn + dur;
+    var eyeDoc = eyebrow.property("Source Text").value;
+    eyeDoc.fontSize = 16;
+    eyeDoc.fillColor = [0.455, 0.506, 0.627];
+    eyeDoc.tracking = 180;
+    try { eyeDoc.font = "ArialMT"; } catch (e) {}
+    eyebrow.property("Source Text").setValue(eyeDoc);
+    eyebrow.property("Transform").property("Position").setValue([-W/2 + 26, -H/2 + 42]);
+    eyebrow.property("Transform").property("Anchor Point").setValue([0, 0]);
+
+    var pillW = 92, pillH = 30;
+    var pill = comp.layers.addSolid([0.047, 0.078, 0.141], "[GlowPeak] Pill", pillW, pillH, comp.pixelAspect, dur);
+    pill.parent = root;
+    pill.inPoint = tIn; pill.outPoint = tIn + dur;
+    pill.property("Transform").property("Position").setValue([W/2 - 26 - pillW/2, -H/2 + 40]);
+    try {
+        var pr = pill.property("ADBE Effect Parade").addProperty("ADBE Round Corners");
+        pr.property(1).setValue(15);
+    } catch (e) {}
+    try {
+        var pstroke = pill.property("ADBE Effect Parade").addProperty("ADBE Stroke");
+        pstroke.property("Color").setValue([0.106, 0.141, 0.212]);
+        pstroke.property("Brush Size").setValue(2);
+        pstroke.property("All Masks").setValue(1);
+    } catch (e) {}
+    var pillTxt = comp.layers.addText("Bu oy");
+    pillTxt.parent = root;
+    pillTxt.inPoint = tIn; pillTxt.outPoint = tIn + dur;
+    var ptd = pillTxt.property("Source Text").value;
+    ptd.fontSize = 15;
+    ptd.fillColor = [0.455, 0.506, 0.627];
+    ptd.justification = ParagraphJustification.CENTER_JUSTIFY;
+    try { ptd.font = "ArialMT"; } catch (e) {}
+    pillTxt.property("Source Text").setValue(ptd);
+    pillTxt.property("Transform").property("Position").setValue([W/2 - 26 - pillW/2, -H/2 + 40 + 5]);
+
+    // 3) the peak line — drawn with a shape layer + trim paths for a genuine draw-on
+    var chartW = 380, chartH = 190;
+    var chartCx = 0, chartCy = -H/2 + 210;
+    var lineLayer = comp.layers.addShape();
+    lineLayer.name = "[GlowPeak] Line";
+    lineLayer.parent = root;
+    lineLayer.inPoint = tIn; lineLayer.outPoint = tIn + dur;
+    lineLayer.property("Transform").property("Position").setValue([chartCx - chartW/2, chartCy - chartH/2]);
+    var lg = lineLayer.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var lc = lg.property("ADBE Vectors Group");
+    var pathProp = lc.addProperty("ADBE Vector Shape - Group");
+    var sh = new Shape();
+    sh.vertices = [[8,142],[96,88],[138,20],[180,88],[292,142]];
+    sh.inTangents  = [[0,0],[-24,4],[-14,-30],[14,-30],[24,4]];
+    sh.outTangents = [[24,4],[14,-30],[-14,-30],[-24,4],[0,0]];
+    sh.closed = false;
+    pathProp.property("ADBE Vector Shape").setValue(sh);
+    var strokeFx = lc.addProperty("ADBE Vector Graphic - Stroke");
+    strokeFx.property("ADBE Vector Stroke Color").setValue(tint);
+    strokeFx.property("ADBE Vector Stroke Width").setValue(6);
+    strokeFx.property("ADBE Vector Stroke Line Cap").setValue(2);
+    strokeFx.property("ADBE Vector Stroke Line Join").setValue(2);
+    var trim = lc.addProperty("ADBE Vector Filter - Trim");
+    trim.property("ADBE Vector Trim End").setValue(0);
+    trim.property("ADBE Vector Trim End").setValueAtTime(tIn + 0.15, 0);
+    trim.property("ADBE Vector Trim End").setValueAtTime(tIn + 1.1, 100);
+    for (var k = 1; k <= trim.property("ADBE Vector Trim End").numKeys; k++) {
+        try {
+            trim.property("ADBE Vector Trim End").setInterpolationTypeAtKey(k, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER);
+            var ea = [new KeyframeEase(0, 80)];
+            trim.property("ADBE Vector Trim End").setTemporalEaseAtKey(k, ea, ea);
+        } catch (e) {}
+    }
+    try {
+        var lglow = lineLayer.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+        lglow.property(2).setValue(35);
+        lglow.property(3).setValue(28);
+        lglow.property(4).setValue(1.4);
+    } catch (e) {}
+
+    // 4) glow dot at the peak, pulsing, appears once the line reaches it
+    var dot = comp.layers.addShape();
+    dot.name = "[GlowPeak] Dot";
+    dot.parent = root;
+    dot.inPoint = tIn; dot.outPoint = tIn + dur;
+    var dotPos = [chartCx - chartW/2 + 138, chartCy - chartH/2 + 20];
+    dot.property("Transform").property("Position").setValue(dotPos);
+    var dg = dot.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var dc = dg.property("ADBE Vectors Group");
+    var ell = dc.addProperty("ADBE Vector Shape - Ellipse");
+    ell.property("ADBE Vector Ellipse Size").setValue([20, 20]);
+    var dfill = dc.addProperty("ADBE Vector Graphic - Fill");
+    dfill.property("ADBE Vector Fill Color").setValue(tint);
+    try {
+        var dglow = dot.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+        dglow.property(2).setValue(25);
+        dglow.property(3).setValue(35);
+        dglow.property(4).setValue(2.0);
+    } catch (e) {}
+    var dotScale = dot.property("Transform").property("Scale");
+    dotScale.setValueAtTime(tIn, [0, 0]);
+    dotScale.setValueAtTime(tIn + 1.1, [0, 0]);
+    dotScale.setValueAtTime(tIn + 1.3, [115, 115]);
+    dotScale.setValueAtTime(tIn + 1.45, [100, 100]);
+    dotScale.setValueAtTime(tIn + 1.9, [130, 130]);
+    dotScale.setValueAtTime(tIn + 2.4, [100, 100]);
+    dotScale.setValueAtTime(tIn + 2.9, [130, 130]);
+    for (var dk = 3; dk <= dotScale.numKeys; dk++) {
+        try {
+            dotScale.setInterpolationTypeAtKey(dk, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER);
+            var de = [new KeyframeEase(0, 60), new KeyframeEase(0, 60)];
+            dotScale.setTemporalEaseAtKey(dk, de, de);
+        } catch (e) {}
+    }
+
+    // 5) bottom text block: metric label, big count-up number, delta, footer
+    var label = comp.layers.addText("G'olib treydlar ulushi");
+    label.parent = root;
+    label.inPoint = tIn; label.outPoint = tIn + dur;
+    var ld = label.property("Source Text").value;
+    ld.fontSize = 17;
+    ld.fillColor = [0.455, 0.506, 0.627];
+    try { ld.font = "ArialMT"; } catch (e) {}
+    label.property("Source Text").setValue(ld);
+    label.property("Transform").property("Position").setValue([-W/2 + 26, H/2 - 138]);
+    label.property("Transform").property("Anchor Point").setValue([0, 0]);
+
+    var numLayer = comp.layers.addText("0%");
+    numLayer.parent = root;
+    numLayer.inPoint = tIn; numLayer.outPoint = tIn + dur;
+    var nd = numLayer.property("Source Text").value;
+    nd.fontSize = 64;
+    nd.fillColor = [0.933, 0.949, 0.984];
+    try { nd.font = "Arial-BoldMT"; } catch (e) {}
+    numLayer.property("Source Text").setValue(nd);
+    numLayer.property("Transform").property("Position").setValue([-W/2 + 26, H/2 - 66]);
+    numLayer.property("Transform").property("Anchor Point").setValue([0, 0]);
+    try {
+        numLayer.property("Source Text").expression =
+            "n = Math.round(linear(time, " + (tIn + 0.3) + ", " + (tIn + 1.9) + ", 0, 87));\n" +
+            "n + \"%\";";
+    } catch (e) {}
+
+    var delta = comp.layers.addText("↑ 12%");
+    delta.parent = root;
+    delta.inPoint = tIn; delta.outPoint = tIn + dur;
+    var dtd = delta.property("Source Text").value;
+    dtd.fontSize = 20;
+    dtd.fillColor = [0.180, 0.827, 0.478];
+    try { dtd.font = "Arial-BoldMT"; } catch (e) {}
+    delta.property("Source Text").setValue(dtd);
+    delta.property("Transform").property("Position").setValue([-W/2 + 220, H/2 - 76]);
+    delta.property("Transform").property("Anchor Point").setValue([0, 0]);
+    var deltaOp = delta.property("Transform").property("Opacity");
+    deltaOp.setValueAtTime(tIn, 0);
+    deltaOp.setValueAtTime(tIn + 1.9, 0);
+    deltaOp.setValueAtTime(tIn + 2.15, 100);
+
+    var foot = comp.layers.addText("O'tgan oyga nisbatan");
+    foot.parent = root;
+    foot.inPoint = tIn; foot.outPoint = tIn + dur;
+    var ftd = foot.property("Source Text").value;
+    ftd.fontSize = 14;
+    ftd.fillColor = [0.29, 0.335, 0.435];
+    try { ftd.font = "ArialMT"; } catch (e) {}
+    foot.property("Source Text").setValue(ftd);
+    foot.property("Transform").property("Position").setValue([-W/2 + 26, H/2 - 34]);
+    foot.property("Transform").property("Anchor Point").setValue([0, 0]);
+
+    // whole card fade/scale in
+    var rootScale = root.property("Transform").property("Scale");
+    rootScale.setValueAtTime(tIn, [94, 94]);
+    rootScale.setValueAtTime(tIn + 0.4, [100, 100]);
+    for (var rk = 1; rk <= rootScale.numKeys; rk++) {
+        try {
+            rootScale.setInterpolationTypeAtKey(rk, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER);
+            var re = [new KeyframeEase(0, 75), new KeyframeEase(0, 75)];
+            rootScale.setTemporalEaseAtKey(rk, re, re);
+        } catch (e) {}
+    }
+    var rootOp = root.property("Transform").property("Opacity");
+    rootOp.setValueAtTime(tIn, 0);
+    rootOp.setValueAtTime(tIn + 0.35, 100);
+
+    root.selected = true;
+    return root;
 }
 
 // --- GLOW WAVE: neon growth line draws L->R with a glowing comet tip, area fill, live counter
