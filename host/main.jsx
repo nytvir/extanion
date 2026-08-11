@@ -8574,12 +8574,95 @@ function _txPro12_ExitSoft() {
     _txProKey(p, "ADBE Text Blur", [0, 0], [16, 16], t0, t1, 85);
 }
 
+// ---------- Tutorial recipes (Clean Text Animation, exact values) ----------
+// 13 — Char Bounce: Expression Selector, har harf kechikib prujina bounce
+function _txPro13_CharBounce() {
+    var tl = _txProTarget("BOUNCE", 110); if (!tl) return;
+    var a = _txAnim(tl, "Char Bounce");
+    var p = a.property("ADBE Text Animator Properties");
+    try { p.addProperty("ADBE Text Scale").setValue([100, 100]); } catch (e) {}
+    try {
+        var es = a.property("ADBE Text Selectors").addProperty("ADBE Text Expressible Selector");
+        var amt = es.property("ADBE Text Expressible Amount");
+        amt.expression =
+            "delay = .05;\n" +
+            "myDelay = delay*textIndex;\n" +
+            "t = (time - thisLayer.inPoint) - myDelay;\n" +
+            "if (t >= 0){\n" +
+            "  freq = 3;\n" +
+            "  amplitude = 50;\n" +
+            "  decay = 5;\n" +
+            "  s = amplitude*Math.cos(freq*t*2*Math.PI)/Math.exp(decay*t);\n" +
+            "  [s,s,s]\n" +
+            "}else{ [50,50,50] }";
+    } catch (e2) {}
+}
+// 14 — Overshoot Settle: harflar pastdan overshoot bilan o'tiradi (tutorial Expression 2)
+function _txPro14_OvershootSettle() {
+    var tl = _txProTarget("OVERSHOOT", 100); if (!tl) return;
+    var a = _txAnim(tl, "Overshoot Settle");
+    var p = a.property("ADBE Text Animator Properties");
+    try { p.addProperty("ADBE Text Position").setValue([0, 80]); } catch (e) {}
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try {
+        var es = a.property("ADBE Text Selectors").addProperty("ADBE Text Expressible Selector");
+        var amt = es.property("ADBE Text Expressible Amount");
+        amt.expression =
+            "freq = 2;\n" +
+            "decay = 9;\n" +
+            "duration = 0.10;\n" +
+            "retard = textIndex*thisComp.frameDuration*2;\n" +
+            "t = time - (thisLayer.inPoint + retard);\n" +
+            "startVal = [100,100,100];\n" +
+            "endVal = [0,0,0];\n" +
+            "if (t < 0){ startVal }\n" +
+            "else if (t < duration){ linear(t,0,duration,startVal,endVal) }\n" +
+            "else{\n" +
+            "  amp = (endVal - startVal)/duration;\n" +
+            "  w = freq*Math.PI*2;\n" +
+            "  endVal + amp*(Math.sin((t-duration)*w)/Math.exp(decay*(t-duration))/w);\n" +
+            "}";
+    } catch (e2) {}
+}
+// 15 — Clean Rise: so'zlar +28px dan 33° burilish bilan toza ko'tariladi (tutorial demo)
+function _txPro15_CleanRise() {
+    var tl = _txProTarget("CLEAN RISE", 96); if (!tl) return;
+    var a = _txAnim(tl, "Clean Rise"); var s = _txSel(a, 3, 1);
+    _txReveal(s, tl.inPoint, tl.inPoint + 1.0, 85);
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 28]); } catch (e) {}
+    try { p.addProperty("ADBE Text Rotation").setValue(33); } catch (e) {}
+    try { p.addProperty("ADBE Text Blur").setValue([6, 6]); } catch (e) {}
+}
+// 16 — Word Ramp Title: MD retsepti tanlangan textga (Ramp Up + Ease -50/100 + Offset)
+function _txPro16_WordRampTitle() {
+    var tl = _txProTarget("WORD RAMP TITLE", 100); if (!tl) return;
+    var a = _txAnim(tl, "Word Ramp");
+    var p = a.property("ADBE Text Animator Properties");
+    p.addProperty("ADBE Text Opacity").setValue(0);
+    try { p.addProperty("ADBE Text Position").setValue([0, 100]); } catch (e) {}
+    var sel = a.property("ADBE Text Selectors").addProperty("ADBE Text Selector");
+    try {
+        var adv = sel.property("ADBE Text Range Advanced");
+        adv.property("ADBE Text Range Type2").setValue(3);
+        adv.property("ADBE Text Range Shape").setValue(2);
+        adv.property("ADBE Text Levels Max Ease").setValue(-50);
+        adv.property("ADBE Text Levels Min Ease").setValue(100);
+    } catch (e2) {}
+    var off = sel.property("ADBE Text Percent Offset");
+    off.setValueAtTime(tl.inPoint, -100);
+    off.setValueAtTime(tl.inPoint + 1.1, 100);
+}
+
 function _txProDispatch(cmd) {
     var m = {
         txPro01:_txPro01_SoftRise, txPro02:_txPro02_WordCascade, txPro03:_txPro03_FocusIn,
         txPro04:_txPro04_LineRise, txPro05:_txPro05_CharDrift, txPro06:_txPro06_TrackingAir,
         txPro07:_txPro07_SoftPop, txPro08:_txPro08_LineSlide, txPro09:_txPro09_WhisperBlur,
-        txPro10:_txPro10_WordTilt, txPro11:_txPro11_SettleBounce, txPro12:_txPro12_ExitSoft
+        txPro10:_txPro10_WordTilt, txPro11:_txPro11_SettleBounce, txPro12:_txPro12_ExitSoft,
+        txPro13:_txPro13_CharBounce, txPro14:_txPro14_OvershootSettle,
+        txPro15:_txPro15_CleanRise, txPro16:_txPro16_WordRampTitle
     };
     if (m[cmd]) m[cmd]();
 }
