@@ -79,6 +79,9 @@ function nytvir_execute(cmd) {
         else if (cmd === "glowPeak") { _glowPeak("blue"); }
         else if (cmd === "glowPeakPurple") { _glowPeak("purple"); }
         else if (cmd === "glowPeakGreen") { _glowPeak("green"); }
+        else if (cmd === "neonGrid") { _neonGridHero("blue"); }
+        else if (cmd === "neonGridRed") { _neonGridHero("red"); }
+        else if (cmd === "neonGridPurple") { _neonGridHero("purple"); }
         else if (cmd === "glowRing") { _glowRing("blue"); }
         else if (cmd === "glowRingPurple") { _glowRing("purple"); }
         else if (cmd === "glowRingGreen") { _glowRing("green"); }
@@ -4787,6 +4790,279 @@ function _glowPeak(colorName) {
 
     root.selected = true;
     return root;
+}
+
+// --- NEON GRID HERO: real 3D camera scene — receding glow floor + floating glass gauge card
+function _neonGridHero(colorName) {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return; }
+
+    var COLORS = {
+        blue:   { a:[0.184,0.659,1.0], b:[0.0,0.898,1.0] },
+        red:    { a:[1.0,0.2,0.28],    b:[1.0,0.45,0.25] },
+        purple: { a:[0.486,0.361,0.988], b:[0.0,0.9,1.0] }
+    };
+    var C = COLORS[colorName] || COLORS.blue;
+    var W = comp.width, H = comp.height;
+    var dur = 4.2;
+    var fps = comp.frameRate || 30;
+
+    function smoothK(prop, infl) {
+        for (var k = 1; k <= prop.numKeys; k++) {
+            try {
+                prop.setInterpolationTypeAtKey(k, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER);
+                var dims = 1; try { dims = prop.value.length || 1; } catch (e0) { dims = 1; }
+                var ea = []; for (var d = 0; d < dims; d++) ea.push(new KeyframeEase(0, infl == null ? 75 : infl));
+                prop.setTemporalEaseAtKey(k, ea, ea);
+            } catch (e) {}
+        }
+    }
+
+    var scene = app.project.items.addComp("[NeonGrid] Scene", W, H, comp.pixelAspect, dur, fps);
+
+    // A) background radial
+    var bg = scene.layers.addSolid([0.008,0.012,0.039], "[NeonGrid] BG", W, H, 1, dur);
+    try {
+        var bgRamp = bg.property("ADBE Effect Parade").addProperty("ADBE Ramp");
+        bgRamp.property("Start Color").setValue([0.04,0.09,0.19]);
+        bgRamp.property("End Color").setValue([0.008,0.012,0.039]);
+        bgRamp.property("Start of Ramp").setValue([W/2, H*0.08]);
+        bgRamp.property("End of Ramp").setValue([W/2, H*0.6]);
+        bgRamp.property("Ramp Shape").setValue(2);
+    } catch (e) {}
+
+    // B) floor — 3D grid shape, lies flat, recedes into distance
+    var floor = scene.layers.addShape();
+    floor.name = "[NeonGrid] Floor";
+    floor.threeDLayer = true;
+    var flg = floor.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var flc = flg.property("ADBE Vectors Group");
+    var half = 1200, farDepth = 3400, step = 140;
+    for (var gx = -half; gx <= half; gx += step) {
+        var vsh = new Shape(); vsh.vertices = [[gx, 0], [gx, farDepth]]; vsh.closed = false;
+        flc.addProperty("ADBE Vector Shape - Group").property("ADBE Vector Shape").setValue(vsh);
+    }
+    for (var gy = 0; gy <= farDepth; gy += step) {
+        var hsh = new Shape(); hsh.vertices = [[-half, gy], [half, gy]]; hsh.closed = false;
+        flc.addProperty("ADBE Vector Shape - Group").property("ADBE Vector Shape").setValue(hsh);
+    }
+    var flStroke = flc.addProperty("ADBE Vector Graphic - Stroke");
+    flStroke.property("ADBE Vector Stroke Color").setValue(C.a);
+    flStroke.property("ADBE Vector Stroke Width").setValue(3);
+    try {
+        var flGlow = floor.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+        flGlow.property(2).setValue(30); flGlow.property(3).setValue(45); flGlow.property(4).setValue(1.7);
+    } catch (e) {}
+    floor.property("Transform").property("Position").setValue([W/2, H*0.60, -100]);
+    floor.property("Transform").property("X Rotation").setValue(90);
+
+    // C) camera — tilted down, looking forward into the receding grid
+    var cam = scene.layers.addCamera("[NeonGrid] Camera", [W/2, H/2]);
+    cam.property("Transform").property("Position").setValue([W/2, H*0.18, -1500]);
+    cam.property("Transform").property("Point of Interest").setValue([W/2, H*0.78, 900]);
+
+    // D) fog — masked solid fading the distant (upper) part of the floor into the background
+    var fog = scene.layers.addSolid([0.008,0.012,0.039], "[NeonGrid] Fog", W, H, 1, dur);
+    var fm = fog.property("ADBE Mask Parade").addProperty("ADBE Mask Atom");
+    var fs = new Shape();
+    fs.vertices = [[0,0],[W,0],[W,H*0.66],[0,H*0.66]];
+    fs.closed = true;
+    fm.property("ADBE Mask Shape").setValue(fs);
+    fm.property("ADBE Mask Feather").setValue([0, H*0.30]);
+
+    // E) ribbon halo — soft rotating colored glow behind the card
+    var ribbonNull = scene.layers.addNull(dur);
+    ribbonNull.name = "[NeonGrid] Ribbon Null";
+    ribbonNull.property("Transform").property("Position").setValue([W/2, H*0.42]);
+    var rrot = ribbonNull.property("Transform").property("Rotation");
+    rrot.setValueAtTime(0, 0);
+    rrot.setValueAtTime(dur, 40);
+    function ribbonBlob(name, color, off, sz, op) {
+        var b = scene.layers.addShape();
+        b.name = name; b.parent = ribbonNull;
+        var bg2 = b.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var bc = bg2.property("ADBE Vectors Group");
+        var ell = bc.addProperty("ADBE Vector Shape - Ellipse");
+        ell.property("ADBE Vector Ellipse Size").setValue([sz, sz]);
+        var fill = bc.addProperty("ADBE Vector Graphic - Fill");
+        fill.property("ADBE Vector Fill Color").setValue(color);
+        b.property("Transform").property("Position").setValue(off);
+        b.property("Transform").property("Opacity").setValue(op);
+        try {
+            var bb = b.property("ADBE Effect Parade").addProperty("ADBE Fast Blur");
+            bb.property(1).setValue(sz*0.22);
+        } catch (e) {}
+        return b;
+    }
+    ribbonBlob("[NeonGrid] Ribbon A", C.a, [-170, -40], 340, 26);
+    ribbonBlob("[NeonGrid] Ribbon B", C.b, [190, 30], 300, 22);
+
+    // F) particles — small glowing dots drifting upward
+    var partPos = [[0.20,0.30],[0.78,0.24],[0.30,0.50],[0.70,0.55],[0.50,0.18],[0.86,0.42],[0.14,0.46],[0.58,0.62]];
+    for (var pi = 0; pi < partPos.length; pi++) {
+        var px = W*partPos[pi][0], py = H*partPos[pi][1];
+        var p = scene.layers.addShape();
+        p.name = "[NeonGrid] Particle " + pi;
+        var pg = p.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var pc = pg.property("ADBE Vectors Group");
+        var pell = pc.addProperty("ADBE Vector Shape - Ellipse");
+        pell.property("ADBE Vector Ellipse Size").setValue([5,5]);
+        var pfill = pc.addProperty("ADBE Vector Graphic - Fill");
+        pfill.property("ADBE Vector Fill Color").setValue(pi % 2 === 0 ? C.a : C.b);
+        try {
+            var pglow = p.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+            pglow.property(2).setValue(60); pglow.property(3).setValue(14); pglow.property(4).setValue(0.7);
+        } catch (e) {}
+        var pos = p.property("Transform").property("Position");
+        pos.setValueAtTime(0, [px, py + 18]);
+        pos.setValueAtTime(dur, [px, py - 18]);
+        smoothK(pos, 50);
+        var op = p.property("Transform").property("Opacity");
+        op.setValueAtTime(0, 25 + (pi % 3) * 15);
+        op.setValueAtTime(dur/2, 80);
+        op.setValueAtTime(dur, 25 + (pi % 3) * 15);
+    }
+
+    // G) card — flat, crisp, floats with a gentle breathe
+    var cardW = Math.min(W*0.82, 460), cardH = cardW * 1.18;
+    var cardRoot = scene.layers.addNull(dur);
+    cardRoot.name = "[NeonGrid] Card Root";
+    cardRoot.property("Transform").property("Position").setValue([W/2, H*0.55]);
+    var crScale = cardRoot.property("Transform").property("Scale");
+    crScale.setValueAtTime(0, [96,96]);
+    crScale.setValueAtTime(0.5, [100,100]);
+    smoothK(crScale, 75);
+    var crPos = cardRoot.property("Transform").property("Position");
+    crPos.setValueAtTime(0, [W/2, H*0.55 + 8]);
+    crPos.setValueAtTime(dur/2, [W/2, H*0.55 - 8]);
+    crPos.setValueAtTime(dur, [W/2, H*0.55 + 8]);
+    smoothK(crPos, 60);
+    var crOp = cardRoot.property("Transform").property("Opacity");
+    crOp.setValueAtTime(0, 0); crOp.setValueAtTime(0.45, 100);
+
+    var panel = scene.layers.addShape();
+    panel.name = "[NeonGrid] Panel"; panel.parent = cardRoot;
+    var pg2 = panel.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var pc2 = pg2.property("ADBE Vectors Group");
+    var prect = pc2.addProperty("ADBE Vector Shape - Rect");
+    prect.property("ADBE Vector Rect Size").setValue([cardW, cardH]);
+    prect.property("ADBE Vector Rect Roundness").setValue(24);
+    var pfill2 = pc2.addProperty("ADBE Vector Graphic - Fill");
+    pfill2.property("ADBE Vector Fill Color").setValue([0.035,0.05,0.09]);
+    try {
+        var pstroke2 = pc2.addProperty("ADBE Vector Graphic - Stroke");
+        pstroke2.property("ADBE Vector Stroke Color").setValue([C.a[0],C.a[1],C.a[2]]);
+        pstroke2.property("ADBE Vector Stroke Width").setValue(1.5);
+        pstroke2.property("ADBE Vector Stroke Opacity").setValue(35);
+    } catch (e) {}
+    try {
+        var pramp = panel.property("ADBE Effect Parade").addProperty("ADBE Ramp");
+        pramp.property("Start Color").setValue([C.a[0]*0.28, C.a[1]*0.28, C.a[2]*0.28]);
+        pramp.property("End Color").setValue([0.02,0.03,0.06]);
+        pramp.property("Start of Ramp").setValue([0, cardH*0.9]);
+        pramp.property("End of Ramp").setValue([0, cardH*0.25]);
+        pramp.property("Ramp Shape").setValue(2);
+        pramp.property("Blend With Original").setValue(45);
+    } catch (e) {}
+
+    function cardText(str, size, color, pos, anchor, bold) {
+        var t = scene.layers.addText(str);
+        t.parent = cardRoot;
+        var d = t.property("Source Text").value;
+        d.fontSize = size; d.fillColor = color;
+        try { d.font = bold ? "Arial-BoldMT" : "ArialMT"; } catch (e) {}
+        t.property("Source Text").setValue(d);
+        t.property("Transform").property("Position").setValue(pos);
+        t.property("Transform").property("Anchor Point").setValue(anchor || [0,0]);
+        return t;
+    }
+    var lo = [0.5,0.58,0.75];
+    var hw2 = cardW/2, hh2 = cardH/2;
+    cardText("WIN RATE", 15, lo, [-hw2+24, -hh2+34]);
+    var winNum = cardText("87%", 22, [C.b[0],C.b[1],C.b[2]], [-hw2+24, -hh2+58], [0,0], true);
+    try { winNum.property("ADBE Effect Parade").addProperty("ADBE Glo2"); } catch (e) {}
+    var profitLabel = cardText("PROFIT", 15, lo, [hw2-24, -hh2+34]);
+    profitLabel.property("Source Text").value.justification = ParagraphJustification.RIGHT_JUSTIFY;
+    profitLabel.property("Source Text").setValue(profitLabel.property("Source Text").value);
+    profitLabel.property("Transform").property("Anchor Point").setValue([0,0]);
+    var profitNum = cardText("+$3,240", 20, [1,1,1], [hw2-24, -hh2+58], [0,0], true);
+    var pnd = profitNum.property("Source Text").value; pnd.justification = ParagraphJustification.RIGHT_JUSTIFY; profitNum.property("Source Text").setValue(pnd);
+
+    // gauge arc (trim paths ellipse) — dim track + bright animated arc
+    var gaugeCy = -hh2 + cardH*0.42;
+    var gauge = scene.layers.addShape();
+    gauge.name = "[NeonGrid] Gauge"; gauge.parent = cardRoot;
+    gauge.property("Transform").property("Position").setValue([0, gaugeCy]);
+    var gg = gauge.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var gc = gg.property("ADBE Vectors Group");
+    var gaugeR = cardW*0.30;
+    var gtrackPath = gc.addProperty("ADBE Vector Shape - Ellipse");
+    gtrackPath.property("ADBE Vector Ellipse Size").setValue([gaugeR*2, gaugeR*2]);
+    var gtrackStroke = gc.addProperty("ADBE Vector Graphic - Stroke");
+    gtrackStroke.property("ADBE Vector Stroke Color").setValue([0.15,0.19,0.28]);
+    gtrackStroke.property("ADBE Vector Stroke Width").setValue(14);
+
+    var gArc = scene.layers.addShape();
+    gArc.name = "[NeonGrid] Gauge Arc"; gArc.parent = cardRoot;
+    gArc.property("Transform").property("Position").setValue([0, gaugeCy]);
+    var ggA = gArc.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var gcA = ggA.property("ADBE Vectors Group");
+    var gArcPath = gcA.addProperty("ADBE Vector Shape - Ellipse");
+    gArcPath.property("ADBE Vector Ellipse Size").setValue([gaugeR*2, gaugeR*2]);
+    var gArcStroke = gcA.addProperty("ADBE Vector Graphic - Stroke");
+    gArcStroke.property("ADBE Vector Stroke Color").setValue(C.a);
+    gArcStroke.property("ADBE Vector Stroke Width").setValue(14);
+    gArcStroke.property("ADBE Vector Stroke Line Cap").setValue(2);
+    var gArcTrim = gcA.addProperty("ADBE Vector Filter - Trim");
+    gArcTrim.property("ADBE Vector Trim Start").setValue(0);
+    var gArcEnd = gArcTrim.property("ADBE Vector Trim End");
+    gArcEnd.setValueAtTime(0.3, 0);
+    gArcEnd.setValueAtTime(1.6, 68);
+    smoothK(gArcEnd, 80);
+    gArcTrim.property("ADBE Vector Trim Offset").setValue(-90);
+    try {
+        var gGlow = gArc.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+        gGlow.property(2).setValue(65); gGlow.property(3).setValue(14); gGlow.property(4).setValue(0.6);
+    } catch (e) {}
+
+    var gaugeNum = cardText("0%", 40, [1,1,1], [0, gaugeCy + 14], [0,0], true);
+    var gnd = gaugeNum.property("Source Text").value; gnd.justification = ParagraphJustification.CENTER_JUSTIFY; gaugeNum.property("Source Text").setValue(gnd);
+    try {
+        gaugeNum.property("Source Text").expression =
+            "n = Math.round(linear(time, 0.35, 1.85, 0, 92));\nn + \"%\";";
+    } catch (e) {}
+
+    var foot2 = cardText("Balans: $12,480 — 30 kunda +35%", 14, lo, [0, hh2 - 26], [0,0]);
+    var fd2 = foot2.property("Source Text").value; fd2.justification = ParagraphJustification.CENTER_JUSTIFY; foot2.property("Source Text").setValue(fd2);
+
+    // H) overall bloom on top
+    var bloomAdj = scene.layers.addSolid([0.5,0.5,0.5], "[NeonGrid] Bloom", W, H, 1, dur);
+    bloomAdj.adjustmentLayer = true;
+    try {
+        var bg3 = bloomAdj.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+        bg3.property(2).setValue(70); bg3.property(3).setValue(24); bg3.property(4).setValue(0.7);
+    } catch (e) {}
+
+    // order (top->bottom): Bloom, CardRoot(auto on top), Ribbon, Particles, Fog, Camera, Floor, BG
+    try { bloomAdj.moveToBeginning(); } catch (e) {}
+    try {
+        for (var li3 = scene.numLayers; li3 >= 1; li3--) {
+            if (scene.layer(li3).name.indexOf("[NeonGrid] Ribbon") === 0) scene.layer(li3).moveAfter(cardRoot);
+        }
+        for (var li4 = scene.numLayers; li4 >= 1; li4--) {
+            if (scene.layer(li4).name.indexOf("[NeonGrid] Particle") === 0) scene.layer(li4).moveBefore(fog);
+        }
+        fog.moveBefore(cam);
+        cam.moveBefore(floor);
+        floor.moveBefore(bg);
+    } catch (e) {}
+
+    var inst = comp.layers.add(scene);
+    inst.name = "[NeonGrid] Hero";
+    inst.property("Transform").property("Position").setValue([comp.width/2, comp.height/2]);
+    inst.selected = true;
+
+    return inst;
 }
 
 // --- GLOW WAVE: neon growth line draws L->R with a glowing comet tip, area fill, live counter
