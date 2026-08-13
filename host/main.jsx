@@ -56,6 +56,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "numberCounter") { _numberCounter(); }
         else if (cmd === "terminalUpload") { _terminalUpload(); }
         else if (cmd === "bailoutStamp") { _bailoutStamp(); }
+        else if (cmd === "genesisBlock") { _genesisBlock(); }
         else if (cmd === "growthChart") { _growthChart(); }
         else if (cmd === "notifySubscriber") { _notifySubscriber(); }
         else if (cmd === "titleHighlight") { _titleHighlight(); }
@@ -3425,6 +3426,61 @@ function _terminalUpload() {
     pct.property("ADBE Transform Group").property("ADBE Opacity").expression = basePre + "(t>2.0)?100:0;";
     pct.property("ADBE Text Properties").property("ADBE Text Document").expression =
         basePre + "var p=Math.max(0,Math.min(1,(t-2.05)/1.3)); text.sourceText.style.setText(Math.round(p*100)+'%');";
+
+    ctrl.selected = true;
+}
+
+// --- GENESIS BLOCK: hex dump of bitcoin block #0, the embedded headline decodes in orange
+function _genesisBlock() {
+    var comp = app.project.activeItem;
+    if(!comp) return;
+    var dur = 8.5;
+    var w = comp.width, h = comp.height;
+    var ctrl = _uiCtl(comp, "GENESIS BLOCK CONTROLLER", dur, [w/2, h*0.42]);
+    _addColorControl(ctrl, "Hex Green", [0.24,0.84,0.55]);
+    _addColorControl(ctrl, "Headline Orange", [0.97,0.58,0.10]);
+    var basePre = "var ctl=thisComp.layer('"+ctrl.name+"'); var spd=ctl.effect('Animation Speed')(1)/100; var t=(time-inPoint)*spd; ";
+
+    var cw = w*0.88, pad = cw*0.065, fs = Math.round(cw*0.042), lh = fs*1.95;
+    var ch = pad*2 + lh*9.6;
+    var xL = -cw/2 + pad;
+    function rowY(i){ return -ch/2 + pad + lh*(0.55 + i); }
+
+    var card = _uiRRect(comp, "Genesis Window", dur, cw, ch, fs*0.8, '[0.016,0.024,0.018,1]');
+    var cardStroke = card.property("ADBE Root Vectors Group").property(1).property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    cardStroke.property("ADBE Vector Stroke Color").setValue([0.13,0.20,0.15,1]);
+    cardStroke.property("ADBE Vector Stroke Width").setValue(Math.max(2, w*0.0025));
+    card.parent = ctrl;
+    card.property("ADBE Transform Group").property("ADBE Position").setValue([0,0]);
+    var cOp = card.property("ADBE Transform Group").property("ADBE Opacity");
+    cOp.setValueAtTime(comp.time, 0); cOp.setValueAtTime(comp.time + 0.3, 92);
+
+    function gLine(str, row, col, mode, delay, cps, glow) {
+        var tl = _uiText(comp, str, fs, 6145, null, dur, col);
+        _uiFont(tl, "Consolas");
+        tl.parent = ctrl;
+        tl.property("ADBE Transform Group").property("ADBE Position").setValue([xL, rowY(row)]);
+        if (mode === "type") {
+            var esc = str.replace(/'/g, "\\'");
+            tl.property("ADBE Text Properties").property("ADBE Text Document").expression =
+                basePre + "var s='"+esc+"'; var n=Math.floor(Math.max(0,(t-"+delay+")*"+cps+")); if(n>s.length)n=s.length; var o=s.substr(0,n); if(n<s.length&&n>0){o+='_';} text.sourceText.style.setText(o);";
+        } else {
+            tl.property("ADBE Transform Group").property("ADBE Opacity").expression = basePre + "(t>"+delay+")?100:0;";
+        }
+        if (glow) _uiGlowFx(tl, w*0.016, 0.6);
+        return tl;
+    }
+    var DIM = [0.22,0.38,0.28], HASH = [0.24,0.84,0.55], HEX = [0.30,0.50,0.37], ORG = [0.97,0.58,0.10], WHT = [0.85,0.89,0.85];
+
+    gLine("// blok #0 - genesis - 03/yan/2009", 0, DIM, "step", 0.4);
+    gLine("hash: 000000000019d6689c085a...", 1, HASH, "step", 0.85);
+    gLine("04 ff ff 00 1d 01 04 45 54 68", 2, HEX, "step", 1.25);
+    gLine("65 20 54 69 6d 65 73 20 30 33", 3, HEX, "step", 1.5);
+    gLine("2f 4a 61 6e 2f 32 30 30 39 20", 4, HEX, "step", 1.75);
+    gLine("The Times 03/Jan/2009", 5.6, ORG, "type", 2.6, 17, true);
+    gLine("Chancellor on brink of second", 6.6, ORG, "type", 4.1, 20, true);
+    gLine("bailout for banks", 7.6, ORG, "type", 5.5, 18, true);
+    gLine("abadiy yozildi. hech qachon o'chmaydi.", 8.8, WHT, "step", 6.9);
 
     ctrl.selected = true;
 }
