@@ -3315,11 +3315,9 @@ function _numberCounter() {
     num.property("ADBE Transform Group").property("ADBE Anchor Point").expression =
         "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
     num.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
-    // pop in, tiny spring punch the moment the count lands on Target
-    num.property("ADBE Transform Group").property("ADBE Scale").expression = pre +
-        "var ct=Math.max(0.1,ctl.effect('Count Time')(1)); var land=(0.15+ct)/ (ctl.effect('Animation Speed')(1)/100); " +
-        "var e=ob(pIn); var x=ib(pOut); var s=Math.max(0,e-x); var b=0; " +
-        "if(t>land){var q=t-land; b=0.09*Math.sin(q*16)/Math.exp(q*7);} [s*100*(1+b), s*100*(1+b)];";
+    // no intro/outro/punch — it just counts and stays until the user trims it
+    ctrl.outPoint = comp.duration;
+    num.outPoint = comp.duration;
 
     ctrl.selected = true;
 }
