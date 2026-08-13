@@ -55,6 +55,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "moneyCounter") { _moneyCounter(); }
         else if (cmd === "numberCounter") { _numberCounter(); }
         else if (cmd === "terminalUpload") { _terminalUpload(); }
+        else if (cmd === "bailoutStamp") { _bailoutStamp(); }
         else if (cmd === "growthChart") { _growthChart(); }
         else if (cmd === "notifySubscriber") { _notifySubscriber(); }
         else if (cmd === "titleHighlight") { _titleHighlight(); }
@@ -3424,6 +3425,113 @@ function _terminalUpload() {
     pct.property("ADBE Transform Group").property("ADBE Opacity").expression = basePre + "(t>2.0)?100:0;";
     pct.property("ADBE Text Properties").property("ADBE Text Document").expression =
         basePre + "var p=Math.max(0,Math.min(1,(t-2.05)/1.3)); text.sourceText.style.setText(Math.round(p*100)+'%');";
+
+    ctrl.selected = true;
+}
+
+// --- BAILOUT STAMP: two official documents, APPROVED for banks / DENIED for people
+function _bailoutStamp() {
+    var comp = app.project.activeItem;
+    if(!comp) return;
+    var dur = 6.5;
+    var w = comp.width, h = comp.height;
+    var t0 = comp.time;
+    var ctrl = _uiCtl(comp, "BAILOUT STAMP CONTROLLER", dur, [w/2, h*0.42]);
+    var spdPre = "var ctl=thisLayer.parent ? thisLayer.parent : thisLayer; ";
+
+    var cw = w*0.72, ch = cw*0.46, pad = cw*0.08;
+    var PAPER = [0.93,0.90,0.82], INK = [0.14,0.12,0.09], BEIGE = [0.80,0.76,0.64];
+    var GREENSTAMP = [0.10,0.50,0.24], REDSTAMP = [0.88,0.26,0.29];
+
+    // camera-shake on the whole rig at each stamp slam
+    ctrl.property("ADBE Transform Group").property("ADBE Position").expression =
+        "var spd=effect('Animation Speed')(1)/100; var tt=(time-inPoint)*spd; " +
+        "function shk(ts){var q=tt-ts; if(q<0) return [0,0]; var a=" + (w*0.014) + "*Math.exp(-q*8); return [a*Math.sin(q*42), a*Math.cos(q*31)];} " +
+        "var a=shk(1.5), b=shk(3.3); value + [a[0]+b[0], a[1]+b[1]];";
+
+    function centerAnchor(tl) {
+        tl.property("ADBE Transform Group").property("ADBE Anchor Point").expression =
+            "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    }
+    function fadeIn(L, d0, d1) {
+        var op = L.property("ADBE Transform Group").property("ADBE Opacity");
+        op.setValueAtTime(t0 + d0, 0);
+        op.setValueAtTime(t0 + d1, 100);
+    }
+
+    function buildDoc(tag, yOff, rot, title, amount, stampStr, stampCol, stampDelay, stampRot, inD) {
+        var dn = comp.layers.addNull(comp.duration);
+        dn.name = "[Bailout] Doc " + tag;
+        dn.inPoint = t0; dn.outPoint = t0 + dur;
+        dn.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0,0]);
+        dn.parent = ctrl;
+        dn.property("ADBE Transform Group").property("ADBE Position").setValue([0, yOff]);
+        dn.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(rot);
+        // slide-up entrance on the doc rig
+        var dp = dn.property("ADBE Transform Group").property("ADBE Position");
+        dp.setValueAtTime(t0 + inD, [0, yOff + ch*0.18]);
+        dp.setValueAtTime(t0 + inD + 0.45, [0, yOff]);
+        try { for (var k=1;k<=2;k++) dp.setTemporalEaseAtKey(k, [new KeyframeEase(0,75), new KeyframeEase(0,75)], [new KeyframeEase(0,75), new KeyframeEase(0,75)]); } catch(e){}
+
+        var paper = _uiRRect(comp, "[Bailout] Paper " + tag, dur, cw, ch, cw*0.015, '[' + PAPER.join(',') + ',1]');
+        try { _uiShadow(paper); } catch(e) {}
+        paper.parent = dn;
+        paper.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+        fadeIn(paper, inD, inD + 0.3);
+
+        var ti = _uiText(comp, title, Math.round(cw*0.042), 6145, null, dur, [0.36,0.33,0.27]);
+        _uiFont(ti, "TimesNewRomanPSMT");
+        ti.parent = dn;
+        ti.property("ADBE Transform Group").property("ADBE Position").setValue([-cw/2 + pad, -ch*0.28]);
+        fadeIn(ti, inD + 0.1, inD + 0.4);
+
+        var am = _uiText(comp, amount, Math.round(cw*0.082), 6145, null, dur, INK);
+        _uiFont(am, "TimesNewRomanPS-BoldMT");
+        am.parent = dn;
+        am.property("ADBE Transform Group").property("ADBE Position").setValue([-cw/2 + pad, ch*0.06]);
+        fadeIn(am, inD + 0.18, inD + 0.48);
+
+        for (var li = 0; li < 2; li++) {
+            var lw = cw * (li === 0 ? 0.62 : 0.44);
+            var ln = _uiRRect(comp, "[Bailout] Line " + tag + li, dur, lw, Math.max(3, cw*0.008), 2, '[' + BEIGE.join(',') + ',1]');
+            ln.parent = dn;
+            ln.property("ADBE Transform Group").property("ADBE Position").setValue([-cw/2 + pad + lw/2, ch*(0.24 + li*0.1)]);
+            fadeIn(ln, inD + 0.22, inD + 0.5);
+        }
+
+        // stamp: bordered box + text, slams in from 3x scale
+        var sw_ = cw*0.5, sh_ = ch*0.36;
+        var box = comp.layers.addShape();
+        box.name = "[Bailout] Stamp " + tag;
+        box.inPoint = t0; box.outPoint = t0 + dur;
+        var bg = box.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var br = bg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+        br.property("ADBE Vector Rect Size").setValue([sw_, sh_]);
+        br.property("ADBE Vector Rect Roundness").setValue(sh_*0.14);
+        var bst = bg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+        bst.property("ADBE Vector Stroke Color").setValue([stampCol[0], stampCol[1], stampCol[2], 1]);
+        bst.property("ADBE Vector Stroke Width").setValue(Math.max(4, cw*0.016));
+        box.parent = dn;
+        box.property("ADBE Transform Group").property("ADBE Position").setValue([cw*0.20, ch*0.16]);
+        box.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(stampRot);
+        box.property("ADBE Transform Group").property("ADBE Opacity").expression =
+            "var spd=thisComp.layer('" + ctrl.name + "').effect('Animation Speed')(1)/100; ((time-inPoint)*spd>=" + stampDelay + ")?93:0;";
+        box.property("ADBE Transform Group").property("ADBE Scale").expression =
+            "var spd=thisComp.layer('" + ctrl.name + "').effect('Animation Speed')(1)/100; var t=(time-inPoint)*spd-" + stampDelay + "; " +
+            "if(t<0){[300,300]}else{var s=100*(1+2*Math.exp(-13*t)+0.05*Math.sin(t*30)*Math.exp(-7*t)); [s,s];}";
+
+        var stx = _uiText(comp, stampStr, Math.round(sw_*0.175), 6147, null, dur, stampCol);
+        _uiFont(stx, "TimesNewRomanPS-BoldMT");
+        centerAnchor(stx);
+        stx.parent = box;
+        stx.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+        stx.property("ADBE Transform Group").property("ADBE Opacity").expression =
+            "var spd=thisComp.layer('" + ctrl.name + "').effect('Animation Speed')(1)/100; ((time-inPoint)*spd>=" + stampDelay + ")?93:0;";
+        return dn;
+    }
+
+    buildDoc("A", -ch*0.72, -2, "Qutqaruv paketi - banklarga", "$700,000,000,000", "TASDIQLANDI", GREENSTAMP, 1.5, -12, 0.15);
+    buildDoc("B", ch*0.72, 1.5, "Yordam so'rovi - oddiy aholi", "$0", "RAD ETILDI", REDSTAMP, 3.3, 8, 0.45);
 
     ctrl.selected = true;
 }
