@@ -53,6 +53,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "titleNeon") { _titleNeon(); }
         else if (cmd === "countdownTimer") { _countdownTimer(); }
         else if (cmd === "moneyCounter") { _moneyCounter(); }
+        else if (cmd === "numberCounter") { _numberCounter(); }
         else if (cmd === "growthChart") { _growthChart(); }
         else if (cmd === "notifySubscriber") { _notifySubscriber(); }
         else if (cmd === "titleHighlight") { _titleHighlight(); }
@@ -3282,6 +3283,41 @@ function _moneyCounter() {
     num.parent = ctrl;
     num.property("ADBE Transform Group").property("ADBE Position").setValue([0, w*0.04]);
     num.property("ADBE Transform Group").property("ADBE Scale").expression = pre + "var e=ob(pIn); var x=ib(pOut); [Math.max(0,e-x)*100, Math.max(0,e-x)*100];";
+
+    ctrl.selected = true;
+}
+
+// --- NUMBER COUNTER: plain number rolls up 0 -> Target, lands with a punch
+function _numberCounter() {
+    var comp = app.project.activeItem;
+    if(!comp) return;
+    var dur = 4.0;
+    var w = comp.width, h = comp.height;
+    var ctrl = _uiCtl(comp, "NUMBER COUNTER CONTROLLER", dur, [w/2, h*0.45]);
+    _addColorControl(ctrl, "Number Color", [1,1,1]);
+    _addSlider(ctrl, "Target", 1000);
+    _addSlider(ctrl, "Count Time", 2.2);
+    var pre = _uiPrefix(ctrl.name);
+
+    var num = _uiText(comp, "0", Math.round(w*0.13), 6147, 'thisComp.layer("'+ctrl.name+'").effect("Number Color")(1)', dur);
+    // count-up drives the text; color is set separately via the style API in the same expression
+    num.property("ADBE Text Properties").property("ADBE Text Document").expression =
+        "var ctl=thisComp.layer('"+ctrl.name+"'); var spd=ctl.effect('Animation Speed')(1)/100; var tt=(time-inPoint)*spd; "+FMT+
+        "function eo3(x){x=Math.max(0,Math.min(1,x));return 1-Math.pow(1-x,3);} var ct=Math.max(0.1,ctl.effect('Count Time')(1)); "+
+        "var e=eo3((tt-0.15)/ct); var v=ctl.effect('Target')(1)*e; var c=ctl.effect('Number Color')(1); "+
+        "text.sourceText.style.setFillColor([c[0],c[1],c[2]]).setText(fmt(v));";
+    _uiFont(num, "Arial-BoldMT");
+    _uiGlowFx(num, w*0.025, 0.55);
+    num.parent = ctrl;
+    // true optical centre: anchor tracks the live text box, so the number stays centred as it grows
+    num.property("ADBE Transform Group").property("ADBE Anchor Point").expression =
+        "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    num.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    // pop in, tiny spring punch the moment the count lands on Target
+    num.property("ADBE Transform Group").property("ADBE Scale").expression = pre +
+        "var ct=Math.max(0.1,ctl.effect('Count Time')(1)); var land=(0.15+ct)/ (ctl.effect('Animation Speed')(1)/100); " +
+        "var e=ob(pIn); var x=ib(pOut); var s=Math.max(0,e-x); var b=0; " +
+        "if(t>land){var q=t-land; b=0.09*Math.sin(q*16)/Math.exp(q*7);} [s*100*(1+b), s*100*(1+b)];";
 
     ctrl.selected = true;
 }
@@ -8184,7 +8220,7 @@ function _uiHelperShape(comp, name, dur) {
     s.inPoint = 0; s.outPoint = dur;
     return s;
 }
-function _uiRRect(shape, w, h, round, colorArr, fillOrStroke, strokeW) {
+function _uiRRect2(shape, w, h, round, colorArr, fillOrStroke, strokeW) {
     var g = shape.property("Contents").addProperty("ADBE Vector Group");
     var c = g.property("Contents");
     var r = c.addProperty("ADBE Vector Shape - Rect");
@@ -8217,7 +8253,7 @@ function _uiEllipse(shape, w, h, colorArr, fillOrStroke, strokeW) {
     }
     return g;
 }
-function _uiText(comp, str, fontSize, colorArr, bold, dur) {
+function _uiText2(comp, str, fontSize, colorArr, bold, dur) {
     var tl = comp.layers.addText(str);
     var td = tl.property("Source Text").value;
     td.fontSize = fontSize;
@@ -8240,7 +8276,7 @@ function _uiBudgetCard() {
 
     // Card background — white rounded
     var card = _uiHelperShape(comp, "[Nytvir] Budget Card BG", dur);
-    _uiRRect(card, W, H, 42, [1,1,1,1], "fill");
+    _uiRRect2(card, W, H, 42, [1,1,1,1], "fill");
     card.property("Transform").property("Position").setValue([cx, cy]);
     // shadow via drop shadow effect
     try {
@@ -8257,14 +8293,14 @@ function _uiBudgetCard() {
     op.setValueAtTime(0, 0); op.setValueAtTime(0.3, 100);
 
     // "Budget" label (top-left of card)
-    var lbl = _uiText(comp, "Budget", 32, [0.42,0.42,0.5,1], false, dur);
+    var lbl = _uiText2(comp, "Budget", 32, [0.42,0.42,0.5,1], false, dur);
     lbl.property("Transform").property("Position").setValue([cx - W/2 + 60, cy - H/2 + 100]);
     lbl.inPoint = 0.4;
     var lblOp = lbl.property("Transform").property("Opacity");
     lblOp.setValueAtTime(0.4, 0); lblOp.setValueAtTime(0.7, 100);
 
     // Big price — count-up
-    var price = _uiText(comp, "$0", 84, [0.05,0.05,0.1,1], true, dur);
+    var price = _uiText2(comp, "$0", 84, [0.05,0.05,0.1,1], true, dur);
     price.property("Transform").property("Position").setValue([cx - W/2 + 60, cy - H/2 + 180]);
     price.inPoint = 0.5;
     var ptxt = price.property("Source Text");
@@ -8279,12 +8315,12 @@ function _uiBudgetCard() {
 
     // "+ $317" growth pill
     var pill = _uiHelperShape(comp, "[Nytvir] Growth Pill", dur);
-    _uiRRect(pill, 200, 52, 26, [0.94,0.94,0.96,1], "fill");
+    _uiRRect2(pill, 200, 52, 26, [0.94,0.94,0.96,1], "fill");
     pill.property("Transform").property("Position").setValue([cx - W/2 + 160, cy - H/2 + 260]);
     pill.inPoint = 1.5;
     var pillOp = pill.property("Transform").property("Opacity");
     pillOp.setValueAtTime(1.5, 0); pillOp.setValueAtTime(1.8, 100);
-    var pillTxt = _uiText(comp, "+ $317  📈", 22, [0.12,0.12,0.2,1], true, dur);
+    var pillTxt = _uiText2(comp, "+ $317  📈", 22, [0.12,0.12,0.2,1], true, dur);
     pillTxt.property("Transform").property("Position").setValue([cx - W/2 + 80, cy - H/2 + 269]);
     pillTxt.inPoint = 1.5;
     pillTxt.property("Transform").property("Opacity").setValueAtTime(1.5, 0);
@@ -8378,7 +8414,7 @@ function _uiBudgetCard() {
     dotSc.setValueAtTime(2.7, [100,100]);
 
     var callPill = _uiHelperShape(comp, "[Nytvir] Wed Callout", dur);
-    _uiRRect(callPill, 130, 46, 23, [0.35, 0.32, 0.98, 1], "fill");
+    _uiRRect2(callPill, 130, 46, 23, [0.35, 0.32, 0.98, 1], "fill");
     callPill.property("Transform").property("Position").setValue([callX, callY - 45]);
     callPill.inPoint = 2.5;
     var cpOp = callPill.property("Transform").property("Opacity");
@@ -8386,7 +8422,7 @@ function _uiBudgetCard() {
     var cpY = callPill.property("Transform").property("Position");
     cpY.setValueAtTime(2.5, [callX, callY - 25]);
     cpY.setValueAtTime(2.8, [callX, callY - 55]);
-    var callTxt = _uiText(comp, "$750", 22, [1,1,1,1], true, dur);
+    var callTxt = _uiText2(comp, "$750", 22, [1,1,1,1], true, dur);
     callTxt.property("Transform").property("Position").setValue([-30, 8]);
     callTxt.parent = callPill;
     callTxt.inPoint = 2.5;
@@ -8395,7 +8431,7 @@ function _uiBudgetCard() {
 
     // Day labels
     for (var d = 0; d < days.length; d++) {
-        var dt = _uiText(comp, days[d], 20, [0.55,0.55,0.62,1], false, dur);
+        var dt = _uiText2(comp, days[d], 20, [0.55,0.55,0.62,1], false, dur);
         var dPos = [chartLeft + d*stepX - 20, chartBaseY + 40];
         dt.property("Transform").property("Position").setValue(dPos);
         dt.inPoint = 1.0 + d * 0.05;
@@ -8451,9 +8487,9 @@ function _uiOrbitalMenu() {
         var py = cy + Math.sin(ang) * ringR * 0.7;
 
         var pill = _uiHelperShape(comp, "[Nytvir] Pill " + labels[p], dur);
-        _uiRRect(pill, 220, 46, 23, [0.15, 0.15, 0.18, 1], "fill");
+        _uiRRect2(pill, 220, 46, 23, [0.15, 0.15, 0.18, 1], "fill");
         // stroke as second group
-        _uiRRect(pill, 220, 46, 23, [0.4, 0.4, 0.5, 1], "strokeOnly", 1);
+        _uiRRect2(pill, 220, 46, 23, [0.4, 0.4, 0.5, 1], "strokeOnly", 1);
         pill.property("Transform").property("Position").setValue([px, py]);
         pill.inPoint = 0.3 + p * 0.25;
         var pOp = pill.property("Transform").property("Opacity");
@@ -8463,7 +8499,7 @@ function _uiOrbitalMenu() {
         pSc.setValueAtTime(0.3 + p*0.25, [70, 70]);
         pSc.setValueAtTime(0.7 + p*0.25, [100, 100]);
 
-        var ptxt = _uiText(comp, labels[p], 16, [0.85, 0.85, 0.9, 1], false, dur);
+        var ptxt = _uiText2(comp, labels[p], 16, [0.85, 0.85, 0.9, 1], false, dur);
         ptxt.parent = pill;
         ptxt.property("Transform").property("Position").setValue([-70, 6]);
         ptxt.inPoint = 0.3 + p*0.25;
@@ -8472,7 +8508,7 @@ function _uiOrbitalMenu() {
     }
 
     // Bottom tagline
-    var tag = _uiText(comp, "Har birini batafsil ko'rsatishga tayyorman", 22, [0.85, 0.85, 0.9, 1], false, dur);
+    var tag = _uiText2(comp, "Har birini batafsil ko'rsatishga tayyorman", 22, [0.85, 0.85, 0.9, 1], false, dur);
     tag.property("Transform").property("Position").setValue([cx - 300, cy + 480]);
     tag.inPoint = 2.5;
     var tOp = tag.property("Transform").property("Opacity");
