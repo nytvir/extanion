@@ -69,6 +69,8 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 .edit-layer-name { font-size: 11px; font-weight: 700; color: var(--accent); }
 .edit-refresh { background: transparent; border: 1px solid var(--border); color: var(--muted); font-size: 9px; padding: 4px 10px; border-radius: 4px; cursor: pointer; transition: .2s; font-family: inherit; }
 .edit-refresh:hover { border-color: var(--accent); color: var(--accent); }
+.ctrl-num { width: 100%; background: #0d0d12; border: 1px solid var(--border); color: var(--accent); font-size: 14px; font-weight: 700; padding: 8px 12px; border-radius: 6px; font-family: inherit; outline: none; }
+.ctrl-num:focus { border-color: var(--accent); }
 
 .ctrl-block { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 13px; }
 .ctrl-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -664,7 +666,11 @@ function loadControls() {
       data.controls.forEach(function(c) {
         if (c.name === 'Curve Type') return;
         html += '<div class="ctrl-block">';
-        if (c.type === 'slider') {
+        if (c.type === 'slider' && (c.name === 'Target' || c.name.indexOf('Multiplier') > -1)) {
+          // free numeric entry — sliders can't reach millions
+          html += '<div class="ctrl-label"><span class="ctrl-name">' + c.name + '</span></div>';
+          html += '<input type="number" class="ctrl-num" min="0" step="1" value="' + parseFloat(c.value) + '" onchange="updateControl(\'' + c.name.replace(/'/g, "\\'") + '\',\'slider\',this.value)">';
+        } else if (c.type === 'slider') {
           var max = 300;
           if (c.name.indexOf('Power') > -1 || c.name.indexOf('Width') > -1 || c.name.indexOf('Distance') > -1 || c.name.indexOf('Height') > -1) max = 2000;
           if (c.name.indexOf('Angle') > -1) max = 720;
