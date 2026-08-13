@@ -79,6 +79,9 @@ function nytvir_execute(cmd) {
         else if (cmd === "glowPeak") { _glowPeak("blue"); }
         else if (cmd === "glowPeakPurple") { _glowPeak("purple"); }
         else if (cmd === "glowPeakGreen") { _glowPeak("green"); }
+        else if (cmd === "bouncrPosition") { _bouncrApply("position"); }
+        else if (cmd === "bouncrScale") { _bouncrApply("scale"); }
+        else if (cmd === "bouncrRotation") { _bouncrApply("rotation"); }
         else if (cmd === "neonGrid") { _neonGridHero("blue"); }
         else if (cmd === "neonGridRed") { _neonGridHero("red"); }
         else if (cmd === "neonGridPurple") { _neonGridHero("purple"); }
@@ -4793,6 +4796,52 @@ function _glowPeak(colorName) {
 }
 
 // --- NEON GRID HERO: real 3D camera scene — receding glow floor + floating glass gauge card
+// --- BOUNCr UNIVERSAL: 4-slider spring bounce expression (Amplitude/Frequency/Decay/Floor)
+// Applies to Position/Scale/Rotation of every selected layer. Sliders stay editable after applying.
+function _bouncrApply(propChoice) {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return 0; }
+    if (comp.selectedLayers.length === 0) { alert("Avval qatlam(lar)ni tanlang!"); return 0; }
+
+    var expr =
+        "amp = effect(\"BOUNCr Amplitude\")(\"Slider\");\n" +
+        "freq = effect(\"BOUNCr Frequency\")(\"Slider\");\n" +
+        "decay = effect(\"BOUNCr Decay\")(\"Slider\");\n" +
+        "floorPct = effect(\"BOUNCr Floor\")(\"Slider\");\n" +
+        "t = time - inPoint;\n" +
+        "if (t < 0){ value }\n" +
+        "else {\n" +
+        "  s = amp * Math.cos(freq*t*2*Math.PI) / Math.exp(decay*t);\n" +
+        "  s = s * (1 - floorPct/100);\n" +
+        "  value + s;\n" +
+        "}";
+
+    var applied = 0;
+    for (var li = 0; li < comp.selectedLayers.length; li++) {
+        var L = comp.selectedLayers[li];
+        try {
+            var fxg = L.property("ADBE Effect Parade");
+            for (var fi = fxg.numProperties; fi >= 1; fi--) {
+                if (fxg.property(fi).name.indexOf("BOUNCr") === 0) fxg.property(fi).remove();
+            }
+            var sAmp = fxg.addProperty("ADBE Slider Control"); sAmp.name = "BOUNCr Amplitude";
+            sAmp.property(1).setValue(propChoice === "scale" ? 12 : (propChoice === "rotation" ? 15 : 40));
+            var sFreq = fxg.addProperty("ADBE Slider Control"); sFreq.name = "BOUNCr Frequency"; sFreq.property(1).setValue(2.5);
+            var sDecay = fxg.addProperty("ADBE Slider Control"); sDecay.name = "BOUNCr Decay"; sDecay.property(1).setValue(4);
+            var sFloor = fxg.addProperty("ADBE Slider Control"); sFloor.name = "BOUNCr Floor"; sFloor.property(1).setValue(0);
+
+            var target = null;
+            if (propChoice === "scale") target = L.property("Transform").property("Scale");
+            else if (propChoice === "rotation") target = L.property("Transform").property("Rotation");
+            else target = L.property("Transform").property("Position");
+
+            target.expression = expr;
+            applied++;
+        } catch (e) { alert("Xato (" + L.name + "): " + e.toString()); }
+    }
+    return applied;
+}
+
 function _neonGridHero(colorName) {
     var comp = app.project.activeItem;
     if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return; }
