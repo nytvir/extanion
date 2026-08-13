@@ -3301,7 +3301,7 @@ function _numberCounter() {
     _addSlider(ctrl, "Count Time", 2.2);
     var pre = _uiPrefix(ctrl.name);
 
-    var num = _uiText(comp, "0", Math.round(w*0.13), 6147, 'thisComp.layer("'+ctrl.name+'").effect("Number Color")(1)', dur);
+    var num = _uiText(comp, "0", Math.round(w*0.13), 6145, 'thisComp.layer("'+ctrl.name+'").effect("Number Color")(1)', dur);
     // count-up drives the text; color is set separately via the style API in the same expression
     num.property("ADBE Text Properties").property("ADBE Text Document").expression =
         "var ctl=thisComp.layer('"+ctrl.name+"'); var spd=ctl.effect('Animation Speed')(1)/100; var tt=(time-inPoint)*spd; "+FMT+
@@ -3311,10 +3311,19 @@ function _numberCounter() {
     _uiFont(num, "Arial-BoldMT");
     _uiGlowFx(num, w*0.025, 0.55);
     num.parent = ctrl;
-    // true optical centre: anchor tracks the live text box, so the number stays centred as it grows
-    num.property("ADBE Transform Group").property("ADBE Anchor Point").expression =
-        "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
-    num.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    // centring is computed from the count value itself (digit metrics), never from
+    // sourceRectAtTime — that expression silently dies on text driven by style.setText
+    num.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, 0]);
+    num.property("ADBE Transform Group").property("ADBE Position").expression =
+        "var ctl=thisLayer.parent; var spd=ctl.effect('Animation Speed')(1)/100; var tt=(time-inPoint)*spd; " +
+        "function eo3(x){x=Math.max(0,Math.min(1,x));return 1-Math.pow(1-x,3);} " +
+        "var ct=Math.max(0.1,ctl.effect('Count Time')(1)); " +
+        "var mult=1; try{mult=Math.max(1,ctl.effect('x Multiplier')(1));}catch(e){} " +
+        "var e=eo3((tt-0.15)/ct); var v=Math.round(ctl.effect('Target')(1)*mult*e); " +
+        "var s=''+v; var commas=Math.floor((s.length-1)/3); " +
+        "var fsz=text.sourceText.style.fontSize; " +
+        "var wpx=s.length*fsz*0.556 + commas*fsz*0.278; " +
+        "[-wpx/2, value[1]];";
     // no intro/outro/punch — it just counts and stays until the user trims it
     ctrl.outPoint = comp.duration;
     num.outPoint = comp.duration;
