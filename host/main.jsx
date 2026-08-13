@@ -289,7 +289,7 @@ function _adjTransition(type) {
             "var dist = effect('Pan Distance')(1) * " + dir + ";" +
             "var res; if(t<mid){ var p=t/mid; res=[cx + dist*easeIn(p), cy]; } else { var p=(t-mid)/mid; res=[cx - dist + dist*easeOut(p), cy]; } res;";
         
-        var blur = _addFx(L, "ADBE Directional Blur");
+        var blur = _addFx(L, "ADBE Motion Blur");
         blur.property(1).setValue(90); // Direction
         blur.property(2).expression = baseExpr + 
             "var bs = effect('Blur Strength')(1);" +
@@ -8290,7 +8290,7 @@ function _amv01_WhipLeft() {
         "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
         "var dist = " + L.containingComp.width + " * 0.6;" +
         "var res; if(t<mid){var p=t/mid; res=[cx - dist*easeIn(p), cy];} else {var p=(t-mid)/mid; res=[cx + dist - dist*easeOut(p), cy];} res;";
-    var db = _addFx(L, "ADBE Directional Blur");
+    var db = _addFx(L, "ADBE Motion Blur");
     db.property(1).setValue(90); // horizontal
     db.property(2).expression = _AMV_BASE + "peak() * effect('Blur')(1);";
 }
@@ -8302,7 +8302,7 @@ function _amv02_WhipRight() {
         "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
         "var dist = " + L.containingComp.width + " * 0.6;" +
         "var res; if(t<mid){var p=t/mid; res=[cx + dist*easeIn(p), cy];} else {var p=(t-mid)/mid; res=[cx - dist + dist*easeOut(p), cy];} res;";
-    var db = _addFx(L, "ADBE Directional Blur");
+    var db = _addFx(L, "ADBE Motion Blur");
     db.property(1).setValue(90);
     db.property(2).expression = _AMV_BASE + "peak() * effect('Blur')(1);";
 }
@@ -8314,7 +8314,7 @@ function _amv03_WhipUp() {
         "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
         "var dist = " + L.containingComp.height + " * 0.6;" +
         "var res; if(t<mid){var p=t/mid; res=[cx, cy - dist*easeIn(p)];} else {var p=(t-mid)/mid; res=[cx, cy + dist - dist*easeOut(p)];} res;";
-    var db = _addFx(L, "ADBE Directional Blur");
+    var db = _addFx(L, "ADBE Motion Blur");
     db.property(1).setValue(0);
     db.property(2).expression = _AMV_BASE + "peak() * effect('Blur')(1);";
 }
@@ -8326,7 +8326,7 @@ function _amv04_WhipDown() {
         "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
         "var dist = " + L.containingComp.height + " * 0.6;" +
         "var res; if(t<mid){var p=t/mid; res=[cx, cy + dist*easeIn(p)];} else {var p=(t-mid)/mid; res=[cx, cy - dist + dist*easeOut(p)];} res;";
-    var db = _addFx(L, "ADBE Directional Blur");
+    var db = _addFx(L, "ADBE Motion Blur");
     db.property(1).setValue(0);
     db.property(2).expression = _AMV_BASE + "peak() * effect('Blur')(1);";
 }
@@ -8454,7 +8454,7 @@ function _amv14_CameraRam() {
         "var cx = " + (L.containingComp.width/2) + "; var cy = " + (L.containingComp.height/2) + ";" +
         "var sh = effect('Shake')(1) * peak();" +
         "[cx + (noise(time*40)-0.5)*sh*2, cy + (noise(time*40+30)-0.5)*sh*2];";
-    var db = _addFx(L, "ADBE Directional Blur");
+    var db = _addFx(L, "ADBE Motion Blur");
     db.property(1).expression = "time*720;";
     db.property(2).expression = _AMV_BASE + "peak() * 60;";
 }
@@ -8471,12 +8471,90 @@ function _amv15_ShatterImpact() {
     tr.property(4).expression = _AMV_BASE + "100 + peak() * 30;";
 }
 
+// --- Shatter Impact family: more burst-style hits ---
+function _amv16_GlitchSlice() {
+    var L = _amvSetup("Glitch Slice", 0.4); if (!L) return;
+    _addSlider(L, "Slice Amount", 120);
+    var ww = _addFx(L, "ADBE Wave Warp");
+    ww.property(1).setValue(2); // square wave = horizontal slices
+    ww.property(2).expression = _AMV_BASE + "Math.round(peak() * effect('Slice Amount')(1));";
+    ww.property(3).setValue(Math.max(60, L.containingComp.height/12));
+    ww.property(4).setValue(0);
+    ww.property(5).setValue(4.5);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 14;";
+}
+function _amv17_LensPunch() {
+    var L = _amvSetup("Lens Punch", 0.5); if (!L) return;
+    _addSlider(L, "Bulge", 120);
+    var oc = _addFx(L, "ADBE Optics Compensation");
+    oc.property(1).expression = _AMV_BASE + "peak() * effect('Bulge')(1);";
+    oc.property(2).setValue(1); // reverse = bulge outward
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 22;";
+    var rb = _addFx(L, "ADBE Radial Blur");
+    rb.property(2).expression = _AMV_BASE + "peak() * 25;";
+}
+function _amv18_TwistImpact() {
+    var L = _amvSetup("Twist Impact", 0.45); if (!L) return;
+    _addSlider(L, "Twist Angle", 140);
+    var tw = _addFx(L, "ADBE Twirl");
+    tw.property(1).expression = _AMV_BASE + "(t<mid?1:-1) * peak() * effect('Twist Angle')(1);";
+    tw.property(2).setValue(70);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 26;";
+}
+function _amv19_PixelCrush() {
+    var L = _amvSetup("Pixel Crush", 0.4); if (!L) return;
+    _addSlider(L, "Crush", 100);
+    var bl = _addFx(L, "CC Block Load");
+    // completion drops at the peak -> image collapses into chunky loading blocks
+    bl.property(1).expression = _AMV_BASE + "var c=effect('Crush')(1)/100; 100 - peak()*88*c;";
+    try { bl.property(3).setValue(0); } catch(e) {}
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 12;";
+}
+function _amv20_WaveCrash() {
+    var L = _amvSetup("Wave Crash", 0.5); if (!L) return;
+    _addSlider(L, "Wave Height", 90);
+    var ww = _addFx(L, "ADBE Wave Warp");
+    ww.property(1).setValue(1); // sine
+    ww.property(2).expression = _AMV_BASE + "Math.round(peak() * effect('Wave Height')(1));";
+    ww.property(3).setValue(Math.max(120, L.containingComp.width/6));
+    ww.property(4).setValue(90);
+    ww.property(5).setValue(6);
+    var db = _addFx(L, "ADBE Motion Blur");
+    db.property(1).setValue(0);
+    db.property(2).expression = _AMV_BASE + "peak() * 120;";
+}
+function _amv21_ChromaQuake() {
+    var L = _amvSetup("Chroma Quake", 0.5); if (!L) return;
+    _addSlider(L, "Quake Power", 100);
+    var td = _addFx(L, "ADBE Turbulent Displace");
+    td.property("Amount").expression = _AMV_BASE + "peak() * effect('Quake Power')(1) * 1.6;";
+    td.property("Size").setValue(120);
+    td.property("Complexity").setValue(3);
+    td.property("Evolution").expression = "time * 300;";
+    var tr = _addFx(L, "ADBE Geometry2");
+    var cx = L.containingComp.width/2, cy = L.containingComp.height/2;
+    tr.property(2).expression = _AMV_BASE +
+        "var p=effect('Quake Power')(1); var a=peak()*p*0.22; [" + cx + " + a*Math.sin(time*57), " + cy + " + a*Math.cos(time*43)];";
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 18;";
+}
+
 function _amvDispatch(cmd) {
     var m = {
         amv01:_amv01_WhipLeft, amv02:_amv02_WhipRight, amv03:_amv03_WhipUp, amv04:_amv04_WhipDown,
         amv05:_amv05_ZoomPunch, amv06:_amv06_ZoomOutPunch, amv07:_amv07_RGBSlam, amv08:_amv08_BassShake,
         amv09:_amv09_RadialBurst, amv10:_amv10_TwirlCut, amv11:_amv11_WarpZoom, amv12:_amv12_SpeedLines,
-        amv13:_amv13_WhiteFlash, amv14:_amv14_CameraRam, amv15:_amv15_ShatterImpact
+        amv13:_amv13_WhiteFlash, amv14:_amv14_CameraRam, amv15:_amv15_ShatterImpact,
+        amv16:_amv16_GlitchSlice, amv17:_amv17_LensPunch, amv18:_amv18_TwistImpact,
+        amv19:_amv19_PixelCrush, amv20:_amv20_WaveCrash, amv21:_amv21_ChromaQuake
     };
     if (m[cmd]) m[cmd]();
 }
