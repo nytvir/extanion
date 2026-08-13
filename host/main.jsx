@@ -8547,6 +8547,75 @@ function _amv21_ChromaQuake() {
     tr.property(4).expression = _AMV_BASE + "100 + peak() * 18;";
 }
 
+function _amv22_KaleidoHit() {
+    var L = _amvSetup("Kaleido Hit", 0.5); if (!L) return;
+    var k = _addFx(L, "CC Kaleida");
+    try { k.property("Size").setValue(28); } catch(e) {}
+    // kaleida is always-on, so the adjustment layer itself fades in/out around the peak
+    L.property("ADBE Transform Group").property("ADBE Opacity").expression = _AMV_BASE + "peak() * 100;";
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 20;";
+}
+function _amv23_LensBall() {
+    var L = _amvSetup("Lens Ball", 0.5); if (!L) return;
+    _addSlider(L, "Ball Power", 100);
+    var lens = _addFx(L, "CC Lens");
+    try { lens.property("Size").expression = _AMV_BASE + "500 - peak() * 360;"; } catch(e) {}
+    try { lens.property("Convergence").expression = _AMV_BASE + "peak() * effect('Ball Power')(1);"; } catch(e) {}
+    L.property("ADBE Transform Group").property("ADBE Opacity").expression = _AMV_BASE + "Math.min(100, peak() * 300);";
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 25;";
+}
+function _amv24_GridPanels() {
+    var L = _amvSetup("Grid Panels", 0.45); if (!L) return;
+    _addSlider(L, "Panel Twist", 40);
+    var g = _addFx(L, "CC Griddler");
+    try { g.property("Tile Size").setValue(12); } catch(e) {}
+    try { g.property("Rotation").expression = _AMV_BASE + "(t<mid?1:-1) * peak() * effect('Panel Twist')(1);"; } catch(e) {}
+    try { g.property("Horizontal Scale").expression = _AMV_BASE + "100 - peak() * 22;"; } catch(e) {}
+    try { g.property("Vertical Scale").expression = _AMV_BASE + "100 - peak() * 22;"; } catch(e) {}
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 16;";
+}
+function _amv25_Spin360() {
+    var L = _amvSetup("Spin 360", 0.5); if (!L) return;
+    var tr = _addFx(L, "ADBE Geometry2");
+    try {
+        tr.property("Rotation").expression = _AMV_BASE +
+            "var p; if(t<mid){p=easeIn(t/mid)*180;}else{p=180+easeOut((t-mid)/mid)*180;} p;";
+    } catch(e) {}
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 55;"; // zoom so corners never show
+    var rb = _addFx(L, "ADBE Radial Blur");
+    rb.property(2).expression = _AMV_BASE + "peak() * 30;"; // default type is already spin
+}
+function _amv26_SqueezePop() {
+    var L = _amvSetup("Squeeze Pop", 0.4); if (!L) return;
+    _addSlider(L, "Squeeze", 45);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(0); // non-uniform: squash X, stretch Y
+    try { tr.property("Scale Width").expression = _AMV_BASE + "100 - peak() * effect('Squeeze')(1);"; } catch(e) {}
+    try { tr.property("Scale Height").expression = _AMV_BASE + "100 + peak() * effect('Squeeze')(1) * 0.8;"; } catch(e) {}
+    var db = _addFx(L, "ADBE Motion Blur");
+    db.property(1).setValue(90);
+    db.property(2).expression = _AMV_BASE + "peak() * 60;";
+}
+function _amv27_BlindSlice() {
+    var L = _amvSetup("Blind Slice", 0.4); if (!L) return;
+    _addSlider(L, "Slice Depth", 65);
+    var vb = _addFx(L, "ADBE Venetian Blinds");
+    vb.property(1).expression = _AMV_BASE + "peak() * effect('Slice Depth')(1);";
+    vb.property(2).setValue(20);
+    vb.property(3).setValue(Math.max(30, L.containingComp.height/22));
+    vb.property(4).setValue(8);
+    var tr = _addFx(L, "ADBE Geometry2");
+    tr.property(3).setValue(1);
+    tr.property(4).expression = _AMV_BASE + "100 + peak() * 14;";
+}
+
 function _amvDispatch(cmd) {
     var m = {
         amv01:_amv01_WhipLeft, amv02:_amv02_WhipRight, amv03:_amv03_WhipUp, amv04:_amv04_WhipDown,
@@ -8554,7 +8623,9 @@ function _amvDispatch(cmd) {
         amv09:_amv09_RadialBurst, amv10:_amv10_TwirlCut, amv11:_amv11_WarpZoom, amv12:_amv12_SpeedLines,
         amv13:_amv13_WhiteFlash, amv14:_amv14_CameraRam, amv15:_amv15_ShatterImpact,
         amv16:_amv16_GlitchSlice, amv17:_amv17_LensPunch, amv18:_amv18_TwistImpact,
-        amv19:_amv19_PixelCrush, amv20:_amv20_WaveCrash, amv21:_amv21_ChromaQuake
+        amv19:_amv19_PixelCrush, amv20:_amv20_WaveCrash, amv21:_amv21_ChromaQuake,
+        amv22:_amv22_KaleidoHit, amv23:_amv23_LensBall, amv24:_amv24_GridPanels,
+        amv25:_amv25_Spin360, amv26:_amv26_SqueezePop, amv27:_amv27_BlindSlice
     };
     if (m[cmd]) m[cmd]();
 }
