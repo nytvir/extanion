@@ -3297,6 +3297,7 @@ function _numberCounter() {
     var ctrl = _uiCtl(comp, "NUMBER COUNTER CONTROLLER", dur, [w/2, h*0.45]);
     _addColorControl(ctrl, "Number Color", [1,1,1]);
     _addSlider(ctrl, "Target", 1000);
+    _addSlider(ctrl, "x Multiplier", 1); // AE sliders cap at 1,000,000 — Target * Multiplier goes beyond
     _addSlider(ctrl, "Count Time", 2.2);
     var pre = _uiPrefix(ctrl.name);
 
@@ -3305,7 +3306,7 @@ function _numberCounter() {
     num.property("ADBE Text Properties").property("ADBE Text Document").expression =
         "var ctl=thisComp.layer('"+ctrl.name+"'); var spd=ctl.effect('Animation Speed')(1)/100; var tt=(time-inPoint)*spd; "+FMT+
         "function eo3(x){x=Math.max(0,Math.min(1,x));return 1-Math.pow(1-x,3);} var ct=Math.max(0.1,ctl.effect('Count Time')(1)); "+
-        "var e=eo3((tt-0.15)/ct); var v=ctl.effect('Target')(1)*e; var c=ctl.effect('Number Color')(1); "+
+        "var e=eo3((tt-0.15)/ct); var v=ctl.effect('Target')(1)*Math.max(1,ctl.effect('x Multiplier')(1))*e; var c=ctl.effect('Number Color')(1); "+
         "text.sourceText.style.setFillColor([c[0],c[1],c[2]]).setText(fmt(v));";
     _uiFont(num, "Arial-BoldMT");
     _uiGlowFx(num, w*0.025, 0.55);
