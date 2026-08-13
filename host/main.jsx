@@ -5018,6 +5018,11 @@ function _insertLogoCardSegment() {
         if (!segItem) { alert("Import qilindi, lekin '" + SEGMENT_NAME + "' topilmadi ichida."); return; }
     }
 
+    if (comp === segItem || comp.id === segItem.id) {
+        alert("Bu kartaning o'zi hozir ochiq turibdi.\nBoshqa (o'z videongiz bo'lgan) kompozitsiyaga o'tib, qayta bosing.");
+        return;
+    }
+
     var layer = comp.layers.add(segItem);
     layer.name = "[Nytvir] Logo Card";
     layer.property("Transform").property("Position").setValue([comp.width / 2, comp.height / 2]);
