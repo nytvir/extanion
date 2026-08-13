@@ -79,6 +79,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "glowPeak") { _glowPeak("blue"); }
         else if (cmd === "glowPeakPurple") { _glowPeak("purple"); }
         else if (cmd === "glowPeakGreen") { _glowPeak("green"); }
+        else if (cmd === "insertLogoCard") { _insertLogoCardSegment(); }
         else if (cmd === "uiFeatureCard") { _uiFeatureCard("purple"); }
         else if (cmd === "uiFeatureCardBlue") { _uiFeatureCard("blue"); }
         else if (cmd === "uiFeatureCardGold") { _uiFeatureCard("gold"); }
@@ -4985,6 +4986,43 @@ function _uiFeatureCard(colorName) {
 
     root.selected = true;
     return root;
+}
+
+// --- LOGO CARD SEGMENT: literal copy of the reference "logo card" moment (nitor project),
+// imported on demand and inserted as one layer. Not a rebuild — the exact original layers/keyframes.
+function _insertLogoCardSegment() {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return; }
+
+    var SEGMENT_NAME = "[Nytvir] Comp1 Segment 6;22-end";
+    var SOURCE_AEP = "D:/ae projects/nitor/UI Bounce Animation.aep";
+
+    var segItem = null;
+    for (var i = 1; i <= app.project.numItems; i++) {
+        var it = app.project.item(i);
+        if (it instanceof CompItem && it.name === SEGMENT_NAME) { segItem = it; break; }
+    }
+
+    if (!segItem) {
+        var srcFile = new File(SOURCE_AEP);
+        if (!srcFile.exists) { alert("Manba topilmadi: " + SOURCE_AEP); return; }
+        try {
+            var io = new ImportOptions(srcFile);
+            io.importAs = ImportAsType.PROJECT;
+            app.project.importFile(io);
+        } catch (e) { alert("Import xato: " + e.toString()); return; }
+        for (var i2 = 1; i2 <= app.project.numItems; i2++) {
+            var it2 = app.project.item(i2);
+            if (it2 instanceof CompItem && it2.name === SEGMENT_NAME) { segItem = it2; break; }
+        }
+        if (!segItem) { alert("Import qilindi, lekin '" + SEGMENT_NAME + "' topilmadi ichida."); return; }
+    }
+
+    var layer = comp.layers.add(segItem);
+    layer.name = "[Nytvir] Logo Card";
+    layer.property("Transform").property("Position").setValue([comp.width / 2, comp.height / 2]);
+    layer.selected = true;
+    return layer;
 }
 
 function _neonGridHero(colorName) {
