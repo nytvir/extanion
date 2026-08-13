@@ -54,6 +54,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "countdownTimer") { _countdownTimer(); }
         else if (cmd === "moneyCounter") { _moneyCounter(); }
         else if (cmd === "numberCounter") { _numberCounter(); }
+        else if (cmd === "terminalUpload") { _terminalUpload(); }
         else if (cmd === "growthChart") { _growthChart(); }
         else if (cmd === "notifySubscriber") { _notifySubscriber(); }
         else if (cmd === "titleHighlight") { _titleHighlight(); }
@@ -3318,6 +3319,103 @@ function _numberCounter() {
         "var ct=Math.max(0.1,ctl.effect('Count Time')(1)); var land=(0.15+ct)/ (ctl.effect('Animation Speed')(1)/100); " +
         "var e=ob(pIn); var x=ib(pOut); var s=Math.max(0,e-x); var b=0; " +
         "if(t>land){var q=t-land; b=0.09*Math.sin(q*16)/Math.exp(q*7);} [s*100*(1+b), s*100*(1+b)];";
+
+    ctrl.selected = true;
+}
+
+// --- TERMINAL UPLOAD: hacker terminal, lines type in, progress bar fills to 100%
+function _terminalUpload() {
+    var comp = app.project.activeItem;
+    if(!comp) return;
+    var dur = 7.5;
+    var w = comp.width, h = comp.height;
+    var ctrl = _uiCtl(comp, "TERMINAL UPLOAD CONTROLLER", dur, [w/2, h*0.42]);
+    _addColorControl(ctrl, "Terminal Green", [0.24,0.84,0.55]);
+    _addColorControl(ctrl, "Accent Orange", [0.97,0.58,0.10]);
+    var cRef = 'thisComp.layer("'+ctrl.name+'")';
+    var basePre = "var ctl=thisComp.layer('"+ctrl.name+"'); var spd=ctl.effect('Animation Speed')(1)/100; var t=(time-inPoint)*spd; ";
+
+    var cw = w*0.86, pad = cw*0.07, fs = Math.round(cw*0.046), lh = fs*2.0;
+    var ch = pad*2 + lh*7.2;
+    var xL = -cw/2 + pad;
+    function rowY(i){ return -ch/2 + pad + lh*(0.55 + i); }
+
+    // terminal window
+    var card = _uiRRect(comp, "Terminal Window", dur, cw, ch, fs*0.8, '[0.016,0.024,0.018,1]');
+    var cardStroke = card.property("ADBE Root Vectors Group").property(1).property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    cardStroke.property("ADBE Vector Stroke Color").setValue([0.13,0.20,0.15,1]);
+    cardStroke.property("ADBE Vector Stroke Width").setValue(Math.max(2, w*0.0025));
+    card.parent = ctrl;
+    card.property("ADBE Transform Group").property("ADBE Position").setValue([0,0]);
+    var cOp = card.property("ADBE Transform Group").property("ADBE Opacity");
+    cOp.setValueAtTime(comp.time, 0); cOp.setValueAtTime(comp.time + 0.3, 92);
+    var cSc = card.property("ADBE Transform Group").property("ADBE Scale");
+    cSc.setValueAtTime(comp.time, [96,96]); cSc.setValueAtTime(comp.time + 0.35, [100,100]);
+    try { for (var ck=1; ck<=2; ck++){ cSc.setInterpolationTypeAtKey(ck, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER); cOp.setInterpolationTypeAtKey(ck, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER); } } catch(e){}
+
+    // mac traffic dots
+    var dots = comp.layers.addShape();
+    dots.name = "Terminal Dots"; dots.inPoint = comp.time; dots.outPoint = comp.time + dur;
+    var dotCols = [[1,0.37,0.34,1],[1,0.74,0.18,1],[0.16,0.78,0.25,1]];
+    for (var di = 0; di < 3; di++) {
+        var dg = dots.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var de = dg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+        de.property("ADBE Vector Ellipse Size").setValue([fs*0.5, fs*0.5]);
+        var df = dg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+        df.property("ADBE Vector Fill Color").setValue(dotCols[di]);
+        dg.property("ADBE Vector Transform Group").property("ADBE Vector Position").setValue([di*fs*0.95, 0]);
+    }
+    dots.parent = ctrl;
+    dots.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0,0]);
+    dots.property("ADBE Transform Group").property("ADBE Position").setValue([xL + fs*0.25, rowY(0) - lh*0.15]);
+    dots.property("ADBE Transform Group").property("ADBE Opacity").expression = basePre + "(t>0.15)?100:0;";
+
+    // helper: monospace terminal line, appears (or types) at its own delay
+    function termLine(str, row, col, mode, delay, cps, cursor) {
+        var tl = _uiText(comp, str, fs, 6145, null, dur, col);
+        _uiFont(tl, "Consolas");
+        tl.parent = ctrl;
+        tl.property("ADBE Transform Group").property("ADBE Position").setValue([xL, rowY(row)]);
+        if (mode === "type") {
+            var esc = str.replace(/'/g, "\\'");
+            var cur = (cursor === "stay")
+                ? "if(n>=s.length){o+=(Math.floor(t*2.5)%2==0)?'_':'';}else{o+='_';}"
+                : "if(n<s.length){o+='_';}";
+            tl.property("ADBE Text Properties").property("ADBE Text Document").expression =
+                basePre + "var s='"+esc+"'; var n=Math.floor(Math.max(0,(t-"+delay+")*"+cps+")); if(n>s.length)n=s.length; var o=s.substr(0,n); "+cur+" text.sourceText.style.setText(o);";
+        } else {
+            tl.property("ADBE Transform Group").property("ADBE Opacity").expression = basePre + "(t>"+delay+")?100:0;";
+        }
+        return tl;
+    }
+    var GRN = [0.24,0.84,0.55], DIM = [0.25,0.43,0.32], WHT = [0.87,0.91,0.87], ORG = [0.97,0.58,0.10];
+
+    termLine("// 2008-10-31 - anonim server", 1, DIM, "step", 0.4);
+    termLine("$ upload bitcoin.pdf", 2, WHT, "type", 0.9, 22);
+    termLine("muallif: satoshi_?????", 4, DIM, "step", 3.7);
+    termLine("1 hujjat. 9 sahifa.", 5, WHT, "step", 4.4);
+    var lastL = termLine("> dunyo endi eskisidek emas", 6, ORG, "type", 5.0, 20, "stay");
+    _uiGlowFx(lastL, w*0.018, 0.6);
+
+    // progress bar row: track + left-anchored fill + percent readout
+    var bw = cw*0.5, bh = fs*0.55, yBar = rowY(3);
+    var track = _uiRRect(comp, "Upload Bar Track", dur, bw, bh, bh/2, '[0.06,0.12,0.08,1]');
+    track.parent = ctrl;
+    track.property("ADBE Transform Group").property("ADBE Position").setValue([xL + bw/2, yBar]);
+    track.property("ADBE Transform Group").property("ADBE Opacity").expression = basePre + "(t>2.0)?100:0;";
+    var fill = _uiRRect(comp, "Upload Bar Fill", dur, bw, bh, bh/2, cRef+'.effect("Terminal Green")(1)');
+    fill.parent = ctrl;
+    fill.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([-bw/2, 0]);
+    fill.property("ADBE Transform Group").property("ADBE Position").setValue([xL, yBar]);
+    fill.property("ADBE Transform Group").property("ADBE Scale").expression = basePre + "var p=Math.max(0,Math.min(1,(t-2.05)/1.3)); [p*100,100];";
+    _uiGlowFx(fill, w*0.012, 0.8);
+    var pct = _uiText(comp, "0%", fs, 6145, null, dur, GRN);
+    _uiFont(pct, "Consolas");
+    pct.parent = ctrl;
+    pct.property("ADBE Transform Group").property("ADBE Position").setValue([xL + bw + pad*0.5, yBar]);
+    pct.property("ADBE Transform Group").property("ADBE Opacity").expression = basePre + "(t>2.0)?100:0;";
+    pct.property("ADBE Text Properties").property("ADBE Text Document").expression =
+        basePre + "var p=Math.max(0,Math.min(1,(t-2.05)/1.3)); text.sourceText.style.setText(Math.round(p*100)+'%');";
 
     ctrl.selected = true;
 }
