@@ -79,6 +79,9 @@ function nytvir_execute(cmd) {
         else if (cmd === "glowPeak") { _glowPeak("blue"); }
         else if (cmd === "glowPeakPurple") { _glowPeak("purple"); }
         else if (cmd === "glowPeakGreen") { _glowPeak("green"); }
+        else if (cmd === "uiFeatureCard") { _uiFeatureCard("purple"); }
+        else if (cmd === "uiFeatureCardBlue") { _uiFeatureCard("blue"); }
+        else if (cmd === "uiFeatureCardGold") { _uiFeatureCard("gold"); }
         else if (cmd === "bouncrPosition") { _bouncrApply("position"); }
         else if (cmd === "bouncrScale") { _bouncrApply("scale"); }
         else if (cmd === "bouncrRotation") { _bouncrApply("rotation"); }
@@ -4840,6 +4843,148 @@ function _bouncrApply(propChoice) {
         } catch (e) { alert("Xato (" + L.name + "): " + e.toString()); }
     }
     return applied;
+}
+
+// --- UI FEATURE CARD: icon + title + description with real casted-shadow (nitor recipe, real icon assets)
+function _uiFeatureCard(colorName) {
+    var comp = app.project.activeItem;
+    if (!comp || !(comp instanceof CompItem)) { alert("Avval kompozitsiya oching!"); return; }
+
+    var COLORS = {
+        purple: [0.78, 0.55, 1.0],
+        blue:   [0.35, 0.65, 1.0],
+        gold:   [1.0, 0.75, 0.35]
+    };
+    var C = COLORS[colorName] || COLORS.purple;
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var tIn = comp.time, dur = 3.0;
+
+    var root = comp.layers.addNull(dur);
+    root.name = "[UICard] Root";
+    root.property("Transform").property("Position").setValue([cx, cy]);
+    root.inPoint = tIn; root.outPoint = tIn + dur;
+
+    // 1) icon — real asset from the nitor reference kit (diamond.png / folder.png), not a hand-drawn shape
+    var ICON_FILES = {
+        purple: "D:/ae projects/nitor/diamond.png",
+        blue:   "D:/ae projects/nitor/folder.png",
+        gold:   "D:/ae projects/nitor/diamond.png"
+    };
+    var iconPath = ICON_FILES[colorName] || ICON_FILES.purple;
+    var iconFile = new File(iconPath);
+    var iconFootage = null;
+    if (iconFile.exists) {
+        for (var ii = 1; ii <= app.project.numItems; ii++) {
+            var it = app.project.item(ii);
+            if (it instanceof FootageItem && it.file && it.file.fsName === iconFile.fsName) { iconFootage = it; break; }
+        }
+        if (!iconFootage) {
+            try { iconFootage = app.project.importFile(new ImportOptions(iconFile)); } catch (e) {}
+        }
+    }
+
+    var icon, iconShadow;
+    if (iconFootage) {
+        icon = comp.layers.add(iconFootage);
+        icon.name = "[UICard] Icon";
+        icon.parent = root;
+        var iconTargetW = 100;
+        var iconScale = (iconTargetW / iconFootage.width) * 100;
+        icon.property("Transform").property("Scale").setValue([iconScale, iconScale]);
+        icon.property("Transform").property("Position").setValue([0, -140]);
+        try {
+            var iglow = icon.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+            iglow.property(2).setValue(80); iglow.property(3).setValue(12); iglow.property(4).setValue(0.35);
+        } catch (e) {}
+
+        iconShadow = icon.duplicate();
+        iconShadow.name = "[UICard] Icon Shadow";
+        iconShadow.moveAfter(icon);
+        icon.property("Transform").property("Position").setValue([0, -140]);
+        iconShadow.property("Transform").property("Position").setValue([10, -128]);
+        try {
+            var isFxg = iconShadow.property("ADBE Effect Parade");
+            for (var fi = isFxg.numProperties; fi >= 1; fi--) isFxg.property(fi).remove();
+            var isFill = isFxg.addProperty("ADBE Fill");
+            isFill.property("ADBE Fill-0002").setValue([0,0,0,1]);
+            var isBlur = isFxg.addProperty("ADBE Gaussian Blur 2");
+            isBlur.property(1).setValue(12);
+        } catch (e) {}
+        iconShadow.property("Transform").property("Opacity").setValue(45);
+    } else {
+        icon = comp.layers.addShape();
+        icon.name = "[UICard] Icon (fallback)";
+        icon.parent = root;
+        icon.property("Transform").property("Position").setValue([0, -140]);
+        var ig = icon.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var ic = ig.property("ADBE Vectors Group");
+        var ell = ic.addProperty("ADBE Vector Shape - Ellipse");
+        ell.property("ADBE Vector Ellipse Size").setValue([70,70]);
+        var ifill = ic.addProperty("ADBE Vector Graphic - Fill");
+        ifill.property("ADBE Vector Fill Color").setValue(C);
+        iconShadow = null;
+    }
+
+    var TITLES = { purple: "VIP FEATURES", blue: "CORE FILES", gold: "VIP FEATURES" };
+    var title = comp.layers.addText(TITLES[colorName] || TITLES.purple);
+    title.parent = root;
+    title.inPoint = tIn; title.outPoint = tIn + dur;
+    var td = title.property("Source Text").value;
+    td.fontSize = 46;
+    td.fillColor = [1,1,1];
+    td.justification = ParagraphJustification.CENTER_JUSTIFY;
+    td.tracking = 20;
+    try { td.font = "Arial-BoldMT"; } catch (e) {}
+    title.property("Source Text").setValue(td);
+    title.property("Transform").property("Position").setValue([0, -30]);
+
+    var desc = comp.layers.addText("Premium features to reach your goals faster.");
+    desc.parent = root;
+    desc.inPoint = tIn; desc.outPoint = tIn + dur;
+    var dd = desc.property("Source Text").value;
+    dd.fontSize = 24;
+    dd.fillColor = [0.68, 0.72, 0.82];
+    dd.justification = ParagraphJustification.CENTER_JUSTIFY;
+    try { dd.font = "ArialMT"; } catch (e) {}
+    desc.property("Source Text").setValue(dd);
+    desc.property("Transform").property("Position").setValue([0, 50]);
+
+    var line = comp.layers.addShape();
+    line.name = "[UICard] Accent Line";
+    line.parent = root;
+    line.property("Transform").property("Position").setValue([0, -85]);
+    var lg = line.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var lc = lg.property("ADBE Vectors Group");
+    var lrect = lc.addProperty("ADBE Vector Shape - Rect");
+    lrect.property("ADBE Vector Rect Size").setValue([56, 4]);
+    lrect.property("ADBE Vector Rect Roundness").setValue(2);
+    var lfill = lc.addProperty("ADBE Vector Graphic - Fill");
+    lfill.property("ADBE Vector Fill Color").setValue(C);
+    try {
+        var lglow = line.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+        lglow.property(2).setValue(50); lglow.property(3).setValue(18); lglow.property(4).setValue(0.8);
+    } catch (e) {}
+
+    function smoothK(prop, infl) {
+        for (var k = 1; k <= prop.numKeys; k++) {
+            try {
+                prop.setInterpolationTypeAtKey(k, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER);
+                var dims = 1; try { dims = prop.value.length || 1; } catch (e0) { dims = 1; }
+                var ea = []; for (var d = 0; d < dims; d++) ea.push(new KeyframeEase(0, infl == null ? 75 : infl));
+                prop.setTemporalEaseAtKey(k, ea, ea);
+            } catch (e) {}
+        }
+    }
+    var rScale = root.property("Transform").property("Scale");
+    rScale.setValueAtTime(tIn, [92,92]);
+    rScale.setValueAtTime(tIn + 0.45, [100,100]);
+    smoothK(rScale, 75);
+    var rOp = root.property("Transform").property("Opacity");
+    rOp.setValueAtTime(tIn, 0);
+    rOp.setValueAtTime(tIn + 0.35, 100);
+
+    root.selected = true;
+    return root;
 }
 
 function _neonGridHero(colorName) {
