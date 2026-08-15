@@ -57,6 +57,11 @@ function nytvir_execute(cmd) {
         else if (cmd === "terminalUpload") { _terminalUpload(); }
         else if (cmd === "bailoutStamp") { _bailoutStamp(); }
         else if (cmd === "genesisBlock") { _genesisBlock(); }
+        else if (cmd === "appleIsland") { _appleDynIsland(); }
+        else if (cmd === "appleNotify") { _appleNotify(); }
+        else if (cmd === "appleFaceID") { _appleFaceID(); }
+        else if (cmd === "appleControl") { _appleControlCenter(); }
+        else if (cmd === "appleCharge") { _appleChargeRing(); }
         else if (cmd === "growthChart") { _growthChart(); }
         else if (cmd === "notifySubscriber") { _notifySubscriber(); }
         else if (cmd === "titleHighlight") { _titleHighlight(); }
@@ -3427,6 +3432,391 @@ function _terminalUpload() {
     pct.property("ADBE Text Properties").property("ADBE Text Document").expression =
         basePre + "var p=Math.max(0,Math.min(1,(t-2.05)/1.3)); text.sourceText.style.setText(Math.round(p*100)+'%');";
 
+    ctrl.selected = true;
+}
+
+// ============================================================
+// APPLE UI KIT — glass blur + SF typography + iOS springs
+// Everything is plain editable layers: texts are real text layers,
+// colours are fills, motion is keyframes the user can drag.
+// ============================================================
+function _appleFontTry(tl, names) {
+    for (var i = 0; i < names.length; i++) {
+        try {
+            var d = tl.property("Source Text").value;
+            d.font = names[i];
+            tl.property("Source Text").setValue(d);
+            if (tl.property("Source Text").value.font === names[i]) return;
+        } catch (e) {}
+    }
+}
+var _SF_BOLD = ["SFProDisplay-Semibold", "SFProText-Semibold", "SegoeUI-Semibold", "SegoeUI-Bold"];
+var _SF_REG  = ["SFProDisplay-Regular", "SFProText-Regular", "SegoeUI"];
+
+// real frosted glass: white matte rects -> gaussian-blur adjustment (alpha matte) -> dark tint
+function _glassPanel(comp, name, rects, radius, blurAmt) {
+    function shapeWith(fillCol, op, nm) {
+        var s = comp.layers.addShape(); s.name = nm; s.inPoint = comp.time; s.outPoint = comp.duration;
+        for (var i = 0; i < rects.length; i++) {
+            var g = s.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+            var r = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+            r.property("ADBE Vector Rect Size").setValue([rects[i][2], rects[i][3]]);
+            r.property("ADBE Vector Rect Roundness").setValue(radius);
+            var f = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+            f.property("ADBE Vector Fill Color").setValue(fillCol);
+            g.property("ADBE Vector Transform Group").property("ADBE Vector Position").setValue([rects[i][0], rects[i][1]]);
+        }
+        if (op != null) s.property("ADBE Transform Group").property("ADBE Opacity").setValue(op);
+        return s;
+    }
+    var matte = shapeWith([1, 1, 1, 1], null, name + " Matte");
+    var adj = comp.layers.addSolid([0, 0, 0], name + " Glass Blur", comp.width, comp.height, comp.pixelAspect, comp.duration);
+    adj.adjustmentLayer = true;
+    adj.inPoint = comp.time; adj.outPoint = comp.duration;
+    var gb = adj.property("ADBE Effect Parade").addProperty("ADBE Gaussian Blur 2");
+    gb.property(1).setValue(blurAmt || 38);
+    try { gb.property(3).setValue(1); } catch (e) {}
+    try { adj.setTrackMatte(matte, TrackMatteType.ALPHA); }
+    catch (e) { try { adj.moveAfter(matte); adj.trackMatteType = TrackMatteType.ALPHA; } catch (e2) {} }
+    try { matte.enabled = false; } catch (e) {}
+    var tint = shapeWith([0.14, 0.145, 0.18, 1], 62, name + " Tint");
+    return { matte: matte, adj: adj, tint: tint };
+}
+function _appleTxt(comp, str, sizePx, col, bold) {
+    var tl = comp.layers.addText(str);
+    tl.inPoint = comp.time; tl.outPoint = comp.duration;
+    var d = tl.property("Source Text").value;
+    d.fontSize = sizePx; d.fillColor = col;
+    try { d.justification = ParagraphJustification.LEFT_JUSTIFY; } catch (e) {}
+    tl.property("Source Text").setValue(d);
+    _appleFontTry(tl, bold ? _SF_BOLD : _SF_REG);
+    return tl;
+}
+function _appleEase(prop) {
+    try {
+        for (var k = 1; k <= prop.numKeys; k++) {
+            var dims = 1; try { dims = prop.value.length || 1; } catch (e0) {}
+            var ea = []; for (var d = 0; d < dims; d++) ea.push(new KeyframeEase(0, 66));
+            prop.setInterpolationTypeAtKey(k, KeyframeInterpolationType.BEZIER, KeyframeInterpolationType.BEZIER);
+            prop.setTemporalEaseAtKey(k, ea, ea);
+        }
+    } catch (e) {}
+}
+
+// --- 1. DYNAMIC ISLAND: black pill expands, music info inside
+function _appleDynIsland() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "DYNAMIC ISLAND CONTROLLER", 5, [w / 2, h * 0.058]);
+    ctrl.outPoint = comp.duration;
+    var pw0 = w * 0.24, ph0 = w * 0.062, pw1 = w * 0.64, ph1 = w * 0.155;
+
+    var pill = comp.layers.addShape();
+    pill.name = "[Apple] Island Pill"; pill.inPoint = t0; pill.outPoint = comp.duration;
+    var pg = pill.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var pr = pg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    // configure the rect fully BEFORE adding the fill — addProperty invalidates sibling refs
+    pr.property("ADBE Vector Rect Roundness").setValue(ph1);
+    // expand with a soft spring; expression avoids Rect Size keyframe quirks
+    pr.property("ADBE Vector Rect Size").expression =
+        "var t = time - inPoint - 0.25; " +
+        "function eo(x){return 1 - Math.pow(1 - x, 3);} " +
+        "var p = eo(Math.max(0, Math.min(1, t / 0.5))); " +
+        "var ov = (t > 0 && t < 0.75) ? Math.sin(p * Math.PI) * 0.045 : 0; " +
+        "[" + pw0.toFixed(1) + " + " + (pw1 - pw0).toFixed(1) + " * p * (1 + ov * 0.4), " +
+        ph0.toFixed(1) + " + " + (ph1 - ph0).toFixed(1) + " * p * (1 + ov)];";
+    var pf = pg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    pf.property("ADBE Vector Fill Color").setValue([0.02, 0.02, 0.025, 1]);
+    pill.parent = ctrl;
+    pill.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var art = comp.layers.addShape();
+    art.name = "[Apple] Island Art"; art.inPoint = t0; art.outPoint = comp.duration;
+    var ag = art.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var ar = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    ar.property("ADBE Vector Rect Size").setValue([w * 0.095, w * 0.095]);
+    ar.property("ADBE Vector Rect Roundness").setValue(w * 0.024);
+    var af = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    af.property("ADBE Vector Fill Color").setValue([0.92, 0.48, 0.14, 1]);
+    art.parent = ctrl;
+    art.property("ADBE Transform Group").property("ADBE Position").setValue([-pw1 / 2 + w * 0.075, 0]);
+
+    var lab = _appleTxt(comp, "Now Playing", Math.round(w * 0.023), [0.62, 0.62, 0.66], false);
+    lab.parent = ctrl;
+    lab.property("ADBE Transform Group").property("ADBE Position").setValue([-pw1 / 2 + w * 0.14, -w * 0.008]);
+    var song = _appleTxt(comp, "nytvir - soliqchi", Math.round(w * 0.03), [1, 1, 1], true);
+    song.parent = ctrl;
+    song.property("ADBE Transform Group").property("ADBE Position").setValue([-pw1 / 2 + w * 0.14, w * 0.03]);
+
+    var eq = comp.layers.addShape();
+    eq.name = "[Apple] Island EQ"; eq.inPoint = t0; eq.outPoint = comp.duration;
+    for (var b = 0; b < 3; b++) {
+        var bg = eq.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var br = bg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+        br.property("ADBE Vector Rect Size").setValue([w * 0.0075, w * 0.042]);
+        br.property("ADBE Vector Rect Roundness").setValue(w * 0.004);
+        var bf = bg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+        bf.property("ADBE Vector Fill Color").setValue([0.19, 0.82, 0.35, 1]);
+        var bt = bg.property("ADBE Vector Transform Group");
+        bt.property("ADBE Vector Position").setValue([b * w * 0.016, w * 0.021]);
+        bt.property("ADBE Vector Anchor").setValue([0, w * 0.021]);
+        bt.property("ADBE Vector Scale").expression = "[100, 45 + 55*Math.abs(Math.sin(time*5.5 + " + b + "*1.1))];";
+    }
+    eq.parent = ctrl;
+    eq.property("ADBE Transform Group").property("ADBE Position").setValue([pw1 / 2 - w * 0.085, -w * 0.021]);
+
+    var inner = [art, lab, song, eq];
+    for (var i = 0; i < inner.length; i++) {
+        var op = inner[i].property("ADBE Transform Group").property("ADBE Opacity");
+        op.setValueAtTime(t0 + 0.55, 0);
+        op.setValueAtTime(t0 + 0.8, 100);
+    }
+    ctrl.selected = true;
+}
+
+// --- 2. iOS NOTIFICATION: frosted glass banner drops in
+function _appleNotify() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "iOS NOTIFY CONTROLLER", 5, [w / 2, h * 0.072]);
+    ctrl.outPoint = comp.duration;
+    var cw = w * 0.92, ch = w * 0.165, rad = w * 0.05;
+
+    var glass = _glassPanel(comp, "[Apple] Notify", [[0, 0, cw, ch]], rad, 40);
+    glass.matte.parent = ctrl; glass.adj.parent = ctrl; glass.tint.parent = ctrl;
+    glass.matte.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    glass.tint.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    var brd = glass.tint.property("ADBE Root Vectors Group").property(1).property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    brd.property("ADBE Vector Stroke Color").setValue([1, 1, 1, 1]);
+    brd.property("ADBE Vector Stroke Width").setValue(Math.max(1.5, w * 0.0012));
+    brd.property("ADBE Vector Stroke Opacity").setValue(11);
+
+    var ic = comp.layers.addShape();
+    ic.name = "[Apple] Notify Icon BG"; ic.inPoint = t0; ic.outPoint = comp.duration;
+    var ig = ic.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var ir = ig.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    ir.property("ADBE Vector Rect Size").setValue([w * 0.095, w * 0.095]);
+    ir.property("ADBE Vector Rect Roundness").setValue(w * 0.024);
+    var iff = ig.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    iff.property("ADBE Vector Fill Color").setValue([0.04, 0.52, 1, 1]);
+    ic.parent = ctrl;
+    ic.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.075, 0]);
+
+    var emo = _appleTxt(comp, "\uD83D\uDCAC", Math.round(w * 0.05), [1, 1, 1], false);
+    emo.parent = ctrl;
+    emo.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.052, w * 0.018]);
+
+    var app_ = _appleTxt(comp, "Telegram", Math.round(w * 0.03), [1, 1, 1], true);
+    app_.parent = ctrl;
+    app_.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.14, -w * 0.014]);
+    var msg = _appleTxt(comp, "Video zo'r chiqibdi", Math.round(w * 0.028), [0.8, 0.8, 0.84], false);
+    msg.parent = ctrl;
+    msg.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.14, w * 0.032]);
+    var tm = _appleTxt(comp, "now", Math.round(w * 0.022), [0.6, 0.6, 0.64], false);
+    tm.parent = ctrl;
+    tm.property("ADBE Transform Group").property("ADBE Position").setValue([cw / 2 - w * 0.085, -w * 0.028]);
+
+    // spring drop on the whole rig
+    var cp = ctrl.property("ADBE Transform Group").property("ADBE Position");
+    cp.setValueAtTime(t0, [w / 2, -ch * 1.4]);
+    cp.setValueAtTime(t0 + 0.45, [w / 2, h * 0.072 + ch * 0.14]);
+    cp.setValueAtTime(t0 + 0.62, [w / 2, h * 0.072]);
+    _appleEase(cp);
+    ctrl.selected = true;
+}
+
+// --- 4. FACE ID: scan line sweeps, dashed ring spins, then confirmed
+function _appleFaceID() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "FACE ID CONTROLLER", 5, [w / 2, h * 0.42]);
+    ctrl.outPoint = comp.duration;
+    var s = w * 0.30;
+
+    var frame = comp.layers.addShape();
+    frame.name = "[Apple] FaceID Frame"; frame.inPoint = t0; frame.outPoint = comp.duration;
+    var fg = frame.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var fr = fg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    fr.property("ADBE Vector Rect Size").setValue([s, s]);
+    fr.property("ADBE Vector Rect Roundness").setValue(s * 0.26);
+    var fst = fg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    fst.property("ADBE Vector Stroke Color").setValue([1, 1, 1, 1]);
+    fst.property("ADBE Vector Stroke Width").setValue(w * 0.008);
+    fst.property("ADBE Vector Stroke Opacity").setValue(88);
+    frame.parent = ctrl;
+    frame.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var ring = comp.layers.addShape();
+    ring.name = "[Apple] FaceID Ring"; ring.inPoint = t0; ring.outPoint = comp.duration;
+    var rg = ring.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var re = rg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    re.property("ADBE Vector Ellipse Size").setValue([s * 0.55, s * 0.55]);
+    var rst = rg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    rst.property("ADBE Vector Stroke Color").setValue([1, 1, 1, 1]);
+    rst.property("ADBE Vector Stroke Width").setValue(w * 0.006);
+    rst.property("ADBE Vector Stroke Opacity").setValue(50);
+    try {
+        var dashes = rst.property("ADBE Vector Stroke Dashes");
+        dashes.addProperty("ADBE Vector Stroke Dash 1");
+        dashes.property("ADBE Vector Stroke Dash 1").setValue(w * 0.018);
+    } catch (e) {}
+    ring.parent = ctrl;
+    ring.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    ring.property("ADBE Transform Group").property("ADBE Rotate Z").expression = "time * 90;";
+
+    var scan = comp.layers.addShape();
+    scan.name = "[Apple] FaceID Scan"; scan.inPoint = t0; scan.outPoint = comp.duration;
+    var sg = scan.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var sr = sg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    sr.property("ADBE Vector Rect Size").setValue([s * 0.86, w * 0.006]);
+    sr.property("ADBE Vector Rect Roundness").setValue(w * 0.003);
+    var sf = sg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    sf.property("ADBE Vector Fill Color").setValue([0.04, 0.52, 1, 1]);
+    _uiGlowFx(scan, w * 0.02, 1.1);
+    scan.parent = ctrl;
+    scan.property("ADBE Transform Group").property("ADBE Position").expression =
+        "var t = time - inPoint; var T = 1.15; var p = (t % T) / T; " +
+        "var yy = -" + (s * 0.38).toFixed(1) + " + " + (s * 0.76).toFixed(1) + " * (p < 0.5 ? p * 2 : (1 - p) * 2); [0, yy];";
+    scan.property("ADBE Transform Group").property("ADBE Opacity").expression =
+        "(time - inPoint) < 2.55 ? 100 : 0;";
+
+    var ok = _appleTxt(comp, "\u2713 Tasdiqlandi", Math.round(w * 0.036), [0.19, 0.82, 0.35], true);
+    ok.parent = ctrl;
+    try { var okd = ok.property("Source Text").value; okd.justification = ParagraphJustification.CENTER_JUSTIFY; ok.property("Source Text").setValue(okd); } catch (e) {}
+    ok.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    ok.property("ADBE Transform Group").property("ADBE Position").setValue([0, s * 0.78]);
+    var okOp = ok.property("ADBE Transform Group").property("ADBE Opacity");
+    okOp.setValueAtTime(t0 + 2.6, 0); okOp.setValueAtTime(t0 + 2.75, 100);
+    var okSc = ok.property("ADBE Transform Group").property("ADBE Scale");
+    okSc.setValueAtTime(t0 + 2.6, [70, 70]);
+    okSc.setValueAtTime(t0 + 2.78, [108, 108]);
+    okSc.setValueAtTime(t0 + 2.92, [100, 100]);
+    _appleEase(okSc);
+    ctrl.selected = true;
+}
+
+// --- 5. CONTROL CENTER: 2x2 frosted toggles, two switch on
+function _appleControlCenter() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "CONTROL CENTER CONTROLLER", 5, [w / 2, h * 0.40]);
+    ctrl.outPoint = comp.duration;
+    var cw = w * 0.36, chh = w * 0.30, gap = w * 0.04, rad = w * 0.055;
+    var px = (cw + gap) / 2, py = (chh + gap) / 2;
+    var rects = [[-px, -py, cw, chh], [px, -py, cw, chh], [-px, py, cw, chh], [px, py, cw, chh]];
+
+    var glass = _glassPanel(comp, "[Apple] CC", rects, rad, 36);
+    glass.matte.parent = ctrl; glass.adj.parent = ctrl; glass.tint.parent = ctrl;
+    glass.matte.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    glass.tint.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    var gtOp = glass.tint.property("ADBE Transform Group").property("ADBE Opacity");
+    gtOp.setValueAtTime(t0, 0); gtOp.setValueAtTime(t0 + 0.4, 62);
+
+    var defs = [
+        { emoji: "\uD83D\uDCF6", label: "Wi-Fi",    onCol: [0.04, 0.52, 1, 1],  onAt: 1.1 },
+        { emoji: "\u2708", label: "Airplane", onCol: null,                onAt: 0 },
+        { emoji: "\uD83C\uDF19", label: "Focus",    onCol: [0.19, 0.82, 0.35, 1], onAt: 1.7 },
+        { emoji: "\uD83D\uDD26", label: "Torch",    onCol: null,                onAt: 0 }
+    ];
+    for (var i = 0; i < 4; i++) {
+        var cx = rects[i][0], cy = rects[i][1];
+        var cn = comp.layers.addNull(comp.duration);
+        cn.name = "[Apple] CC Card " + (i + 1); cn.inPoint = t0; cn.outPoint = comp.duration;
+        cn.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, 0]);
+        cn.parent = ctrl;
+        cn.property("ADBE Transform Group").property("ADBE Position").setValue([cx, cy]);
+        var d0 = t0 + 0.15 + i * 0.1;
+        var cns = cn.property("ADBE Transform Group").property("ADBE Scale");
+        cns.setValueAtTime(d0, [82, 82]); cns.setValueAtTime(d0 + 0.3, [100, 100]);
+        _appleEase(cns);
+
+        var circ = comp.layers.addShape();
+        circ.name = "[Apple] CC Toggle " + (i + 1); circ.inPoint = t0; circ.outPoint = comp.duration;
+        var cg = circ.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var ce = cg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+        ce.property("ADBE Vector Ellipse Size").setValue([w * 0.085, w * 0.085]);
+        var cf = cg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+        if (defs[i].onCol) {
+            var fc = cf.property("ADBE Vector Fill Color");
+            fc.setValueAtTime(t0, [1, 1, 1, 0.14]);
+            fc.setValueAtTime(t0 + defs[i].onAt, [1, 1, 1, 0.14]);
+            fc.setValueAtTime(t0 + defs[i].onAt + 0.12, defs[i].onCol);
+        } else {
+            cf.property("ADBE Vector Fill Color").setValue([1, 1, 1, 1]);
+            circ.property("ADBE Transform Group").property("ADBE Opacity").setValue(14);
+        }
+        circ.parent = cn;
+        circ.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.065, -chh / 2 + w * 0.062]);
+
+        var em = _appleTxt(comp, defs[i].emoji, Math.round(w * 0.038), [1, 1, 1], false);
+        em.parent = cn;
+        em.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.047, -chh / 2 + w * 0.076]);
+
+        var lb = _appleTxt(comp, defs[i].label, Math.round(w * 0.028), [1, 1, 1], true);
+        lb.parent = cn;
+        lb.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.035, chh / 2 - w * 0.035]);
+    }
+    ctrl.selected = true;
+}
+
+// --- 6. CHARGING RING: green power ring fills to Target %
+function _appleChargeRing() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "CHARGE RING CONTROLLER", 5, [w / 2, h * 0.42]);
+    ctrl.outPoint = comp.duration;
+    _addSlider(ctrl, "Target %", 80);
+    var R = w * 0.155, sw = w * 0.028;
+
+    var track = comp.layers.addShape();
+    track.name = "[Apple] Ring Track"; track.inPoint = t0; track.outPoint = comp.duration;
+    var tg = track.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var te = tg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    te.property("ADBE Vector Ellipse Size").setValue([R * 2, R * 2]);
+    var tst = tg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    tst.property("ADBE Vector Stroke Color").setValue([1, 1, 1, 1]);
+    tst.property("ADBE Vector Stroke Width").setValue(sw);
+    track.parent = ctrl;
+    track.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    track.property("ADBE Transform Group").property("ADBE Opacity").setValue(12);
+
+    var fillL = comp.layers.addShape();
+    fillL.name = "[Apple] Ring Fill"; fillL.inPoint = t0; fillL.outPoint = comp.duration;
+    var lg = fillL.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var le = lg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    le.property("ADBE Vector Ellipse Size").setValue([R * 2, R * 2]);
+    var lst = lg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    lst.property("ADBE Vector Stroke Color").setValue([0.19, 0.82, 0.35, 1]);
+    lst.property("ADBE Vector Stroke Width").setValue(sw);
+    lst.property("ADBE Vector Stroke Line Cap").setValue(2);
+    var trim = lg.property("ADBE Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    trim.property("ADBE Vector Trim End").expression =
+        "var tp = thisLayer.parent.effect('Target %')(1); var t = time - inPoint; " +
+        "function eo(x){return 1 - Math.pow(1 - x, 3);} tp * eo(Math.max(0, Math.min(1, t / 2.2)));";
+    _uiGlowFx(fillL, w * 0.018, 0.5);
+    fillL.parent = ctrl;
+    fillL.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    fillL.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(-90);
+    fillL.property("ADBE Transform Group").property("ADBE Scale").setValue([100, -100]);
+
+    var pct = _appleTxt(comp, "0%", Math.round(w * 0.062), [1, 1, 1], true);
+    pct.parent = ctrl;
+    pct.property("ADBE Text Properties").property("ADBE Text Document").expression =
+        "var tp = thisLayer.parent.effect('Target %')(1); var t = time - inPoint; " +
+        "function eo(x){return 1 - Math.pow(1 - x, 3);} " +
+        "text.sourceText.style.setText(Math.round(tp * eo(Math.max(0, Math.min(1, t / 2.2)))) + '%');";
+    pct.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    pct.property("ADBE Transform Group").property("ADBE Position").setValue([0, -w * 0.008]);
+
+    var bolt = _appleTxt(comp, "\u26A1", Math.round(w * 0.03), [0.19, 0.82, 0.35], false);
+    bolt.parent = ctrl;
+    bolt.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    bolt.property("ADBE Transform Group").property("ADBE Position").setValue([0, w * 0.05]);
+
+    var lbl = _appleTxt(comp, "Quvvatlanmoqda", Math.round(w * 0.028), [0.62, 0.62, 0.66], false);
+    lbl.parent = ctrl;
+    lbl.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    lbl.property("ADBE Transform Group").property("ADBE Position").setValue([0, R * 1.45]);
     ctrl.selected = true;
 }
 
