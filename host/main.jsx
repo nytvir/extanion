@@ -3460,8 +3460,9 @@ function _appleFontTry(tl, names) {
         } catch (e) {}
     }
 }
-var _SF_BOLD = ["SFProDisplay-Semibold", "SFProText-Semibold", "SegoeUI-Semibold", "SegoeUI-Bold"];
-var _SF_REG  = ["SFProDisplay-Regular", "SFProText-Regular", "SegoeUI"];
+// Arial last — guaranteed to exist, so text never falls into AE's default serif
+var _SF_BOLD = ["SFProDisplay-Semibold", "SFProText-Semibold", "SegoeUI-Semibold", "SegoeUI-Bold", "Arial-BoldMT"];
+var _SF_REG  = ["SFProDisplay-Regular", "SFProText-Regular", "SegoeUI", "ArialMT"];
 
 // real frosted glass: white matte rects -> gaussian-blur adjustment (alpha matte) -> dark tint
 function _glassPanel(comp, name, rects, radius, blurAmt) {
