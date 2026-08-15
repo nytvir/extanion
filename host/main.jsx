@@ -62,6 +62,10 @@ function nytvir_execute(cmd) {
         else if (cmd === "appleFaceID") { _appleFaceID(); }
         else if (cmd === "appleControl") { _appleControlCenter(); }
         else if (cmd === "appleCharge") { _appleChargeRing(); }
+        else if (cmd === "appleSiri") { _appleSiriOrb(); }
+        else if (cmd === "appleVolume") { _appleVolumeHUD(); }
+        else if (cmd === "appleInstall") { _appleAppInstall(); }
+        else if (cmd === "appleAirDrop") { _appleAirDrop(); }
         else if (cmd === "growthChart") { _growthChart(); }
         else if (cmd === "notifySubscriber") { _notifySubscriber(); }
         else if (cmd === "titleHighlight") { _titleHighlight(); }
@@ -3817,6 +3821,251 @@ function _appleChargeRing() {
     lbl.parent = ctrl;
     lbl.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
     lbl.property("ADBE Transform Group").property("ADBE Position").setValue([0, R * 1.45]);
+    ctrl.selected = true;
+}
+
+// --- 7. SIRI ORB: pulsing gradient sphere, swirling colour blobs
+function _appleSiriOrb() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "SIRI ORB CONTROLLER", 5, [w / 2, h * 0.42]);
+    ctrl.outPoint = comp.duration;
+    var D = w * 0.30;
+
+    function circle(nm, dia, col, blurPx) {
+        var s = comp.layers.addShape();
+        s.name = nm; s.inPoint = t0; s.outPoint = comp.duration;
+        var g = s.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var e = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+        e.property("ADBE Vector Ellipse Size").setValue([dia, dia]);
+        var f = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+        f.property("ADBE Vector Fill Color").setValue(col);
+        if (blurPx) {
+            try {
+                var bl = s.property("ADBE Effect Parade").addProperty("ADBE Box Blur2");
+                bl.property(1).setValue(blurPx);
+                bl.property(2).setValue(3);
+            } catch (e2) {}
+        }
+        return s;
+    }
+    var base = circle("[Apple] Orb Base", D, [0.10, 0.07, 0.28, 1], 0);
+    base.parent = ctrl;
+    base.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var spin = comp.layers.addNull(comp.duration);
+    spin.name = "[Apple] Orb Spinner"; spin.inPoint = t0; spin.outPoint = comp.duration;
+    spin.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, 0]);
+    spin.parent = ctrl;
+    spin.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    spin.property("ADBE Transform Group").property("ADBE Rotate Z").expression = "time * 85;";
+
+    var b1 = circle("[Apple] Orb Blue", D * 0.52, [0.36, 0.62, 1, 1], w * 0.03);
+    b1.parent = spin;
+    b1.property("ADBE Transform Group").property("ADBE Position").setValue([-D * 0.16, -D * 0.14]);
+    var b2 = circle("[Apple] Orb Pink", D * 0.46, [0.85, 0.35, 0.9, 1], w * 0.03);
+    b2.parent = spin;
+    b2.property("ADBE Transform Group").property("ADBE Position").setValue([D * 0.17, D * 0.15]);
+    var b3 = circle("[Apple] Orb Violet", D * 0.4, [0.45, 0.35, 0.95, 1], w * 0.026);
+    b3.parent = spin;
+    b3.property("ADBE Transform Group").property("ADBE Position").setValue([D * 0.05, -D * 0.2]);
+
+    _uiGlowFx(base, w * 0.05, 0.8);
+    // breathing pulse on the whole orb
+    ctrl.property("ADBE Transform Group").property("ADBE Scale").expression =
+        "var s = 100 + 8 * Math.sin(time * 2.6); [s, s];";
+
+    var tx = _appleTxt(comp, "Eshityapman...", Math.round(w * 0.03), [0.79, 0.79, 0.83], false);
+    tx.parent = ctrl;
+    tx.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    tx.property("ADBE Transform Group").property("ADBE Position").setValue([0, D * 0.92]);
+    var txOp = tx.property("ADBE Transform Group").property("ADBE Opacity");
+    txOp.setValueAtTime(t0 + 0.5, 0); txOp.setValueAtTime(t0 + 0.9, 100);
+    ctrl.selected = true;
+}
+
+// --- 8. VOLUME HUD: frosted side slider fills to Level %
+function _appleVolumeHUD() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "VOLUME HUD CONTROLLER", 5, [w / 2, h * 0.40]);
+    ctrl.outPoint = comp.duration;
+    _addSlider(ctrl, "Level %", 78);
+    var pw = w * 0.115, ph = w * 0.52, rad = pw / 2;
+
+    var glass = _glassPanel(comp, "[Apple] Volume", [[0, 0, pw, ph]], rad, 34);
+    glass.matte.parent = ctrl; glass.adj.parent = ctrl; glass.tint.parent = ctrl;
+    glass.matte.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    glass.tint.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var fill = comp.layers.addShape();
+    fill.name = "[Apple] Volume Fill"; fill.inPoint = t0; fill.outPoint = comp.duration;
+    var fgp = fill.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var frct = fgp.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    frct.property("ADBE Vector Rect Roundness").setValue(rad);
+    frct.property("ADBE Vector Rect Size").expression =
+        "var ctl = thisComp.layer('" + ctrl.name + "'); var target = ctl.effect('Level %')(1); " +
+        "var t = time - thisLayer.inPoint; function eo(x){return 1 - Math.pow(1 - x, 3);} " +
+        "var p = eo(Math.max(0, Math.min(1, (t - 0.35) / 0.9))); var lvl = 20 + (target - 20) * p; " +
+        "[" + pw.toFixed(1) + ", " + ph.toFixed(1) + " * lvl / 100];";
+    frct.property("ADBE Vector Rect Position").expression =
+        "var ctl = thisComp.layer('" + ctrl.name + "'); var target = ctl.effect('Level %')(1); " +
+        "var t = time - thisLayer.inPoint; function eo(x){return 1 - Math.pow(1 - x, 3);} " +
+        "var p = eo(Math.max(0, Math.min(1, (t - 0.35) / 0.9))); var lvl = 20 + (target - 20) * p; " +
+        "[0, " + (ph / 2).toFixed(1) + " - " + (ph / 2).toFixed(1) + " * lvl / 100];";
+    var ffl = fgp.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    ffl.property("ADBE Vector Fill Color").setValue([1, 1, 1, 1]);
+    fill.parent = ctrl;
+    fill.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var spk = _appleTxt(comp, "\uD83D\uDD0A", Math.round(w * 0.036), [0.25, 0.25, 0.28], false);
+    spk.parent = ctrl;
+    spk.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    spk.property("ADBE Transform Group").property("ADBE Position").setValue([0, ph / 2 - w * 0.05]);
+    ctrl.selected = true;
+}
+
+// --- 9. APP STORE INSTALL: GET -> spinner -> OPEN
+function _appleAppInstall() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "APP INSTALL CONTROLLER", 5, [w / 2, h * 0.40]);
+    ctrl.outPoint = comp.duration;
+    var cw = w * 0.86, ch = w * 0.24, rad = w * 0.06;
+
+    var glass = _glassPanel(comp, "[Apple] Install", [[0, 0, cw, ch]], rad, 36);
+    glass.matte.parent = ctrl; glass.adj.parent = ctrl; glass.tint.parent = ctrl;
+    glass.matte.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    glass.tint.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var ico = comp.layers.addShape();
+    ico.name = "[Apple] Install Icon"; ico.inPoint = t0; ico.outPoint = comp.duration;
+    var ig = ico.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var ir = ig.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    ir.property("ADBE Vector Rect Size").setValue([w * 0.13, w * 0.13]);
+    ir.property("ADBE Vector Rect Roundness").setValue(w * 0.032);
+    var iff = ig.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    iff.property("ADBE Vector Fill Color").setValue([0.95, 0.55, 0.12, 1]);
+    ico.parent = ctrl;
+    ico.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.105, 0]);
+
+    var sym = _appleTxt(comp, "B", Math.round(w * 0.06), [1, 1, 1], true);
+    sym.parent = ctrl;
+    sym.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    sym.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.105, 0]);
+
+    var t1 = _appleTxt(comp, "Soliqchi", Math.round(w * 0.034), [1, 1, 1], true);
+    t1.parent = ctrl;
+    t1.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.2, -w * 0.006]);
+    var t2 = _appleTxt(comp, "nytvir studio", Math.round(w * 0.024), [0.6, 0.6, 0.65], false);
+    t2.parent = ctrl;
+    t2.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.2, w * 0.032]);
+
+    var bw = w * 0.16, bh = w * 0.068, bx = cw / 2 - w * 0.12;
+    function pillBtn(nm, fillCol, fillOp) {
+        var p = comp.layers.addShape();
+        p.name = nm; p.inPoint = t0; p.outPoint = comp.duration;
+        var g = p.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var r = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+        r.property("ADBE Vector Rect Size").setValue([bw, bh]);
+        r.property("ADBE Vector Rect Roundness").setValue(bh / 2);
+        var f = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+        f.property("ADBE Vector Fill Color").setValue(fillCol);
+        if (fillOp != null) f.property("ADBE Vector Fill Opacity").setValue(fillOp);
+        p.parent = ctrl;
+        p.property("ADBE Transform Group").property("ADBE Position").setValue([bx, 0]);
+        return p;
+    }
+    function stepOp(L, on0, off0) {
+        var op = L.property("ADBE Transform Group").property("ADBE Opacity");
+        op.expression = "var t = time - inPoint; (t >= " + on0 + " && t < " + off0 + ") ? 100 : 0;";
+    }
+    var getP = pillBtn("[Apple] Btn GET", [1, 1, 1, 1], 16);
+    var getT = _appleTxt(comp, "GET", Math.round(w * 0.026), [0.04, 0.52, 1], true);
+    getT.parent = ctrl;
+    getT.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    getT.property("ADBE Transform Group").property("ADBE Position").setValue([bx, 0]);
+    stepOp(getP, 0, 1.0); stepOp(getT, 0, 1.0);
+
+    var spin = comp.layers.addShape();
+    spin.name = "[Apple] Btn Spinner"; spin.inPoint = t0; spin.outPoint = comp.duration;
+    var sg = spin.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var se = sg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    se.property("ADBE Vector Ellipse Size").setValue([bh * 0.8, bh * 0.8]);
+    var sst = sg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    sst.property("ADBE Vector Stroke Color").setValue([0.04, 0.52, 1, 1]);
+    sst.property("ADBE Vector Stroke Width").setValue(Math.max(3, w * 0.005));
+    sst.property("ADBE Vector Stroke Line Cap").setValue(2);
+    var str = sg.property("ADBE Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    str.property("ADBE Vector Trim End").setValue(30);
+    spin.parent = ctrl;
+    spin.property("ADBE Transform Group").property("ADBE Position").setValue([bx, 0]);
+    spin.property("ADBE Transform Group").property("ADBE Rotate Z").expression = "time * 420;";
+    stepOp(spin, 1.0, 2.7);
+
+    var openP = pillBtn("[Apple] Btn OPEN", [0.04, 0.52, 1, 1], null);
+    var openT = _appleTxt(comp, "OPEN", Math.round(w * 0.026), [1, 1, 1], true);
+    openT.parent = ctrl;
+    openT.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    openT.property("ADBE Transform Group").property("ADBE Position").setValue([bx, 0]);
+    stepOp(openP, 2.7, 9999); stepOp(openT, 2.7, 9999);
+    var osc = openP.property("ADBE Transform Group").property("ADBE Scale");
+    osc.setValueAtTime(t0 + 2.7, [70, 70]);
+    osc.setValueAtTime(t0 + 2.88, [108, 108]);
+    osc.setValueAtTime(t0 + 3.0, [100, 100]);
+    _appleEase(osc);
+    ctrl.selected = true;
+}
+
+// --- 10. AIRDROP: blue waves radiate from the avatar
+function _appleAirDrop() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "AIRDROP CONTROLLER", 5, [w / 2, h * 0.40]);
+    ctrl.outPoint = comp.duration;
+    var D = w * 0.16, waveD = w * 0.38;
+
+    for (var i = 0; i < 3; i++) {
+        var wv = comp.layers.addShape();
+        wv.name = "[Apple] AirDrop Wave " + (i + 1); wv.inPoint = t0; wv.outPoint = comp.duration;
+        var wg = wv.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var we = wg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+        we.property("ADBE Vector Ellipse Size").setValue([waveD, waveD]);
+        var wst = wg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+        wst.property("ADBE Vector Stroke Color").setValue([0.04, 0.52, 1, 1]);
+        wst.property("ADBE Vector Stroke Width").setValue(Math.max(3, w * 0.004));
+        wv.parent = ctrl;
+        wv.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+        var ph = (i * 0.73).toFixed(2);
+        wv.property("ADBE Transform Group").property("ADBE Scale").expression =
+            "var p = ((time - inPoint) / 2.2 + " + ph + ") % 1; var s = 35 + 95 * p; [s, s];";
+        wv.property("ADBE Transform Group").property("ADBE Opacity").expression =
+            "var p = ((time - inPoint) / 2.2 + " + ph + ") % 1; 85 * (1 - p);";
+    }
+
+    var av = comp.layers.addShape();
+    av.name = "[Apple] AirDrop Avatar"; av.inPoint = t0; av.outPoint = comp.duration;
+    var ag = av.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var ae = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    ae.property("ADBE Vector Ellipse Size").setValue([D, D]);
+    var afl = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    afl.property("ADBE Vector Fill Color").setValue([0.29, 0.41, 0.94, 1]);
+    av.parent = ctrl;
+    av.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var em = _appleTxt(comp, "\uD83D\uDC64", Math.round(w * 0.055), [1, 1, 1], false);
+    em.parent = ctrl;
+    em.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    em.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var nm = _appleTxt(comp, "Satoshi", Math.round(w * 0.034), [1, 1, 1], true);
+    nm.parent = ctrl;
+    nm.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    nm.property("ADBE Transform Group").property("ADBE Position").setValue([0, waveD * 0.62]);
+    var st = _appleTxt(comp, "bitcoin.pdf yubormoqda...", Math.round(w * 0.026), [0.04, 0.52, 1], false);
+    st.parent = ctrl;
+    st.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+    st.property("ADBE Transform Group").property("ADBE Position").setValue([0, waveD * 0.62 + w * 0.045]);
     ctrl.selected = true;
 }
 
