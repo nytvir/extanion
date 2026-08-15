@@ -66,6 +66,12 @@ function nytvir_execute(cmd) {
         else if (cmd === "appleVolume") { _appleVolumeHUD(); }
         else if (cmd === "appleInstall") { _appleAppInstall(); }
         else if (cmd === "appleAirDrop") { _appleAirDrop(); }
+        else if (cmd === "storySearch") { _storySearch(); }
+        else if (cmd === "storyDossier") { _storyDossier(); }
+        else if (cmd === "storyReceipt") { _storyReceipt(); }
+        else if (cmd === "storyVault") { _storyVault(); }
+        else if (cmd === "storyDomino") { _storyDomino(); }
+        else if (cmd === "storyWanted") { _storyWanted(); }
         else if (cmd === "growthChart") { _growthChart(); }
         else if (cmd === "notifySubscriber") { _notifySubscriber(); }
         else if (cmd === "titleHighlight") { _titleHighlight(); }
@@ -4066,6 +4072,366 @@ function _appleAirDrop() {
     st.parent = ctrl;
     st.property("ADBE Transform Group").property("ADBE Anchor Point").expression = "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
     st.property("ADBE Transform Group").property("ADBE Position").setValue([0, waveD * 0.62 + w * 0.045]);
+    ctrl.selected = true;
+}
+
+// ============================================================
+// STORY KIT — cinematic storytelling overlays (user-picked concepts)
+// ============================================================
+function _stRect(comp, nm, w_, h_, round, col) {
+    var s = comp.layers.addShape();
+    s.name = nm; s.inPoint = comp.time; s.outPoint = comp.duration;
+    var g = s.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var r = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    r.property("ADBE Vector Rect Size").setValue([w_, h_]);
+    r.property("ADBE Vector Rect Roundness").setValue(round);
+    var f = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    f.property("ADBE Vector Fill Color").setValue(col);
+    return s;
+}
+function _stCenterAnchor(tl) {
+    tl.property("ADBE Transform Group").property("ADBE Anchor Point").expression =
+        "var r=sourceRectAtTime(time,false); [r.left+r.width/2, r.top+r.height/2];";
+}
+
+// --- STORY 1. GOOGLE SEARCH: query types itself, suggestions drop in
+function _storySearch() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "SEARCH CONTROLLER", 6, [w / 2, h * 0.30]);
+    ctrl.outPoint = comp.duration;
+    var cw = w * 0.86, ch = w * 0.125, rad = ch / 2;
+
+    var bar = _stRect(comp, "[Story] Search Bar", cw, ch, rad, [1, 1, 1, 1]);
+    try { _uiShadow(bar); } catch (e) {}
+    bar.parent = ctrl;
+    bar.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var mag = _appleTxt(comp, "\uD83D\uDD0D", Math.round(w * 0.042), [0.35, 0.35, 0.38], false);
+    mag.parent = ctrl;
+    _stCenterAnchor(mag);
+    mag.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.062, 0]);
+
+    var q = _appleTxt(comp, "bitcoin nima?", Math.round(w * 0.036), [0.11, 0.12, 0.13], false);
+    q.parent = ctrl;
+    q.property("ADBE Text Properties").property("ADBE Text Document").expression =
+        "var s = 'bitcoin nima?'; var t = time - inPoint; " +
+        "var n = Math.floor(Math.max(0, (t - 0.4) * 14)); if (n > s.length) n = s.length; " +
+        "var o = s.substr(0, n); if (n < s.length) o += '|'; text.sourceText.style.setText(o);";
+    q.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.115, w * 0.012]);
+
+    var sh = w * 0.30;
+    var sug = _stRect(comp, "[Story] Suggest Card", cw, sh, w * 0.035, [1, 1, 1, 1]);
+    try { _uiShadow(sug); } catch (e) {}
+    sug.parent = ctrl;
+    sug.property("ADBE Transform Group").property("ADBE Position").setValue([0, ch / 2 + w * 0.02 + sh / 2]);
+    var sgOp = sug.property("ADBE Transform Group").property("ADBE Opacity");
+    sgOp.setValueAtTime(t0 + 1.6, 0); sgOp.setValueAtTime(t0 + 1.85, 100);
+
+    var sugs = ["bitcoin nima uchun kerak", "bitcoinni kim yaratgan", "bitcoin 2008 inqiroz"];
+    for (var i = 0; i < 3; i++) {
+        var st_ = _appleTxt(comp, sugs[i], Math.round(w * 0.03), [0.25, 0.26, 0.28], false);
+        st_.parent = ctrl;
+        st_.property("ADBE Transform Group").property("ADBE Position").setValue([-cw / 2 + w * 0.065, ch / 2 + w * 0.02 + sh * (0.22 + i * 0.3)]);
+        var so = st_.property("ADBE Transform Group").property("ADBE Opacity");
+        so.setValueAtTime(t0 + 1.8 + i * 0.18, 0); so.setValueAtTime(t0 + 2.0 + i * 0.18, 100);
+    }
+    ctrl.selected = true;
+}
+
+// --- STORY 2. TOP SECRET DOSSIER: folder opens, the file slides up
+function _storyDossier() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "DOSSIER CONTROLLER", 6, [w / 2, h * 0.42]);
+    ctrl.outPoint = comp.duration;
+    var fw = w * 0.56, fh = w * 0.70;
+
+    var back = _stRect(comp, "[Story] Folder Back", fw, fh, w * 0.02, [0.66, 0.52, 0.30, 1]);
+    try { _uiShadow(back); } catch (e) {}
+    back.parent = ctrl;
+    back.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var tab = _stRect(comp, "[Story] Folder Tab", fw * 0.4, w * 0.045, w * 0.012, [0.66, 0.52, 0.30, 1]);
+    tab.parent = ctrl;
+    tab.property("ADBE Transform Group").property("ADBE Position").setValue([-fw * 0.28, -fh / 2 - w * 0.018]);
+
+    var paper = _stRect(comp, "[Story] Dossier Paper", fw * 0.9, fh * 0.92, w * 0.008, [0.94, 0.92, 0.85, 1]);
+    paper.parent = ctrl;
+    var pp = paper.property("ADBE Transform Group").property("ADBE Position");
+    pp.setValueAtTime(t0 + 1.15, [0, 0]);
+    pp.setValueAtTime(t0 + 1.7, [0, -fh * 0.22]);
+    _appleEase(pp);
+    for (var li = 0; li < 4; li++) {
+        var ln = _stRect(comp, "[Story] Dossier Line " + li, fw * (li % 2 === 0 ? 0.62 : 0.45), Math.max(3, w * 0.007), 2, [0.80, 0.76, 0.64, 1]);
+        ln.parent = paper;
+        ln.property("ADBE Transform Group").property("ADBE Position").setValue([-fw * 0.1, -fh * 0.28 + li * fh * 0.09]);
+    }
+
+    var cover = _stRect(comp, "[Story] Folder Cover", fw, fh, w * 0.02, [0.58, 0.44, 0.24, 1]);
+    cover.parent = ctrl;
+    cover.property("ADBE Transform Group").property("ADBE Position").setValue([0, fh / 2]);
+    cover.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, fh / 2]);
+    var cs = cover.property("ADBE Transform Group").property("ADBE Scale");
+    cs.setValueAtTime(t0 + 0.7, [100, 100]);
+    cs.setValueAtTime(t0 + 1.25, [100, 7]);
+    _appleEase(cs);
+
+    var stamp = _appleTxt(comp, "TOP SECRET", Math.round(w * 0.045), [0.82, 0.20, 0.22], true);
+    _uiFont(stamp, "TimesNewRomanPS-BoldMT");
+    stamp.parent = cover;
+    _stCenterAnchor(stamp);
+    stamp.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    stamp.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(-10);
+
+    var lbl = _appleTxt(comp, "fayl #2008-J13", Math.round(w * 0.024), [0.55, 0.55, 0.58], false);
+    lbl.parent = ctrl;
+    _stCenterAnchor(lbl);
+    lbl.property("ADBE Transform Group").property("ADBE Position").setValue([0, fh / 2 + w * 0.05]);
+    ctrl.selected = true;
+}
+
+// --- STORY 3. RECEIPT PRINTER: the bailout bill prints out
+function _storyReceipt() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "RECEIPT CONTROLLER", 7, [w / 2, h * 0.20]);
+    ctrl.outPoint = comp.duration;
+    var rw = w * 0.64, rh = w * 0.86;
+
+    // print rig: everything below slides down out of the slot
+    var rig = comp.layers.addNull(comp.duration);
+    rig.name = "[Story] Print Rig"; rig.inPoint = t0; rig.outPoint = comp.duration;
+    rig.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, 0]);
+    rig.parent = ctrl;
+    var rp = rig.property("ADBE Transform Group").property("ADBE Position");
+    rp.setValueAtTime(t0 + 0.3, [0, -rh]);
+    rp.setValueAtTime(t0 + 3.6, [0, 0]);
+    _appleEase(rp);
+
+    // matte: only the area below the slot shows the paper
+    var matte = _stRect(comp, "[Story] Receipt Matte", rw * 1.2, rh * 1.6, 0, [1, 1, 1, 1]);
+    matte.parent = ctrl;
+    matte.property("ADBE Transform Group").property("ADBE Position").setValue([0, rh * 0.8 + w * 0.006]);
+    try { matte.enabled = false; } catch (e) {}
+
+    var paper = _stRect(comp, "[Story] Receipt Paper", rw, rh, w * 0.006, [0.97, 0.955, 0.90, 1]);
+    paper.parent = rig;
+    paper.property("ADBE Transform Group").property("ADBE Position").setValue([0, rh / 2 + w * 0.01]);
+    try { paper.setTrackMatte(matte, TrackMatteType.ALPHA); } catch (e) {}
+
+    var txt = comp.layers.addText("*** 2008 QUTQARUV HISOBI ***\r\r" +
+        "Banklarga bailout      $700 mlrd\r" +
+        "AIG sug'urta           $182 mlrd\r" +
+        "Avtogigantlar           $80 mlrd\r" +
+        "--------------------------------\r" +
+        "Oddiy odamlarga          $0.00\r" +
+        "--------------------------------\r" +
+        "TO'LOVCHI:                 SIZ\r\r" +
+        "rahmat xaridingiz uchun");
+    txt.name = "[Story] Receipt Text";
+    txt.inPoint = t0; txt.outPoint = comp.duration;
+    var td = txt.property("Source Text").value;
+    td.fontSize = Math.round(w * 0.026);
+    td.fillColor = [0.16, 0.14, 0.10];
+    try { td.justification = ParagraphJustification.LEFT_JUSTIFY; } catch (e) {}
+    try { td.leading = Math.round(w * 0.042); } catch (e) {}
+    txt.property("Source Text").setValue(td);
+    _uiFont(txt, "Consolas");
+    txt.parent = rig;
+    txt.property("ADBE Transform Group").property("ADBE Position").setValue([-rw / 2 + w * 0.045, w * 0.075]);
+    try { txt.setTrackMatte(matte, TrackMatteType.ALPHA); } catch (e) {}
+
+    var slot = _stRect(comp, "[Story] Printer Slot", rw * 1.12, w * 0.03, w * 0.015, [0.10, 0.11, 0.13, 1]);
+    try { _uiShadow(slot); } catch (e) {}
+    slot.parent = ctrl;
+    slot.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    ctrl.selected = true;
+}
+
+// --- STORY 4. BANK VAULT: wheel spins, the door cracks golden light
+function _storyVault() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "VAULT CONTROLLER", 6, [w / 2, h * 0.42]);
+    ctrl.outPoint = comp.duration;
+    var D = w * 0.5;
+
+    var door = comp.layers.addShape();
+    door.name = "[Story] Vault Door"; door.inPoint = t0; door.outPoint = comp.duration;
+    var dg = door.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var de = dg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    de.property("ADBE Vector Ellipse Size").setValue([D, D]);
+    var dfl = dg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    dfl.property("ADBE Vector Fill Color").setValue([0.20, 0.22, 0.26, 1]);
+    var dst = dg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    dst.property("ADBE Vector Stroke Color").setValue([0.30, 0.32, 0.38, 1]);
+    dst.property("ADBE Vector Stroke Width").setValue(w * 0.02);
+    try { _uiShadow(door); } catch (e) {}
+    door.parent = ctrl;
+    door.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var wheel = comp.layers.addShape();
+    wheel.name = "[Story] Vault Wheel"; wheel.inPoint = t0; wheel.outPoint = comp.duration;
+    for (var sp = 0; sp < 3; sp++) {
+        var sg2 = wheel.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var sr2 = sg2.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+        sr2.property("ADBE Vector Rect Size").setValue([w * 0.02, D * 0.52]);
+        sr2.property("ADBE Vector Rect Roundness").setValue(w * 0.01);
+        var sf2 = sg2.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+        sf2.property("ADBE Vector Fill Color").setValue([0.38, 0.41, 0.47, 1]);
+        sg2.property("ADBE Vector Transform Group").property("ADBE Vector Rotation").setValue(sp * 60);
+    }
+    var hubG = wheel.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var hubE = hubG.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    hubE.property("ADBE Vector Ellipse Size").setValue([D * 0.26, D * 0.26]);
+    var hubF = hubG.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    hubF.property("ADBE Vector Fill Color").setValue([0.30, 0.33, 0.38, 1]);
+    wheel.parent = ctrl;
+    wheel.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    var wr = wheel.property("ADBE Transform Group").property("ADBE Rotate Z");
+    wr.setValueAtTime(t0 + 0.4, 0);
+    wr.setValueAtTime(t0 + 2.4, 560);
+    _appleEase(wr);
+
+    // golden light cracks out of the right edge
+    var light = _stRect(comp, "[Story] Vault Light", w * 0.05, D * 0.62, w * 0.02, [0.95, 0.72, 0.28, 1]);
+    try {
+        var bl = light.property("ADBE Effect Parade").addProperty("ADBE Box Blur2");
+        bl.property(1).setValue(w * 0.02); bl.property(2).setValue(3);
+    } catch (e) {}
+    _uiGlowFx(light, w * 0.04, 1.2);
+    light.blendingMode = BlendingMode.ADD;
+    light.parent = ctrl;
+    light.property("ADBE Transform Group").property("ADBE Position").setValue([D / 2 + w * 0.01, 0]);
+    var lo = light.property("ADBE Transform Group").property("ADBE Opacity");
+    lo.setValueAtTime(t0 + 2.5, 0); lo.setValueAtTime(t0 + 3.1, 100);
+    var lsc = light.property("ADBE Transform Group").property("ADBE Scale");
+    lsc.setValueAtTime(t0 + 2.5, [20, 60]);
+    lsc.setValueAtTime(t0 + 3.2, [100, 100]);
+    _appleEase(lsc);
+
+    var lbl = _appleTxt(comp, "ochilmoqda...", Math.round(w * 0.028), [0.62, 0.62, 0.66], false);
+    lbl.parent = ctrl;
+    _stCenterAnchor(lbl);
+    lbl.property("ADBE Transform Group").property("ADBE Position").setValue([0, D * 0.68]);
+    ctrl.selected = true;
+}
+
+// --- STORY 5. DOMINO: banks fall one by one, the golden one stands
+function _storyDomino() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "DOMINO CONTROLLER", 6, [w / 2, h * 0.45]);
+    ctrl.outPoint = comp.duration;
+    var dw = w * 0.075, dh = w * 0.24, spacing = w * 0.135;
+
+    var ground = _stRect(comp, "[Story] Domino Ground", w * 0.78, Math.max(3, w * 0.005), 2, [0.25, 0.27, 0.32, 1]);
+    ground.parent = ctrl;
+    ground.property("ADBE Transform Group").property("ADBE Position").setValue([0, dh / 2 + w * 0.01]);
+
+    var names = ["LEH", "BSC", "AIG", "C"];
+    for (var i = 0; i < 4; i++) {
+        var x = -w * 0.30 + i * spacing;
+        var dm = _stRect(comp, "[Story] Domino " + names[i], dw, dh, w * 0.012, [0.24, 0.26, 0.31, 1]);
+        dm.parent = ctrl;
+        dm.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([dw / 2, dh / 2]);
+        dm.property("ADBE Transform Group").property("ADBE Position").setValue([x + dw / 2, dh / 2]);
+        var dr = dm.property("ADBE Transform Group").property("ADBE Rotate Z");
+        var d0 = t0 + 0.8 + i * 0.3;
+        dr.setValueAtTime(d0, 0);
+        dr.setValueAtTime(d0 + 0.5, 72);
+        try {
+            dr.setTemporalEaseAtKey(1, [new KeyframeEase(0, 33)], [new KeyframeEase(0.9, 33)]);
+            dr.setTemporalEaseAtKey(2, [new KeyframeEase(0, 80)], [new KeyframeEase(0, 80)]);
+        } catch (e) {}
+        var nm2 = _appleTxt(comp, names[i], Math.round(w * 0.02), [0.62, 0.62, 0.68], true);
+        nm2.parent = dm;
+        _stCenterAnchor(nm2);
+        nm2.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+        nm2.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(90);
+    }
+
+    var gx = -w * 0.30 + 4 * spacing + w * 0.012;
+    var gold = _stRect(comp, "[Story] Domino Gold", dw * 1.15, dh * 1.12, w * 0.012, [0.85, 0.64, 0.25, 1]);
+    _uiGlowFx(gold, w * 0.02, 0.5);
+    gold.parent = ctrl;
+    gold.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([dw * 0.575, dh * 0.56]);
+    gold.property("ADBE Transform Group").property("ADBE Position").setValue([gx + dw * 0.575, dh * 0.44]);
+    var gr = gold.property("ADBE Transform Group").property("ADBE Rotate Z");
+    var g0 = t0 + 0.8 + 4 * 0.3;
+    gr.setValueAtTime(g0, 0);
+    gr.setValueAtTime(g0 + 0.18, 7);
+    gr.setValueAtTime(g0 + 0.42, -3);
+    gr.setValueAtTime(g0 + 0.65, 0);
+    _appleEase(gr);
+    var bt = _appleTxt(comp, "B", Math.round(w * 0.042), [0.25, 0.18, 0.05], true);
+    bt.parent = gold;
+    _stCenterAnchor(bt);
+    bt.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+
+    var cap = _appleTxt(comp, "Hammasi quladi. Bittasi turdi.", Math.round(w * 0.028), [0.85, 0.64, 0.25], true);
+    cap.parent = ctrl;
+    _stCenterAnchor(cap);
+    cap.property("ADBE Transform Group").property("ADBE Position").setValue([0, dh / 2 + w * 0.09]);
+    var co = cap.property("ADBE Transform Group").property("ADBE Opacity");
+    co.setValueAtTime(g0 + 0.6, 0); co.setValueAtTime(g0 + 0.9, 100);
+    ctrl.selected = true;
+}
+
+// --- STORY 6. WANTED POSTER: swinging on a nail, golden reward
+function _storyWanted() {
+    var comp = app.project.activeItem; if (!comp) return;
+    var w = comp.width, h = comp.height, t0 = comp.time;
+    var ctrl = _uiCtl(comp, "WANTED CONTROLLER", 6, [w / 2, h * 0.40]);
+    ctrl.outPoint = comp.duration;
+    var pw2 = w * 0.52, ph2 = w * 0.72;
+
+    // swing rig pinned at the nail
+    var rig = comp.layers.addNull(comp.duration);
+    rig.name = "[Story] Wanted Rig"; rig.inPoint = t0; rig.outPoint = comp.duration;
+    rig.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, 0]);
+    rig.parent = ctrl;
+    rig.property("ADBE Transform Group").property("ADBE Position").setValue([0, -ph2 / 2]);
+    rig.property("ADBE Transform Group").property("ADBE Rotate Z").expression =
+        "Math.sin(time * 1.4) * 2.2;";
+
+    var poster = _stRect(comp, "[Story] Wanted Poster", pw2, ph2, w * 0.006, [0.91, 0.86, 0.75, 1]);
+    try { _uiShadow(poster); } catch (e) {}
+    poster.parent = rig;
+    poster.property("ADBE Transform Group").property("ADBE Position").setValue([0, ph2 / 2]);
+
+    var nail = comp.layers.addShape();
+    nail.name = "[Story] Wanted Nail"; nail.inPoint = t0; nail.outPoint = comp.duration;
+    var ng = nail.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var ne = ng.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    ne.property("ADBE Vector Ellipse Size").setValue([w * 0.018, w * 0.018]);
+    var nf = ng.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    nf.property("ADBE Vector Fill Color").setValue([0.42, 0.36, 0.25, 1]);
+    nail.parent = ctrl;
+    nail.property("ADBE Transform Group").property("ADBE Position").setValue([0, -ph2 / 2]);
+
+    function serifTxt(str, size, col, bold, y) {
+        var tl = _appleTxt(comp, str, size, col, bold);
+        _uiFont(tl, bold ? "TimesNewRomanPS-BoldMT" : "TimesNewRomanPSMT");
+        tl.parent = rig;
+        _stCenterAnchor(tl);
+        tl.property("ADBE Transform Group").property("ADBE Position").setValue([0, y]);
+        return tl;
+    }
+    serifTxt("WANTED", Math.round(w * 0.062), [0.23, 0.18, 0.11], true, ph2 * 0.14);
+    var photo = _stRect(comp, "[Story] Wanted Photo", pw2 * 0.52, pw2 * 0.52, 0, [0.79, 0.74, 0.61, 1]);
+    photo.parent = rig;
+    photo.property("ADBE Transform Group").property("ADBE Position").setValue([0, ph2 * 0.44]);
+    var qm = serifTxt("?", Math.round(w * 0.085), [0.45, 0.38, 0.24], true, ph2 * 0.455);
+    serifTxt("SATOSHI NAKAMOTO", Math.round(w * 0.03), [0.23, 0.18, 0.11], true, ph2 * 0.72);
+    serifTxt("kimligini bilganlarga mukofot:", Math.round(w * 0.02), [0.35, 0.29, 0.19], false, ph2 * 0.80);
+    var rw2 = serifTxt("1,000,000 BTC", Math.round(w * 0.036), [0.23, 0.18, 0.11], true, ph2 * 0.885);
+    var rc = rw2.property("ADBE Text Properties").property("ADBE Text Document");
+    rc.expression =
+        "var t = time - inPoint; var c = (t > 2.0) ? [0.72, 0.53, 0.08] : [0.23, 0.18, 0.11]; " +
+        "text.sourceText.style.setFillColor(c);";
+    _uiGlowFx(rw2, w * 0.015, 0.4);
     ctrl.selected = true;
 }
 
