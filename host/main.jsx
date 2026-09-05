@@ -91,6 +91,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "tradeProfit") { _tradeProfit(); }
         else if (cmd === "portfolioBalance") { _portfolioBalance(); }
         else if (cmd === "candleChart") { _candleChart(); }
+        else if (cmd === "neonChart") { _neonChart(); }
         else if (cmd === "cryptoWatchlist") { _cryptoWatchlist(); }
         else if (cmd === "orderFilled") { _orderFilled(); }
         else if (cmd === "glowProfile") { _glowProfile("blue"); }
@@ -11699,4 +11700,128 @@ function nytvir_setControl(name, type, val) {
             }
         }
     } catch(e) {}
+}
+
+// --- NEON CHART PRO (v2.20): PTJ/Wyckoff final stil — katta flat neon svechalar,
+// CAM follow (faqat position), grid + trail, har bir svecha alohida editable ---
+function _neonChart() {
+    var comp = app.project.activeItem;
+    var W = comp.width, H = comp.height;
+    var t0 = comp.time;
+    var N = 24, DX = 88, X0 = 80;
+    var GRN = [0.133, 0.890, 0.306], RED = [0.949, 0.216, 0.184], ACC2 = [1.0, 0.624, 0.263];
+    var seed = Math.floor(Math.random() * 2147483000) + 1;
+    function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+
+    var baseY = Math.round(H * 0.276); // 1920 -> ~530 (50/50 layout tepasi)
+    var cam = comp.layers.addNull(comp.duration); cam.name = "[NEO] CAM";
+    cam.property("Transform").property("Position").setValue([W / 2, baseY]);
+    cam.label = 10;
+
+    // narx yo'li: yengil ko'tarilish trendi + shovqin
+    var X = [], Y = [], yy = baseY;
+    var i;
+    for (i = 0; i < N; i++) {
+        X.push(X0 + i * DX);
+        yy += (rnd() - 0.56) * 46;
+        if (yy < baseY - 190) yy = baseY - 190 + rnd() * 20;
+        if (yy > baseY + 220) yy = baseY + 220 - rnd() * 20;
+        Y.push(yy);
+    }
+
+    function _ncGlow(l, rad, inten) {
+        try {
+            var g = l.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+            try { g.property("ADBE Glo2-0002").setValue(150); } catch (e) {}
+            try { g.property("ADBE Glo2-0003").setValue(rad); } catch (e) {}
+            try { g.property("ADBE Glo2-0004").setValue(inten); } catch (e) {}
+        } catch (e) {}
+    }
+    function _ncEaseAll(pr) {
+        var e = new KeyframeEase(0, 75);
+        for (var k = 1; k <= pr.numKeys; k++) {
+            try { pr.setTemporalEaseAtKey(k, [e, e], [e, e]); } catch (x) {
+                try { pr.setTemporalEaseAtKey(k, [e, e, e], [e, e, e]); } catch (z) {}
+            }
+        }
+    }
+
+    // xira grid
+    var grid = comp.layers.addShape(); grid.name = "[NEO] grid";
+    var gc = grid.property("ADBE Root Vectors Group");
+    for (var g2 = 0; g2 < 6; g2++) {
+        var gr = gc.addProperty("ADBE Vector Shape - Rect");
+        gr.property("ADBE Vector Rect Size").setValue([N * DX + 2000, 2]);
+        gr.property("ADBE Vector Rect Position").setValue([N * DX / 2, baseY - 260 + g2 * 110]);
+    }
+    var gf = gc.addProperty("ADBE Vector Graphic - Fill");
+    gf.property("ADBE Vector Fill Color").setValue([1, 1, 1]);
+    grid.property("Transform").property("Position").setValue([0, 0]);
+    grid.property("Transform").property("Opacity").setValue(10);
+    grid.parent = cam; grid.motionBlur = true;
+
+    // orange trail (narx izi, uzunlik bo'yicha chiziladi)
+    var trl = comp.layers.addShape(); trl.name = "[NEO] trail";
+    var tc = trl.property("ADBE Root Vectors Group");
+    var grp = tc.addProperty("ADBE Vector Shape - Group");
+    var sh = new Shape(); var vv = [], ti = [], to = [];
+    for (i = 0; i < N; i++) { vv.push([X[i], Y[i]]); ti.push([0, 0]); to.push([0, 0]); }
+    sh.vertices = vv; sh.inTangents = ti; sh.outTangents = to; sh.closed = false;
+    grp.property("ADBE Vector Shape").setValue(sh);
+    var tst = tc.addProperty("ADBE Vector Graphic - Stroke");
+    tst.property("ADBE Vector Stroke Color").setValue(ACC2);
+    tst.property("ADBE Vector Stroke Width").setValue(3);
+    var D = [0];
+    for (i = 1; i < N; i++) {
+        var ddx = X[i] - X[i - 1], ddy = Y[i] - Y[i - 1];
+        D.push(D[i - 1] + Math.sqrt(ddx * ddx + ddy * ddy));
+    }
+    var trim = tc.addProperty("ADBE Vector Filter - Trim");
+    var te = trim.property("ADBE Vector Trim End");
+    te.setValueAtTime(t0, 0);
+    for (i = 1; i < N; i++) te.setValueAtTime(t0 + 0.3 + i * 0.45, D[i] / D[N - 1] * 100);
+    _ncGlow(trl, 12, 0.7);
+    trl.property("Transform").property("Position").setValue([0, 0]);
+    trl.property("Transform").property("Opacity").setValue(38);
+    trl.parent = cam; trl.motionBlur = true;
+
+    // svechalar: 45px tana, 5px wick, o'tkir burchak, flat fill + soft glow
+    for (i = 0; i < N; i++) {
+        var t = t0 + 0.3 + i * 0.45;
+        var bH = 34 + rnd() * 46, wUp = 14 + rnd() * 26, wDn = 14 + rnd() * 26;
+        var yO = Y[i] + bH / 2, yCl = Y[i] - bH / 2, wTop = yCl - wUp, wBot = yO + wDn;
+        var up = (i > 0) ? (Y[i] < Y[i - 1]) : true;
+        var col = up ? GRN : RED;
+        var l = comp.layers.addShape(); l.name = "[NEO] k" + (i + 1);
+        var c = l.property("ADBE Root Vectors Group");
+        var wick = c.addProperty("ADBE Vector Shape - Rect");
+        wick.property("ADBE Vector Rect Size").setValue([5, Math.max(10, wBot - wTop)]);
+        wick.property("ADBE Vector Rect Position").setValue([0, -Math.max(10, wBot - wTop) / 2]);
+        var body = c.addProperty("ADBE Vector Shape - Rect");
+        body.property("ADBE Vector Rect Size").setValue([45, Math.max(14, yO - yCl)]);
+        body.property("ADBE Vector Rect Roundness").setValue(0);
+        body.property("ADBE Vector Rect Position").setValue([0, (yCl + (yO - yCl) / 2) - wBot]);
+        var fl = c.addProperty("ADBE Vector Graphic - Fill");
+        fl.property("ADBE Vector Fill Color").setValue(col);
+        l.property("Transform").property("Position").setValue([X[i], wBot]);
+        _ncGlow(l, 16, 0.75);
+        var sc = l.property("Transform").property("Scale");
+        sc.setValueAtTime(t, [100, 8]); sc.setValueAtTime(t + 0.45, [100, 100]);
+        var e2 = new KeyframeEase(0, 80);
+        try { sc.setTemporalEaseAtKey(2, [e2, e2], [e2, e2]); } catch (e) {}
+        var op = l.property("Transform").property("Opacity");
+        op.setValueAtTime(t, 0); op.setValueAtTime(t + 0.12, 100);
+        l.parent = cam; l.motionBlur = true;
+    }
+
+    // kamera: FAQAT position (scale statik) — eng silliq harakat.
+    // MUHIM: keylar bolalar parent bo'lgandan KEYIN qo'yiladi (parent tuzog'i yo'q)
+    var pos = cam.property("Transform").property("Position");
+    for (i = 0; i < N; i += 3) {
+        var tgt = W * 0.6 + i * 6;
+        pos.setValueAtTime(t0 + 0.3 + i * 0.45, [tgt - (X[i] - W / 2), baseY + (baseY - Y[i]) * 0.45]);
+    }
+    _ncEaseAll(pos);
+    pos.expression = "value + [Math.sin(time*0.4)*3, Math.cos(time*0.3)*2]";
+    comp.motionBlur = true;
 }
