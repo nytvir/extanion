@@ -98,6 +98,12 @@ function nytvir_execute(cmd) {
         else if (cmd === "limeCard") { _limeCard(); }
         else if (cmd === "limeProfile") { _limeProfile(); }
         else if (cmd === "limeProEase") { _limeProEase(); }
+        else if (cmd === "apPopIn") { _apPopIn(); }
+        else if (cmd === "apBouncyText") { _apBouncyText(); }
+        else if (cmd === "apMorph") { _apMorph(); }
+        else if (cmd === "apProgress") { _apProgress(); }
+        else if (cmd === "apBlurPulse") { _apBlurPulse(); }
+        else if (cmd === "apShadow") { _apShadow(); }
         else if (cmd === "cryptoWatchlist") { _cryptoWatchlist(); }
         else if (cmd === "orderFilled") { _orderFilled(); }
         else if (cmd === "glowProfile") { _glowProfile("blue"); }
@@ -12136,6 +12142,241 @@ function _limeProEase() {
         var rot=0;
         try{ rot=sel[i].property("Transform").property("Rotation").value; }catch(e){}
         _limeInUp(sel[i], t0 + i*0.12, rot);
+    }
+    return sel.length;
+}
+
+// ============================================================
+// APPLE SMOOTH KIT (v2.22) - darslik metodi tool'larda
+// Inertial bounce entrance, bouncy text, morph rig, progress,
+// blur-puls transition, apple soft shadow
+// ============================================================
+
+var AP_BOUNCE = "n=0; if (numKeys>0){ n=nearestKey(time).index; if (key(n).time>time) n--; } if (n==0){ t=0; } else { t=time-key(n).time; } if (n>0 && t<1){ v=velocityAtTime(key(n).time - thisComp.frameDuration/10); amp=.05; freq=3.0; decay=6.0; value + v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t); }else{ value }";
+
+function _apEaseFirst(pr){
+    var e=new KeyframeEase(0,33.33);
+    try{ pr.setTemporalEaseAtKey(1,[e,e],[e,e]); }catch(x){
+        try{ pr.setTemporalEaseAtKey(1,[e],[e]); }catch(y){
+            try{ pr.setTemporalEaseAtKey(1,[e,e,e],[e,e,e]); }catch(z){} } }
+}
+
+// --- 1) APPLE POP-IN: tanlangan layerlarga bounce entrance (staggered) ---
+function _apPopIn() {
+    var comp = app.project.activeItem;
+    var sel = comp.selectedLayers;
+    if (sel.length===0){ alert("Avval layer(lar)ni tanlang!"); return; }
+    var t0=comp.time;
+    for (var i=0;i<sel.length;i++){
+        var l=sel[i], t=t0+i*0.1;
+        var pos=l.property("Transform").property("Position");
+        var v=pos.value;
+        if (v.length===3){ pos.setValueAtTime(t,[v[0],v[1]+110,v[2]]); pos.setValueAtTime(t+0.42,v); }
+        else { pos.setValueAtTime(t,[v[0],v[1]+110]); pos.setValueAtTime(t+0.42,v); }
+        _apEaseFirst(pos);
+        pos.expression=AP_BOUNCE;
+        var sc=l.property("Transform").property("Scale");
+        var sv=sc.value;
+        if (sv.length===3){ sc.setValueAtTime(t,[sv[0]*0.7,sv[1]*0.7,sv[2]]); sc.setValueAtTime(t+0.42,sv); }
+        else { sc.setValueAtTime(t,[sv[0]*0.7,sv[1]*0.7]); sc.setValueAtTime(t+0.42,sv); }
+        _apEaseFirst(sc);
+        sc.expression=AP_BOUNCE;
+        var rt=l.property("Transform").property("Rotation");
+        var rv=rt.value;
+        rt.setValueAtTime(t,rv-7); rt.setValueAtTime(t+0.42,rv);
+        _apEaseFirst(rt);
+        rt.expression=AP_BOUNCE;
+        var op=l.property("Transform").property("Opacity");
+        op.setValueAtTime(t,0); op.setValueAtTime(t+0.2,100);
+        l.motionBlur=true;
+    }
+    comp.motionBlur=true;
+    return sel.length;
+}
+
+// --- 2) BOUNCY TEXT: tanlangan text layerga animator (darslik uslubi) ---
+function _apBouncyText() {
+    var comp = app.project.activeItem;
+    var sel = comp.selectedLayers;
+    var tl=null;
+    for (var i=0;i<sel.length;i++){ if (sel[i] instanceof TextLayer){ tl=sel[i]; break; } }
+    if (!tl){ alert("Text layer tanlang!"); return; }
+    var anims=tl.property("ADBE Text Properties").property("ADBE Text Animators");
+    var an=anims.addProperty("ADBE Text Animator");
+    an.name="Apple Bouncy";
+    var props=an.property("ADBE Text Animator Properties");
+    props.addProperty("ADBE Text Position 3D").setValue([0,20,0]);
+    props.addProperty("ADBE Text Opacity").setValue(0);
+    var selr=an.property("ADBE Text Selectors").addProperty("ADBE Text Expressible Selector");
+    var amt=selr.property("ADBE Text Expressible Amount");
+    amt.expression="delay=0.03; d=delay*(textIndex-1); t=time-(thisLayer.inPoint+d); dur=0.3; if(t<0){ [100,100,100] }else if(t<dur){ p=linear(t,0,dur,100,0) - 18*Math.sin(Math.min(t/dur,1)*Math.PI); [p,p,p] }else{ [0,0,0] }";
+    tl.motionBlur=true;
+    comp.motionBlur=true;
+}
+
+// --- 3) MORPH RIG: notification karta -> qorong'i widget (CTI'dan) ---
+function _apMorph() {
+    var comp = app.project.activeItem;
+    var t0=comp.time;
+    var W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2*0.46;
+
+    var card=comp.layers.addShape(); card.name="[AP] Card";
+    var cc=card.property("ADBE Root Vectors Group");
+    var cr=cc.addProperty("ADBE Vector Shape - Rect");
+    cr.property("ADBE Vector Rect Roundness").setValue(56*s);
+    var cf=cc.addProperty("ADBE Vector Graphic - Fill");
+    cf.property("ADBE Vector Fill Color").setValue([1,1,1]);
+    var sizeProp=card.property("ADBE Root Vectors Group").property(1).property("ADBE Vector Rect Size");
+    var colProp=card.property("ADBE Root Vectors Group").property(2).property("ADBE Vector Fill Color");
+    sizeProp.setValue([780*s,240*s]);
+    card.property("Transform").property("Position").setValue([W2/2,cy]);
+    try{
+        var ds=card.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+        try{ ds.property("ADBE Drop Shadow-0002").setValue(32); }catch(e){}
+        try{ ds.property("ADBE Drop Shadow-0004").setValue(0); }catch(e){}
+        try{ ds.property("ADBE Drop Shadow-0005").setValue(130*s); }catch(e){}
+    }catch(e){}
+    card.motionBlur=true;
+
+    // kontent — HAMMASI karta statik payt parent qilinadi (temir qoida)
+    function ctext(t,fs,col,pos,name,bold){
+        var l=comp.layers.addText(t);
+        l.name=name;
+        var stp=l.property("Source Text"); var td=stp.value;
+        td.text=t; td.fontSize=fs; td.applyFill=true; td.fillColor=col; td.applyStroke=false;
+        try{ td.font=bold?"Arial-BoldMT":"SegoeUI-Light"; }catch(e){}
+        try{ td.justification=ParagraphJustification.CENTER_JUSTIFY; }catch(e){}
+        stp.setValue(td);
+        l.parent=card;
+        l.property("Transform").property("Position").setValue(pos);
+        l.motionBlur=true;
+        return l;
+    }
+    var a1=ctext("MUHIM",28*s,[0.62,0.64,0.68],[-140*s,-58*s],"[AP] lbl1",false);
+    var a2=ctext("hozir",28*s,[0.62,0.64,0.68],[262*s,-58*s],"[AP] lbl2",false);
+    var a3=ctext("Xabar matni shu yerda",36*s,[0.12,0.12,0.14],[0,14*s],"[AP] msg",true);
+    var b1=ctext("Sarlavha",40*s,[1,1,1],[-160*s,-110*s],"[AP] w1",true);
+    var b2=ctext("qiymat",32*s,[0.62,0.75,1],[240*s,-110*s],"[AP] w2",false);
+
+    // eski kontent chiqishi (morph paytida)
+    function exitUp(l,t){
+        var pp=l.property("Transform").property("Position");
+        var v=pp.value;
+        pp.setValueAtTime(t,v); pp.setValueAtTime(t+0.35,[v[0],v[1]-140*s]);
+        var e=new KeyframeEase(0,66);
+        try{ pp.setTemporalEaseAtKey(1,[e,e],[e,e]); pp.setTemporalEaseAtKey(2,[e,e],[e,e]); }catch(x){}
+        var op=l.property("Transform").property("Opacity");
+        op.setValueAtTime(t,100); op.setValueAtTime(t+0.3,0);
+    }
+    function inB(l,t){
+        var pp=l.property("Transform").property("Position");
+        var v=pp.value;
+        pp.setValueAtTime(t,[v[0],v[1]+50*s]); pp.setValueAtTime(t+0.4,v);
+        _apEaseFirst(pp);
+        pp.expression=AP_BOUNCE;
+        var op=l.property("Transform").property("Opacity");
+        op.setValue(0);
+        op.setValueAtTime(t,0); op.setValueAtTime(t+0.18,100);
+    }
+    var tm=t0+3.0; // morph vaqti
+    exitUp(a3,tm-0.15); exitUp(a1,tm-0.05); exitUp(a2,tm-0.05);
+    inB(b1,tm+0.7); inB(b2,tm+0.85);
+    // widget matnlari morphgacha ko'rinmasin
+    b1.property("Transform").property("Opacity").setValueAtTime(t0,0);
+    b2.property("Transform").property("Opacity").setValueAtTime(t0,0);
+
+    // KARTA KEYLARI — ENG OXIRIDA
+    var pos=card.property("Transform").property("Position");
+    var scc=card.property("Transform").property("Scale");
+    var rot=card.property("Transform").property("Rotation");
+    var opa=card.property("Transform").property("Opacity");
+    pos.setValueAtTime(t0,[W2/2,cy+170*s]); pos.setValueAtTime(t0+0.42,[W2/2,cy]);
+    scc.setValueAtTime(t0,[68,68]); scc.setValueAtTime(t0+0.42,[100,100]);
+    rot.setValueAtTime(t0,-7); rot.setValueAtTime(t0+0.42,0);
+    opa.setValueAtTime(t0,0); opa.setValueAtTime(t0+0.2,100);
+    _apEaseFirst(pos); _apEaseFirst(scc); _apEaseFirst(rot);
+    pos.expression=AP_BOUNCE; scc.expression=AP_BOUNCE; rot.expression=AP_BOUNCE;
+    sizeProp.setValueAtTime(tm,[780*s,240*s]);
+    sizeProp.setValueAtTime(tm+0.5,[840*s,430*s]);
+    _apEaseFirst(sizeProp);
+    sizeProp.expression=AP_BOUNCE;
+    colProp.setValueAtTime(tm,[1,1,1]);
+    colProp.setValueAtTime(tm+0.5,[0.07,0.07,0.09]);
+    comp.motionBlur=true;
+}
+
+// --- 4) PROGRESS BAR RIG (CTI'dan 2.5s animatsiya) ---
+function _apProgress() {
+    var comp = app.project.activeItem;
+    var t0=comp.time;
+    var s=comp.height/1920;
+    var cx=comp.width/2, cy=comp.height*0.5;
+    var TRACKC=[0.22,0.28,0.42], PASTEL=[0.62,0.75,1.0];
+    function line(name,col){
+        var l=comp.layers.addShape(); l.name=name;
+        var c=l.property("ADBE Root Vectors Group");
+        var g=c.addProperty("ADBE Vector Shape - Group");
+        var sh=new Shape(); sh.vertices=[[-280*s,0],[280*s,0]]; sh.inTangents=[[0,0],[0,0]]; sh.outTangents=[[0,0],[0,0]]; sh.closed=false;
+        g.property("ADBE Vector Shape").setValue(sh);
+        var st=c.addProperty("ADBE Vector Graphic - Stroke");
+        st.property("ADBE Vector Stroke Color").setValue(col);
+        st.property("ADBE Vector Stroke Width").setValue(14*s);
+        try{ st.property("ADBE Vector Stroke Line Cap").setValue(2); }catch(e){}
+        l.property("Transform").property("Position").setValue([cx,cy]);
+        l.motionBlur=true;
+        return l;
+    }
+    var trk=line("[AP] track",TRACKC);
+    var fil=line("[AP] fill",PASTEL);
+    fil.property("ADBE Root Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    var te=fil.property("ADBE Root Vectors Group").property(3).property("ADBE Vector Trim End");
+    te.setValueAtTime(t0,0); te.setValueAtTime(t0+2.5,66);
+    var e=new KeyframeEase(0,66);
+    try{ te.setTemporalEaseAtKey(1,[e],[e]); te.setTemporalEaseAtKey(2,[e],[e]); }catch(x){}
+    try{
+        var gl=fil.property("ADBE Effect Parade").addProperty("ADBE Glo2");
+        try{ gl.property("ADBE Glo2-0002").setValue(150); }catch(e2){}
+        try{ gl.property("ADBE Glo2-0003").setValue(42*s); }catch(e2){}
+        try{ gl.property("ADBE Glo2-0004").setValue(0.6); }catch(e2){}
+    }catch(e2){}
+    var knob=comp.layers.addShape(); knob.name="[AP] knob";
+    var kc=knob.property("ADBE Root Vectors Group");
+    kc.addProperty("ADBE Vector Shape - Ellipse").property("ADBE Vector Ellipse Size").setValue([30*s,30*s]);
+    kc.addProperty("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").setValue([1,1,1]);
+    var kp=knob.property("Transform").property("Position");
+    kp.setValueAtTime(t0,[cx-280*s,cy]); kp.setValueAtTime(t0+2.5,[cx-280*s+560*s*0.66,cy]);
+    try{ kp.setTemporalEaseAtKey(1,[e,e],[e,e]); kp.setTemporalEaseAtKey(2,[e,e],[e,e]); }catch(x){}
+    knob.motionBlur=true;
+    comp.motionBlur=true;
+}
+
+// --- 5) BLUR PULS transition (CTI'da fokus effekti) ---
+function _apBlurPulse() {
+    var comp = app.project.activeItem;
+    var t0=comp.time;
+    var adj=comp.layers.addSolid([1,1,1],"[AP] blur pulse",comp.width,comp.height,1,comp.duration);
+    adj.adjustmentLayer=true;
+    adj.inPoint=Math.max(0,t0-0.05); adj.outPoint=Math.min(comp.duration,t0+0.9);
+    var gb=adj.property("ADBE Effect Parade").addProperty("ADBE Gaussian Blur 2");
+    var gp=gb.property("ADBE Gaussian Blur 2-0001");
+    gp.setValueAtTime(t0,0); gp.setValueAtTime(t0+0.3,22); gp.setValueAtTime(t0+0.7,0);
+    try{ gb.property("ADBE Gaussian Blur 2-0002").setValue(1); }catch(e){}
+}
+
+// --- 6) APPLE SOFT SHADOW: tanlanganlarga (distance 0, katta softness, ~12%) ---
+function _apShadow() {
+    var comp = app.project.activeItem;
+    var sel = comp.selectedLayers;
+    if (sel.length===0){ alert("Avval layer(lar)ni tanlang!"); return; }
+    var s=comp.height/1920;
+    for (var i=0;i<sel.length;i++){
+        try{
+            var ds=sel[i].property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+            try{ ds.property("ADBE Drop Shadow-0002").setValue(32); }catch(e){}
+            try{ ds.property("ADBE Drop Shadow-0004").setValue(0); }catch(e){}
+            try{ ds.property("ADBE Drop Shadow-0005").setValue(130*s); }catch(e){}
+        }catch(e){}
     }
     return sel.length;
 }
