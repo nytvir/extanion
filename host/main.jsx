@@ -92,6 +92,12 @@ function nytvir_execute(cmd) {
         else if (cmd === "portfolioBalance") { _portfolioBalance(); }
         else if (cmd === "candleChart") { _candleChart(); }
         else if (cmd === "neonChart") { _neonChart(); }
+        else if (cmd === "limePillCaps") { _limePillCaps("uz"); }
+        else if (cmd === "limePillCapsEn") { _limePillCaps("en"); }
+        else if (cmd === "limeScribble") { _limeScribble(); }
+        else if (cmd === "limeCard") { _limeCard(); }
+        else if (cmd === "limeProfile") { _limeProfile(); }
+        else if (cmd === "limeProEase") { _limeProEase(); }
         else if (cmd === "cryptoWatchlist") { _cryptoWatchlist(); }
         else if (cmd === "orderFilled") { _orderFilled(); }
         else if (cmd === "glowProfile") { _glowProfile("blue"); }
@@ -11824,4 +11830,312 @@ function _neonChart() {
     _ncEaseAll(pos);
     pos.expression = "value + [Math.sin(time*0.4)*3, Math.cos(time*0.3)*2]";
     comp.motionBlur = true;
+}
+
+// ============================================================
+// LIME KIT (v2.21) - "Ismail" personal-brand mashinasi
+// Word-sync pill captionlar, scribble, pastel UI karta, profil,
+// va PRO EASE (overshoot + asimmetrik ease) - hammasi bir bosishda
+// ============================================================
+
+var LIME_PILL=[0.84,0.92,0.63], LIME_ACC=[0.73,0.86,0.34], LIME_OLIVE=[0.27,0.32,0.10];
+var LIME_DARK=[0.14,0.16,0.11], LIME_GREY=[0.45,0.48,0.42], LIME_RED=[0.90,0.30,0.26];
+
+// PRO EASE rig: otilib chiqib suzib qo'nadi (silliqlikning 6 siri shu yerda)
+function _limeInUp(l, t, rot0) {
+    var eOut=new KeyframeEase(0,33), eIn=new KeyframeEase(0,90), eSet=new KeyframeEase(0,95);
+    function AE2(pr,k,ein,eout){
+        try{ pr.setTemporalEaseAtKey(k,[ein,ein],[eout,eout]); }catch(x){
+            try{ pr.setTemporalEaseAtKey(k,[ein,ein,ein],[eout,eout,eout]); }catch(z){} }
+    }
+    var pp=l.property("Transform").property("Position");
+    var v=pp.value;
+    pp.setValueAtTime(t,[v[0]-16,v[1]+120]);
+    pp.setValueAtTime(t+0.44,[v[0]+3,v[1]-9]);
+    pp.setValueAtTime(t+0.66,[v[0],v[1]]);
+    AE2(pp,1,eIn,eOut); AE2(pp,2,eIn,eOut); AE2(pp,3,eSet,eOut);
+    var sc=l.property("Transform").property("Scale");
+    sc.setValueAtTime(t+0.07,[92,92]);
+    sc.setValueAtTime(t+0.48,[101.5,101.5]);
+    sc.setValueAtTime(t+0.70,[100,100]);
+    AE2(sc,1,eIn,eOut); AE2(sc,2,eIn,eOut); AE2(sc,3,eSet,eOut);
+    if (rot0!==undefined && rot0!==null){
+        var rt=l.property("Transform").property("Rotation");
+        rt.setValueAtTime(t,rot0-8);
+        rt.setValueAtTime(t+0.5,rot0+1.4);
+        rt.setValueAtTime(t+0.7,rot0);
+        AE2(rt,1,eIn,eOut); AE2(rt,2,eIn,eOut); AE2(rt,3,eSet,eOut);
+    }
+    var op=l.property("Transform").property("Opacity");
+    op.setValueAtTime(t,0); op.setValueAtTime(t+0.18,100);
+    l.motionBlur=true;
+}
+
+function _limeText(comp, txt, fs, col, pos, name, bold) {
+    var tl=comp.layers.addText(txt);
+    tl.name=name;
+    var stp=tl.property("Source Text"); var td=stp.value;
+    td.text=txt; td.fontSize=fs; td.applyFill=true; td.fillColor=col; td.applyStroke=false;
+    try{ td.font = bold ? "Arial-BoldMT" : "SegoeUI-Light"; }catch(e){ try{ td.font="ArialMT"; }catch(e2){} }
+    try{ td.justification=ParagraphJustification.CENTER_JUSTIFY; }catch(e){}
+    stp.setValue(td);
+    tl.property("Transform").property("Position").setValue(pos);
+    return tl;
+}
+
+function _limeRRect(comp, sz, rnd, fill, pos, rot, name, shadow) {
+    var cd=comp.layers.addShape(); cd.name=name;
+    var cc=cd.property("ADBE Root Vectors Group");
+    var cr=cc.addProperty("ADBE Vector Shape - Rect");
+    cr.property("ADBE Vector Rect Size").setValue(sz);
+    cr.property("ADBE Vector Rect Roundness").setValue(rnd);
+    var cf=cc.addProperty("ADBE Vector Graphic - Fill");
+    cf.property("ADBE Vector Fill Color").setValue(fill);
+    cd.property("Transform").property("Position").setValue(pos);
+    cd.property("Transform").property("Rotation").setValue(rot);
+    if (shadow){
+        try{
+            var ds=cd.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+            try{ ds.property("ADBE Drop Shadow-0002").setValue(50); }catch(e){}
+            try{ ds.property("ADBE Drop Shadow-0004").setValue(24); }catch(e){}
+            try{ ds.property("ADBE Drop Shadow-0005").setValue(80); }catch(e){}
+        }catch(e){}
+    }
+    return cd;
+}
+
+// --- 1) WORD-SYNC PILL CAPTIONS: whisper -ml 1 -> token merge -> hard-swap pill ---
+function _limePillCaps(lang) {
+    var comp = app.project.activeItem;
+    var src = _capFindSourceVideo(comp);
+    if (!src) { alert("Video topilmadi - audio bor video qatlamni tanlang."); return; }
+    if (!(new File(CAP_WHISPER)).exists) { alert("Whisper o'rnatilmagan:\n" + CAP_WHISPER); return; }
+
+    var tmp = Folder.temp.fsName;
+    var wav = tmp + "\\nytvir_limepill.wav";
+    var srtBase = tmp + "\\nytvir_limepill";
+    var srt = srtBase + ".srt";
+    try { var oldSrt = new File(srt); if (oldSrt.exists) oldSrt.remove(); } catch (e) {}
+    var bat = new File(tmp + "\\nytvir_limepill.bat");
+    bat.encoding = "UTF-8";
+    bat.open("w");
+    bat.writeln("@echo off");
+    bat.writeln('"' + CAP_FFMPEG + '" -y -i "' + src + '" -vn -ar 16000 -ac 1 -c:a pcm_s16le "' + wav + '"');
+    bat.writeln('"' + CAP_WHISPER + '" -m "' + CAP_MODEL + '" -f "' + wav + '" -l ' + (lang || "uz") + ' -ml 1 -osrt -of "' + srtBase + '"');
+    bat.close();
+    system.callSystem('cmd.exe /c "' + bat.fsName + '"');
+
+    var srtFile = new File(srt);
+    if (!srtFile.exists) { alert("Whisper SRT yozmadi. Video ovozini tekshiring."); return; }
+
+    // SRT o'qish + tokenlarni so'zlarga birlashtirish (bosh joy = yangi so'z)
+    srtFile.encoding="UTF-8"; srtFile.open("r");
+    var words=[], curW=null;
+    function t2s(s){
+        var pp=s.split(":");
+        var last=pp[2].split(",");
+        return parseFloat(pp[0])*3600 + parseFloat(pp[1])*60 + parseFloat(last[0]) + parseFloat(last[1])/1000;
+    }
+    while(!srtFile.eof){
+        var ln=srtFile.readln();
+        if (ln.indexOf("-->")>=0){
+            var parts=ln.split(" ");
+            var t1=t2s(parts[0]), t2=t2s(parts[2]);
+            var txt=srtFile.eof ? "" : srtFile.readln();
+            if (txt.replace(/^\s+|\s+$/g,"").length>0){
+                var isNew = (txt.charAt(0)===" ");
+                var clean = txt.replace(/^\s+|\s+$/g,"");
+                if (isNew || curW===null){
+                    if (curW) words.push(curW);
+                    curW=[t1,t2,clean];
+                } else {
+                    curW[1]=t2; curW[2]=curW[2]+clean;
+                }
+            }
+        }
+    }
+    if (curW) words.push(curW);
+    srtFile.close();
+    if (words.length<2){ alert("So'zlar topilmadi."); return; }
+
+    // pill tizimi: 1 shape + 1 text, hold keylar (POP YO'Q - keskin swap)
+    var scl = comp.height/1920;
+    var FS=Math.round(46*scl), PY=Math.round(comp.height*0.70);
+    var pill=comp.layers.addShape(); pill.name="[LIME] pill bg";
+    var pc=pill.property("ADBE Root Vectors Group");
+    var prc=pc.addProperty("ADBE Vector Shape - Rect");
+    prc.property("ADBE Vector Rect Roundness").setValue(Math.round(37*scl));
+    var pf=pc.addProperty("ADBE Vector Graphic - Fill");
+    pf.property("ADBE Vector Fill Color").setValue(LIME_PILL);
+    var szProp=pill.property("ADBE Root Vectors Group").property(1).property("ADBE Vector Rect Size");
+    pill.property("Transform").property("Position").setValue([comp.width/2,PY]);
+
+    var txtL=comp.layers.addText(" ");
+    txtL.name="[LIME] pill word";
+    txtL.property("Transform").property("Position").setValue([comp.width/2,PY+Math.round(15*scl)]);
+    var stp=txtL.property("Source Text");
+    function mkTD(word){
+        var td=stp.value;
+        td.text=word; td.fontSize=FS; td.applyFill=true; td.fillColor=LIME_OLIVE; td.applyStroke=false;
+        try{ td.font="SegoeUI-Bold"; }catch(e){ try{ td.font="Arial-BoldMT"; }catch(e2){} }
+        try{ td.justification=ParagraphJustification.CENTER_JUSTIFY; }catch(e){}
+        return td;
+    }
+    szProp.setValueAtTime(0,[0.1,0.1]);
+    stp.setValueAtTime(0,mkTD(""));
+    var lastEnd=-1;
+    for (var i=0;i<words.length;i++){
+        var w1=words[i][0], w2=words[i][1], word=words[i][2];
+        if (lastEnd>0 && w1-lastEnd>0.55){
+            szProp.setValueAtTime(lastEnd+0.18,[0.1,0.1]);
+            stp.setValueAtTime(lastEnd+0.18,mkTD(""));
+        }
+        var wlow=word.toLowerCase();
+        szProp.setValueAtTime(w1,[wlow.length*FS*0.50+62*scl, 74*scl]);
+        stp.setValueAtTime(w1,mkTD(wlow));
+        lastEnd=w2;
+    }
+    szProp.setValueAtTime(lastEnd+0.2,[0.1,0.1]);
+    stp.setValueAtTime(lastEnd+0.2,mkTD(""));
+    for (i=1;i<=szProp.numKeys;i++){
+        try{ szProp.setInterpolationTypeAtKey(i,KeyframeInterpolationType.HOLD,KeyframeInterpolationType.HOLD); }catch(e){}
+    }
+    return words.length;
+}
+
+// --- 2) SCRIBBLE: tanlangan text atrofiga lime ellips chiziladi ---
+function _limeScribble() {
+    var comp = app.project.activeItem;
+    var t0 = comp.time;
+    var target=null;
+    if (comp.selectedLayers.length>0) target=comp.selectedLayers[0];
+    var pos=[comp.width/2, comp.height*0.5], w=260, h=110;
+    if (target){
+        var tp=target.property("Transform").property("Position").value;
+        pos=[tp[0],tp[1]-18];
+        try{
+            var r=target.sourceRectAtTime(t0,false);
+            if (r && r.width>0){ w=r.width+110; h=Math.max(100,r.height+64); }
+        }catch(e){}
+    }
+    var el=comp.layers.addShape(); el.name="[LIME] scribble";
+    var ec=el.property("ADBE Root Vectors Group");
+    var ee=ec.addProperty("ADBE Vector Shape - Ellipse");
+    ee.property("ADBE Vector Ellipse Size").setValue([w,h]);
+    var es=ec.addProperty("ADBE Vector Graphic - Stroke");
+    es.property("ADBE Vector Stroke Color").setValue(LIME_ACC);
+    es.property("ADBE Vector Stroke Width").setValue(5);
+    ec.addProperty("ADBE Vector Filter - Trim");
+    var ete=el.property("ADBE Root Vectors Group").property(3).property("ADBE Vector Trim End");
+    ete.setValueAtTime(t0,0); ete.setValueAtTime(t0+0.4,100);
+    try{ var e9=new KeyframeEase(0,82); ete.setTemporalEaseAtKey(2,[e9],[e9]); }catch(e){}
+    el.property("Transform").property("Position").setValue(pos);
+    el.property("Transform").property("Rotation").setValue(-4);
+    try{ el.property("ADBE Effect Parade").addProperty("ADBE Glo2"); }catch(e){}
+    el.inPoint=t0;
+}
+
+// --- 3) PASTEL UI KARTA: cutaway starter (4s, ichini o'zing yozasan) ---
+function _limeCard() {
+    var comp = app.project.activeItem;
+    var t0=comp.time, t1=Math.min(t0+4.0, comp.duration);
+    var W2=comp.width, H2=comp.height, s=H2/1920;
+    function trimL(l){
+        l.inPoint=t0; l.outPoint=t1;
+        var op=l.property("Transform").property("Opacity");
+        op.setValueAtTime(t1-0.25,100); op.setValueAtTime(t1-0.02,0);
+    }
+    var bg=comp.layers.addSolid([0.94,0.97,0.92],"[LIME] BG",W2,H2,1,comp.duration);
+    bg.inPoint=t0; bg.outPoint=t1;
+    var bop=bg.property("Transform").property("Opacity");
+    bop.setValueAtTime(t0,0); bop.setValueAtTime(t0+0.3,100);
+    bop.setValueAtTime(t1-0.3,100); bop.setValueAtTime(t1-0.02,0);
+    var bars=comp.layers.addShape(); bars.name="[LIME] bars";
+    var bc=bars.property("ADBE Root Vectors Group");
+    for (var b=0;b<6;b++){
+        var br=bc.addProperty("ADBE Vector Shape - Rect");
+        br.property("ADBE Vector Rect Size").setValue([60*s,(500+b*130)*s]);
+        br.property("ADBE Vector Rect Position").setValue([(650+b*75)*s, H2*0.78-(500+b*130)*s/2]);
+    }
+    var bf=bc.addProperty("ADBE Vector Graphic - Fill");
+    bf.property("ADBE Vector Fill Color").setValue(LIME_ACC);
+    bars.property("Transform").property("Position").setValue([0,0]);
+    bars.property("Transform").property("Opacity").setValue(20);
+    bars.property("Transform").property("Position").expression="value + [0, Math.sin(time*0.5)*8]";
+    bars.inPoint=t0; bars.outPoint=t1;
+    var st1=_limeText(comp,"(kichik izoh)",Math.round(36*s),LIME_GREY,[W2*0.37,H2*0.27],"[LIME] title small",false);
+    _limeInUp(st1,t0+0.1); trimL(st1);
+    var ul=_limeRRect(comp,[300*s,8*s],4,LIME_ACC,[W2*0.31,H2*0.293],0,"[LIME] underline",false);
+    var us=ul.property("Transform").property("Scale");
+    us.setValueAtTime(t0+0.25,[0,100]); us.setValueAtTime(t0+0.6,[100,100]);
+    try{ var e8=new KeyframeEase(0,85); us.setTemporalEaseAtKey(2,[e8,e8],[e8,e8]); }catch(e){}
+    trimL(ul);
+    var st2=_limeText(comp,"KATTA SARLAVHA!",Math.round(56*s),LIME_DARK,[W2*0.40,H2*0.335],"[LIME] title big",true);
+    _limeInUp(st2,t0+0.28); trimL(st2);
+    var card=_limeRRect(comp,[640*s,380*s],44*s,[1,1,1],[W2*0.40,H2*0.50],-5,"[LIME] card",true);
+    _limeInUp(card,t0+0.35,-5); trimL(card);
+    var ct=_limeText(comp,"matn shu yerga",Math.round(40*s),LIME_GREY,[W2*0.40,H2*0.50],"[LIME] card text",false);
+    _limeInUp(ct,t0+0.5); trimL(ct);
+    var bdg=_limeRRect(comp,[92*s,92*s],26*s,LIME_RED,[W2*0.13,H2*0.42],-8,"[LIME] badge",true);
+    _limeInUp(bdg,t0+0.7,-8); trimL(bdg);
+    var bdt=_limeText(comp,"!",Math.round(56*s),[1,1,1],[W2*0.13,H2*0.431],"[LIME] badge txt",true);
+    _limeInUp(bdt,t0+0.75); trimL(bdt);
+    var chp=_limeRRect(comp,[250*s,74*s],37*s,LIME_ACC,[W2*0.72,H2*0.62],-4,"[LIME] chip",true);
+    _limeInUp(chp,t0+0.9,-4); trimL(chp);
+    var cht=_limeText(comp,"chip",Math.round(34*s),LIME_DARK,[W2*0.72,H2*0.627],"[LIME] chip txt",false);
+    _limeInUp(cht,t0+0.95); trimL(cht);
+}
+
+// --- 4) PROFIL KARTA: pixelate + tint + follow karta (3.5s) ---
+function _limeProfile() {
+    var comp = app.project.activeItem;
+    var t0=comp.time, t1=Math.min(t0+3.5, comp.duration);
+    var W2=comp.width, H2=comp.height, s=H2/1920;
+    // video layerni topib, mosaic DUPLIKAT (adjustmentda ishlamaydi!)
+    var vid=null;
+    for (var i=1;i<=comp.numLayers;i++){
+        var l=comp.layer(i);
+        try{
+            if (l.source && l.source.mainSource && l.source.hasVideo && !l.adjustmentLayer && l.name.indexOf("[LIME]")!==0){ vid=l; break; }
+        }catch(e){}
+    }
+    if (vid){
+        var dup=vid.duplicate(); dup.name="[LIME] video pixel";
+        dup.moveBefore(vid); dup.inPoint=t0; dup.outPoint=t1;
+        var dfx=dup.property("ADBE Effect Parade");
+        for (i=dfx.numProperties;i>=1;i--){ dfx.property(i).remove(); }
+        var mo=dfx.addProperty("ADBE Mosaic");
+        mo.property("ADBE Mosaic-0001").setValue(36);
+        mo.property("ADBE Mosaic-0002").setValue(64);
+    }
+    var tint=comp.layers.addSolid([0.32,0.42,0.18],"[LIME] tint",W2,H2,1,comp.duration);
+    tint.inPoint=t0; tint.outPoint=t1;
+    var top2=tint.property("Transform").property("Opacity");
+    top2.setValueAtTime(t0,0); top2.setValueAtTime(t0+0.4,55);
+    var card=_limeRRect(comp,[700*s,540*s],40*s,[1,1,1],[W2/2,H2*0.49],0,"[LIME] prof card",true);
+    _limeInUp(card,t0+0.3,0); card.inPoint=t0+0.3; card.outPoint=t1;
+    var ban=_limeRRect(comp,[620*s,140*s],34*s,LIME_ACC,[W2/2,H2*0.412],0,"[LIME] prof banner",false);
+    _limeInUp(ban,t0+0.55); ban.inPoint=t0+0.55; ban.outPoint=t1;
+    var bt=_limeText(comp,"FOLLOW",Math.round(40*s),LIME_DARK,[W2/2,H2*0.418],"[LIME] prof bannertxt",true);
+    _limeInUp(bt,t0+0.6); bt.inPoint=t0+0.6; bt.outPoint=t1;
+    var av=_limeRRect(comp,[120*s,120*s],60*s,LIME_ACC,[W2/2,H2*0.49],0,"[LIME] prof avatar",false);
+    _limeInUp(av,t0+0.75); av.inPoint=t0+0.75; av.outPoint=t1;
+    var nm=_limeText(comp,"Nytvir",Math.round(54*s),LIME_DARK,[W2/2,H2*0.556],"[LIME] prof name",true);
+    _limeInUp(nm,t0+0.9); nm.inPoint=t0+0.9; nm.outPoint=t1;
+    var hd=_limeText(comp,"@nytvir",Math.round(34*s),LIME_GREY,[W2/2,H2*0.598],"[LIME] prof handle",false);
+    _limeInUp(hd,t0+1.0); hd.inPoint=t0+1.0; hd.outPoint=t1;
+}
+
+// --- 5) PRO EASE: tanlangan layerlarga staggered premium kirish ---
+function _limeProEase() {
+    var comp = app.project.activeItem;
+    var sel = comp.selectedLayers;
+    if (sel.length===0){ alert("Avval layer(lar)ni tanlang!"); return; }
+    var t0=comp.time;
+    for (var i=0;i<sel.length;i++){
+        var rot=0;
+        try{ rot=sel[i].property("Transform").property("Rotation").value; }catch(e){}
+        _limeInUp(sel[i], t0 + i*0.12, rot);
+    }
+    return sel.length;
 }
