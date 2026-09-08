@@ -117,6 +117,9 @@ function nytvir_execute(cmd) {
         else if (cmd === "msLevelUp") { _msLevelUp(); }
         else if (cmd === "msSteps") { _msSteps(); }
         else if (cmd === "msSlider") { _msSlider(); }
+        else if (cmd === "msCalendar") { _msCalendar(); }
+        else if (cmd === "msBattery") { _msBattery(); }
+        else if (cmd === "msGauge") { _msGauge(); }
         else if (cmd === "cryptoWatchlist") { _cryptoWatchlist(); }
         else if (cmd === "orderFilled") { _orderFilled(); }
         else if (cmd === "glowProfile") { _glowProfile("blue"); }
@@ -12932,5 +12935,127 @@ function _msSlider(){
     var val=_msText(comp,"0%",64*s,[0.19,0.82,0.35],[W2/2,cy-90*s],"[MS] slider foiz",true);
     val.property("Source Text").expression=
         "var k=thisComp.layer(\"[MS] slider knob\").position[0]; Math.round(linear(k,"+x0.toFixed(1)+","+x1.toFixed(1)+",0,100))+\"%\"";
+    comp.motionBlur=true;
+}
+
+// ============================================================
+// v2.27 - Calendar Fill (43) + Battery Charge (47)
+// ============================================================
+
+// --- 43: CALENDAR FILL (21 kun birma-bir yashil) ---
+function _msCalendar(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var CELL=90*s, GAP2=14*s, COLS=7, ROWS=3;
+    var DIM=[0.11,0.12,0.15], GRN2=[0.19,0.82,0.35];
+    var gw=COLS*CELL+(COLS-1)*GAP2;
+    var x0=W2/2-gw/2+CELL/2, y0=H2/2-((ROWS-1)*(CELL+GAP2))/2;
+    for (var i=0;i<COLS*ROWS;i++){
+        var cx=x0+(i%COLS)*(CELL+GAP2);
+        var cy=y0+Math.floor(i/COLS)*(CELL+GAP2);
+        var tc=t0+0.3+i*0.11;
+        var cell=_msRRect(comp,[CELL,CELL],20*s,DIM,[cx,cy],"[MS] kun "+(i+1));
+        var colp=cell.property("ADBE Root Vectors Group").property(2).property("ADBE Vector Fill Color");
+        colp.setValueAtTime(tc-0.01,DIM); colp.setValueAtTime(tc,GRN2);
+        var sc=cell.property("Transform").property("Scale");
+        sc.setValueAtTime(tc,[100,100]); sc.setValueAtTime(tc+0.1,[118,118]); sc.setValueAtTime(tc+0.2,[100,100]);
+        _msEaseBoth(sc,2,60); _msEaseBoth(sc,3,90);
+        var op=cell.property("Transform").property("Opacity");
+        op.setValueAtTime(t0,0); op.setValueAtTime(t0+0.15+i*0.015,100);
+    }
+    comp.motionBlur=true;
+}
+
+// --- 47: BATTERY CHARGE (qizil 14% -> yashil 100% + chaqmoq) ---
+function _msBattery(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2/2, BW=460*s, BH=200*s;
+    // korpus (stroke)
+    var body=comp.layers.addShape(); body.name="[MS] bat korpus";
+    var bc=body.property("ADBE Root Vectors Group");
+    var br=bc.addProperty("ADBE Vector Shape - Rect");
+    br.property("ADBE Vector Rect Size").setValue([BW,BH]);
+    br.property("ADBE Vector Rect Roundness").setValue(40*s);
+    var bst=bc.addProperty("ADBE Vector Graphic - Stroke");
+    bst.property("ADBE Vector Stroke Color").setValue([0.55,0.58,0.65]);
+    bst.property("ADBE Vector Stroke Width").setValue(12*s);
+    body.property("Transform").property("Position").setValue([W2/2,cy]);
+    body.motionBlur=true;
+    // qopqoq
+    var cap=_msRRect(comp,[26*s,80*s],8*s,[0.55,0.58,0.65],[W2/2+BW/2+22*s,cy],"[MS] bat qopqoq");
+    // ichki fill (chapdan o'sadi, rang qizil->yashil)
+    var fw=BW-40*s, fh=BH-40*s;
+    var fill=_msRRect(comp,[fw,fh],26*s,[1.0,0.27,0.23],[W2/2,cy],"[MS] bat quvvat");
+    fill.property("Transform").property("Anchor Point").setValue([-fw/2,0]);
+    fill.property("Transform").property("Position").setValue([W2/2-fw/2,cy]);
+    var fsc=fill.property("Transform").property("Scale");
+    fsc.setValueAtTime(t0+0.3,[14,100]);
+    fsc.setValueAtTime(t0+2.2,[100,100]);
+    _msEaseBoth(fsc,1,60); _msEaseBoth(fsc,2,88);
+    var fcol=fill.property("ADBE Root Vectors Group").property(2).property("ADBE Vector Fill Color");
+    fcol.setValueAtTime(t0+0.3,[1.0,0.27,0.23]);
+    fcol.setValueAtTime(t0+1.2,[1.0,0.62,0.04]);
+    fcol.setValueAtTime(t0+2.0,[0.19,0.82,0.35]);
+    // chaqmoq
+    var bolt=_msText(comp,"⚡",84*s,[1,1,1],[W2/2,cy+30*s],"[MS] bat chaqmoq",true);
+    try{
+        var ds=bolt.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+        try{ ds.property("ADBE Drop Shadow-0002").setValue(120); }catch(e){}
+        try{ ds.property("ADBE Drop Shadow-0004").setValue(0); }catch(e){}
+        try{ ds.property("ADBE Drop Shadow-0005").setValue(30*s); }catch(e){}
+    }catch(e){}
+    bolt.inPoint=t0+0.9;
+    var bsc2=bolt.property("Transform").property("Scale");
+    bsc2.setValueAtTime(t0+0.9,[0,0]); bsc2.setValueAtTime(t0+1.18,[100,100]);
+    _apEaseFirst(bsc2); bsc2.expression=AP_BOUNCE;
+    bolt.motionBlur=true;
+    comp.motionBlur=true;
+}
+
+// --- 63: GAUGE NEEDLE (yashil-sariq-qizil yoy + spring strelka) ---
+function _msGauge(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cx=W2/2, cy=H2/2+90*s, R=300*s;
+    var ZON=[[[0.19,0.82,0.35],0,16.7],[[1.0,0.62,0.04],16.7,33.3],[[1.0,0.27,0.23],33.3,50]];
+    for (var z=0;z<3;z++){
+        var arc=comp.layers.addShape(); arc.name="[MS] gauge zona "+(z+1);
+        var ac=arc.property("ADBE Root Vectors Group");
+        var ae2=ac.addProperty("ADBE Vector Shape - Ellipse");
+        ae2.property("ADBE Vector Ellipse Size").setValue([R*2,R*2]);
+        var ast=ac.addProperty("ADBE Vector Graphic - Stroke");
+        ast.property("ADBE Vector Stroke Color").setValue(ZON[z][0]);
+        ast.property("ADBE Vector Stroke Width").setValue(46*s);
+        try{ ast.property("ADBE Vector Stroke Line Cap").setValue(2); }catch(e){}
+        ac.addProperty("ADBE Vector Filter - Trim");
+        var tr=arc.property("ADBE Root Vectors Group").property(3);
+        tr.property("ADBE Vector Trim Start").setValue(ZON[z][1]);
+        var te=tr.property("ADBE Vector Trim End");
+        te.setValueAtTime(t0+0.2+z*0.25,ZON[z][1]);
+        te.setValueAtTime(t0+0.5+z*0.25,ZON[z][2]);
+        _msEaseBoth(te,2,80);
+        tr.property("ADBE Vector Trim Offset").setValue(270);
+        arc.property("Transform").property("Position").setValue([cx,cy]);
+        arc.motionBlur=true;
+    }
+    // strelka
+    var nd=_msRRect(comp,[10*s,230*s],5*s,[1,1,1],[cx,cy],"[MS] gauge strelka");
+    nd.property("Transform").property("Anchor Point").setValue([0,115*s]);
+    nd.property("Transform").property("Position").setValue([cx,cy]);
+    var rot=nd.property("Transform").property("Rotation");
+    rot.setValueAtTime(t0+0.4,-88);
+    rot.setValueAtTime(t0+1.6,62);
+    _apEaseFirst(rot);
+    rot.expression=AP_BOUNCE;
+    nd.motionBlur=true;
+    // markaz pivot
+    var pv=comp.layers.addShape(); pv.name="[MS] gauge pivot";
+    var pc=pv.property("ADBE Root Vectors Group");
+    var pe=pc.addProperty("ADBE Vector Shape - Ellipse");
+    pe.property("ADBE Vector Ellipse Size").setValue([44*s,44*s]);
+    var pf=pc.addProperty("ADBE Vector Graphic - Fill");
+    pf.property("ADBE Vector Fill Color").setValue([0.85,0.87,0.92]);
+    pv.property("Transform").property("Position").setValue([cx,cy]);
     comp.motionBlur=true;
 }
