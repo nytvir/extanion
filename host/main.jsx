@@ -104,6 +104,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "apProgress") { _apProgress(); }
         else if (cmd === "apBlurPulse") { _apBlurPulse(); }
         else if (cmd === "apShadow") { _apShadow(); }
+        else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "cryptoWatchlist") { _cryptoWatchlist(); }
         else if (cmd === "orderFilled") { _orderFilled(); }
         else if (cmd === "glowProfile") { _glowProfile("blue"); }
@@ -12379,4 +12380,45 @@ function _apShadow() {
         }catch(e){}
     }
     return sel.length;
+}
+
+// ============================================================
+// SFX KIT (v2.23) - nytvir_sfx to'plami: CTI ga bir bosishda
+// Kategoriyalar: UI plip / Impact / Transition / Alert
+// Darajalar jangovar loyihalarda sinalgan standartlar
+// ============================================================
+
+var SFX_LIB = {
+    sfx_plip1:   ["plip1.wav",     -11],
+    sfx_plip2:   ["plip2.wav",     -11],
+    sfx_plipbig: ["plip_big.wav",   -8],
+    sfx_tick:    ["tick.wav",      -11],
+    sfx_tap:     ["tap.wav",       -10],
+    sfx_ding:    ["ding_pos.wav",   -8],
+    sfx_thud:    ["thud_neg.wav",   -6],
+    sfx_swin:    ["swoosh_in.wav",  -6],
+    sfx_swout:   ["swoosh_out.wav", -7],
+    sfx_modal:   ["modal.wav",      -7]
+};
+
+function _sfxPlace(cmd) {
+    var comp = app.project.activeItem;
+    var rec = SFX_LIB[cmd];
+    if (!rec) return;
+    var fn = rec[0], db = rec[1];
+    var file = new File("D:/edit/nytvir_sfx/" + fn);
+    if (!file.exists) { alert("SFX topilmadi:\n" + file.fsName); return; }
+    // duplikat import qilmaslik: projectda shu nomli footage bormi
+    var item = null;
+    for (var i = 1; i <= app.project.numItems; i++) {
+        var it = app.project.item(i);
+        if (it instanceof FootageItem && it.name === fn) { item = it; break; }
+    }
+    if (!item) item = app.project.importFile(new ImportOptions(file));
+    var l = comp.layers.add(item);
+    l.name = "[SFX] " + fn.replace(".wav", "") + " @" + comp.time.toFixed(2);
+    l.startTime = comp.time;
+    l.property("Audio Levels").setValue([db, db]);
+    l.moveToEnd();
+    return fn;
 }
