@@ -105,6 +105,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "apBlurPulse") { _apBlurPulse(); }
         else if (cmd === "apShadow") { _apShadow(); }
         else if (cmd === "amBounce") { _amBounce(); }
+        else if (cmd === "srchPaper") { _srchPaper(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -12434,6 +12435,67 @@ function _amBounce() {
     }
     app.endUndoGroup();
     if (applied === 0) alert("Keyframe topilmadi - avval harakatga 2ta key qo'ying");
+}
+
+// PAPER SEARCH (v2.30) - SIMONS videosidagi search-pill: oq pill + caret bilan yozilish + SEARCHING label
+function _srchPaper() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Nima yozilsin?", "90% win rate");
+    if (q === null) return;
+    if (q === "") q = "90% win rate";
+    app.beginUndoGroup("Paper Search");
+    var t0 = comp.time, W = comp.width, H = comp.height;
+    var cx = W / 2, cy = H / 2 - 30;
+    var INKC = [0.067, 0.078, 0.090];
+    // pill
+    var pill = comp.layers.addShape(); pill.name = "[SRCH] pill";
+    var pg = pill.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var pr = pg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    pr.property("ADBE Vector Rect Size").setValue([W * 0.7, 120]);
+    pr.property("ADBE Vector Rect Roundness").setValue(60);
+    var pf = pg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    pf.property("ADBE Vector Fill Color").setValue([1, 1, 1]);
+    var ps = pg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    ps.property("ADBE Vector Stroke Color").setValue([0.85, 0.84, 0.80]);
+    ps.property("ADBE Vector Stroke Width").setValue(3);
+    pill.position.setValue([cx, cy]);
+    pill.inPoint = t0; pill.outPoint = t0 + 4;
+    pill.scale.setValueAtTime(t0, [62, 62]);
+    pill.scale.setValueAtTime(t0 + 0.26, [100, 100]);
+    try { pill.scale.expression = AM_BOUNCE; } catch (eB) {}
+    pill.opacity.setValueAtTime(t0, 0); pill.opacity.setValueAtTime(t0 + 0.1, 100);
+    // typing text
+    var ty = comp.layers.addText("");
+    ty.name = "[SRCH] text";
+    var td = ty.property("Source Text").value;
+    td.resetCharStyle(); td.fontSize = 44; td.applyFill = true; td.fillColor = INKC; td.applyStroke = false;
+    td.font = "ArialMT"; td.justification = ParagraphJustification.CENTER_JUSTIFY;
+    ty.property("Source Text").setValue(td);
+    ty.position.setValue([cx, cy + 16]);
+    ty.inPoint = t0; ty.outPoint = t0 + 4;
+    var st = ty.property("Source Text");
+    var tt = t0 + 0.25;
+    for (var i = 1; i <= q.length; i++) {
+        var d2 = st.valueAtTime(tt, false); d2.text = q.substring(0, i) + "|";
+        st.setValueAtTime(tt, d2); tt += 0.085;
+    }
+    var d3 = st.valueAtTime(tt + 0.1, false); d3.text = q; st.setValueAtTime(tt + 0.1, d3);
+    for (i = 1; i <= st.numKeys; i++) { st.setInterpolationTypeAtKey(i, KeyframeInterpolationType.HOLD); }
+    // SEARCHING label
+    var lb = comp.layers.addText("SEARCHING...");
+    lb.name = "[SRCH] label";
+    var td2 = lb.property("Source Text").value;
+    td2.resetCharStyle(); td2.fontSize = 28; td2.applyFill = true; td2.fillColor = [0.55, 0.55, 0.55]; td2.applyStroke = false;
+    td2.font = "ArialMT"; td2.justification = ParagraphJustification.CENTER_JUSTIFY; td2.tracking = 700;
+    lb.property("Source Text").setValue(td2);
+    lb.position.setValue([cx, cy + 160]);
+    lb.inPoint = t0 + 0.2; lb.outPoint = t0 + 4;
+    lb.position.setValueAtTime(t0 + 0.2, [cx, cy + 200]);
+    lb.position.setValueAtTime(t0 + 0.5, [cx, cy + 160]);
+    try { lb.position.expression = AM_BOUNCE; } catch (eB2) {}
+    lb.opacity.setValueAtTime(t0 + 0.2, 0); lb.opacity.setValueAtTime(t0 + 0.35, 100);
+    app.endUndoGroup();
 }
 
 // SFX KIT (v2.23) - nytvir_sfx to'plami: CTI ga bir bosishda
