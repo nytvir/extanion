@@ -114,6 +114,9 @@ function nytvir_execute(cmd) {
         else if (cmd === "msStars") { _msStars(); }
         else if (cmd === "msErase") { _msErase(); }
         else if (cmd === "msUnlock") { _msUnlock(); }
+        else if (cmd === "msLevelUp") { _msLevelUp(); }
+        else if (cmd === "msSteps") { _msSteps(); }
+        else if (cmd === "msSlider") { _msSlider(); }
         else if (cmd === "cryptoWatchlist") { _cryptoWatchlist(); }
         else if (cmd === "orderFilled") { _orderFilled(); }
         else if (cmd === "glowProfile") { _glowProfile("blue"); }
@@ -12809,5 +12812,125 @@ function _msUnlock(){
         op.setValueAtTime(t0+3.1,base); op.setValueAtTime(t0+3.5,0);
     }
     arrow.inPoint=t0; arrow.outPoint=t0+3.6;
+    comp.motionBlur=true;
+}
+
+// ============================================================
+// GROWTH KIT (v2.26) - Level Up, Progress Steps, Slider Drag %
+// ============================================================
+
+// --- 32: LEVEL UP (XP bar to'ladi -> badge spring) ---
+function _msLevelUp(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2/2;
+    var trk=_msRRect(comp,[560*s,34*s],17*s,[0.13,0.14,0.17],[W2/2,cy],"[MS] xp track");
+    var fill=_msRRect(comp,[560*s,34*s],17*s,[0.04,0.52,1.0],[W2/2,cy],"[MS] xp fill");
+    fill.property("Transform").property("Anchor Point").setValue([-280*s,0]);
+    fill.property("Transform").property("Position").setValue([W2/2-280*s,cy]);
+    var fsc=fill.property("Transform").property("Scale");
+    fsc.setValueAtTime(t0+0.2,[14,100]);
+    fsc.setValueAtTime(t0+1.4,[100,100]);
+    _msEaseBoth(fsc,1,60); _msEaseBoth(fsc,2,90);
+    // badge
+    var bdg=_msRRect(comp,[300*s,92*s],20*s,[1.0,0.62,0.04],[W2/2,cy-120*s],"[MS] level badge");
+    var bt=_msText(comp,"LEVEL 2 ⬆",40*s,[0.12,0.09,0.02],[0,14*s],"[MS] level matn",true);
+    bt.parent=bdg;
+    bt.property("Transform").property("Position").setValue([0,14*s]);
+    bdg.inPoint=t0+1.35; bt.inPoint=t0+1.35;
+    var bsc=bdg.property("Transform").property("Scale");
+    bsc.setValueAtTime(t0+1.35,[0,0]); bsc.setValueAtTime(t0+1.63,[100,100]);
+    _apEaseFirst(bsc); bsc.expression=AP_BOUNCE;
+    bdg.motionBlur=true;
+    // puls halqa
+    var ring=comp.layers.addShape(); ring.name="[MS] level puls";
+    var rc=ring.property("ADBE Root Vectors Group");
+    var re=rc.addProperty("ADBE Vector Shape - Rect");
+    re.property("ADBE Vector Rect Size").setValue([300*s,92*s]);
+    re.property("ADBE Vector Rect Roundness").setValue(20*s);
+    var rst=rc.addProperty("ADBE Vector Graphic - Stroke");
+    rst.property("ADBE Vector Stroke Color").setValue([1.0,0.62,0.04]);
+    rst.property("ADBE Vector Stroke Width").setValue(3*s);
+    ring.property("Transform").property("Position").setValue([W2/2,cy-120*s]);
+    ring.inPoint=t0+1.45; ring.outPoint=t0+2.2;
+    var rs2=ring.property("Transform").property("Scale");
+    rs2.setValueAtTime(t0+1.45,[100,100]); rs2.setValueAtTime(t0+2.1,[150,175]);
+    _msEaseBoth(rs2,2,85);
+    var ro=ring.property("Transform").property("Opacity");
+    ro.setValueAtTime(t0+1.45,90); ro.setValueAtTime(t0+2.1,0);
+    comp.motionBlur=true;
+}
+
+// --- 36: PROGRESS STEPS (1-2-3 birma-bir yonadi) ---
+function _msSteps(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2/2, GAP=200*s, BLUE=[0.04,0.52,1.0], DIM=[0.16,0.17,0.20];
+    for (var i=0;i<3;i++){
+        var x=W2/2+(i-1)*GAP;
+        var tOn=t0+0.4+i*0.9;
+        // ulovchi chiziq (birinchisidan oldin yo'q)
+        if (i>0){
+            var ln=_msRRect(comp,[GAP-90*s,8*s],4*s,BLUE,[x-GAP/2,cy],"[MS] step chiziq "+i);
+            ln.property("Transform").property("Anchor Point").setValue([-(GAP-90*s)/2,0]);
+            ln.property("Transform").property("Position").setValue([x-GAP+45*s,cy]);
+            var lsc=ln.property("Transform").property("Scale");
+            lsc.setValueAtTime(tOn-0.5,[0,100]); lsc.setValueAtTime(tOn-0.05,[100,100]);
+            _msEaseBoth(lsc,2,85);
+            var lbg=_msRRect(comp,[GAP-90*s,8*s],4*s,DIM,[x-GAP/2,cy],"[MS] step chiziq fon "+i);
+            lbg.moveAfter(ln);
+        }
+        // doira
+        var cir=comp.layers.addShape(); cir.name="[MS] step doira "+(i+1);
+        var cc=cir.property("ADBE Root Vectors Group");
+        var ce=cc.addProperty("ADBE Vector Shape - Ellipse");
+        ce.property("ADBE Vector Ellipse Size").setValue([84*s,84*s]);
+        var cf=cc.addProperty("ADBE Vector Graphic - Fill");
+        cf.property("ADBE Vector Fill Color").setValue(DIM);
+        cir.property("Transform").property("Position").setValue([x,cy]);
+        var colp=cir.property("ADBE Root Vectors Group").property(2).property("ADBE Vector Fill Color");
+        colp.setValueAtTime(tOn-0.01,DIM); colp.setValueAtTime(tOn,BLUE);
+        var csc=cir.property("Transform").property("Scale");
+        csc.setValueAtTime(tOn,[100,100]); csc.setValueAtTime(tOn+0.13,[124,124]); csc.setValueAtTime(tOn+0.25,[100,100]);
+        _msEaseBoth(csc,2,60); _msEaseBoth(csc,3,90);
+        cir.motionBlur=true;
+        // raqam
+        var nt=_msText(comp,String(i+1),36*s,[1,1,1],[0,13*s],"[MS] step raqam "+(i+1),true);
+        nt.parent=cir;
+        nt.property("Transform").property("Position").setValue([0,13*s]);
+    }
+    comp.motionBlur=true;
+}
+
+// --- 37: SLIDER DRAG % (raqam knob'ga expression bilan bog'langan) ---
+function _msSlider(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2/2, HW=280*s;
+    var x0=W2/2-HW, x1=W2/2+HW;
+    var trk=_msRRect(comp,[HW*2,22*s],11*s,[0.13,0.14,0.17],[W2/2,cy],"[MS] slider track");
+    var fill=_msRRect(comp,[HW*2,22*s],11*s,[0.19,0.82,0.35],[W2/2,cy],"[MS] slider fill");
+    fill.property("Transform").property("Anchor Point").setValue([-HW,0]);
+    fill.property("Transform").property("Position").setValue([x0,cy]);
+    // knob
+    var knob=comp.layers.addShape(); knob.name="[MS] slider knob";
+    var kc=knob.property("ADBE Root Vectors Group");
+    var ke=kc.addProperty("ADBE Vector Shape - Ellipse");
+    ke.property("ADBE Vector Ellipse Size").setValue([56*s,56*s]);
+    var kf=kc.addProperty("ADBE Vector Graphic - Fill");
+    kf.property("ADBE Vector Fill Color").setValue([1,1,1]);
+    var kp=knob.property("Transform").property("Position");
+    kp.setValueAtTime(t0+0.3,[x0,cy]);
+    kp.setValueAtTime(t0+2.0,[x1,cy]);
+    _msEaseBoth(kp,1,60); _msEaseBoth(kp,2,90);
+    kp.expression=AP_BOUNCE;
+    knob.motionBlur=true;
+    // fill knob'ga ergashadi (expression)
+    fill.property("Transform").property("Scale").expression=
+        "var k=thisComp.layer(\"[MS] slider knob\").position[0]; var p=(k-("+x0.toFixed(1)+"))/("+(2*HW).toFixed(1)+"); [Math.max(0.5,p*100),100]";
+    // foiz raqami ham knob'ga ergashadi
+    var val=_msText(comp,"0%",64*s,[0.19,0.82,0.35],[W2/2,cy-90*s],"[MS] slider foiz",true);
+    val.property("Source Text").expression=
+        "var k=thisComp.layer(\"[MS] slider knob\").position[0]; Math.round(linear(k,"+x0.toFixed(1)+","+x1.toFixed(1)+",0,100))+\"%\"";
     comp.motionBlur=true;
 }
