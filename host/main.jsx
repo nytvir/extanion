@@ -104,6 +104,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "apProgress") { _apProgress(); }
         else if (cmd === "apBlurPulse") { _apBlurPulse(); }
         else if (cmd === "apShadow") { _apShadow(); }
+        else if (cmd === "amBounce") { _amBounce(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -12403,6 +12404,38 @@ function _apShadow() {
 }
 
 // ============================================================
+// ATERMAGICS BOUNCE (v2.29) - foydalanuvchi bergan bounce (easeOut factor bilan).
+// Tanlangan layer(lar)ning KEYFRAME QO'YILGAN transform xossalariga bir bosishda tushadi.
+var AM_BOUNCE = "amp=.04;freq=1.8;decay=3;n=0;time_max=3;" +
+    "if(numKeys>0){n=nearestKey(time).index;if(key(n).time>time){n--;}}" +
+    "if(n==0){t=0;}else{t=time-key(n).time;}" +
+    "if(n>0&&t<time_max){v=velocityAtTime(key(n).time-thisComp.frameDuration/10);" +
+    "easeFactor=easeOut(t,0,time_max,1,0);" +
+    "value+v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t)*easeFactor;}else{value;}";
+function _amBounce() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var sel = comp.selectedLayers;
+    if (sel.length === 0) { alert("Layer tanlang"); return; }
+    app.beginUndoGroup("AterMagics Bounce");
+    var applied = 0;
+    for (var i = 0; i < sel.length; i++) {
+        var L = sel[i];
+        var props = ["ADBE Position", "ADBE Scale", "ADBE Rotate Z", "ADBE Anchor Point"];
+        for (var p = 0; p < props.length; p++) {
+            try {
+                var pr = L.property("ADBE Transform Group").property(props[p]);
+                if (pr && pr.numKeys > 0 && pr.canSetExpression) {
+                    pr.expression = AM_BOUNCE;
+                    applied++;
+                }
+            } catch (e) {}
+        }
+    }
+    app.endUndoGroup();
+    if (applied === 0) alert("Keyframe topilmadi - avval harakatga 2ta key qo'ying");
+}
+
 // SFX KIT (v2.23) - nytvir_sfx to'plami: CTI ga bir bosishda
 // Kategoriyalar: UI plip / Impact / Transition / Alert
 // Darajalar jangovar loyihalarda sinalgan standartlar
