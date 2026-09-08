@@ -105,6 +105,14 @@ function nytvir_execute(cmd) {
         else if (cmd === "apBlurPulse") { _apBlurPulse(); }
         else if (cmd === "apShadow") { _apShadow(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
+        else if (cmd === "msScreenshot") { _msScreenshot(); }
+        else if (cmd === "msTapback") { _msTapback(); }
+        else if (cmd === "msReminders") { _msReminders(); }
+        else if (cmd === "msRefresh") { _msRefresh(); }
+        else if (cmd === "msSpinnerCheck") { _msSpinnerCheck(); }
+        else if (cmd === "msToggle") { _msToggle(); }
+        else if (cmd === "msStars") { _msStars(); }
+        else if (cmd === "msErase") { _msErase(); }
         else if (cmd === "cryptoWatchlist") { _cryptoWatchlist(); }
         else if (cmd === "orderFilled") { _orderFilled(); }
         else if (cmd === "glowProfile") { _glowProfile("blue"); }
@@ -12421,4 +12429,327 @@ function _sfxPlace(cmd) {
     l.property("Audio Levels").setValue([db, db]);
     l.moveToEnd();
     return fn;
+}
+
+// ============================================================
+// MICRO MOMENTS KIT (v2.24) - foydalanuvchi tanlagan 8 moment
+// Hammasi CTI dan boshlanadi, to'liq editable oddiy layerlar,
+// bounce = AP_BOUNCE (v2.22), temir qoida: parent avval, key keyin
+// ============================================================
+
+function _msEaseBoth(pr,k,inf){
+    var e=new KeyframeEase(0,inf||70);
+    try{ pr.setTemporalEaseAtKey(k,[e,e],[e,e]); }catch(x){
+        try{ pr.setTemporalEaseAtKey(k,[e],[e]); }catch(y){
+            try{ pr.setTemporalEaseAtKey(k,[e,e,e],[e,e,e]); }catch(z){} } }
+}
+function _msRRect(comp,sz,rnd,fill,pos,name){
+    var l=comp.layers.addShape(); l.name=name;
+    var c=l.property("ADBE Root Vectors Group");
+    var r=c.addProperty("ADBE Vector Shape - Rect");
+    r.property("ADBE Vector Rect Size").setValue(sz);
+    r.property("ADBE Vector Rect Roundness").setValue(rnd);
+    var f=c.addProperty("ADBE Vector Graphic - Fill");
+    f.property("ADBE Vector Fill Color").setValue(fill);
+    l.property("Transform").property("Position").setValue(pos);
+    l.motionBlur=true;
+    return l;
+}
+function _msText(comp,txt,fs,col,pos,name,bold,just){
+    var tl=comp.layers.addText(txt);
+    tl.name=name;
+    var stp=tl.property("Source Text"); var td=stp.value;
+    td.text=txt; td.fontSize=fs; td.applyFill=true; td.fillColor=col; td.applyStroke=false;
+    try{ td.font=bold?"Arial-BoldMT":"SegoeUI-Light"; }catch(e){}
+    try{ td.justification=just||ParagraphJustification.CENTER_JUSTIFY; }catch(e){}
+    stp.setValue(td);
+    tl.property("Transform").property("Position").setValue(pos);
+    tl.motionBlur=true;
+    return tl;
+}
+
+// --- 5: SCREENSHOT (flash + thumbnail burchakka) ---
+function _msScreenshot(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var fl=comp.layers.addSolid([1,1,1],"[MS] shot flash",W2,H2,1,comp.duration);
+    fl.inPoint=t0; fl.outPoint=t0+0.5;
+    var fop=fl.property("Transform").property("Opacity");
+    fop.setValueAtTime(t0,88); fop.setValueAtTime(t0+0.3,0);
+    var fw=W2*0.30, fh=H2*0.30;
+    var frame=_msRRect(comp,[fw,fh],14*s,[0.09,0.10,0.13],[W2/2,H2/2],"[MS] shot frame");
+    var st=frame.property("ADBE Root Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    st.property("ADBE Vector Stroke Color").setValue([1,1,1]);
+    st.property("ADBE Vector Stroke Width").setValue(5*s);
+    // kontent placeholder (o'rniga o'z rasm/videongni parent qilib qo'yasan)
+    var cont=_msRRect(comp,[fw-14*s,fh-14*s],10*s,[0.16,0.19,0.26],[0,0],"[MS] shot content (almashtir)");
+    cont.parent=frame;
+    cont.property("Transform").property("Position").setValue([0,0]);
+    // frame keylari - bolalar paretdan KEYIN
+    frame.inPoint=t0; frame.outPoint=t0+3.0;
+    cont.inPoint=t0; cont.outPoint=t0+3.0;
+    var pp=frame.property("Transform").property("Position");
+    var sc=frame.property("Transform").property("Scale");
+    pp.setValueAtTime(t0+0.15,[W2/2,H2/2]);
+    pp.setValueAtTime(t0+0.65,[W2*0.17,H2*0.80]);
+    sc.setValueAtTime(t0+0.15,[100,100]);
+    sc.setValueAtTime(t0+0.65,[34,34]);
+    _apEaseFirst(pp); _apEaseFirst(sc);
+    pp.expression=AP_BOUNCE; sc.expression=AP_BOUNCE;
+    // chiqish: chapga suzib ketadi
+    pp.setValueAtTime(t0+2.4,[W2*0.17,H2*0.80]);
+    pp.setValueAtTime(t0+2.9,[-fw*0.4,H2*0.80]);
+    _msEaseBoth(pp,pp.numKeys-1,70); _msEaseBoth(pp,pp.numKeys,70);
+    comp.motionBlur=true;
+}
+
+// --- 9: iMESSAGE TAPBACK (xabar + spring reaksiya) ---
+function _msTapback(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var bw=520*s, bh=110*s;
+    var bub=_msRRect(comp,[bw,bh],36*s,[0.15,0.16,0.19],[W2/2,H2/2],"[MS] tb bubble");
+    var msg=_msText(comp,"zo'r video bo'pti 🔥",34*s,[0.91,0.92,0.94],[0,12*s],"[MS] tb matn",false);
+    msg.parent=bub;
+    msg.property("Transform").property("Position").setValue([0,12*s]);
+    var pill=_msRRect(comp,[120*s,66*s],33*s,[0.04,0.52,1.0],[bw*0.42,-bh*0.62],"[MS] tb pill");
+    pill.parent=bub;
+    pill.property("Transform").property("Position").setValue([bw*0.42,-bh*0.62]);
+    var emo=_msText(comp,"❤️",34*s,[1,1,1],[0,12*s],"[MS] tb emoji",false);
+    emo.parent=pill;
+    emo.property("Transform").property("Position").setValue([0,12*s]);
+    // keylar: bubble kichik pop, pill spring (bolalar allaqachon parent)
+    var t1=t0, t2=t0+0.35;
+    var bsc=bub.property("Transform").property("Scale");
+    bsc.setValueAtTime(t1,[92,92]); bsc.setValueAtTime(t1+0.25,[100,100]);
+    _apEaseFirst(bsc); bsc.expression=AP_BOUNCE;
+    var bop=bub.property("Transform").property("Opacity");
+    bop.setValueAtTime(t1,0); bop.setValueAtTime(t1+0.12,100);
+    var psc=pill.property("Transform").property("Scale");
+    psc.setValueAtTime(t2,[0,0]); psc.setValueAtTime(t2+0.28,[100,100]);
+    _apEaseFirst(psc); psc.expression=AP_BOUNCE;
+    var pop2=pill.property("Transform").property("Opacity");
+    pop2.setValueAtTime(t2,0); pop2.setValueAtTime(t2+0.08,100);
+    comp.motionBlur=true;
+}
+
+// --- 10: REMINDERS CHECK-OFF (3 band birma-bir belgilanadi) ---
+function _msReminders(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var TXT=["Strategiyani o'rgan","Risk 1% qo'y","Jurnall yurit"];
+    var cy=H2/2-90*s;
+    for (var i=0;i<3;i++){
+        var y=cy+i*95*s;
+        var tc=t0+0.6+i*0.8; // belgilanish vaqti
+        // ring (bo'sh doira)
+        var ring=comp.layers.addShape(); ring.name="[MS] rem ring "+(i+1);
+        var rc=ring.property("ADBE Root Vectors Group");
+        var el=rc.addProperty("ADBE Vector Shape - Ellipse");
+        el.property("ADBE Vector Ellipse Size").setValue([36*s,36*s]);
+        var rst=rc.addProperty("ADBE Vector Graphic - Stroke");
+        rst.property("ADBE Vector Stroke Color").setValue([0.42,0.44,0.48]);
+        rst.property("ADBE Vector Stroke Width").setValue(4*s);
+        var rfl=rc.addProperty("ADBE Vector Graphic - Fill");
+        rfl.property("ADBE Vector Fill Color").setValue([1.0,0.62,0.04]);
+        ring.property("Transform").property("Position").setValue([W2/2-190*s,y]);
+        // fill faqat belgilanganda: fill opacity
+        var flo=ring.property("ADBE Root Vectors Group").property(3).property("ADBE Vector Fill Opacity");
+        flo.setValueAtTime(tc-0.01,0); flo.setValueAtTime(tc,100);
+        var rsc=ring.property("Transform").property("Scale");
+        rsc.setValueAtTime(tc,[100,100]); rsc.setValueAtTime(tc+0.14,[128,128]); rsc.setValueAtTime(tc+0.26,[100,100]);
+        _msEaseBoth(rsc,2,60); _msEaseBoth(rsc,3,90);
+        ring.motionBlur=true;
+        // matn
+        var tl=_msText(comp,TXT[i],34*s,[0.84,0.86,0.90],[W2/2+30*s,y+12*s],"[MS] rem matn "+(i+1),false);
+        var top3=tl.property("Transform").property("Opacity");
+        top3.setValueAtTime(tc-0.01,100); top3.setValueAtTime(tc+0.1,45);
+        // ustidan chiziq (strike) - chapdan o'sadi
+        var stk=_msRRect(comp,[380*s,4*s],2,[0.55,0.57,0.62],[W2/2+30*s,y],"[MS] rem strike "+(i+1));
+        stk.property("Transform").property("Anchor Point").setValue([-190*s,0]);
+        stk.property("Transform").property("Position").setValue([W2/2-160*s,y]);
+        var ssc=stk.property("Transform").property("Scale");
+        ssc.setValueAtTime(tc,[0,100]); ssc.setValueAtTime(tc+0.3,[100,100]);
+        _msEaseBoth(ssc,2,85);
+        var sop=stk.property("Transform").property("Opacity");
+        sop.setValueAtTime(0,70);
+        // umumiy kirish
+        var group=[ring,tl,stk];
+        for (var g=0; g<3; g++){
+            var gl=group[g];
+            gl.inPoint=t0;
+            var go=gl.property("Transform").property("Opacity");
+            var cur=go.numKeys>0?null:go.value;
+            go.setValueAtTime(t0, 0);
+            go.setValueAtTime(t0+0.25+i*0.08, (g===2)?70:(g===1?100:100));
+        }
+    }
+    comp.motionBlur=true;
+}
+
+// --- 14: PULL TO REFRESH ---
+function _msRefresh(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    // kontent qatorlari (bitta shape, 3 qator) - pastga tortiladi va qaytadi
+    var rows=comp.layers.addShape(); rows.name="[MS] refresh rows";
+    var rc=rows.property("ADBE Root Vectors Group");
+    for (var i=0;i<3;i++){
+        var r=rc.addProperty("ADBE Vector Shape - Rect");
+        r.property("ADBE Vector Rect Size").setValue([(430-i*60)*s,26*s]);
+        r.property("ADBE Vector Rect Roundness").setValue(13*s);
+        r.property("ADBE Vector Rect Position").setValue([-(i*30)*s, i*70*s]);
+    }
+    var rf=rc.addProperty("ADBE Vector Graphic - Fill");
+    rf.property("ADBE Vector Fill Color").setValue([0.16,0.17,0.20]);
+    rows.property("Transform").property("Position").setValue([W2/2,H2/2-20*s]);
+    rows.motionBlur=true;
+    var rp=rows.property("Transform").property("Position");
+    rp.setValueAtTime(t0,[W2/2,H2/2-20*s]);
+    rp.setValueAtTime(t0+0.4,[W2/2,H2/2+120*s]);
+    rp.setValueAtTime(t0+1.5,[W2/2,H2/2+120*s]);
+    rp.setValueAtTime(t0+1.95,[W2/2,H2/2-20*s]);
+    for (i=1;i<=rp.numKeys;i++) _msEaseBoth(rp,i,75);
+    rp.expression=AP_BOUNCE;
+    // spinner (trim halqa + doimiy aylanish)
+    var sp=comp.layers.addShape(); sp.name="[MS] refresh spinner";
+    var sc2=sp.property("ADBE Root Vectors Group");
+    var se=sc2.addProperty("ADBE Vector Shape - Ellipse");
+    se.property("ADBE Vector Ellipse Size").setValue([56*s,56*s]);
+    var sst=sc2.addProperty("ADBE Vector Graphic - Stroke");
+    sst.property("ADBE Vector Stroke Color").setValue([1,1,1]);
+    sst.property("ADBE Vector Stroke Width").setValue(5*s);
+    try{ sst.property("ADBE Vector Stroke Line Cap").setValue(2); }catch(e){}
+    sc2.addProperty("ADBE Vector Filter - Trim");
+    sp.property("ADBE Root Vectors Group").property(3).property("ADBE Vector Trim End").setValue(72);
+    sp.property("Transform").property("Position").setValue([W2/2,H2/2-95*s]);
+    sp.property("Transform").property("Rotation").expression="time*360";
+    var so=sp.property("Transform").property("Opacity");
+    so.setValueAtTime(t0+0.25,0); so.setValueAtTime(t0+0.45,100);
+    so.setValueAtTime(t0+1.45,100); so.setValueAtTime(t0+1.75,0);
+    sp.inPoint=t0; sp.outPoint=t0+1.85;
+    sp.motionBlur=true;
+    comp.motionBlur=true;
+}
+
+// --- 16: SPINNER -> CHECKMARK ---
+function _msSpinnerCheck(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var sp=comp.layers.addShape(); sp.name="[MS] load spinner";
+    var c=sp.property("ADBE Root Vectors Group");
+    var se=c.addProperty("ADBE Vector Shape - Ellipse");
+    se.property("ADBE Vector Ellipse Size").setValue([120*s,120*s]);
+    var st=c.addProperty("ADBE Vector Graphic - Stroke");
+    st.property("ADBE Vector Stroke Color").setValue([0.04,0.52,1.0]);
+    st.property("ADBE Vector Stroke Width").setValue(9*s);
+    try{ st.property("ADBE Vector Stroke Line Cap").setValue(2); }catch(e){}
+    c.addProperty("ADBE Vector Filter - Trim");
+    sp.property("ADBE Root Vectors Group").property(3).property("ADBE Vector Trim End").setValue(70);
+    sp.property("Transform").property("Position").setValue([W2/2,H2/2]);
+    sp.property("Transform").property("Rotation").expression="time*420";
+    var so=sp.property("Transform").property("Opacity");
+    so.setValueAtTime(t0,0); so.setValueAtTime(t0+0.15,100);
+    so.setValueAtTime(t0+1.0,100); so.setValueAtTime(t0+1.15,0);
+    sp.inPoint=t0; sp.outPoint=t0+1.2;
+    sp.motionBlur=true;
+    // yashil doira + galochka
+    var ok=comp.layers.addShape(); ok.name="[MS] check circle";
+    var oc=ok.property("ADBE Root Vectors Group");
+    var oe=oc.addProperty("ADBE Vector Shape - Ellipse");
+    oe.property("ADBE Vector Ellipse Size").setValue([130*s,130*s]);
+    var of2=oc.addProperty("ADBE Vector Graphic - Fill");
+    of2.property("ADBE Vector Fill Color").setValue([0.19,0.82,0.35]);
+    ok.property("Transform").property("Position").setValue([W2/2,H2/2]);
+    ok.inPoint=t0+1.05;
+    var ck=_msText(comp,"✓",64*s,[1,1,1],[0,22*s],"[MS] check belgi",true);
+    ck.parent=ok;
+    ck.property("Transform").property("Position").setValue([0,22*s]);
+    ck.inPoint=t0+1.05;
+    var osc=ok.property("Transform").property("Scale");
+    osc.setValueAtTime(t0+1.05,[0,0]); osc.setValueAtTime(t0+1.33,[100,100]);
+    _apEaseFirst(osc); osc.expression=AP_BOUNCE;
+    ok.motionBlur=true;
+    comp.motionBlur=true;
+}
+
+// --- 17: TOGGLE ON (spring bilan yonadi) ---
+function _msToggle(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var trk=_msRRect(comp,[170*s,96*s],48*s,[0.22,0.22,0.25],[W2/2,H2/2],"[MS] toggle track");
+    var tcol=trk.property("ADBE Root Vectors Group").property(2).property("ADBE Vector Fill Color");
+    tcol.setValueAtTime(t0+0.35,[0.22,0.22,0.25]);
+    tcol.setValueAtTime(t0+0.5,[0.19,0.82,0.35]);
+    var knob=comp.layers.addShape(); knob.name="[MS] toggle knob";
+    var kc=knob.property("ADBE Root Vectors Group");
+    var ke=kc.addProperty("ADBE Vector Shape - Ellipse");
+    ke.property("ADBE Vector Ellipse Size").setValue([82*s,82*s]);
+    var kf=kc.addProperty("ADBE Vector Graphic - Fill");
+    kf.property("ADBE Vector Fill Color").setValue([1,1,1]);
+    knob.parent=trk;
+    knob.property("Transform").property("Position").setValue([-40*s,0]);
+    var kp=knob.property("Transform").property("Position");
+    kp.setValueAtTime(t0+0.35,[-40*s,0]);
+    kp.setValueAtTime(t0+0.62,[40*s,0]);
+    _apEaseFirst(kp);
+    kp.expression=AP_BOUNCE;
+    knob.motionBlur=true;
+    comp.motionBlur=true;
+}
+
+// --- 18: STAR RATING (birma-bir yonadi) ---
+function _msStars(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var GREY=[0.25,0.26,0.30], GOLD=[1.0,0.62,0.04];
+    for (var i=0;i<5;i++){
+        var x=W2/2+(i-2)*95*s;
+        var tl=comp.layers.addText("★");
+        tl.name="[MS] star "+(i+1);
+        var stp=tl.property("Source Text");
+        function TD(col){
+            var td=stp.value;
+            td.text="★"; td.fontSize=72*s; td.applyFill=true; td.fillColor=col; td.applyStroke=false;
+            try{ td.font="Arial-BoldMT"; }catch(e){}
+            try{ td.justification=ParagraphJustification.CENTER_JUSTIFY; }catch(e){}
+            return td;
+        }
+        stp.setValue(TD(GREY));
+        var tf=t0+0.4+i*0.25;
+        stp.setValueAtTime(t0,TD(GREY));
+        stp.setValueAtTime(tf,TD(GOLD));
+        tl.property("Transform").property("Position").setValue([x,H2/2+24*s]);
+        var sc=tl.property("Transform").property("Scale");
+        sc.setValueAtTime(tf,[100,100]); sc.setValueAtTime(tf+0.12,[140,140]); sc.setValueAtTime(tf+0.24,[100,100]);
+        _msEaseBoth(sc,2,60); _msEaseBoth(sc,3,90);
+        var op=tl.property("Transform").property("Opacity");
+        op.setValueAtTime(t0,0); op.setValueAtTime(t0+0.15+i*0.05,100);
+        tl.motionBlur=true;
+    }
+    comp.motionBlur=true;
+}
+
+// --- 20: BACKSPACE ERASE (matn manba-layerdan o'qiladi - to'liq customize) ---
+function _msErase(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    // MANBA matn (buni tahrirlaysan - hammasi unga ergashadi)
+    var src=_msText(comp,"100x leverage",44*s,[1,1,1],[W2/2,H2/2-160*s],"[MS] erase MANBA (tahrirla)",true);
+    src.enabled=false;
+    // ko'rinadigan matn: expression manbadan o'qiydi, slider harf sonini boshqaradi
+    var disp=_msText(comp," ",44*s,[1,1,1],[W2/2-160*s,H2/2+16*s],"[MS] erase matn",true,ParagraphJustification.LEFT_JUSTIFY);
+    try{
+        var sl=disp.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
+        sl.name="Harflar";
+        var slp=sl.property("ADBE Slider Control-0001");
+        slp.setValueAtTime(t0+0.5,99);
+        slp.setValueAtTime(t0+2.2,0);
+    }catch(e){}
+    disp.property("Source Text").expression="var full=String(thisComp.layer(\"[MS] erase MANBA (tahrirla)\").text.sourceText); var n=Math.round(effect(\"Harflar\")(\"Slider\")); full.substring(0,Math.min(Math.max(n,0),full.length))";
+    // kursor: harf soniga qarab yuradi + miltillaydi
+    var cur=_msRRect(comp,[5*s,52*s],2,[0.04,0.52,1.0],[W2/2,H2/2],"[MS] erase kursor");
+    cur.property("Transform").property("Position").expression="var L=thisComp.layer(\"[MS] erase matn\"); var full=String(thisComp.layer(\"[MS] erase MANBA (tahrirla)\").text.sourceText); var n=Math.min(Math.max(Math.round(L.effect(\"Harflar\")(\"Slider\")),0),full.length); [L.position[0]+n*"+(44*s*0.52).toFixed(2)+"+6, L.position[1]-16]";
+    cur.property("Transform").property("Opacity").expression="(Math.sin(time*9)>0)?100:0";
+    comp.motionBlur=true;
 }
