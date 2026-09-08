@@ -120,6 +120,11 @@ function nytvir_execute(cmd) {
         else if (cmd === "msCalendar") { _msCalendar(); }
         else if (cmd === "msBattery") { _msBattery(); }
         else if (cmd === "msGauge") { _msGauge(); }
+        else if (cmd === "msSegment") { _msSegment(); }
+        else if (cmd === "msChecklist") { _msChecklist(); }
+        else if (cmd === "msSearch") { _msSearch(); }
+        else if (cmd === "msTimerChip") { _msTimerChip(); }
+        else if (cmd === "msDropdown") { _msDropdown(); }
         else if (cmd === "cryptoWatchlist") { _cryptoWatchlist(); }
         else if (cmd === "orderFilled") { _orderFilled(); }
         else if (cmd === "glowProfile") { _glowProfile("blue"); }
@@ -13057,5 +13062,236 @@ function _msGauge(){
     var pf=pc.addProperty("ADBE Vector Graphic - Fill");
     pf.property("ADBE Vector Fill Color").setValue([0.85,0.87,0.92]);
     pv.property("Transform").property("Position").setValue([cx,cy]);
+    comp.motionBlur=true;
+}
+
+// ============================================================
+// CONTROLS KIT (v2.28) - Segmented, Checklist, Search, TimerPie, Dropdown
+// ============================================================
+
+// --- 81: SEGMENTED SWITCH ---
+function _msSegment(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2/2, TW=520*s, TH=110*s;
+    var trk=_msRRect(comp,[TW,TH],26*s,[0.11,0.12,0.15],[W2/2,cy],"[MS] seg track");
+    var knob=_msRRect(comp,[TW/2-12*s,TH-16*s],20*s,[0.23,0.25,0.31],[W2/2-TW/4+3*s,cy],"[MS] seg knob");
+    var kp=knob.property("Transform").property("Position");
+    kp.setValueAtTime(t0+0.8,[W2/2-TW/4+3*s,cy]);
+    kp.setValueAtTime(t0+1.1,[W2/2+TW/4-3*s,cy]);
+    _apEaseFirst(kp); kp.expression=AP_BOUNCE;
+    knob.motionBlur=true;
+    function segTxt(str,x,name,actFirst){
+        var tl=comp.layers.addText(str);
+        tl.name=name;
+        var stp=tl.property("Source Text");
+        function TD(col){
+            var td=stp.value;
+            td.text=str; td.fontSize=36*s; td.applyFill=true; td.fillColor=col; td.applyStroke=false;
+            try{ td.font="SegoeUI-Bold"; }catch(e){ try{ td.font="Arial-BoldMT"; }catch(e2){} }
+            try{ td.justification=ParagraphJustification.CENTER_JUSTIFY; }catch(e){}
+            return td;
+        }
+        var ACT=[1,1,1], PAS=[0.50,0.52,0.58];
+        stp.setValue(TD(actFirst?ACT:PAS));
+        stp.setValueAtTime(t0,TD(actFirst?ACT:PAS));
+        stp.setValueAtTime(t0+0.95,TD(actFirst?PAS:ACT));
+        tl.property("Transform").property("Position").setValue([x,cy+13*s]);
+        tl.motionBlur=true;
+    }
+    segTxt("Oldin",W2/2-TW/4,"[MS] seg matn 1",true);
+    segTxt("Keyin",W2/2+TW/4,"[MS] seg matn 2",false);
+    comp.motionBlur=true;
+}
+
+// --- 85: CHECKBOX CASCADE (3 band) ---
+function _msChecklist(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var TXT=["O'rgan","Sinab ko'r","Takrorla"];
+    var BLUE=[0.04,0.52,1.0];
+    var cy=H2/2-110*s;
+    for (var i=0;i<3;i++){
+        var y=cy+i*110*s;
+        var tc=t0+0.5+i*0.6;
+        var box=comp.layers.addShape(); box.name="[MS] check quti "+(i+1);
+        var bc=box.property("ADBE Root Vectors Group");
+        var br=bc.addProperty("ADBE Vector Shape - Rect");
+        br.property("ADBE Vector Rect Size").setValue([56*s,56*s]);
+        br.property("ADBE Vector Rect Roundness").setValue(14*s);
+        var bst=bc.addProperty("ADBE Vector Graphic - Stroke");
+        bst.property("ADBE Vector Stroke Color").setValue([0.32,0.34,0.40]);
+        bst.property("ADBE Vector Stroke Width").setValue(5*s);
+        var bfl=bc.addProperty("ADBE Vector Graphic - Fill");
+        bfl.property("ADBE Vector Fill Color").setValue(BLUE);
+        box.property("Transform").property("Position").setValue([W2/2-170*s,y]);
+        var flo=box.property("ADBE Root Vectors Group").property(3).property("ADBE Vector Fill Opacity");
+        flo.setValueAtTime(tc-0.01,0); flo.setValueAtTime(tc,100);
+        var stc=box.property("ADBE Root Vectors Group").property(2).property("ADBE Vector Stroke Color");
+        stc.setValueAtTime(tc-0.01,[0.32,0.34,0.40]); stc.setValueAtTime(tc,BLUE);
+        var bsc=box.property("Transform").property("Scale");
+        bsc.setValueAtTime(tc,[100,100]); bsc.setValueAtTime(tc+0.12,[122,122]); bsc.setValueAtTime(tc+0.24,[100,100]);
+        _msEaseBoth(bsc,2,60); _msEaseBoth(bsc,3,90);
+        box.motionBlur=true;
+        var ck=_msText(comp,"✓",34*s,[1,1,1],[0,12*s],"[MS] check belgi "+(i+1),true);
+        ck.parent=box;
+        ck.property("Transform").property("Position").setValue([0,12*s]);
+        ck.inPoint=tc;
+        var csc=ck.property("Transform").property("Scale");
+        csc.setValueAtTime(tc,[0,0]); csc.setValueAtTime(tc+0.2,[100,100]);
+        _apEaseFirst(csc); csc.expression=AP_BOUNCE;
+        var lbl=_msText(comp,TXT[i],40*s,[0.84,0.86,0.90],[W2/2+60*s,y+14*s],"[MS] check matn "+(i+1),false);
+        var lop=lbl.property("Transform").property("Opacity");
+        lop.setValueAtTime(t0,0); lop.setValueAtTime(t0+0.25+i*0.1,100);
+        var bop=box.property("Transform").property("Opacity");
+        bop.setValueAtTime(t0,0); bop.setValueAtTime(t0+0.2+i*0.1,100);
+    }
+    comp.motionBlur=true;
+}
+
+// --- 87: SEARCH EXPAND (matn manba-layerdan, o'zi yoziladi) ---
+function _msSearch(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2/2;
+    var fld=comp.layers.addShape(); fld.name="[MS] search maydon";
+    var fc=fld.property("ADBE Root Vectors Group");
+    var fr=fc.addProperty("ADBE Vector Shape - Rect");
+    fr.property("ADBE Vector Rect Roundness").setValue(55*s);
+    var ffl=fc.addProperty("ADBE Vector Graphic - Fill");
+    ffl.property("ADBE Vector Fill Color").setValue([0.11,0.12,0.15]);
+    var szp=fld.property("ADBE Root Vectors Group").property(1).property("ADBE Vector Rect Size");
+    szp.setValueAtTime(t0,[110*s,110*s]);
+    szp.setValueAtTime(t0+0.45,[560*s,110*s]);
+    _apEaseFirst(szp); szp.expression=AP_BOUNCE;
+    fld.property("Transform").property("Position").setValue([W2/2,cy]);
+    fld.motionBlur=true;
+    var lupa=_msText(comp,"🔍",40*s,[1,1,1],[W2/2-215*s,cy+14*s],"[MS] search lupa",false);
+    var lp=lupa.property("Transform").property("Position");
+    lp.setValueAtTime(t0,[W2/2,cy+14*s]);
+    lp.setValueAtTime(t0+0.45,[W2/2-215*s,cy+14*s]);
+    _apEaseFirst(lp); lp.expression=AP_BOUNCE;
+    // MANBA matn (tahrirlanadigan)
+    var src=_msText(comp,"strategiya",38*s,[1,1,1],[W2/2,cy-200*s],"[MS] search MANBA (tahrirla)",false);
+    src.enabled=false;
+    var disp=_msText(comp," ",38*s,[1,1,1],[W2/2-160*s,cy+13*s],"[MS] search matn",false,ParagraphJustification.LEFT_JUSTIFY);
+    try{
+        var sl=disp.property("ADBE Effect Parade").addProperty("ADBE Slider Control");
+        sl.name="Harflar";
+        var slp=sl.property("ADBE Slider Control-0001");
+        slp.setValueAtTime(t0+0.6,0);
+        slp.setValueAtTime(t0+1.8,99);
+    }catch(e){}
+    disp.property("Source Text").expression="var full=String(thisComp.layer(\"[MS] search MANBA (tahrirla)\").text.sourceText); var n=Math.round(effect(\"Harflar\")(\"Slider\")); full.substring(0,Math.min(Math.max(n,0),full.length))";
+    var cur=_msRRect(comp,[4*s,46*s],2,[0.04,0.52,1.0],[W2/2,cy],"[MS] search kursor");
+    cur.property("Transform").property("Position").expression="var L=thisComp.layer(\"[MS] search matn\"); var full=String(thisComp.layer(\"[MS] search MANBA (tahrirla)\").text.sourceText); var n=Math.min(Math.max(Math.round(L.effect(\"Harflar\")(\"Slider\")),0),full.length); [L.position[0]+n*"+(38*s*0.50).toFixed(2)+"+5, L.position[1]-14]";
+    cur.property("Transform").property("Opacity").expression="(time<inPoint+0.6)?0:((Math.sin(time*9)>0)?100:0)";
+    cur.inPoint=t0;
+    comp.motionBlur=true;
+}
+
+// --- 95: TIMER PIE CHIP ---
+function _msTimerChip(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2/2;
+    var chip=_msRRect(comp,[440*s,104*s],52*s,[0.11,0.12,0.15],[W2/2,cy],"[MS] timer chip");
+    // pie: qalin stroke'li doira trim bilan to'ladi
+    var pie=comp.layers.addShape(); pie.name="[MS] timer pie";
+    var pc=pie.property("ADBE Root Vectors Group");
+    var pe=pc.addProperty("ADBE Vector Shape - Ellipse");
+    pe.property("ADBE Vector Ellipse Size").setValue([30*s,30*s]);
+    var pst=pc.addProperty("ADBE Vector Graphic - Stroke");
+    pst.property("ADBE Vector Stroke Color").setValue([0.04,0.52,1.0]);
+    pst.property("ADBE Vector Stroke Width").setValue(30*s);
+    pc.addProperty("ADBE Vector Filter - Trim");
+    var tr=pie.property("ADBE Root Vectors Group").property(3);
+    var te=tr.property("ADBE Vector Trim End");
+    te.setValueAtTime(t0+0.3,0);
+    te.setValueAtTime(t0+3.3,100);
+    pie.parent=chip;
+    pie.property("Transform").property("Position").setValue([-160*s,0]);
+    // fon halqa
+    var bg=comp.layers.addShape(); bg.name="[MS] timer pie fon";
+    var gc2=bg.property("ADBE Root Vectors Group");
+    var ge2=gc2.addProperty("ADBE Vector Shape - Ellipse");
+    ge2.property("ADBE Vector Ellipse Size").setValue([60*s,60*s]);
+    var gf2=gc2.addProperty("ADBE Vector Graphic - Fill");
+    gf2.property("ADBE Vector Fill Color").setValue([0.20,0.22,0.27]);
+    bg.parent=chip;
+    bg.property("Transform").property("Position").setValue([-160*s,0]);
+    bg.moveAfter(pie);
+    var lbl=_msText(comp,"24 soat qoldi",38*s,[1,1,1],[30*s,13*s],"[MS] timer matn",false);
+    lbl.parent=chip;
+    lbl.property("Transform").property("Position").setValue([30*s,13*s]);
+    // chip kirishi
+    var csc=chip.property("Transform").property("Scale");
+    csc.setValueAtTime(t0,[80,80]); csc.setValueAtTime(t0+0.3,[100,100]);
+    _apEaseFirst(csc); csc.expression=AP_BOUNCE;
+    var cop=chip.property("Transform").property("Opacity");
+    cop.setValueAtTime(t0,0); cop.setValueAtTime(t0+0.15,100);
+    chip.motionBlur=true;
+    comp.motionBlur=true;
+}
+
+// --- 99: DROPDOWN PICK ---
+function _msDropdown(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2/2-120*s, DW=440*s;
+    var OPT=["Scalping","Swing","Investitsiya"];
+    var PICK=1; // tanlanadigan indeks
+    var hdr=_msRRect(comp,[DW,96*s],22*s,[0.11,0.12,0.15],[W2/2,cy],"[MS] dd sarlavha");
+    var ht=comp.layers.addText("Strategiya");
+    ht.name="[MS] dd sarlavha matn";
+    var hstp=ht.property("Source Text");
+    function HTD(str){
+        var td=hstp.value;
+        td.text=str; td.fontSize=38*s; td.applyFill=true; td.fillColor=[1,1,1]; td.applyStroke=false;
+        try{ td.font="SegoeUI-Bold"; }catch(e){ try{ td.font="Arial-BoldMT"; }catch(e2){} }
+        try{ td.justification=ParagraphJustification.CENTER_JUSTIFY; }catch(e){}
+        return td;
+    }
+    hstp.setValue(HTD("Strategiya"));
+    hstp.setValueAtTime(t0,HTD("Strategiya"));
+    hstp.setValueAtTime(t0+2.0,HTD(OPT[PICK]));
+    ht.parent=hdr;
+    ht.property("Transform").property("Position").setValue([-20*s,13*s]);
+    var ar=_msText(comp,"▾",38*s,[0.55,0.58,0.65],[DW/2-50*s,13*s],"[MS] dd strelka",true);
+    ar.parent=hdr;
+    ar.property("Transform").property("Position").setValue([DW/2-50*s,13*s]);
+    var arot=ar.property("Transform").property("Rotation");
+    arot.setValueAtTime(t0+0.5,0); arot.setValueAtTime(t0+0.75,180);
+    arot.setValueAtTime(t0+2.0,180); arot.setValueAtTime(t0+2.25,0);
+    for (var k=1;k<=arot.numKeys;k++) _msEaseBoth(arot,k,75);
+    // ro'yxat paneli (tepadan ochiladi)
+    var LH=96*s*OPT.length;
+    var pnl=_msRRect(comp,[DW,LH],22*s,[0.15,0.16,0.20],[W2/2,cy+70*s+LH/2],"[MS] dd panel");
+    pnl.property("Transform").property("Anchor Point").setValue([0,-LH/2]);
+    pnl.property("Transform").property("Position").setValue([W2/2,cy+70*s]);
+    var psc=pnl.property("Transform").property("Scale");
+    psc.setValueAtTime(t0+0.55,[100,0]); psc.setValueAtTime(t0+0.85,[100,100]);
+    psc.setValueAtTime(t0+2.0,[100,100]); psc.setValueAtTime(t0+2.25,[100,0]);
+    _apEaseFirst(psc);
+    for (k=3;k<=psc.numKeys;k++) _msEaseBoth(psc,k,75);
+    pnl.motionBlur=true;
+    // tanlov highlight
+    var hlY=cy+70*s+96*s*PICK+48*s;
+    var hl=_msRRect(comp,[DW-20*s,80*s],16*s,[0.04,0.52,1.0],[W2/2,hlY],"[MS] dd tanlov");
+    var hop=hl.property("Transform").property("Opacity");
+    hop.setValueAtTime(t0,0);
+    hop.setValueAtTime(t0+1.5,0); hop.setValueAtTime(t0+1.6,100);
+    hop.setValueAtTime(t0+2.0,100); hop.setValueAtTime(t0+2.15,0);
+    hl.inPoint=t0+0.85; hl.outPoint=t0+2.25;
+    // variantlar
+    for (var i=0;i<OPT.length;i++){
+        var oy=cy+70*s+96*s*i+48*s;
+        var ot=_msText(comp,OPT[i],34*s,[0.80,0.82,0.87],[W2/2,oy+12*s],"[MS] dd variant "+(i+1),false);
+        var oop=ot.property("Transform").property("Opacity");
+        oop.setValueAtTime(t0,0);
+        oop.setValueAtTime(t0+0.75+i*0.07,0); oop.setValueAtTime(t0+0.9+i*0.07,100);
+        oop.setValueAtTime(t0+2.0,100); oop.setValueAtTime(t0+2.2,0);
+        ot.inPoint=t0+0.55; ot.outPoint=t0+2.3;
+    }
     comp.motionBlur=true;
 }
