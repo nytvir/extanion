@@ -113,6 +113,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "msToggle") { _msToggle(); }
         else if (cmd === "msStars") { _msStars(); }
         else if (cmd === "msErase") { _msErase(); }
+        else if (cmd === "msUnlock") { _msUnlock(); }
         else if (cmd === "cryptoWatchlist") { _cryptoWatchlist(); }
         else if (cmd === "orderFilled") { _orderFilled(); }
         else if (cmd === "glowProfile") { _glowProfile("blue"); }
@@ -12751,5 +12752,62 @@ function _msErase(){
     var cur=_msRRect(comp,[5*s,52*s],2,[0.04,0.52,1.0],[W2/2,H2/2],"[MS] erase kursor");
     cur.property("Transform").property("Position").expression="var L=thisComp.layer(\"[MS] erase matn\"); var full=String(thisComp.layer(\"[MS] erase MANBA (tahrirla)\").text.sourceText); var n=Math.min(Math.max(Math.round(L.effect(\"Harflar\")(\"Slider\")),0),full.length); [L.position[0]+n*"+(44*s*0.52).toFixed(2)+"+6, L.position[1]-16]";
     cur.property("Transform").property("Opacity").expression="(Math.sin(time*9)>0)?100:0";
+    comp.motionBlur=true;
+}
+
+// ============================================================
+// SLIDE TO UNLOCK (v2.25) - klassik shimmer + knob slide
+// Matnni "[MS] unlock matn" da tahrirla - shine avtomatik ergashadi
+// ============================================================
+
+function _msUnlock(){
+    var comp=app.project.activeItem;
+    var t0=comp.time, W2=comp.width, H2=comp.height, s=H2/1920;
+    var cy=H2/2;
+    // track
+    var trk=_msRRect(comp,[640*s,110*s],55*s,[0.10,0.11,0.14],[W2/2,cy],"[MS] unlock track");
+    var tst=trk.property("ADBE Root Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    tst.property("ADBE Vector Stroke Color").setValue([0.25,0.26,0.30]);
+    tst.property("ADBE Vector Stroke Width").setValue(2*s);
+    // asosiy matn (kulrang) - TAHRIRLANADIGAN manba
+    var txt=_msText(comp,"slide to unlock",40*s,[0.44,0.46,0.52],[W2/2+30*s,cy+14*s],"[MS] unlock matn",false);
+    // shine matn (oq) - manbadan o'qiydi
+    var shine=_msText(comp," ",40*s,[1,1,1],[W2/2+30*s,cy+14*s],"[MS] unlock shine",false);
+    shine.property("Source Text").expression="thisComp.layer(\"[MS] unlock matn\").text.sourceText";
+    // shine matte: yumshoq yorug' polosa chapdan o'ngga aylanib yuradi
+    var mat=comp.layers.addSolid([1,1,1],"[MS] unlock matte",Math.round(200*s),Math.round(160*s),1,comp.duration);
+    mat.moveBefore(shine);
+    var mm=mat.property("ADBE Mask Parade").addProperty("ADBE Mask Atom");
+    var ms=new Shape();
+    ms.vertices=[[40*s,0],[160*s,0],[160*s,160*s],[40*s,160*s]];
+    ms.closed=true;
+    mm.property("ADBE Mask Shape").setValue(ms);
+    mm.property("ADBE Mask Feather").setValue([60*s,60*s]);
+    mat.property("Transform").property("Position").expression=
+        "var cx="+(W2/2).toFixed(1)+"; var span="+(560*s).toFixed(1)+"; var tt=(time-inPoint)%2.2; [cx-span/2 + (tt/2.2)*span, "+(cy).toFixed(1)+"]";
+    try{ shine.trackMatteType=TrackMatteType.ALPHA; }catch(e){
+        try{ shine.setTrackMatte(mat,TrackMatteType.ALPHA); }catch(e2){} }
+    // knob (o'ngga suriladi CTI+2.6 da)
+    var knob=_msRRect(comp,[96*s,96*s],26*s,[0.92,0.93,0.95],[W2/2-262*s,cy],"[MS] unlock knob");
+    var arrow=_msText(comp,">",44*s,[0.35,0.37,0.42],[0,15*s],"[MS] unlock arrow",true);
+    arrow.parent=knob;
+    arrow.property("Transform").property("Position").setValue([0,15*s]);
+    var kp=knob.property("Transform").property("Position");
+    kp.setValueAtTime(t0+2.6,[W2/2-262*s,cy]);
+    kp.setValueAtTime(t0+3.0,[W2/2+262*s,cy]);
+    _apEaseFirst(kp);
+    kp.expression=AP_BOUNCE;
+    knob.motionBlur=true;
+    // ochilgach hammasi so'nadi
+    var ALL=[trk,txt,shine,mat,knob];
+    for (var q=0;q<ALL.length;q++){
+        var l=ALL[q];
+        l.inPoint=t0; l.outPoint=t0+3.6;
+        var op=l.property("Transform").property("Opacity");
+        var base=(l===mat)?100:100;
+        op.setValueAtTime(t0,0); op.setValueAtTime(t0+0.25,base);
+        op.setValueAtTime(t0+3.1,base); op.setValueAtTime(t0+3.5,0);
+    }
+    arrow.inPoint=t0; arrow.outPoint=t0+3.6;
     comp.motionBlur=true;
 }
