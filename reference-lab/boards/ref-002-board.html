@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REF-002 · Turtle Traders smooth dekompilyatsiyasi</title>
+<style>
+  :root{
+    --bg:#0a0a0d; --panel:#121218; --line:#26262f; --txt:#e8e8ee; --dim:#8a8a99;
+    --mono:'SF Mono',ui-monospace,Menlo,monospace;
+    --red:#d92b26; --green:#1e9e63; --paper:#e9e6de; --ink:#161514;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.55 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  header{margin-bottom:24px}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--red);text-transform:uppercase}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  h1 span{color:var(--red)}
+  .sub{color:var(--dim);font-size:13px}
+
+  /* qonunlar */
+  .laws{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:20px 0 14px}
+  .law{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px}
+  .law b{display:block;font-size:12.5px;color:var(--red);margin-bottom:4px}
+  .law p{font-size:11.5px;color:var(--dim)}
+
+  /* taqqos */
+  .vs{display:flex;gap:0;margin:0 0 30px;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:12px}
+  .vs>div{flex:1;padding:12px 16px}
+  .vs .a{background:#1a1426}
+  .vs .b{background:#221514}
+  .vs h4{font-size:12px;margin-bottom:6px}
+  .vs .a h4{color:#b98aff}.vs .b h4{color:#ff8a86}
+  .vs ul{list-style:none}
+  .vs li{color:var(--dim);padding:1.5px 0}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s}
+  .card:hover{border-color:#3d3d4d}
+  .stage{background:#08080a;display:flex;justify-content:center;padding:14px 0}
+  .demo{position:relative;width:158px;aspect-ratio:9/16;background:var(--paper);overflow:hidden;border-radius:8px;box-shadow:0 4px 18px rgba(0,0,0,.5)}
+  .body{padding:13px 15px 15px;display:flex;flex-direction:column;gap:7px;flex:1}
+  .row1{display:flex;align-items:center;gap:9px}
+  .num{font:800 14px var(--mono);color:#fff;background:var(--red);border-radius:7px;padding:2px 8px}
+  .body h3{font-size:14px;font-weight:700}
+  .body p{font-size:12px;color:var(--dim)}
+  .meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;padding-top:5px}
+  .m{font:9.5px var(--mono);border:1px solid var(--line);border-radius:5px;padding:2px 6px;color:#b9b9c9}
+  .pot{font:9.5px var(--mono);border-radius:5px;padding:2px 6px;font-weight:700}
+  .pot.hi{background:rgba(217,43,38,.16);color:#ff7b76}
+  .pot.mid{background:rgba(0,194,255,.13);color:#59c8ff}
+  .pot.lo{background:rgba(255,255,255,.07);color:var(--dim)}
+
+  /* umumiy paper elementlar */
+  .dots{position:absolute;inset:0;background-image:radial-gradient(#00000018 1px,transparent 1px);background-size:11px 11px}
+  .vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,transparent 46%,rgba(60,55,48,.55) 100%)}
+  .grain{position:absolute;inset:0;opacity:.05;background:repeating-conic-gradient(#000 0 .0001%,#fff 0 .0002%);animation:grn .3s steps(2) infinite;pointer-events:none}
+  @keyframes grn{to{transform:translate(2px,-1px)}}
+  .thread{position:absolute;bottom:9%;left:6%;right:6%;height:2px;background:var(--red);transform-origin:left;box-shadow:0 0 5px rgba(217,43,38,.6)}
+
+  /* 216 paper stage */
+  .d216 .zoomer{position:absolute;inset:0;animation:kb216 9s ease-in-out infinite alternate}
+  @keyframes kb216{from{transform:scale(1)}to{transform:scale(1.13)}}
+
+  /* 217 word reveal */
+  .d217 .para{position:absolute;left:9%;right:9%;top:34%;text-align:center;font-size:10.5px;font-weight:700;line-height:1.65;color:var(--ink)}
+  .d217 .w{display:inline-block;opacity:0;animation:w217 8s infinite}
+  @keyframes w217{0%{opacity:0;color:#a5a19a;filter:blur(2.5px)}
+    2.5%{opacity:1;color:#a5a19a;filter:blur(2px)}
+    7.5%{opacity:1;color:#161514;filter:blur(0)}
+    88%{opacity:1;color:#161514;filter:blur(0)}
+    94%,100%{opacity:0}}
+  .d217 .thread{animation:th217 8s linear infinite}
+  @keyframes th217{from{transform:scaleX(.15)}88%{transform:scaleX(1)}to{transform:scaleX(1)}}
+
+  /* 218 polaroid ken burns */
+  .d218 .pol{position:absolute;left:12%;top:14%;width:76%;aspect-ratio:5/6;background:#f6f4ec;padding:5% 5% 14% 5%;border-radius:2px 7px 3px 6px;box-shadow:0 5px 14px rgba(0,0,0,.28);animation:pol218 8s ease-in-out infinite}
+  .d218 .pol i{position:absolute;inset:5% 5% 14% 5%;overflow:hidden;display:block}
+  .d218 .pol i::before{content:'';position:absolute;inset:0;background:
+     radial-gradient(circle at 50% 38%,#c9a882 12%,transparent 13%),
+     linear-gradient(#8a9188 0 55%,#6b6f68 55% 100%);animation:kbi218 8s ease-in-out infinite}
+  @keyframes kbi218{0%{transform:scale(1)}75%{transform:scale(1.16)}100%{transform:scale(1.16)}}
+  @keyframes pol218{0%,72%{translate:0 0;opacity:1}84%,100%{translate:-160% 0;opacity:1}}
+
+  /* 219 headline crossfade */
+  .d219 .h{position:absolute;left:8%;right:8%;top:12%;text-align:center;font-family:'Arial Narrow',sans-serif;font-weight:900;font-size:13px;line-height:1.1;letter-spacing:.02em;color:var(--red);text-transform:uppercase;opacity:0;animation:hx219 7.5s infinite}
+  .d219 .h:nth-child(3){animation-delay:2.5s}
+  .d219 .h:nth-child(4){animation-delay:5s;font-size:20px}
+  @keyframes hx219{0%{opacity:0}6%{opacity:1}30%{opacity:1}36%,100%{opacity:0}}
+  .d219 .ph{position:absolute;left:20%;top:36%;width:60%;aspect-ratio:4/5;background:linear-gradient(#95988f,#70746c);border-radius:3px;animation:kb216 9s ease-in-out infinite alternate}
+
+  /* 220 stamp */
+  .d220 .stamp{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) rotate(-12deg);border:3px solid var(--red);color:var(--red);font:900 11px var(--mono);letter-spacing:.08em;padding:5px 9px;border-radius:4px;opacity:0;animation:st220 5s steps(2,jump-none) infinite;mix-blend-mode:multiply}
+  @keyframes st220{0%,11%{opacity:0;transform:translate(-50%,-50%) rotate(-12deg) scale(2.1)}
+    13%{opacity:1;transform:translate(-50%,-50%) rotate(-12deg) scale(1)}
+    75%{opacity:.85}92%,100%{opacity:0;transform:translate(-50%,-50%) rotate(-12deg) scale(1)}}
+  .d220 .txt{position:absolute;left:10%;right:10%;top:20%;text-align:center;font-weight:800;font-size:11px;color:var(--ink)}
+
+  /* 221 red thread + scene switch */
+  .d221 .scene{position:absolute;inset:0;animation:sc221 8s infinite}
+  @keyframes sc221{0%,38%{background:#e9e6de}50%,88%{background:#17181c}100%{background:#e9e6de}}
+  .d221 .t1{position:absolute;left:0;right:0;top:40%;text-align:center;font-size:10px;font-weight:700;animation:tc221 8s infinite}
+  @keyframes tc221{0%,38%{color:#161514}50%,88%{color:#f0f0ee}100%{color:#161514}}
+  .d221 .thread{animation:th221 8s linear infinite}
+  @keyframes th221{from{transform:scaleX(.06)}to{transform:scaleX(1)}}
+
+  /* 222 palette alternation */
+  .d222 .bgc{position:absolute;inset:0;opacity:0;animation:bg222 9s infinite}
+  .d222 .bgc.b1{background:#e9e6de;animation-delay:0s}
+  .d222 .bgc.b2{background:radial-gradient(ellipse at 50% 30%,#3a3d42,#131417 70%);animation-delay:3s}
+  .d222 .bgc.b3{background:linear-gradient(180deg,#101113,#1a1c20);animation-delay:6s}
+  @keyframes bg222{0%{opacity:0}5%,31%{opacity:1}38%,100%{opacity:0}}
+  .d222 .sil{position:absolute;bottom:18%;left:22%;width:22%;height:34%;border-radius:40% 40% 8% 8%;background:#0a0b0d;filter:blur(1px);opacity:0;animation:bg222 9s infinite;animation-delay:3s}
+  .d222 .candle{position:absolute;bottom:24%;width:6%;background:#585d66;opacity:0;animation:bg222 9s infinite;animation-delay:6s}
+  .d222 .candle.c1{left:24%;height:22%}.d222 .candle.c2{left:38%;height:34%}
+  .d222 .candle.c3{left:52%;height:16%}.d222 .candle.c4{left:66%;height:28%}
+
+  /* 223 glow pill */
+  .d223{background:radial-gradient(ellipse at 50% 26%,#43464c,#141519 72%)}
+  .d223 .pillbg{position:absolute;left:12%;right:12%;top:42%;height:15%;background:#000;filter:blur(9px);opacity:.55;border-radius:12px}
+  .d223 .t{position:absolute;left:0;right:0;top:45%;text-align:center;font-size:9.5px;font-weight:700;color:#fff;text-shadow:0 0 8px rgba(255,255,255,.35)}
+  .d223 .sil2{position:absolute;bottom:0;left:30%;width:40%;height:52%;border-radius:45% 45% 0 0;background:#08090b;filter:blur(2px)}
+
+  /* 224 money counter */
+  .d224 .cnt{position:absolute;left:0;right:0;top:44%;text-align:center;font:800 15px var(--mono);color:var(--green);letter-spacing:.02em}
+  .d224 .cnt.rolling{filter:blur(1.5px);opacity:.75}
+  .d224 .bill{position:absolute;width:20%;height:9%;background:linear-gradient(#2ea873,#1d7a52);border:1px solid #16603f;border-radius:2px;opacity:.85;animation:bill224 6s linear infinite}
+  .d224 .bill.b1{left:10%;animation-delay:0s}
+  .d224 .bill.b2{left:55%;animation-delay:2s}
+  .d224 .bill.b3{left:75%;animation-delay:4s;width:14%}
+  @keyframes bill224{from{top:-12%;transform:rotate(0deg)}to{top:110%;transform:rotate(160deg)}}
+
+  /* 225 quote */
+  .d225 .qm{position:absolute;font:900 64px Georgia,serif;color:#c9c4b8;opacity:.55}
+  .d225 .qm.q1{left:6%;top:16%}.d225 .qm.q2{right:6%;bottom:8%;transform:rotate(180deg)}
+  .d225 .para{position:absolute;left:14%;right:14%;top:38%;text-align:center;font-size:9.5px;font-weight:800;line-height:1.7;color:var(--ink)}
+
+  /* 226 logo reveal */
+  .d226 .mark{position:absolute;left:50%;top:36%;width:34px;height:34px;transform:translateX(-50%);border-radius:50%;background:conic-gradient(#e2571f 0 25%,#161514 25% 50%,#e2571f 50% 75%,#161514 75%);opacity:0;animation:mk226 6s ease-out infinite}
+  @keyframes mk226{0%{opacity:0;transform:translateX(-50%) scale(.7)}10%,88%{opacity:1;transform:translateX(-50%) scale(1)}94%,100%{opacity:0}}
+  .d226 .nm{position:absolute;left:0;right:0;top:56%;text-align:center;font-size:11px;font-weight:800;color:var(--ink)}
+
+  footer{margin-top:38px;text-align:center;font:11px var(--mono);color:var(--dim)}
+  footer b{color:#ff7b76}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Reference Lab · REF-002 · dekompilyatsiya</div>
+  <h1>Turtle Traders — <span>smooth</span> formula</h1>
+  <div class="sub">45.6s · 30fps · 720×1280 (9:16, phone-first) · o'zbekcha VO · hikoya-reel. Har demo — o'lchangan xatti-harakatning jonli nusxasi.</div>
+</header>
+
+<div class="laws">
+  <div class="law"><b>① Hard cut yo'q</b><p>Oq sahnalarda hamma almashinuv 300–500ms opacity crossfade. Slam faqat shtampda.</p></div>
+  <div class="law"><b>② Hech narsa statik emas</b><p>Fon va foto doim ~2–4%/s zoom drift qiladi. Statik kadr = o'lik kadr.</p></div>
+  <div class="law"><b>③ Matn nafas oladi</b><p>Yangi so'z: 40% kulrang + blur → 300–400ms'da keskin qora. Teleport yo'q.</p></div>
+  <div class="law"><b>④ Bitta tez element</b><p>Shtamp 2–3 kadrda tushadi. Sekinlik fonida yagona zarba — kontrast printsipi.</p></div>
+  <div class="law"><b>⑤ Bitta material</b><p>Grain + vinyetka + dot-grid barcha sahnalarni bitta dunyoga tikadi.</p></div>
+</div>
+
+<div class="vs">
+  <div class="a"><h4>REF-001 · Solana (tez qutb)</h4>
+    <ul><li>hard cut, slam, glitch</li><li>kesim 2s→0.3s accelerando</li><li>matn blok-slam + decode</li></ul></div>
+  <div class="b"><h4>REF-002 · Turtle (smooth qutb)</h4>
+    <ul><li>crossfade 300–500ms, drift</li><li>bir maromdagi sokin oqim</li><li>matn so'zma-so'z dim-reveal</li></ul></div>
+</div>
+
+<div class="grid">
+
+<div class="card"><div class="stage"><div class="demo d216">
+  <div class="zoomer"><div class="dots"></div></div>
+  <div class="vig"></div><div class="grain"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">216</span><h3>Paper Stage</h3></div>
+  <p>Doimiy sahna: qog'oz + dot-grid + vinyetka + grain, uzluksiz sekin zoom. Hamma narsaning ostidagi poydevor.</p>
+  <div class="meta"><span class="m">drift 2–4%/s</span><span class="m">grain+vignette</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d217">
+  <div class="dots"></div><div class="vig"></div>
+  <div class="para">
+    <span class="w" style="animation-delay:.2s">Buni</span>
+    <span class="w" style="animation-delay:.9s">tekshirish</span>
+    <span class="w" style="animation-delay:1.6s">uchun</span><br>
+    <span class="w" style="animation-delay:2.5s">Dennis</span>
+    <span class="w" style="animation-delay:3.3s">oddiy</span>
+    <span class="w" style="animation-delay:4.0s">odamlarni</span><br>
+    <span class="w" style="animation-delay:4.9s">yig'adi</span>
+  </div>
+  <div class="thread"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">217</span><h3>Word-by-Word Dim Reveal</h3></div>
+  <p>Videoning YURAGI: so'z xira+blur keladi, 300–400ms'da keskinlashadi. VO'ga sinxron, har 0.5–0.9s'da bitta so'z. Paragraf joyi band — matn sakramaydi.</p>
+  <div class="meta"><span class="m">dim 40% + blur 2px</span><span class="m">keskin: 9–12 kadr</span><span class="pot hi">TOOL: ENG YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d218">
+  <div class="dots"></div>
+  <div class="pol"><i></i></div>
+  <div class="vig"></div><div class="grain"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">218</span><h3>Polaroid Ken Burns</h3></div>
+  <p>Yirtiq qirrali foto uzluksiz zoom qiladi (~3%/s), sahna tugaganda chapga silliq surilib chiqadi (0.7s).</p>
+  <div class="meta"><span class="m">rough edges matte</span><span class="m">exit: 0.7s soft</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d219">
+  <div class="dots"></div>
+  <div class="ph"></div>
+  <span class="h">Treyderni atigi<br>2 haftada<br>tayyorlash mumkin</span>
+  <span class="h">Richard<br>Dennis</span>
+  <span class="h">1980</span>
+  <div class="vig"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">219</span><h3>Soft Headline Crossfade</h3></div>
+  <p>Qizil sarlavhalar bir-birini 300–500ms dissolve bilan almashtiradi — slam yo'q. Foto zoomi to'xtamaydi.</p>
+  <div class="meta"><span class="m">dissolve 300–500ms</span><span class="m">condensed red type</span><span class="pot mid">TOOL: O'RTA</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d220">
+  <div class="dots"></div>
+  <div class="txt">Treyderni 2 haftada<br>tayyorlash mumkinmi?</div>
+  <div class="stamp">ISHONCHI KOMIL</div>
+  <div class="vig"></div><div class="grain"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">220</span><h3>Stamp Slam</h3></div>
+  <p>Videodagi YAGONA tez harakat: shtamp 2–3 kadrda tushadi (scale 2→1), yengil burchak, multiply — rezina muhr hissi.</p>
+  <div class="meta"><span class="m">slam: 2–3 kadr</span><span class="m">rotate −12°</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d221">
+  <div class="scene"></div>
+  <div class="t1">hikoya davom etadi…</div>
+  <div class="thread"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">221</span><h3>Red Thread</h3></div>
+  <p>Pastdagi qizil ip butun video davomida o'sib boradi — sahna oq yoki qora bo'lsin, uzilmaydi. Taranglik/progress metaforasi.</p>
+  <div class="meta"><span class="m">trim path o'sish</span><span class="m">sahnadan mustaqil</span><span class="pot lo">TOOL: PAST</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d222">
+  <div class="bgc b1"></div>
+  <div class="bgc b2"></div>
+  <div class="bgc b3"></div>
+  <div class="sil"></div>
+  <div class="candle c1"></div><div class="candle c2"></div><div class="candle c3"></div><div class="candle c4"></div>
+  <div class="vig"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">222</span><h3>Scene Palette Alternation</h3></div>
+  <p>Oq qog'oz ↔ qora siluet ↔ chart — har 8–12s crossfade. Ritm montaj bilan emas, RANG bilan yasaladi.</p>
+  <div class="meta"><span class="m">3 palitra</span><span class="m">crossfade orqali</span><span class="pot mid">STRUKTURA</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d223">
+  <div class="sil2"></div>
+  <div class="pillbg"></div>
+  <div class="t">Ko'pchiligida trading<br>tajribasi ham bo'lmagan.</div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">223</span><h3>Glow Pill Backing</h3></div>
+  <p>Qorong'i/serqatnov fonda matn orqasiga blurlangan qora "yostiq" — o'qilish kafolati, chegarasi ko'rinmaydi.</p>
+  <div class="meta"><span class="m">dublikat + blur 20</span><span class="m">opacity 60%</span><span class="pot lo">217 ICHIDA</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d224">
+  <div class="dots"></div>
+  <div class="bill b1"></div><div class="bill b2"></div><div class="bill b3"></div>
+  <div class="cnt" id="cnt224">$100.000.000</div>
+  <div class="vig"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">224</span><h3>Money Counter Roll</h3></div>
+  <p>Yashil raqamlar vertikal blur + yarim shaffof holda aylanadi, yakuniy summada TO'XTAB keskinlashadi. Kupyuralar sekin yog'iladi.</p>
+  <div class="meta"><span class="m">roll: blur+75% opacity</span><span class="m">stop: keskin</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d225">
+  <div class="dots"></div>
+  <span class="qm q1">“</span><span class="qm q2">“</span>
+  <div class="para">
+    <span class="w" style="animation-delay:.2s;animation-name:w217;animation-duration:8s;animation-iteration-count:infinite;display:inline-block;opacity:0">Strategiyani</span>
+    <span class="w" style="animation-delay:1.0s;animation-name:w217;animation-duration:8s;animation-iteration-count:infinite;display:inline-block;opacity:0">o'rgatish</span>
+    <span class="w" style="animation-delay:1.8s;animation-name:w217;animation-duration:8s;animation-iteration-count:infinite;display:inline-block;opacity:0">mumkin,</span><br>
+    <span class="w" style="animation-delay:2.8s;animation-name:w217;animation-duration:8s;animation-iteration-count:infinite;display:inline-block;opacity:0">lekin</span>
+    <span class="w" style="animation-delay:3.6s;animation-name:w217;animation-duration:8s;animation-iteration-count:infinite;display:inline-block;opacity:0">amal</span>
+    <span class="w" style="animation-delay:4.4s;animation-name:w217;animation-duration:8s;animation-iteration-count:infinite;display:inline-block;opacity:0">qilish</span><br>
+    <span class="w" style="animation-delay:5.4s;animation-name:w217;animation-duration:8s;animation-iteration-count:infinite;display:inline-block;opacity:0">boshqa</span>
+    <span class="w" style="animation-delay:6.2s;animation-name:w217;animation-duration:8s;animation-iteration-count:infinite;display:inline-block;opacity:0">masala</span>
+  </div>
+  <div class="vig"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">225</span><h3>Quote Frame</h3></div>
+  <p>Katta xira qo'shtirnoqlar orasida sitata so'zma-so'z (217 mexanikasi bilan) teriladi — hikoyaning axloqiy yakuni.</p>
+  <div class="meta"><span class="m">217 + preset</span><span class="pot mid">TOOL: O'RTA</span></div>
+</div></div>
+
+<div class="card"><div class="stage"><div class="demo d226">
+  <div class="dots"></div>
+  <div class="mark"></div>
+  <div class="nm">
+    <span class="w" style="animation:w217 6s infinite;animation-delay:1s;display:inline-block;opacity:0">Turtle</span>
+    <span class="w" style="animation:w217 6s infinite;animation-delay:1.7s;display:inline-block;opacity:0">Traders</span>
+  </div>
+  <div class="vig"></div>
+</div></div><div class="body">
+  <div class="row1"><span class="num">226</span><h3>Logo Soft Reveal</h3></div>
+  <p>Belgi yumshoq fade+scale bilan (0.5s), nom esa so'zma-so'z dim-reveal — logo ham smooth qonunlariga bo'ysunadi.</p>
+  <div class="meta"><span class="m">fade+scale 0.5s</span><span class="pot lo">TOOL: PAST</span></div>
+</div></div>
+
+</div>
+
+<footer>REF-002 · texnikalar <b>216–226</b> · raqam tanla — faqat o'shanisi quriladi · to'liq o'lchovlar: <b>03-konspekt/ref-002-turtle-traders-smooth.md</b></footer>
+</div>
+
+<script>
+// 224: counter roll -> snap
+(function(){
+  var el=document.getElementById('cnt224'); if(!el) return;
+  var FINAL='$100.000.000';
+  function grp(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+  function cycle(){
+    el.classList.add('rolling');
+    var t=0, iv=setInterval(function(){
+      t+=70;
+      el.textContent='$'+grp(Math.floor(Math.random()*99000000+900000));
+      if(t>=2100){clearInterval(iv);el.classList.remove('rolling');el.textContent=FINAL;}
+    },70);
+  }
+  cycle(); setInterval(cycle,6000);
+})();
+</script>
+</body>
+</html>
