@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REF-001 · Solana Breakpoint dekompilyatsiyasi</title>
+<style>
+  :root{
+    --bg:#0a0a0d; --panel:#121218; --panel2:#17171f; --line:#26262f;
+    --txt:#e8e8ee; --dim:#8a8a99; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+    --sol1:#9945FF; --sol2:#14F195; --sol3:#00C2FF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.55 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  /* ---------- HEADER ---------- */
+  header{margin-bottom:26px}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--sol2);text-transform:uppercase}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  h1 span{background:linear-gradient(90deg,var(--sol1),var(--sol3),var(--sol2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--dim);font-size:13px}
+  .facts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .fact{font:11px var(--mono);color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:4px 12px}
+  .fact b{color:var(--txt);font-weight:600}
+
+  /* ---------- TIMELINE ---------- */
+  .tl{margin:26px 0 8px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .tl h2{font-size:13px;font-weight:700;margin-bottom:4px}
+  .tl .note{font-size:12px;color:var(--dim);margin-bottom:14px}
+  .bar{position:relative;display:flex;height:58px;border-radius:8px;overflow:hidden;background:#000}
+  .seg{position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 10px;border-right:1px solid #000;min-width:0}
+  .seg small{font:9px var(--mono);color:rgba(255,255,255,.55);letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .seg b{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .s1{flex:3.5;background:#15151c}.s2{flex:8;background:#1a1a24}.s3{flex:9.5;background:#141b1a}
+  .s4{flex:8;background:#1d1620}.s5{flex:24;background:linear-gradient(90deg,#241b38,#12312b)}
+  .ticks{position:absolute;inset:auto 0 0 0;height:12px;display:flex;align-items:flex-end}
+  .ticks i{flex:1;border-left:1px solid rgba(255,255,255,.22);height:8px}
+  .playhead{position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(var(--sol2),var(--sol1));box-shadow:0 0 10px var(--sol2);animation:ph 10.8s linear infinite}
+  @keyframes ph{from{left:0}to{left:100%}}
+  .tl .legend{display:flex;justify-content:space-between;font:10px var(--mono);color:var(--dim);margin-top:8px}
+
+  /* ---------- INSIGHTS ---------- */
+  .insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:18px 0 34px}
+  .ins{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .ins b{display:block;font-size:12.5px;margin-bottom:4px;color:var(--sol2)}
+  .ins p{font-size:12px;color:var(--dim)}
+
+  /* ---------- CARDS ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s}
+  .card:hover{border-color:#3d3d4d}
+  .demo{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden;flex-shrink:0}
+  .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .row1{display:flex;align-items:center;gap:10px}
+  .num{font:800 15px var(--mono);color:#000;background:linear-gradient(135deg,var(--sol2),var(--sol3));border-radius:8px;padding:3px 9px}
+  .body h3{font-size:15px;font-weight:700;letter-spacing:-.01em}
+  .body p{font-size:12.5px;color:var(--dim)}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+  .m{font:10px var(--mono);border:1px solid var(--line);border-radius:5px;padding:2px 7px;color:#b9b9c9}
+  .pot{font:10px var(--mono);border-radius:5px;padding:2px 7px;font-weight:700}
+  .pot.hi{background:rgba(20,241,149,.14);color:var(--sol2)}
+  .pot.mid{background:rgba(0,194,255,.14);color:var(--sol3)}
+  .pot.lo{background:rgba(255,255,255,.07);color:var(--dim)}
+
+  /* ============ DEMO ANIMATSIYALAR ============ */
+  .cap{position:absolute;bottom:9%;left:0;right:0;text-align:center;font:9px var(--mono);color:#ddd;letter-spacing:.03em}
+
+  /* 200 caption rail */
+  .d200 .shot{position:absolute;inset:0;animation:shots200 8s steps(1) infinite}
+  @keyframes shots200{0%{background:radial-gradient(circle at 30% 40%,#2a2a33,#000 70%)}
+    25%{background:radial-gradient(circle at 70% 60%,#33272a,#000 70%)}
+    50%{background:radial-gradient(circle at 50% 20%,#27332e,#000 70%)}
+    75%{background:radial-gradient(circle at 20% 70%,#2a2d3a,#000 70%)}}
+  .d200 .c{position:absolute;bottom:9%;width:100%;text-align:center;font:9px var(--mono);color:#ddd;opacity:0;animation:cap200 8s steps(1) infinite}
+  .d200 .c:nth-child(2){animation-delay:0s}.d200 .c:nth-child(3){animation-delay:2s}
+  .d200 .c:nth-child(4){animation-delay:4s}.d200 .c:nth-child(5){animation-delay:6s}
+  @keyframes cap200{0%,24.9%{opacity:1}25%,100%{opacity:0}}
+
+  /* 201 portrait lineage */
+  .d201 .p{position:absolute;left:50%;top:50%;width:17%;aspect-ratio:4/5;transform:translate(-50%,-54%);opacity:0;animation:sw201 3s steps(1) infinite;filter:grayscale(1) contrast(1.1)}
+  .d201 .p i{position:absolute;inset:0;background:
+      radial-gradient(circle at 50% 32%,#cfcfcf 13%,transparent 14%),
+      radial-gradient(ellipse at 50% 78%,#c4c4c4 30%,transparent 31%),
+      linear-gradient(#8e8e8e,#5f5f5f)}
+  .d201 .p:nth-child(1){animation-delay:0s}.d201 .p:nth-child(2){animation-delay:.5s}
+  .d201 .p:nth-child(3){animation-delay:1s}.d201 .p:nth-child(4){animation-delay:1.5s}
+  .d201 .p:nth-child(5){animation-delay:2s}.d201 .p:nth-child(6){animation-delay:2.5s}
+  .d201 .p:nth-child(2) i{filter:brightness(.8)}.d201 .p:nth-child(3) i{filter:brightness(1.15)}
+  .d201 .p:nth-child(4) i{filter:brightness(.7)}.d201 .p:nth-child(5) i{filter:brightness(.95)}
+  .d201 .p:nth-child(6) i{filter:brightness(1.25)}
+  @keyframes sw201{0%,16.6%{opacity:1}16.7%,100%{opacity:0}}
+  .scan{position:absolute;left:0;right:0;top:50%;height:2px;background:repeating-linear-gradient(90deg,#f0f 0 3px,#0ff 3px 5px,#111 5px 11px);animation:scanmv 0.4s steps(4) infinite;opacity:.8}
+  @keyframes scanmv{from{background-position:0 0}to{background-position:22px 0}}
+
+  /* 202 photo cluster cascade */
+  .d202 .ph{position:absolute;opacity:0;animation:pop202 5s steps(1) infinite;filter:grayscale(1)}
+  .d202 .ph i{position:absolute;inset:0;background:linear-gradient(160deg,#bbb,#666)}
+  .d202 .ph::before{content:'';position:absolute;inset:0;background:#fff;z-index:2;animation:flash202 5s steps(1) infinite;animation-delay:inherit;opacity:0}
+  .d202 .ph:nth-child(1){left:24%;top:18%;width:20%;height:38%;animation-delay:.3s}
+  .d202 .ph:nth-child(2){left:48%;top:30%;width:15%;height:30%;animation-delay:.9s}
+  .d202 .ph:nth-child(3){left:36%;top:50%;width:18%;height:34%;animation-delay:1.5s}
+  .d202 .ph:nth-child(4){left:60%;top:14%;width:13%;height:26%;animation-delay:2.1s}
+  .d202 .ph:nth-child(5){left:57%;top:52%;width:16%;height:32%;animation-delay:2.7s}
+  @keyframes pop202{0%{opacity:0}6%,88%{opacity:1}89%,100%{opacity:0}}
+  @keyframes flash202{0%,5.9%{opacity:0}6%,9%{opacity:1}9.1%,100%{opacity:0}}
+  .d202 .clu{position:absolute;inset:0;animation:drift202 5s linear infinite}
+  @keyframes drift202{from{transform:translate(0,0) scale(1)}to{transform:translate(-2.5%,-1.5%) scale(1.04)}}
+
+  /* 203 scanline — reuses .scan, thicker */
+  .d203 .scan{height:5px;top:48%}
+  .d203 .scan.b{top:56%;height:2px;opacity:.5;animation-duration:.3s}
+
+  /* 204 white flash logo */
+  .d204 .white{position:absolute;inset:0;background:#f4f4f2;opacity:0;animation:wf204 4s steps(1) infinite;display:flex;align-items:center;justify-content:center;gap:12px}
+  @keyframes wf204{0%,49.9%{opacity:0}50%,87%{opacity:1}87.1%,100%{opacity:0}}
+  .logoS{width:34px;height:26px;background:linear-gradient(#111 0 22%,transparent 22% 39%,#111 39% 61%,transparent 61% 78%,#111 78% 100%)}
+  .pill{border:1.5px solid #111;border-radius:20px;color:#111;font:8px var(--mono);letter-spacing:.12em;padding:4px 10px}
+
+  /* 205 question series */
+  .d205 .arch{position:absolute;inset:0;opacity:0;animation:arch205 4.8s steps(1) infinite;filter:sepia(.4) contrast(1.05)}
+  .d205 .arch:nth-child(1){background:radial-gradient(circle,#6d6455 0%,#171310 75%);animation-delay:0s}
+  .d205 .arch:nth-child(2){background:radial-gradient(circle,#75706a 0%,#14120f 75%);animation-delay:1.6s}
+  .d205 .arch:nth-child(3){background:radial-gradient(circle,#5d5d63 0%,#101014 75%);animation-delay:3.2s}
+  @keyframes arch205{0%,33.2%{opacity:1}33.3%,100%{opacity:0}}
+  .d205 .q{position:absolute;bottom:9%;width:100%;text-align:center;font:9px var(--mono);color:#eee}
+
+  /* 206 vignette spotlight */
+  .d206 .film{position:absolute;inset:0;background:linear-gradient(120deg,#4a4a4a,#222 55%,#3d3d3d);animation:pan206 6s linear infinite alternate}
+  @keyframes pan206{from{transform:translateX(-4%) scale(1.12)}to{transform:translateX(4%) scale(1.12)}}
+  .d206 .vig{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,transparent 22%,rgba(0,0,0,.92) 58%)}
+  .d206 .grain{position:absolute;inset:0;opacity:.14;background:repeating-conic-gradient(#fff 0 .0001%,#000 0 .0002%);animation:gr206 .25s steps(2) infinite}
+  @keyframes gr206{to{transform:translate(2px,-2px)}}
+
+  /* 207 beam */
+  .d207 .cone{position:absolute;left:50%;top:18%;width:0;height:0;border-left:60px solid transparent;border-right:60px solid transparent;border-bottom:150px solid rgba(255,250,230,.16);transform:translateX(-50%) scaleX(.05);transform-origin:top;filter:blur(6px);animation:beam207 4s ease-in-out infinite}
+  .d207 .src{position:absolute;left:50%;top:15%;width:10px;height:10px;border-radius:50%;background:#fff8e0;transform:translateX(-50%);box-shadow:0 0 24px 6px #fff8e0;animation:src207 4s ease-in-out infinite}
+  @keyframes beam207{0%,15%{transform:translateX(-50%) scaleX(.05);opacity:0}40%,80%{transform:translateX(-50%) scaleX(1);opacity:1}100%{transform:translateX(-50%) scaleX(.05);opacity:0}}
+  @keyframes src207{0%,10%{opacity:0}25%,85%{opacity:1}100%{opacity:0}}
+
+  /* 208 orbit spirals */
+  .d208 svg{position:absolute;inset:0;width:100%;height:100%}
+  .d208 .o{fill:none;stroke-width:1.6;transform-origin:50% 50%;animation:orb208 5s cubic-bezier(.2,.7,.3,1) infinite}
+  .d208 .o2{animation-delay:.25s}.d208 .o3{animation-delay:.5s}.d208 .o4{animation-delay:.75s}
+  @keyframes orb208{0%{transform:scale(2.6) rotate(-160deg);opacity:0}30%{opacity:1}70%{transform:scale(1) rotate(0);opacity:1}100%{transform:scale(.92) rotate(20deg);opacity:0}}
+
+  /* 209 typewriter + NOW */
+  .d209 .tw{position:absolute;left:10%;top:16%;font:10px var(--mono);color:#fff;letter-spacing:.15em;white-space:pre-line}
+  .d209 .tw i{font-style:normal;opacity:0;animation:tchar209 6s steps(1) infinite}
+  .d209 .now{position:absolute;left:0;right:0;top:44%;text-align:center;font-size:56px;font-weight:900;letter-spacing:-.02em;color:#fff;font-family:ui-rounded,'Arial Rounded MT Bold',var(--mono);opacity:0;animation:now209 6s infinite}
+  @keyframes now209{0%,49%{opacity:0;transform:scale(2.6)}50%{opacity:1;transform:scale(1.5)}56%{transform:scale(.96)}62%{transform:scale(1.02)}66%,88%{opacity:1;transform:scale(1)}89%,100%{opacity:0}}
+  .d209 .crowd{position:absolute;inset:0;background:repeating-linear-gradient(90deg,#17171c 0 7px,#101014 7px 13px),repeating-linear-gradient(0deg,#15151a 0 5px,#0d0d10 5px 9px);opacity:0;animation:crowd209 6s steps(1) infinite}
+  @keyframes crowd209{0%,49.9%{opacity:0}50%,88%{opacity:.9}89%,100%{opacity:0}}
+
+  /* 210 token rain */
+  .d210{background:#d6d2c4}
+  .d210 .cyl{position:absolute;width:12%;height:9%;background:#141414;border-radius:45%/50%;animation:fall210 2.4s steps(12) infinite}
+  .d210 .cyl:nth-child(1){left:12%;animation-delay:0s;transform:rotate(20deg)}
+  .d210 .cyl:nth-child(2){left:38%;animation-delay:.5s;transform:rotate(-35deg)}
+  .d210 .cyl:nth-child(3){left:64%;animation-delay:.9s;transform:rotate(60deg)}
+  .d210 .cyl:nth-child(4){left:83%;animation-delay:.3s;transform:rotate(-10deg)}
+  .d210 .cyl:nth-child(5){left:25%;animation-delay:1.4s;transform:rotate(80deg)}
+  @keyframes fall210{from{top:-14%;rotate:0deg}to{top:108%;rotate:140deg}}
+  .d210 .big{position:absolute;left:0;right:0;top:32%;text-align:center;color:#141414;font-weight:900;font-family:'Arial Narrow',var(--mono);letter-spacing:.02em;animation:jit210 .35s steps(4) infinite}
+  .d210 .big small{display:block;font:700 9px var(--mono);letter-spacing:.4em}
+  .d210 .big .l1{font-size:34px;line-height:.95;letter-spacing:.06em}
+  .d210 .big .l2{font-size:19px;letter-spacing:.28em}
+  @keyframes jit210{0%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}50%{transform:translate(-1px,1px)}75%{transform:translate(1px,1px)}}
+
+  /* 211 duotone slam */
+  .d211 .city{position:absolute;inset:0;background:
+     linear-gradient(0deg,#000 0 18%,transparent 18%),
+     repeating-linear-gradient(90deg,#0009 0 26px,#0004 26px 34px,#000b 34px 70px),
+     linear-gradient(#777,#333)}
+  .d211 .tone{position:absolute;inset:0;mix-blend-mode:color;animation:tone211 4.5s steps(1) infinite}
+  @keyframes tone211{0%{background:#0057ff}33%{background:#8a2be2}66%{background:#00b87a}}
+  .d211 .vbar{position:absolute;top:0;bottom:0;width:5%;background:rgba(255,255,255,.16);animation:vb211 .6s steps(3) infinite}
+  .d211 .vbar:nth-child(3){left:22%}.d211 .vbar:nth-child(4){left:58%;animation-delay:.2s}
+  .d211 .vbar:nth-child(5){left:80%;width:3%;animation-delay:.4s}
+  @keyframes vb211{0%{transform:scaleY(1)}33%{transform:scaleY(1.6) translateY(6%)}66%{transform:scaleY(.7)}}
+
+  /* 212 glitch type */
+  .d212 .g{position:absolute;left:0;right:0;top:38%;text-align:center;font-size:34px;font-weight:900;letter-spacing:.08em;color:#eaffea}
+  .d212 .g em{font-style:normal;position:relative;display:inline-block;animation:slice212 2.2s steps(1) infinite}
+  .d212 .g em:nth-child(odd){animation-delay:.12s}
+  .d212 .g em:nth-child(3n){animation-delay:.24s}
+  @keyframes slice212{0%{transform:translate(6px,-4px);clip-path:inset(0 0 45% 0)}
+    8%{transform:translate(-5px,3px);clip-path:inset(35% 0 0 0)}
+    16%{transform:none;clip-path:none}
+    78%{transform:none;clip-path:none}
+    85%{transform:translate(4px,2px);clip-path:inset(20% 0 20% 0)}
+    93%,100%{transform:none;clip-path:none}}
+
+  /* 213 block build */
+  .d213 .stack{position:absolute;left:12%;top:22%;font:12px var(--mono);color:#fff;letter-spacing:.1em}
+  .d213 .w{opacity:0;animation:blk213 4s steps(1) infinite}
+  .d213 .w1{animation-delay:0s}.d213 .w2{animation-delay:.24s}.d213 .w3{animation-delay:.8s}
+  @keyframes blk213{0%{opacity:0}10%,92%{opacity:1}93%,100%{opacity:0}}
+  .d213 .sol{position:absolute;left:12%;top:52%;display:flex;align-items:center;gap:8px;opacity:0;animation:sol213 4s infinite}
+  .d213 .sol .logoS{width:26px;height:20px;background:linear-gradient(#fff 0 22%,transparent 22% 39%,#fff 39% 61%,transparent 61% 78%,#fff 78% 100%)}
+  .d213 .sol b{font-size:24px;font-weight:900;letter-spacing:.12em;color:#fff}
+  @keyframes sol213{0%,29%{opacity:0;transform:scale(1.35)}30%{opacity:1;transform:scale(1.08)}36%,92%{opacity:1;transform:scale(1)}93%,100%{opacity:0}}
+  .d213::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,#6a4bbf33,#a06be255);mix-blend-mode:screen}
+
+  /* 214 decode — JS */
+  .d214 .dc{position:absolute;left:0;right:0;top:34%;text-align:center;font:16px var(--mono);color:#fff;letter-spacing:.12em}
+  .d214 .dc small{display:block;font-size:8px;color:#aaa;margin-top:8px;letter-spacing:.2em}
+
+  /* 215 dashboard */
+  .d215{background:#0b0e12}
+  .d215 .kpi{position:absolute;left:8%;top:14%;font:700 22px var(--mono);color:#fff}
+  .d215 .kpi small{display:block;font:9px var(--mono);color:#6f7a88;font-weight:400;letter-spacing:.1em}
+  .d215 .bar215{position:absolute;left:8%;bottom:18%;width:55%;height:5px;background:#1c232c;border-radius:3px;overflow:hidden}
+  .d215 .bar215 i{display:block;height:100%;width:40%;background:linear-gradient(90deg,var(--sol1),var(--sol2));animation:fill215 3s ease-in-out infinite alternate}
+  @keyframes fill215{from{width:35%}to{width:88%}}
+  .d215 .dot{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--sol2);animation:ping215 2s infinite}
+  .d215 .dot:nth-child(4){left:70%;top:30%}.d215 .dot:nth-child(5){left:82%;top:52%;animation-delay:.6s}
+  .d215 .dot:nth-child(6){left:64%;top:62%;animation-delay:1.2s}
+  @keyframes ping215{0%{box-shadow:0 0 0 0 rgba(20,241,149,.5)}70%{box-shadow:0 0 0 9px rgba(20,241,149,0)}100%{box-shadow:0 0 0 0 rgba(20,241,149,0)}}
+
+  footer{margin-top:40px;text-align:center;font:11px var(--mono);color:var(--dim)}
+  footer b{color:var(--sol2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Reference Lab · REF-001 · dekompilyatsiya</div>
+  <h1>Solana <span>Breakpoint BP26</span> — uslub xaritasi</h1>
+  <div class="sub">53.9s · 25fps · 1280×720 · ~40 shot · manba: brend-manifest promo. Har karta = jonli demo + o'lchov. Tool qilish uchun raqam tanla.</div>
+  <div class="facts">
+    <div class="fact">kesim: <b>2.0s → 0.3s</b> accelerando</div>
+    <div class="fact">rang: <b>90% B&W</b>, brend rang faqat finalda</div>
+    <div class="fact">foto pop: <b>1–2 kadr oq flash</b> oldin</div>
+    <div class="fact">SOLANA slam: <b>≤80ms</b></div>
+    <div class="fact">glitch: boshida nozik → oxirida agressiv</div>
+  </div>
+</header>
+
+<div class="tl">
+  <h2>5 aktli ritorik skelet (footage almashsa ham ishlaydi)</h2>
+  <div class="note">Segment kengligi = real davomiylik. Pastdagi chiziqchalar — kesim zichligi (oxirga qarab tezlashadi).</div>
+  <div class="bar">
+    <div class="seg s1"><small>0–3.5s · TEZIS</small><b>«Qoidalarni qabul qilishadi»</b></div>
+    <div class="seg s2"><small>4–13.5s · ANTITEZIS</small><b>«Kimdir buzadi» + logo flash</b></div>
+    <div class="seg s3"><small>13.5–21.5s · SAVOLLAR</small><b>Okean · Axborot · Pul</b></div>
+    <div class="seg s4"><small>22–29.5s · ISBOT</small><b>Raketa · Jobs · «All at once»</b></div>
+    <div class="seg s5"><small>30–54s · NOW + CTA</small><b>NOW · Supercycle · London · BP26</b></div>
+    <div class="ticks">
+      <i></i><i style="flex:2.2"></i><i style="flex:2"></i><i style="flex:1.8"></i><i style="flex:1.6"></i>
+      <i style="flex:1.5"></i><i style="flex:1.3"></i><i style="flex:1.2"></i><i></i><i style="flex:.9"></i>
+      <i style="flex:.8"></i><i style="flex:.7"></i><i style="flex:.65"></i><i style="flex:.6"></i><i style="flex:.55"></i>
+      <i style="flex:.5"></i><i style="flex:.45"></i><i style="flex:.4"></i><i style="flex:.38"></i><i style="flex:.35"></i>
+      <i style="flex:.33"></i><i style="flex:.3"></i><i style="flex:.3"></i><i style="flex:.28"></i><i style="flex:.28"></i>
+    </div>
+    <div class="playhead"></div>
+  </div>
+  <div class="legend"><span>0s</span><span>13.5s</span><span>27s</span><span>40s</span><span>54s</span></div>
+</div>
+
+<div class="insights">
+  <div class="ins"><b>①  Argument &gt; effekt</b><p>Bu video ritorik isbot: tezis → antitezis → savollar → isbot → CTA. Effektni ko'chirgan ko'p, skeletni ko'chirgan yo'q.</p></div>
+  <div class="ins"><b>②  Montaj = mavzu</b><p>«Speed» g'oyasi kesim tezligining o'zida: 2s dan 0.3s gacha qisqaradi.</p></div>
+  <div class="ins"><b>③  Rang — mukofot</b><p>Duotone va gradientlar faqat oxirgi aktda ochiladi, shuning uchun final portlaydi.</p></div>
+  <div class="ins"><b>④  Caption — umurtqa</b><p>Pastdagi mono caption hech qachon yo'qolmaydi; vizuallar shunchaki illyustratsiya.</p></div>
+</div>
+
+<div class="grid">
+
+<div class="card"><div class="demo d200">
+  <div class="shot"></div>
+  <span class="c">The world doesn't change because</span>
+  <span class="c">people accept the rules.</span>
+  <span class="c">It changes because</span>
+  <span class="c">someone breaks them.</span>
+</div><div class="body">
+  <div class="row1"><span class="num">200</span><h3>Caption Rail</h3></div>
+  <p>Pastda doimiy mono caption, VO bilan sinxron hard-swap. Shotlar almashaveradi — matn umurtqa bo'lib qoladi.</p>
+  <div class="meta"><span class="m">sourceText + HOLD keys</span><span class="m">butun video davomida</span><span class="pot mid">TOOL: O'RTA</span></div>
+</div></div>
+
+<div class="card"><div class="demo d201">
+  <div class="p"><i></i></div><div class="p"><i></i></div><div class="p"><i></i></div>
+  <div class="p"><i></i></div><div class="p"><i></i></div><div class="p"><i></i></div>
+  <div class="scan"></div>
+</div><div class="body">
+  <div class="row1"><span class="num">201</span><h3>Portrait Lineage</h3></div>
+  <p>Markazda kichik B&W portret, har 12 kadrda (0.5s) hard-swap — ixtirochilar «nasl-nasabi». Markazdan data-scanline o'tadi.</p>
+  <div class="meta"><span class="m">swap: 12 kadr</span><span class="m">o'lcham: ~10% ekran</span><span class="m">4.0–7.5s</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="demo d202">
+  <div class="clu">
+    <div class="ph"><i></i></div><div class="ph"><i></i></div><div class="ph"><i></i></div>
+    <div class="ph"><i></i></div><div class="ph"><i></i></div>
+  </div>
+  <div class="scan" style="opacity:.45"></div>
+</div><div class="body">
+  <div class="row1"><span class="num">202</span><h3>Photo Cluster Cascade</h3></div>
+  <p>Fotolar klaster bo'lib yog'iladi. Sir: har rasm chiqishidan OLDIN 1–2 kadr OQ placeholder yonadi — «chaqnab tug'ilish» hissi shundan.</p>
+  <div class="meta"><span class="m">yangi foto: har 4–8 kadr</span><span class="m">flash: 1–2 kadr</span><span class="m">klaster drift</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="demo d203" style="background:#050507">
+  <div class="scan"></div><div class="scan b"></div>
+</div><div class="body">
+  <div class="row1"><span class="num">203</span><h3>Data Scanline</h3></div>
+  <p>Gorizontal markaz chiziqda uzluksiz RGB-split shovqin tasmasi — «ma'lumot oqimi» metaforasi. Butun portret seksiyasida yashaydi.</p>
+  <div class="meta"><span class="m">fractal noise 1px strip</span><span class="m">RGB shift</span><span class="pot lo">TOOL: PAST (bezak)</span></div>
+</div></div>
+
+<div class="card"><div class="demo d204" style="background:#050507">
+  <div class="white"><div class="logoS"></div><div class="pill">HIGH-PERFORMANCE</div></div>
+</div><div class="body">
+  <div class="row1"><span class="num">204</span><h3>White Flash Interlude</h3></div>
+  <p>Qorong'i oqimni to'satdan OQ fon yorib yuboradi: logo + pill-label, 1.5s — kontrast-zarba, keyin yana qorong'iga.</p>
+  <div class="meta"><span class="m">12.0–13.5s</span><span class="m">davomiylik: 1.5s</span><span class="pot mid">TOOL: O'RTA</span></div>
+</div></div>
+
+<div class="card"><div class="demo d205">
+  <div class="arch"></div><div class="arch"></div><div class="arch"></div>
+  <div class="vig" style="position:absolute;inset:0;background:radial-gradient(circle,transparent 30%,rgba(0,0,0,.85) 75%)"></div>
+  <span class="q">Why should crossing an ocean take weeks?</span>
+</div><div class="body">
+  <div class="row1"><span class="num">205</span><h3>Rhetorical Question Series</h3></div>
+  <p>Har savol = 3–4 davrga mos arxiv shot + bitta caption. Eng ko'p o'tkazib yuboriladigan narsa: footage emas, savol-javob TUZILMASI.</p>
+  <div class="meta"><span class="m">3 savol × ~2.7s</span><span class="m">arxiv davri savolga mos</span><span class="pot mid">STRUKTURA</span></div>
+</div></div>
+
+<div class="card"><div class="demo d206">
+  <div class="film"></div><div class="vig"></div><div class="grain"></div>
+</div><div class="body">
+  <div class="row1"><span class="num">206</span><h3>Vignette Spotlight</h3></div>
+  <p>Arxiv kadr aylana «proyektor dog'i» ichida, chekka to'liq qora. Grain + sekin pan — eski kino hissi.</p>
+  <div class="meta"><span class="m">ellipse mask + feather</span><span class="m">film grain</span><span class="pot mid">TOOL: O'RTA</span></div>
+</div></div>
+
+<div class="card"><div class="demo d207" style="background:#020203">
+  <div class="cone"></div><div class="src"></div>
+</div><div class="body">
+  <div class="row1"><span class="num">207</span><h3>«Then All At Once» Beam</h3></div>
+  <p>To'liq qorong'idan proyektor nuri ochiladi — «Not overnight. Then all at once» so'zlariga vizual javob va akt-darvozasi.</p>
+  <div class="meta"><span class="m">28.5–29.5s</span><span class="m">akt o'tish vositasi</span><span class="pot lo">TOOL: PAST</span></div>
+</div></div>
+
+<div class="card"><div class="demo d208" style="background:#040406">
+  <svg viewBox="0 0 320 180">
+    <defs><linearGradient id="og" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9945FF"/><stop offset=".5" stop-color="#00C2FF"/><stop offset="1" stop-color="#14F195"/>
+    </linearGradient></defs>
+    <ellipse class="o o1" cx="160" cy="90" rx="30" ry="26" stroke="url(#og)"/>
+    <ellipse class="o o2" cx="160" cy="90" rx="60" ry="50" stroke="url(#og)"/>
+    <ellipse class="o o3" cx="160" cy="90" rx="95" ry="76" stroke="url(#og)"/>
+    <ellipse class="o o4" cx="160" cy="90" rx="135" ry="105" stroke="url(#og)"/>
+  </svg>
+</div><div class="body">
+  <div class="row1"><span class="num">208</span><h3>Orbit Spirals</h3></div>
+  <p>Brend-gradient orbita halqalari burilib ichkariga «yig'iladi» — 2 soniyalik kirish, NOW oldidan nafas.</p>
+  <div class="meta"><span class="m">shape + trim paths</span><span class="m">gradient stroke</span><span class="m">29.5–31.5s</span><span class="pot mid">TOOL: O'RTA</span></div>
+</div></div>
+
+<div class="card"><div class="demo d209">
+  <div class="crowd"></div>
+  <div class="tw">
+    <i style="animation-delay:.0s">T</i><i style="animation-delay:.07s">H</i><i style="animation-delay:.14s">A</i><i style="animation-delay:.21s">T</i><i style="animation-delay:.28s">'</i><i style="animation-delay:.35s">S</i><br>
+    <i style="animation-delay:.7s">W</i><i style="animation-delay:.77s">H</i><i style="animation-delay:.84s">E</i><i style="animation-delay:.91s">R</i><i style="animation-delay:.98s">E</i>
+    <i style="animation-delay:1.2s"> </i><i style="animation-delay:1.25s">W</i><i style="animation-delay:1.32s">E</i><br>
+    <i style="animation-delay:1.6s">A</i><i style="animation-delay:1.67s">R</i><i style="animation-delay:1.74s">E</i>
+  </div>
+  <div class="now">NOW</div>
+</div><div class="body">
+  <div class="row1"><span class="num">209</span><h3>Typewriter Stack + NOW Slam</h3></div>
+  <p>Kichik mono so'zlar qator-qator teriladi (har so'z ~0.5s), so'ng GIGANT rounded «NOW» crowd ustiga overshoot bilan slam. Kichik→ulkan shrift zarbasi.</p>
+  <div class="meta"><span class="m">30.0–33.5s</span><span class="m">slam: overshoot 1.05x</span><span class="m">AM_BOUNCE mos</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="demo d210">
+  <div class="cyl"></div><div class="cyl"></div><div class="cyl"></div><div class="cyl"></div><div class="cyl"></div>
+  <div class="big"><small>THE</small><span class="l1">TOKEN</span><span class="l2">SUPERCYCLE</span></div>
+</div><div class="body">
+  <div class="row1"><span class="num">210</span><h3>Paper Stop-Motion Token Rain</h3></div>
+  <p>Qog'oz fonda qora silindrlar (tokenlar) stop-motion yog'iladi, ustida katta display type har kadrda 1–2px qaltiraydi — bosma misregistration hissi.</p>
+  <div class="meta"><span class="m">posterizeTime(12)</span><span class="m">jitter: 1–2px wiggle</span><span class="m">36–42.5s</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="demo d211">
+  <div class="city"></div><div class="tone"></div>
+  <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+</div><div class="body">
+  <div class="row1"><span class="num">211</span><h3>Duotone City Slam</h3></div>
+  <p>Bir xil shahar-timelapse, rang HARD-CUT bilan almashadi: blue → purple → green (har biri ~1.5–2s, beat'ga). O'tish yo'q — rangning o'zi montaj zarbasi.</p>
+  <div class="meta"><span class="m">3 rang × 1.5–2s</span><span class="m">vertikal pixel-stretch</span><span class="m">41.5–47.5s</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="demo d212" style="background:#06090b">
+  <div class="g"><em>L</em><em>O</em><em>N</em><em>D</em><em>O</em><em>N</em></div>
+</div><div class="body">
+  <div class="row1"><span class="num">212</span><h3>Glitch Type Reveal</h3></div>
+  <p>So'z buzilgan/siljigan bloklardan 2–3 kadrda joyiga tushadi; vaqti-vaqti bilan qayta «sinadi» — barqarorlashmagan signal hissi.</p>
+  <div class="meta"><span class="m">slice offset: 2–3 kadr</span><span class="m">44.0–45.5s</span><span class="pot mid">TOOL: O'RTA</span></div>
+</div></div>
+
+<div class="card"><div class="demo d213" style="background:#241b38">
+  <div class="stack"><span class="w w1">BUILD</span> <span class="w w2">IT</span> <span class="w w3">ON</span></div>
+  <div class="sol"><div class="logoS"></div><b>SOLANA</b></div>
+</div><div class="body">
+  <div class="row1"><span class="num">213</span><h3>Cumulative Block Build</h3></div>
+  <p>Matn typewriter emas — BUTUN SO'Z birdan qo'shiladi: BUILD (240ms) → +IT (560ms) → +ON (400ms) → logo+wordmark BIR KADRDA slam.</p>
+  <div class="meta"><span class="m">o'lchangan: 240/560/400ms</span><span class="m">slam ≤80ms</span><span class="m">48.5–50s</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="demo d214" style="background:#050507">
+  <div class="dc"><span id="dc1">BP26</span><small id="dc2">NOV 15-17 • LONDON</small></div>
+</div><div class="body">
+  <div class="row1"><span class="num">214</span><h3>End Card Decode</h3></div>
+  <p>Yakuniy karta harflari random belgilardan chapdan-o'ngga «decode» bo'lib to'g'ri matnga tushadi (kadrlarda BP28→BP26 ko'rinadi), so'ng 2s toza turadi.</p>
+  <div class="meta"><span class="m">text-scramble</span><span class="m">51.5–53.9s</span><span class="pot hi">TOOL: YUQORI</span></div>
+</div></div>
+
+<div class="card"><div class="demo d215">
+  <div class="kpi"><span id="ms">364</span> ms<small>BLOCK TIME · LIVE</small></div>
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  <div class="bar215"><i></i></div>
+</div><div class="body">
+  <div class="row1"><span class="num">215</span><h3>Live Dashboard Insert</h3></div>
+  <p>Da'vodan keyin real mahsulot ekrani — jonli metrikalar «isbot» sifatida 1 soniya ko'rsatiladi. Ishontirish texnikasi.</p>
+  <div class="meta"><span class="m">34.5–35.5s</span><span class="m">counting numbers</span><span class="pot lo">TOOL: PAST</span></div>
+</div></div>
+
+</div>
+
+<footer>REF-001 · texnikalar <b>200–215</b> · raqam tanla — faqat o'shanisi quriladi · to'liq o'lchovlar: <b>03-konspekt/ref-001-solana-breakpoint.md</b></footer>
+</div>
+
+<script>
+// 214: text scramble decode (loop)
+(function(){
+  var el1=document.getElementById('dc1'), el2=document.getElementById('dc2');
+  if(!el1) return;
+  var t1='BP26', t2='NOV 15-17 • LONDON', CH='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&';
+  function scramble(el,target,speed){
+    var frame=0, locked=0;
+    var iv=setInterval(function(){
+      var out='';
+      for(var i=0;i<target.length;i++){
+        if(i<locked||target[i]===' '||target[i]==='•') out+=target[i];
+        else out+=CH[Math.floor(Math.random()*CH.length)];
+      }
+      el.textContent=out;
+      frame++;
+      if(frame%3===0) locked++;
+      if(locked>=target.length){el.textContent=target;clearInterval(iv);}
+    },speed);
+  }
+  function run(){ scramble(el1,t1,55); scramble(el2,t2,40); }
+  run(); setInterval(run,4000);
+})();
+// 215: block time counter
+(function(){
+  var el=document.getElementById('ms'); if(!el) return;
+  setInterval(function(){ el.textContent=(330+Math.floor(Math.random()*60)); },700);
+})();
+</script>
+</body>
+</html>
