@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smooth Lab — nima o'rgandim, nima qila olaman</title>
+<style>
+  :root{
+    --bg:#0a0a0d; --panel:#121218; --panel2:#1a1a22; --line:#26262f;
+    --txt:#e8e8ee; --dim:#8a8a99; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+    --blue:#0a84ff; --acc:#ffb454; --red:#d92b26; --green:#30d158;
+    --ca-default:cubic-bezier(.25,.1,.25,1);
+    --ca-easeout:cubic-bezier(0,0,.58,1);
+    --sine-io:cubic-bezier(.37,0,.63,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--txt);font:14px/1.55 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header{margin-bottom:24px}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--blue);text-transform:uppercase}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  h1 span{color:var(--blue)}
+  .sub{color:var(--dim);font-size:13px;max-width:720px}
+  h2.sec{font-size:16px;font-weight:800;margin:36px 0 4px}
+  .secnote{font-size:12.5px;color:var(--dim);margin-bottom:14px}
+  .hint{font:10.5px var(--mono);color:#5f8fbf}
+
+  /* ---------- 1: POYGA ---------- */
+  .race{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .lane2{display:grid;grid-template-columns:150px 1fr 84px;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid #1c1c24}
+  .lane2:last-child{border:none}
+  .lane2 .nm{font-size:12px;font-weight:600}
+  .lane2 .nm small{display:block;font:9.5px var(--mono);color:var(--dim)}
+  .track{position:relative;height:26px;background:#0d0d12;border-radius:13px}
+  .ball{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%}
+  .lane2 .val{font:9.5px var(--mono);color:var(--dim);text-align:right}
+  .b-lin{background:#4a4a55}
+  .b-ca{background:var(--blue)}
+  .b-out{background:#64d2ff}
+  .b-sine{background:var(--acc)}
+  .running .b-lin{animation:go 1.3s linear forwards}
+  .running .b-ca{animation:go 1.3s var(--ca-default) forwards}
+  .running .b-out{animation:go 1.3s var(--ca-easeout) forwards}
+  .running .b-sine{animation:go 1.3s var(--sine-io) forwards}
+  @keyframes go{to{left:calc(100% - 23px)}}
+
+  /* ---------- 2: SPRING LAB ---------- */
+  .slab{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .sctl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .sbtn{font:600 12px -apple-system,sans-serif;color:var(--txt);background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:7px 14px;cursor:pointer;transition:transform .15s var(--ca-default),background .2s}
+  .sbtn:active{transform:scale(.94)}
+  .sbtn.on{background:var(--blue);border-color:var(--blue);color:#fff}
+  .sstage{position:relative;height:150px;background:#0d0d12;border-radius:12px;overflow:hidden}
+  .scard{position:absolute;left:24px;top:50%;width:86px;height:86px;margin-top:-43px;border-radius:22px;background:linear-gradient(145deg,#2c2c35,#1d1d25);border:1px solid #34343f;display:flex;align-items:center;justify-content:center;font:700 11px var(--mono);color:#9a9ab0;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+  .sgraph{position:absolute;right:12px;top:10px;bottom:10px;width:34%;opacity:.9}
+  .sinfo{margin-top:10px;font:11px var(--mono);color:var(--dim)}
+  .sinfo b{color:var(--acc)}
+
+  /* ---------- 3: CAPABILITIES ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:16px}
+  .cap{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  .cstage{position:relative;height:190px;background:#0d0d12;overflow:hidden;cursor:pointer}
+  .cbody{padding:12px 15px 14px}
+  .cbody h3{font-size:13.5px;font-weight:700;margin-bottom:3px}
+  .cbody p{font-size:11.5px;color:var(--dim)}
+  .cbody .tag{display:inline-block;font:9.5px var(--mono);color:var(--acc);border:1px solid #4a3a22;border-radius:5px;padding:1.5px 6px;margin-top:7px}
+
+  /* sheet demo */
+  .phone{position:absolute;left:50%;top:14px;transform:translateX(-50%);width:104px;height:210px;border-radius:20px;background:#1b1b22;border:1.5px solid #33333e;overflow:hidden}
+  .pbar{height:26px;display:flex;align-items:center;justify-content:center;font:600 8px -apple-system;color:#777}
+  .dimmer{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+  .sheet{position:absolute;left:3px;right:3px;bottom:3px;height:64%;border-radius:14px 14px 12px 12px;background:#f2f2f6;transform:translateY(110%)}
+  .sheet .grab{width:26px;height:4px;border-radius:2px;background:#c7c7cc;margin:6px auto}
+  .sheet .ln{height:7px;border-radius:4px;background:#e2e2e8;margin:7px 10px}
+  .sheet .ln.w1{width:55%}
+
+  /* toggle demo */
+  .bigtoggle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:104px;height:60px;border-radius:30px;background:#39393f;transition:background .3s var(--ca-default)}
+  .bigtoggle.on{background:var(--green)}
+  .knob{position:absolute;top:3px;left:3px;width:54px;height:54px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+
+  /* island demo */
+  .island{position:absolute;left:50%;top:50%;translate:-50% -50%;height:34px;width:110px;border-radius:17px;background:#000;border:1px solid #2a2a30;display:flex;align-items:center;justify-content:center;gap:8px;overflow:hidden}
+  .island .dot1{width:9px;height:9px;border-radius:50%;background:var(--green)}
+  .island .wave{display:flex;gap:2.5px;align-items:center}
+  .island .wave i{width:2.5px;border-radius:2px;background:var(--blue);height:6px;animation:wv .7s var(--sine-io) infinite alternate}
+  .island .wave i:nth-child(2){height:13px;animation-delay:.12s}
+  .island .wave i:nth-child(3){height:8px;animation-delay:.24s}
+  .island .wave i:nth-child(4){height:15px;animation-delay:.36s}
+  .island .wave i:nth-child(5){height:6px;animation-delay:.48s}
+  @keyframes wv{to{transform:scaleY(.4)}}
+
+  /* press demo */
+  .presscard{position:absolute;left:50%;top:50%;translate:-50% -50%;width:150px;height:96px;border-radius:18px;background:linear-gradient(145deg,#28283a,#1b1b28);border:1px solid #3a3a4d;display:flex;flex-direction:column;justify-content:flex-end;padding:10px}
+  .presscard b{font-size:11px}.presscard small{font-size:9px;color:var(--dim)}
+
+  /* word demo */
+  .wpaper{position:absolute;inset:0;background:#e9e6de}
+  .wdots{position:absolute;inset:0;background-image:radial-gradient(#00000015 1px,transparent 1px);background-size:11px 11px}
+  .wvig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,transparent 46%,rgba(60,55,48,.5) 100%)}
+  .wtxt{position:absolute;left:8%;right:8%;top:36%;text-align:center;font-weight:800;font-size:13px;color:#161514;line-height:1.6}
+  .wtxt i{font-style:normal;display:inline-block;opacity:0}
+
+  /* stamp demo */
+  .stamp2{position:absolute;left:50%;top:50%;border:3px solid var(--red);color:var(--red);font:900 13px var(--mono);letter-spacing:.08em;padding:7px 12px;border-radius:5px;opacity:0;mix-blend-mode:multiply}
+
+  /* counter demo */
+  .cnt2{position:absolute;left:0;right:0;top:44%;text-align:center;font:800 19px var(--mono);color:var(--green)}
+
+  footer{margin-top:40px;text-align:center;font:11px var(--mono);color:var(--dim)}
+  footer b{color:var(--blue)}
+  code.k{font:10.5px var(--mono);color:var(--acc)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Reference Lab · Smooth Lab · GitHub tadqiqoti natijasi</div>
+  <h1>Nima o'rgandim — <span>jonli isbot</span></h1>
+  <div class="sub">Bu sahifadagi har bir harakat Apple'ning RASMIY raqamlari bilan ishlaydi: Core Animation bezierlari va SwiftUI spring fizikasi (JS'da qayta yozdim). Har demoni <b>bosib ko'r</b> — qayta o'ynaydi.</div>
+</header>
+
+<h2 class="sec">1 · Kurvalar poygasi — farqni ko'z bilan ko'r</h2>
+<div class="secnote">To'rt shar bir xil masofani bir xil vaqtda (1.3s) bosadi. Farq faqat kurvada. <span class="hint">▶ bosish bilan qayta start</span></div>
+<div class="race" id="race" onclick="restartRace()">
+  <div class="lane2"><div class="nm">Linear<small>mening v1 xatom</small></div><div class="track"><div class="ball b-lin"></div></div><div class="val">(0,0,1,1)</div></div>
+  <div class="lane2"><div class="nm">Apple CA Default<small>iOS'ning uy easi</small></div><div class="track"><div class="ball b-ca"></div></div><div class="val">(.25,.1,.25,1)</div></div>
+  <div class="lane2"><div class="nm">Apple EaseOut<small>kirib kelishlar</small></div><div class="track"><div class="ball b-out"></div></div><div class="val">(0,0,.58,1)</div></div>
+  <div class="lane2"><div class="nm">easeInOutSine<small>REF-002'dan o'lchaganim</small></div><div class="track"><div class="ball b-sine"></div></div><div class="val">(.37,0,.63,1)</div></div>
+</div>
+
+<h2 class="sec">2 · Spring laboratoriyasi — SwiftUI fizikasi JS'da</h2>
+<div class="secnote">Bu CSS emas — haqiqiy so'ndirilgan ossillyator formulasi (SwiftUI .spring bilan bir xil matematika). Retseptni tanla, karta harakatini va o'ng tomondagi kurvasini ko'r.</div>
+<div class="slab">
+  <div class="sctl">
+    <button class="sbtn on" data-r="0.55" data-d="0.825">Standart · 0.55 / 0.825</button>
+    <button class="sbtn" data-r="0.5" data-d="1.0">Bounce 0 (sheet)</button>
+    <button class="sbtn" data-r="0.5" data-d="0.7">Brisk · bounce 0.15</button>
+    <button class="sbtn" data-r="0.5" data-d="0.55">Playful · bounce 0.3</button>
+    <button class="sbtn" data-r="0.15" data-d="0.86">Interactive · 0.15 / 0.86</button>
+  </div>
+  <div class="sstage" id="sstage">
+    <div class="scard" id="scard">SPRING</div>
+    <svg class="sgraph" id="sgraph" viewBox="0 0 200 130" preserveAspectRatio="none"></svg>
+  </div>
+  <div class="sinfo" id="sinfo">response <b>0.55s</b> · dampingFraction <b>0.825</b> — Apple'ning "uy hissi": bitta mikro-overshoot, keyin tinchlik.</div>
+</div>
+
+<h2 class="sec">3 · Qo'limdan keladiganlar — bosib sina</h2>
+<div class="secnote">Har karta — Apple raqamlarida ishlaydigan tayyor UI naqsh. Hammasi AE tool'ga aylanadi (Smooth Kit v2.31).</div>
+<div class="grid">
+
+<div class="cap"><div class="cstage" id="sheetStage">
+  <div class="phone"><div class="pbar">9:41</div><div class="dimmer" id="dimmer"></div>
+    <div class="sheet" id="sheet"><div class="grab"></div><div class="ln"></div><div class="ln w1"></div><div class="ln"></div></div>
+  </div>
+</div><div class="cbody">
+  <h3>iOS Sheet Presentation</h3>
+  <p>Bounce 0 spring bilan ko'tariladi, fon proporsional xiralashadi. Sakramaydi — sirpanadi.</p>
+  <span class="tag">spring 0.5s · damping 1.0</span>
+</div></div>
+
+<div class="cap"><div class="cstage" id="togStage">
+  <div class="bigtoggle" id="tog"><div class="knob" id="knob"></div></div>
+</div><div class="cbody">
+  <h3>iOS Toggle</h3>
+  <p>Knob haqiqiy spring bilan uchadi — oxirida 2–3% mikro-overshoot, xuddi iPhone'dagidek.</p>
+  <span class="tag">spring 0.3s · damping 0.825</span>
+</div></div>
+
+<div class="cap"><div class="cstage" id="islStage">
+  <div class="island" id="island">
+    <div class="dot1"></div>
+    <div class="wave" id="wave" style="display:none"><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</div><div class="cbody">
+  <h3>Dynamic Island Expand</h3>
+  <p>Kenglik+balandlik interactiveSpring bilan kengayadi — tez javob, yumshoq qo'nish.</p>
+  <span class="tag">spring 0.35s · damping 0.78</span>
+</div></div>
+
+<div class="cap"><div class="cstage" id="pressStage">
+  <div class="presscard" id="presscard"><b>App Card</b><small>bosib tur — qo'yib yubor</small></div>
+</div><div class="cbody">
+  <h3>Press Feedback</h3>
+  <p>Bosганda 0.15s'da 0.94 ga botadi, qo'yib yuborsang interactiveSpring bilan qaytadi.</p>
+  <span class="tag">interactive 0.15s / 0.86</span>
+</div></div>
+
+<div class="cap"><div class="cstage" id="wordStage">
+  <div class="wpaper"></div><div class="wdots"></div>
+  <div class="wtxt" id="wtxt"></div>
+  <div class="wvig"></div>
+</div><div class="cbody">
+  <h3>Word Reveal (REF-002)</h3>
+  <p>O'lchangan retsept: 430ms inOutSine, blur 3→0, kulrang→qora. Endi JS bilan aniq vaqtda.</p>
+  <span class="tag">430ms · inOutSine ★o'lchangan</span>
+</div></div>
+
+<div class="cap"><div class="cstage" id="stampStage">
+  <div class="wpaper"></div><div class="wdots"></div>
+  <div class="stamp2" id="stamp2">ISHONCHI KOMIL</div>
+  <div class="wvig"></div>
+</div><div class="cbody">
+  <h3>Stamp + appleSpring settle</h3>
+  <p>100ms'da tushadi, keyin spring bilan botib-qaytadi (decay 9 = damping 0.825 analogi).</p>
+  <span class="tag">100ms slam + spring settle</span>
+</div></div>
+
+<div class="cap"><div class="cstage" id="cntStage">
+  <div class="wpaper"></div><div class="wdots"></div>
+  <div class="cnt2" id="cnt2">$100.000.000</div>
+  <div class="wvig"></div>
+</div><div class="cbody">
+  <h3>Counter deceleration</h3>
+  <p>Interval 40→240ms easeOut bilan cho'ziladi — hisoblagich charxpalakdek sekinlashib to'xtaydi.</p>
+  <span class="tag">easeOutCubic interval</span>
+</div></div>
+
+<div class="cap"><div class="cstage" style="display:flex;align-items:center;justify-content:center;padding:14px;cursor:default">
+  <pre style="font:9.5px/1.5 var(--mono);color:#b9b9c9;overflow:hidden">// [SMTH] appleSpring — AE expression
+amp=.04; freq=2.2; <b style="color:var(--acc)">decay=9</b>;
+n=nearestKey(time).index; ...
+value + v*(amp*Math.sin(freq*t*2*PI)
+        /Math.exp(<b style="color:var(--acc)">decay</b>*t));</pre>
+</div><div class="cbody">
+  <h3>AE'ga ko'chirish tayyor</h3>
+  <p>Shu spring AE expression sifatida kodeksda yozib qo'yilgan — Smooth Kit shu bilan quriladi.</p>
+  <span class="tag">decay 9 ≈ damping 0.825</span>
+</div></div>
+
+</div>
+
+<footer>o'rganilgan: CA bezierlar · SwiftUI spring (0.55/0.825) · bounce retseptlari · scroll-scrub printsipi — hammasi <b>apple-smooth-codex.md</b>'da · keyingi qadam: "boshla" → Smooth Kit v2.31</footer>
+</div>
+
+<script>
+/* ============ SPRING ENGINE (SwiftUI matematikasi) ============ */
+/* response (davomiylik, s) + dampingFraction (0..1] -> so'ndirilgan ossillyator */
+function springAt(x, response, zeta){
+  var w0 = 2*Math.PI/response;
+  if (zeta < 1){
+    var wd = w0*Math.sqrt(1 - zeta*zeta);
+    return 1 - Math.exp(-zeta*w0*x)*(Math.cos(wd*x) + (zeta*w0/wd)*Math.sin(wd*x));
+  }
+  return 1 - Math.exp(-w0*x)*(1 + w0*x); // kritik so'ndirilgan
+}
+function runSpring(response, zeta, dur, apply, done){
+  var t0 = performance.now();
+  function fr(now){
+    var x = (now - t0)/1000;
+    if (x >= dur){ apply(1); done && done(); return; }
+    apply(springAt(x, response, zeta));
+    requestAnimationFrame(fr);
+  }
+  requestAnimationFrame(fr);
+}
+var easeOutCubic = function(t){ return 1 - Math.pow(1-t,3); };
+
+/* ============ 1: POYGA ============ */
+function restartRace(){
+  var r = document.getElementById('race');
+  r.classList.remove('running'); void r.offsetWidth; r.classList.add('running');
+}
+setInterval(restartRace, 3200); restartRace();
+
+/* ============ 2: SPRING LAB ============ */
+(function(){
+  var card = document.getElementById('scard'), g = document.getElementById('sgraph'),
+      info = document.getElementById('sinfo'), R = 0.55, Z = 0.825;
+  var DESC = {
+    '0.55/0.825':"response <b>0.55s</b> · dampingFraction <b>0.825</b> — Apple'ning \"uy hissi\": bitta mikro-overshoot, keyin tinchlik.",
+    '0.5/1':"bounce <b>0</b> — sheet/navigatsiya: umuman sakramaydi, shunchaki sirpanib qo'nadi.",
+    '0.5/0.7':"bounce <b>0.15</b> — \"brisk\": sezilarli lekin bosiq bitta tebranish.",
+    '0.5/0.55':"bounce <b>0.3</b> — o'yinqaroq: ochiq overshoot. UI'da ehtiyot bo'lish kerak.",
+    '0.15/0.86':"interactiveSpring — barmoq ostidagi javob: <b>0.15s</b>, deyarli tebranishsiz."
+  };
+  function drawGraph(){
+    var dur = Math.max(R*3.2, .9), pts = [];
+    for (var i=0;i<=120;i++){
+      var x=i/120, v=springAt(x*dur, R, Z);
+      pts.push((x*200).toFixed(1)+','+(120 - v*90).toFixed(1));
+    }
+    g.innerHTML = '<line x1="0" y1="30" x2="200" y2="30" stroke="#26262f" stroke-dasharray="3 4"/>'+
+      '<polyline fill="none" stroke="#0a84ff" stroke-width="2" points="'+pts.join(' ')+'"/>';
+  }
+  function play(){
+    var stage = document.getElementById('sstage');
+    var dist = stage.clientWidth*0.5;
+    runSpring(R, Z, Math.max(R*3.2,.9), function(p){
+      card.style.transform = 'translateX('+(dist*p)+'px) rotate('+(p*180)+'deg)';
+      card.style.borderRadius = (22 + p*21)+'px';
+    });
+  }
+  document.querySelectorAll('.sbtn').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.sbtn').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      R = parseFloat(b.dataset.r); Z = parseFloat(b.dataset.d);
+      info.innerHTML = DESC[b.dataset.r+'/'+ (Z===1?'1':b.dataset.d)] || DESC[b.dataset.r+'/'+b.dataset.d] || '';
+      drawGraph(); play();
+    });
+  });
+  document.getElementById('sstage').addEventListener('click', play);
+  drawGraph(); play(); setInterval(play, 4200);
+})();
+
+/* ============ 3: CAPABILITIES ============ */
+/* Sheet */
+(function(){
+  var sheet=document.getElementById('sheet'), dim=document.getElementById('dimmer'), open=false;
+  function toggle(){
+    open=!open;
+    var from=open?110:0, to=open?0:110;
+    runSpring(0.5, 1.0, 1.1, function(p){
+      sheet.style.transform='translateY('+(from+(to-from)*p)+'%)';
+      dim.style.opacity=(open?p:1-p)*0.45;
+    });
+  }
+  document.getElementById('sheetStage').addEventListener('click', toggle);
+  toggle(); setInterval(toggle, 3800);
+})();
+/* Toggle */
+(function(){
+  var tog=document.getElementById('tog'), knob=document.getElementById('knob'), on=false;
+  function flip(){
+    on=!on;
+    tog.classList.toggle('on', on);
+    var from=on?0:47, to=on?47:0;
+    runSpring(0.3, 0.825, 0.9, function(p){
+      knob.style.transform='translateX('+(from+(to-from)*p)+'px)';
+    });
+  }
+  document.getElementById('togStage').addEventListener('click', flip);
+  setInterval(flip, 2600); flip();
+})();
+/* Island */
+(function(){
+  var isl=document.getElementById('island'), wave=document.getElementById('wave'), big=false;
+  function go(){
+    big=!big;
+    var fw=big?110:196, tw=big?196:110, fh=big?34:56, th=big?56:34;
+    if(big) wave.style.display='flex'; else wave.style.display='none';
+    runSpring(0.35, 0.78, 1.0, function(p){
+      isl.style.width=(fw+(tw-fw)*p)+'px';
+      isl.style.height=(fh+(th-fh)*p)+'px';
+      isl.style.borderRadius=((fh+(th-fh)*p)/2)+'px';
+    });
+  }
+  document.getElementById('islStage').addEventListener('click', go);
+  setInterval(go, 3400); go();
+})();
+/* Press */
+(function(){
+  var c=document.getElementById('presscard'), st=document.getElementById('pressStage');
+  function down(){ runSpring(0.15, 1.0, 0.4, function(p){ c.style.transform='translate(-50%,-50%) scale('+(1-0.06*p)+')'; }); }
+  function up(){ runSpring(0.3, 0.7, 0.9, function(p){ c.style.transform='translate(-50%,-50%) scale('+(0.94+0.06*p)+')'; }); }
+  st.addEventListener('pointerdown', down);
+  st.addEventListener('pointerup', up); st.addEventListener('pointerleave', up);
+  setInterval(function(){ down(); setTimeout(up, 480); }, 3000);
+})();
+/* Word reveal — 430ms inOutSine, blur 3->0 */
+(function(){
+  var WORDS="So'zlar mana shunday nafas olib keladi".split(' ');
+  var el=document.getElementById('wtxt');
+  function easeInOutSine(t){ return -(Math.cos(Math.PI*t)-1)/2; }
+  function run(){
+    el.innerHTML = WORDS.map(function(w){return '<i>'+w+'</i>'}).join(' ');
+    var spans=el.querySelectorAll('i');
+    spans.forEach(function(s,i){
+      setTimeout(function(){
+        var t0=performance.now();
+        (function fr(now){
+          var t=Math.min(1,(now-t0)/430), p=easeInOutSine(t);
+          s.style.opacity=Math.min(1,p*1.6);
+          s.style.filter='blur('+(3*(1-p))+'px)';
+          s.style.color='rgb('+Math.round(165-143*p)+','+Math.round(161-140*p)+','+Math.round(154-134*p)+')';
+          if(t<1) requestAnimationFrame(fr);
+        })(t0);
+      }, 250+i*620);
+    });
+  }
+  document.getElementById('wordStage').addEventListener('click', run);
+  run(); setInterval(run, 6200);
+})();
+/* Stamp — slam + spring settle */
+(function(){
+  var s=document.getElementById('stamp2');
+  function run(){
+    s.style.opacity='0';
+    var t0=performance.now();
+    (function fr(now){
+      var x=(now-t0)/1000;
+      if(x<0.1){ // slam: 100ms, scale 2.2 -> 1 (easeIn — tezlashib uriladi)
+        var t=x/0.1, sc=2.2-1.2*(t*t);
+        s.style.opacity=String(t);
+        s.style.transform='translate(-50%,-50%) rotate(-12deg) scale('+sc+')';
+        requestAnimationFrame(fr);
+      } else if(x<1.1){ // appleSpring settle: decay 9
+        var t2=x-0.1;
+        var sc2=1 + 0.10*Math.sin(2.2*t2*2*Math.PI)/Math.exp(9*t2);
+        s.style.opacity='1';
+        s.style.transform='translate(-50%,-50%) rotate(-12deg) scale('+sc2+')';
+        requestAnimationFrame(fr);
+      } else { s.style.transform='translate(-50%,-50%) rotate(-12deg) scale(1)'; }
+    })(t0);
+  }
+  document.getElementById('stampStage').addEventListener('click', run);
+  run(); setInterval(run, 4600);
+})();
+/* Counter */
+(function(){
+  var el=document.getElementById('cnt2'), FINAL='$100.000.000';
+  function grp(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+  function run(){
+    var t0=Date.now(), DUR=2200;
+    el.style.filter='blur(1.5px)'; el.style.opacity='.7';
+    (function tick(){
+      var t=(Date.now()-t0)/DUR;
+      if(t>=1){ el.style.filter='blur(0)'; el.style.opacity='1'; el.textContent=FINAL; return; }
+      el.textContent='$'+grp(Math.floor(Math.random()*99000000+900000));
+      setTimeout(tick, 40 + easeOutCubic(t)*200);
+    })();
+  }
+  document.getElementById('cntStage').addEventListener('click', run);
+  run(); setInterval(run, 5800);
+})();
+</script>
+</body>
+</html>
