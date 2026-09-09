@@ -100,6 +100,23 @@ Tool: PAST.
 Xulosa: ikkala uslub bitta arsenalga sig'adi — "tez to'plam" (200-215) va
 "smooth to'plam" (216-226). Kontent turiga qarab almashtiriladi.
 
+## O'LCHANGAN EASING KURVALAR (ffmpeg signalstats, piksel-luminance per frame)
+
+Egasi v1 board'ni "smooth emas" deb rad etdi — sabab linear/steps demolar edi. Videodan
+haqiqiy kurvalarni o'lchab chiqdik:
+
+- **So'z fade-in: ~430ms (13 kadr @30fps), shakli easeInOutSine (0.37,0,0.63,1)** —
+  sekin boshlanadi, o'rtada tezlashadi, yumshoq qo'nadi. AE: Easy Ease 33/33.
+  O'lchov (normalizatsiya): 0, .015, .082, .18, .29, .40, .52, .65, .75, .84, .93, .98, 1.0
+- **Sarlavha kirish: ~370ms ease-out (outCubic)**; **chiqish: ~400ms ease-in** —
+  g'oyib bo'lish ham yumshoq boshlanadi.
+- **Sahna crossfade: ~470ms (14 kadr).**
+- Fade'lar orasida ham luminance ~0.15/kadr siljiydi — fon hech qachon statik emas.
+
+QOIDA (xatolar daftariga): motion demo/tool'da linear yoki steps() bilan "smooth" chiqmaydi.
+Kodeks: matn — inOutSine 430ms; kirish-slam — outExpo (0.16,1,0.3,1); overshoot — outBack
+(0.34,1.56,0.64,1); surilish — inOutQuint (0.83,0,0.17,1); uy easimiz Soft Flow 75/75.
+
 ## KEYINGI QADAMLAR
 - [ ] VO transkript + so'z-timing (whisper) — 217 tool'ga to'g'ridan-to'g'ri input bo'ladi
 - [ ] Egasi raqam tanlaydi → board/tool
