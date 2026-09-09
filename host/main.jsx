@@ -227,6 +227,7 @@ function nytvir_execute(cmd) {
         else if (cmd.indexOf("cap") === 0) { _capDispatch(cmd); }
         else if (cmd.indexOf("txPro") === 0) { _txProDispatch(cmd); }
         else if (cmd.indexOf("txFx") === 0) { _txDispatch(cmd); }
+        else if (cmd === "pbSocials") { _pbSocials(); }
         else if (cmd === "uiBudgetCard") { _uiBudgetCard(); }
         else if (cmd === "uiOrbitalMenu") { _uiOrbitalMenu(); }
         else if (cmd.indexOf("amv") === 0) { _amvDispatch(cmd); }
@@ -770,6 +771,69 @@ function _fractalMandala() {
         mainXf.property("ADBE Rotate Z").expression = baseExpr + "var delay = "+(i*0.1)+"; var pp = Math.max(0, Math.min(1, (p-delay)/(1-delay))); var e = easeInOut(pp); e * 180;";
         
         s.selected = isM;
+    }
+}
+
+function _pbSocials() {
+    var comp = app.project.activeItem;
+    if(!comp) return;
+    
+    var w = comp.width, h = comp.height;
+    
+    var master = comp.layers.addNull();
+    master.name = "[Nytvir] pbSocials Master";
+    master.position.setValue([w/2, h/2]);
+    
+    _addSlider(master, "Transition Speed %", 100);
+    _addColorControl(master, "Text Color", [1,1,1]);
+    _addColorControl(master, "Glass Color", [1,1,1]);
+    _addSlider(master, "Glass Opacity", 10);
+    
+    var socials = ["IG", "YT", "IN"];
+    var gap = 70;
+    var startX = -gap;
+    
+    for (var i = 0; i < 3; i++) {
+        var shape = comp.layers.addShape();
+        shape.name = "[Nytvir] Social Circle " + (i+1);
+        shape.parent = master;
+        shape.position.setValue([startX + (i*gap), 0]);
+        
+        var contents = shape.property("ADBE Root Vectors Group");
+        var grp = contents.addProperty("ADBE Vector Group");
+        
+        var ell = grp.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+        ell.property("ADBE Vector Ellipse Size").setValue([50, 50]);
+        
+        var str = grp.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+        str.property("ADBE Vector Stroke Color").expression = "thisComp.layer('" + master.name + "').effect('Text Color')(1);";
+        str.property("ADBE Vector Stroke Width").setValue(1.5);
+        str.property("ADBE Vector Stroke Opacity").setValue(30);
+        
+        var fill = grp.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+        fill.property("ADBE Vector Fill Color").expression = "thisComp.layer('" + master.name + "').effect('Glass Color')(1);";
+        fill.property("ADBE Vector Fill Opacity").expression = "thisComp.layer('" + master.name + "').effect('Glass Opacity')(1);";
+        
+        var baseExpr = "var mRef = thisComp.layer('" + master.name + "'); var spd = mRef.effect('Transition Speed %')(1)/100; var t = (time - inPoint)*spd; var delay = " + (i*0.1) + "; var p = Math.max(0, t - delay); " + EASE_LIB + " ";
+        
+        shape.property("ADBE Transform Group").property("ADBE Scale").expression = baseExpr + "var e = elasticOut(Math.min(1, p*1.5)); [e*100, e*100];";
+        shape.property("ADBE Transform Group").property("ADBE Position").expression = baseExpr + "var e = easeOutBack(Math.min(1, p*1.5)); [" + (startX + (i*gap)) + ", (1-e)*20];";
+        shape.property("ADBE Transform Group").property("ADBE Opacity").expression = baseExpr + "var e = easeOut(Math.min(1, p*2)); e*100;";
+        
+        var txt = comp.layers.addText(socials[i]);
+        txt.name = "[Nytvir] Social Text " + socials[i];
+        txt.parent = shape;
+        var textProp = txt.property("Source Text");
+        var textDoc = textProp.value;
+        textDoc.fontSize = 16;
+        textDoc.fillColor = [1,1,1];
+        textDoc.justification = ParagraphJustification.CENTER_JUSTIFY;
+        textProp.setValue(textDoc);
+        
+        txt.property("ADBE Transform Group").property("ADBE Position").setValue([0, 5.5]);
+        var anim = txt.property("ADBE Text Properties").property("ADBE Text Animators").addProperty("ADBE Text Animator");
+        var col = anim.property("ADBE Text Animator Properties").addProperty("ADBE Text Fill Color");
+        col.expression = "thisComp.layer('" + master.name + "').effect('Text Color')(1);";
     }
 }
 
