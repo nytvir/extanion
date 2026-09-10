@@ -110,6 +110,11 @@ function nytvir_execute(cmd) {
         else if (cmd === "saasCursorClick") { _saasCursorClick(); }
         else if (cmd === "saasStagger") { _saasStagger(); }
         else if (cmd === "saasBallWipe") { _saasBallWipe(); }
+        else if (cmd === "s44PromptCard") { _s44PromptCard(); }
+        else if (cmd === "s44StatBox") { _s44StatBox(); }
+        else if (cmd === "s44ChipLime") { _s44ChipLime(); }
+        else if (cmd === "s44LabelChip") { _s44LabelChip(); }
+        else if (cmd === "s44HeroCard") { _s44HeroCard(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -12684,6 +12689,178 @@ function _saasBallWipe() {
         ba.property("Ball Size").setValueAtTime(t0, 38);
         ba.property("Ball Size").setValueAtTime(t0 + 1.38, 76);
     } catch (eB) {}
+    app.endUndoGroup();
+}
+
+// S44 UI SET (v2.36) - user's OWN Main.aep UI widgets as generators (exact geometry from ui_dump)
+// Har widget: bosh karta + bolalari unga PARENT - bitta layerni sursang butun widget ko'chadi.
+var S44_GRAY = [0.216, 0.216, 0.216];
+var S44_LIME = [0.898, 0.945, 0.506];
+function _s44Font(td, medium) {
+    td.font = medium ? "SFProDisplay-Medium" : "SFProDisplay-Regular";
+    return td;
+}
+function _s44Rect(comp, name, w, h, r, fill, cx, cy, t0, t1) {
+    var L = comp.layers.addShape(); L.name = name;
+    var g = L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var rc = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    rc.property("ADBE Vector Rect Size").setValue([w, h]);
+    rc.property("ADBE Vector Rect Roundness").setValue(r);
+    var fl = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    fl.property("ADBE Vector Fill Color").setValue(fill);
+    L.position.setValue([cx, cy]);
+    L.inPoint = t0; L.outPoint = t1;
+    // soft shadow (SaaS look)
+    var sh = L.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+    sh.property("ADBE Drop Shadow-0002").setValue(28); sh.property("ADBE Drop Shadow-0004").setValue(10); sh.property("ADBE Drop Shadow-0005").setValue(40);
+    return L;
+}
+function _s44Text(comp, str, size, color, medium, just, x, y, t0, t1) {
+    var L = comp.layers.addText(str);
+    var td = L.property("Source Text").value;
+    td.resetCharStyle(); td.fontSize = size; td.applyFill = true; td.fillColor = color; td.applyStroke = false;
+    _s44Font(td, medium);
+    td.justification = just;
+    L.property("Source Text").setValue(td);
+    L.position.setValue([x, y]); L.inPoint = t0; L.outPoint = t1;
+    return L;
+}
+function _s44Enter(L, t0) { // 166->100 kirish (Main comp'dagidek) + AM bounce
+    var b = L.scale.value;
+    L.scale.setValueAtTime(t0, [b[0] * 1.66, b[1] * 1.66]);
+    L.scale.setValueAtTime(t0 + 1.13, [b[0], b[1]]);
+    try { L.scale.expression = AM_BOUNCE; } catch (eB) {}
+    L.opacity.setValueAtTime(t0, 0); L.opacity.setValueAtTime(t0 + 0.2, 100);
+}
+// 1) AI PROMPT CARD: 899x257 r26 oq + placeholder + plus + qora submit (174 r42 @31%) + oq strelka
+function _s44PromptCard() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Placeholder matni?", "Build a trip planning app that organizes destinations...");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Prompt Card");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] prompt card", 899, 257, 26, [1, 1, 1], cx, cy, t0, t1);
+    var tx = _s44Text(comp, q, 30, S44_GRAY, true, ParagraphJustification.LEFT_JUSTIFY, cx - 400, cy - 55, t0, t1);
+    tx.name = "[S44] placeholder"; tx.parent = card;
+    // plus (chap-past)
+    var pl = comp.layers.addShape(); pl.name = "[S44] plus";
+    var pg = pl.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var p1 = pg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var s1 = new Shape(); s1.vertices = [[-12, 0], [12, 0]]; s1.closed = false;
+    p1.property("ADBE Vector Shape").setValue(s1);
+    var p2 = pg.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var s2 = new Shape(); s2.vertices = [[0, -12], [0, 12]]; s2.closed = false;
+    p2.property("ADBE Vector Shape").setValue(s2);
+    var pst = pg.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    pst.property("ADBE Vector Stroke Color").setValue([0.561, 0.561, 0.561]);
+    pst.property("ADBE Vector Stroke Width").setValue(4);
+    pl.position.setValue([cx - 400, cy + 85]); pl.inPoint = t0; pl.outPoint = t1; pl.parent = card;
+    // submit squircle (o'ng-past) + oq strelka
+    var sb = _s44Rect(comp, "[S44] submit", 174, 174, 42, [0, 0, 0], cx + 388, cy + 78, t0, t1);
+    sb.scale.setValue([31, 31]); sb.parent = card;
+    var ar = comp.layers.addShape(); ar.name = "[S44] arrow";
+    var ag = ar.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var a1 = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var as1 = new Shape(); as1.vertices = [[0, 12], [0, -12]]; as1.closed = false;
+    a1.property("ADBE Vector Shape").setValue(as1);
+    var a2 = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var as2 = new Shape(); as2.vertices = [[-8, -3], [0, -12], [8, -3]]; as2.closed = false;
+    a2.property("ADBE Vector Shape").setValue(as2);
+    var ast = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    ast.property("ADBE Vector Stroke Color").setValue([1, 1, 1]);
+    ast.property("ADBE Vector Stroke Width").setValue(5);
+    try { ast.property("ADBE Vector Stroke Line Cap").setValue(2); } catch (eC) {}
+    ar.position.setValue([cx + 388, cy + 78]); ar.inPoint = t0; ar.outPoint = t1; ar.parent = card;
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 2) STAT BOX: 374x259 r14 oq + 2 tile 168x231 r8 #E7 + %matnlar
+function _s44StatBox() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Ikki qiymat (vergul bilan)?", "%50,%70");
+    if (q === null) return;
+    var parts = q.split(","); var v1 = parts[0] || "%50", v2 = parts[1] || "%70";
+    app.beginUndoGroup("S44 Stat Box");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] stat box", 374, 259, 14, [1, 1, 1], cx, cy, t0, t1);
+    var tA = _s44Rect(comp, "[S44] tile A", 168, 231, 8, [0.906, 0.906, 0.906], cx - 90, cy, t0, t1);
+    tA.parent = card; tA.property("ADBE Effect Parade").property(1).enabled = false;
+    var tB = _s44Rect(comp, "[S44] tile B", 168, 231, 8, [0.906, 0.906, 0.906], cx + 90, cy, t0, t1);
+    tB.parent = card; tB.property("ADBE Effect Parade").property(1).enabled = false;
+    var x1 = _s44Text(comp, v1, 46, S44_GRAY, false, ParagraphJustification.CENTER_JUSTIFY, cx - 90, cy + 14, t0, t1);
+    x1.name = "[S44] val A"; x1.parent = card;
+    var x2 = _s44Text(comp, v2, 46, S44_GRAY, false, ParagraphJustification.CENTER_JUSTIFY, cx + 90, cy + 14, t0, t1);
+    x2.name = "[S44] val B"; x2.parent = card;
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 3) LIME CHIP: 374x90 r14 lime + matn + oq kvadrat 63x63 r8 + strelka
+function _s44ChipLime() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Chip matni?", "Plan My Next Trip");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Lime Chip");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] lime chip", 374, 90, 14, S44_LIME, cx, cy, t0, t1);
+    var tx = _s44Text(comp, q, 30, S44_GRAY, false, ParagraphJustification.LEFT_JUSTIFY, cx - 160, cy + 10, t0, t1);
+    tx.name = "[S44] chip text"; tx.parent = card;
+    var sq = _s44Rect(comp, "[S44] chip square", 63, 63, 8, [1, 1, 1], cx + 143, cy, t0, t1);
+    sq.parent = card; sq.property("ADBE Effect Parade").property(1).enabled = false;
+    var ar = comp.layers.addShape(); ar.name = "[S44] chip arrow";
+    var ag = ar.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var a1 = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var s1 = new Shape(); s1.vertices = [[-9, 0], [9, 0]]; s1.closed = false;
+    a1.property("ADBE Vector Shape").setValue(s1);
+    var a2 = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var s2 = new Shape(); s2.vertices = [[2, -7], [9, 0], [2, 7]]; s2.closed = false;
+    a2.property("ADBE Vector Shape").setValue(s2);
+    var ast = ag.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    ast.property("ADBE Vector Stroke Color").setValue(S44_GRAY);
+    ast.property("ADBE Vector Stroke Width").setValue(4);
+    ar.position.setValue([cx + 143, cy]); ar.inPoint = t0; ar.outPoint = t1; ar.parent = card;
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 4) LABEL CHIP: 278x73 r14 oq + matn
+function _s44LabelChip() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Label matni?", "Flight infos....");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Label Chip");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] label chip", 278, 73, 14, [1, 1, 1], cx, cy, t0, t1);
+    var tx = _s44Text(comp, q, 30, S44_GRAY, false, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 10, t0, t1);
+    tx.name = "[S44] label text"; tx.parent = card;
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 5) HERO CARD: 374x185 r14 oq + sarlavha + qidiruv maydoni 344x49 r7 #E2 + matn
+function _s44HeroCard() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q1 = prompt("Sarlavha?", "Plan Your Perfect trip");
+    if (q1 === null) return;
+    var q2 = prompt("Qidiruv matni?", "Search for the best result");
+    if (q2 === null) return;
+    app.beginUndoGroup("S44 Hero Card");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] hero card", 374, 185, 14, [1, 1, 1], cx, cy, t0, t1);
+    var tt = _s44Text(comp, q1, 32, [0.671, 0.671, 0.671], true, ParagraphJustification.LEFT_JUSTIFY, cx - 150, cy - 40, t0, t1);
+    tt.name = "[S44] hero title"; tt.parent = card;
+    var fld = _s44Rect(comp, "[S44] hero field", 344, 49, 7, [0.886, 0.886, 0.886], cx, cy + 47, t0, t1);
+    fld.parent = card; fld.property("ADBE Effect Parade").property(1).enabled = false;
+    var ft = _s44Text(comp, q2, 22, S44_GRAY, false, ParagraphJustification.LEFT_JUSTIFY, cx - 155, cy + 54, t0, t1);
+    ft.name = "[S44] hero search"; ft.parent = card;
+    _s44Enter(card, t0);
     app.endUndoGroup();
 }
 
