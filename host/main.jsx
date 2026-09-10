@@ -145,6 +145,11 @@ function nytvir_execute(cmd) {
         else if (cmd === "s44Path") { _s44Path(); }
         else if (cmd === "s44Flip") { _s44Flip(); }
         else if (cmd === "s44Magic") { _s44Magic(); }
+        else if (cmd === "s44Sheet") { _s44Sheet(); }
+        else if (cmd === "s44Badge") { _s44Badge(); }
+        else if (cmd === "s44Fold") { _s44Fold(); }
+        else if (cmd === "s44Blob") { _s44Blob(); }
+        else if (cmd === "s44Fan") { _s44Fan(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -14007,6 +14012,159 @@ function _s44Magic() {
     mk("[S44] magic A", [1, 1, 1], 300, 180, -165, -110, 630, 170, 0, -115);
     mk("[S44] magic B (lime)", S44_LIME, 300, 180, 165, -110, 300, 190, 165, 90);
     mk("[S44] magic C", [1, 1, 1], 630, 190, 0, 95, 300, 190, -165, 90);
+    app.endUndoGroup();
+}
+
+// S44 v2.42 - board 6 picks: 197 Sheet, 198 Badge, 200 Fold, 201 Blob, 202 Fan
+// 197 BOTTOM SHEET
+function _s44Sheet() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Sheet sarlavhasi?", "Tanlovlar");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Sheet");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2;
+    var sy = comp.height - 260; // final markaz
+    var sheet = _s44Rect(comp, "[S44] sheet", comp.width - 80, 520, 26, [1, 1, 1], cx, sy, t0, t1);
+    var tk = t0 + 0.5;
+    sheet.position.setValueAtTime(tk, [cx, comp.height + 300]);
+    sheet.position.setValueAtTime(tk + 0.55, [cx, sy]);
+    try { sheet.position.expression = AM_BOUNCE; } catch (eB) {}
+    var grab = _s44Rect(comp, "[S44] sheet grabber", 90, 10, 5, [0.788, 0.773, 0.729], cx, sy - 230, t0, t1);
+    grab.property("ADBE Effect Parade").property(1).enabled = false; grab.parent = sheet;
+    var tt = _s44Text(comp, q, 30, S44_GRAY, true, ParagraphJustification.LEFT_JUSTIFY, cx - 420, sy - 160, t0, t1);
+    tt.name = "[S44] sheet title"; tt.parent = sheet;
+    for (var i = 0; i < 2; i++) {
+        var ln = _s44Rect(comp, "[S44] sheet line " + (i + 1), (i === 0 ? 760 : 520), 18, 9, [0.906, 0.906, 0.906], cx - (i === 0 ? 40 : 160), sy - 90 + i * 56, t0, t1);
+        ln.property("ADBE Effect Parade").property(1).enabled = false;
+        ln.opacity.setValueAtTime(tk + 0.5 + i * 0.1, 0);
+        ln.opacity.setValueAtTime(tk + 0.65 + i * 0.1, 100);
+        ln.parent = sheet;
+    }
+    app.endUndoGroup();
+}
+// 198 BADGE DROP
+function _s44Badge() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Nishon matni?", "TOP-1");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Badge");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var b = _s44Ellipse(comp, "[S44] badge", 220, S44_LIME, cx, cy, t0, t1);
+    var sh = b.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+    sh.property("ADBE Drop Shadow-0002").setValue(38); sh.property("ADBE Drop Shadow-0004").setValue(14); sh.property("ADBE Drop Shadow-0005").setValue(34);
+    var tk = t0 + 0.4;
+    b.position.setValueAtTime(tk, [cx, cy - 700]);
+    b.position.setValueAtTime(tk + 0.55, [cx, cy]);
+    b.position.setValueAtTime(tk + 0.75, [cx, cy - 55]);
+    b.position.setValueAtTime(tk + 0.95, [cx, cy]);
+    try { b.position.expression = AM_BOUNCE; } catch (eB) {}
+    b.rotation.setValueAtTime(tk, -210);
+    b.rotation.setValueAtTime(tk + 0.75, 0);
+    _s44Ease(b.rotation, 1, 2);
+    b.opacity.setValueAtTime(tk, 0);
+    b.opacity.setValueAtTime(tk + 0.12, 100);
+    var tx = _s44Text(comp, q, 38, [0.2, 0.2, 0.2], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 13, t0, t1);
+    tx.name = "[S44] badge text"; tx.parent = b;
+    app.endUndoGroup();
+}
+// 200 FOLD-OUT MENU
+function _s44Fold() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    app.beginUndoGroup("S44 Fold");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var base = _s44Rect(comp, "[S44] fold base", 200, 200, 28, [1, 1, 1], cx, cy, t0, t1);
+    var plus = _s44Text(comp, "+", 74, [0.55, 0.55, 0.55], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 24, t0, t1);
+    plus.name = "[S44] fold plus"; plus.parent = base;
+    plus.rotation.setValueAtTime(t0 + 0.8, 0);
+    plus.rotation.setValueAtTime(t0 + 1.1, 135);
+    _s44Ease(plus.rotation, 1, 2);
+    var offs = [[-260, -240], [0, -310], [260, -240]];
+    var cols = [S44_LIME, [0.08, 0.08, 0.08], S44_LIME];
+    for (var i = 0; i < 3; i++) {
+        var ic = _s44Rect(comp, "[S44] fold item " + (i + 1), 150, 150, 22, cols[i], cx, cy, t0, t1);
+        var tk = t0 + 0.85 + i * 0.08;
+        ic.position.setValueAtTime(tk, [cx, cy]);
+        ic.position.setValueAtTime(tk + 0.45, [cx + offs[i][0], cy + offs[i][1]]);
+        try { ic.position.expression = AM_BOUNCE; } catch (eB) {}
+        ic.scale.setValueAtTime(tk, [30, 30]);
+        ic.scale.setValueAtTime(tk + 0.4, [100, 100]);
+        try { ic.scale.expression = AM_BOUNCE; } catch (eB2) {}
+        ic.opacity.setValueAtTime(tk, 0);
+        ic.opacity.setValueAtTime(tk + 0.1, 100);
+        ic.parent = base;
+    }
+    _s44Enter(base, t0);
+    app.endUndoGroup();
+}
+// 201 BLOB CHECKPOINTS
+function _s44Blob() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    app.beginUndoGroup("S44 Blob");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var ctrl = comp.layers.addNull(); ctrl.name = "[S44] blob CTRL";
+    ctrl.position.setValue([cx, cy]); ctrl.inPoint = t0; ctrl.outPoint = t1;
+    var W2 = 700;
+    var trk = _s44Rect(comp, "[S44] blob track", W2, 12, 6, [0.906, 0.906, 0.906], cx, cy, t0, t1);
+    trk.property("ADBE Effect Parade").property(1).enabled = false; trk.parent = ctrl;
+    var xs = [cx - W2 / 2, cx, cx + W2 / 2];
+    var tk = t0 + 0.6, seg = 0.8;
+    for (var i = 0; i < 3; i++) {
+        var cp = _s44Ellipse(comp, "[S44] blob cp " + (i + 1), 52, [0.906, 0.906, 0.906], xs[i], cy, t0, t1);
+        var fl = cp.property("ADBE Root Vectors Group").property(1).property("ADBE Vectors Group").property("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color");
+        var tHit = tk + seg * i + 0.05;
+        fl.setValueAtTime(tHit, [0.906, 0.906, 0.906]);
+        fl.setValueAtTime(tHit + 0.12, [0.898, 0.945, 0.506]);
+        cp.parent = ctrl;
+    }
+    var bl = _s44Ellipse(comp, "[S44] blob", 84, S44_LIME, xs[0], cy, t0, t1);
+    var bsh = bl.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+    bsh.property("ADBE Drop Shadow-0002").setValue(35); bsh.property("ADBE Drop Shadow-0004").setValue(6); bsh.property("ADBE Drop Shadow-0005").setValue(18);
+    bl.position.setValueAtTime(tk, [xs[0], cy]);
+    bl.position.setValueAtTime(tk + seg, [xs[1], cy]);
+    bl.position.setValueAtTime(tk + seg * 2, [xs[2], cy]);
+    _s44Ease(bl.position, 1, 3);
+    // cho'zilish: har segment o'rtasida scaleX katta
+    bl.scale.setValueAtTime(tk, [100, 100]);
+    bl.scale.setValueAtTime(tk + seg * 0.5, [160, 78]);
+    bl.scale.setValueAtTime(tk + seg, [100, 100]);
+    bl.scale.setValueAtTime(tk + seg * 1.5, [160, 78]);
+    bl.scale.setValueAtTime(tk + seg * 2, [100, 100]);
+    try { bl.scale.expression = AM_BOUNCE; } catch (eB) {}
+    bl.parent = ctrl;
+    app.endUndoGroup();
+}
+// 202 PHOTO FAN
+function _s44Fan() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    app.beginUndoGroup("S44 Fan");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var tk = t0 + 0.7;
+    var rots = [-22, 0, 22], txs = [-120, 0, 120], tys = [10, -25, 10];
+    var cols = [[1, 1, 1], S44_LIME, [1, 1, 1]];
+    var order = [0, 2, 1]; // o'rta karta tepada tursin
+    for (var oi = 0; oi < 3; oi++) {
+        var i = order[oi];
+        var c = _s44Rect(comp, "[S44] fan card " + (i + 1), 300, 400, 18, cols[i], cx, cy, t0, t1);
+        // anchor pastda - yelpig'ich pastdan ochiladi
+        c.anchorPoint.setValue([cx, cy + 200]);
+        c.position.setValue([cx, cy + 200]);
+        c.rotation.setValueAtTime(tk, 0);
+        c.rotation.setValueAtTime(tk + 0.5, rots[i]);
+        try { c.rotation.expression = AM_BOUNCE; } catch (eB) {}
+        c.position.setValueAtTime(tk, [cx, cy + 200]);
+        c.position.setValueAtTime(tk + 0.5, [cx + txs[i], cy + 200 + tys[i]]);
+        _s44Ease(c.position, 1, 2);
+    }
     app.endUndoGroup();
 }
 
