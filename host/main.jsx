@@ -106,6 +106,10 @@ function nytvir_execute(cmd) {
         else if (cmd === "apShadow") { _apShadow(); }
         else if (cmd === "amBounce") { _amBounce(); }
         else if (cmd === "srchPaper") { _srchPaper(); }
+        else if (cmd === "saasBallReveal") { _saasBallReveal(); }
+        else if (cmd === "saasCursorClick") { _saasCursorClick(); }
+        else if (cmd === "saasStagger") { _saasStagger(); }
+        else if (cmd === "saasBallWipe") { _saasBallWipe(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -12559,6 +12563,127 @@ function _srchPaper() {
     lb.position.setValueAtTime(t0 + 0.5, [cx, cy + 160]);
     try { lb.position.expression = AM_BOUNCE; } catch (eB2) {}
     lb.opacity.setValueAtTime(t0 + 0.2, 0); lb.opacity.setValueAtTime(t0 + 0.35, 100);
+    app.endUndoGroup();
+}
+
+// SAAS KIT (v2.32) - user's own Main.aep transitions ported (D:\ae lrn\Transition Project File)
+// All keyframes left open for hand-editing. Numbers taken from the dumped project.
+function _saasSel(minN) {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return null; }
+    var sel = comp.selectedLayers;
+    if (sel.length < minN) { alert(minN + " ta layer tanlang"); return null; }
+    return { c: comp, s: sel };
+}
+// T-1..T-6 stack: staggered Block Dissolve + CC Ball Action + rang variantlari
+function _saasBallReveal() {
+    var ctx = _saasSel(1); if (!ctx) return;
+    app.beginUndoGroup("SaaS Ball Reveal");
+    var comp = ctx.c, src = ctx.s[0], t0 = comp.time;
+    var stag = 0.42, durD = 1.5;
+    for (var i = 5; i >= 0; i--) { // pastdan tepaga: eng erta pastda
+        var L = src.duplicate();
+        L.name = "[SAAS] T-" + (i + 1);
+        L.startTime = src.startTime; // vaqtni buzmaslik
+        L.inPoint = t0 + stag * i;
+        L.outPoint = Math.min(t0 + stag * i + 6, comp.duration);
+        var fx = L.property("ADBE Effect Parade");
+        var bd = fx.addProperty("ADBE Block Dissolve");
+        var endV = (i === 5) ? 18 : 0; // T-6 qismiy qoladi (asl loyihadagidek)
+        bd.property("ADBE Block Dissolve-0001").setValueAtTime(L.inPoint, 100);
+        bd.property("ADBE Block Dissolve-0001").setValueAtTime(L.inPoint + durD, endV);
+        try { fx.addProperty("CC Ball Action"); } catch (eB) {}
+        if (i % 3 === 0) {
+            var tn = fx.addProperty("ADBE Tint"); tn.property("ADBE Tint-0003").setValue(60);
+        } else if (i % 3 === 1) {
+            try { fx.addProperty("APC Colorama"); } catch (eC) {}
+        } else {
+            try { fx.addProperty("ADBE Invert"); } catch (eI) {}
+            try { fx.addProperty("APC Colorama"); } catch (eC2) {}
+        }
+        L.moveBefore(src);
+    }
+    src.enabled = true;
+    app.endUndoGroup();
+}
+// kursor uchib kelib tanlangan "tugma"ni bosadi
+function _saasCursorClick() {
+    var ctx = _saasSel(1); if (!ctx) return;
+    app.beginUndoGroup("SaaS Cursor Click");
+    var comp = ctx.c, tgt = ctx.s[0], t0 = comp.time;
+    var tp = tgt.position.value;
+    var cur = comp.layers.addShape(); cur.name = "[SAAS] cursor";
+    var g = cur.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var pth = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var sh = new Shape();
+    sh.vertices = [[0,0],[0,58],[14,45],[23,64],[31,60],[22,42],[40,40]];
+    sh.closed = true;
+    pth.property("ADBE Vector Shape").setValue(sh);
+    var fl = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    fl.property("ADBE Vector Fill Color").setValue([0.08, 0.08, 0.1]);
+    var st = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    st.property("ADBE Vector Stroke Color").setValue([1, 1, 1]);
+    st.property("ADBE Vector Stroke Width").setValue(4);
+    cur.inPoint = t0; cur.outPoint = Math.min(t0 + 3, comp.duration);
+    // uchish: past-chapdan targetga (Main comp qiymatlari: 1.0s, rot 101->22)
+    cur.position.setValueAtTime(t0, [tp[0] - 620, tp[1] + 480]);
+    cur.position.setValueAtTime(t0 + 1.0, [tp[0] + 8, tp[1] + 10]);
+    cur.rotation.setValueAtTime(t0, 101);
+    cur.rotation.setValueAtTime(t0 + 1.0, 22);
+    // klik: dip (asl: 8->4->8 = 50% dip, 0.16s)
+    cur.scale.setValueAtTime(t0 + 1.0, [100, 100]);
+    cur.scale.setValueAtTime(t0 + 1.08, [55, 55]);
+    cur.scale.setValueAtTime(t0 + 1.16, [100, 100]);
+    // target javob-punch: RELATIVE (asl: 31->28->31 = ~10% dip)
+    var b = tgt.scale.value;
+    tgt.scale.setValueAtTime(t0 + 1.0, [b[0], b[1]]);
+    tgt.scale.setValueAtTime(t0 + 1.08, [b[0] * 0.9, b[1] * 0.9]);
+    tgt.scale.setValueAtTime(t0 + 1.18, [b[0], b[1]]);
+    // ease: Soft Flow
+    try {
+        var e = new KeyframeEase(0, 75);
+        cur.position.setTemporalEaseAtKey(1, [e, e], [e, e]);
+        cur.position.setTemporalEaseAtKey(2, [e, e], [e, e]);
+    } catch (eE) {}
+    app.endUndoGroup();
+}
+// tanlangan layerlar chapdan stagger bilan kiradi (Main: 563px, 1.0s, ~0.09s stagger)
+function _saasStagger() {
+    var ctx = _saasSel(2); if (!ctx) return;
+    app.beginUndoGroup("SaaS Stagger Slide");
+    var comp = ctx.c, sel = ctx.s, t0 = comp.time;
+    for (var i = 0; i < sel.length; i++) {
+        var L = sel[i];
+        var p = L.position.value;
+        var ts = t0 + 0.09 * i;
+        L.position.setValueAtTime(ts, [p[0] - 563, p[1], p[2] || 0]);
+        L.position.setValueAtTime(ts + 1.0, p);
+        L.opacity.setValueAtTime(ts, 0);
+        L.opacity.setValueAtTime(ts + 0.25, 100);
+        try {
+            var e = new KeyframeEase(0, 75);
+            var n = L.position.numKeys;
+            L.position.setTemporalEaseAtKey(n - 1, [e, e], [e, e]);
+            L.position.setTemporalEaseAtKey(n, [e, e], [e, e]);
+        } catch (eE) {}
+    }
+    app.endUndoGroup();
+}
+// Gradient Wipe + Ball Size grow reveal (Main - Scene: 1.38s, ball 38->76)
+function _saasBallWipe() {
+    var ctx = _saasSel(1); if (!ctx) return;
+    app.beginUndoGroup("SaaS Ball Wipe");
+    var comp = ctx.c, L = ctx.s[0], t0 = comp.time;
+    var fx = L.property("ADBE Effect Parade");
+    var gw = fx.addProperty("ADBE Gradient Wipe");
+    gw.property("ADBE Gradient Wipe-0001").setValueAtTime(t0, 100);
+    gw.property("ADBE Gradient Wipe-0001").setValueAtTime(t0 + 1.38, 0);
+    try { gw.property("ADBE Gradient Wipe-0002").setValue(30); } catch (eS) {}
+    try {
+        var ba = fx.addProperty("CC Ball Action");
+        ba.property("Ball Size").setValueAtTime(t0, 38);
+        ba.property("Ball Size").setValueAtTime(t0 + 1.38, 76);
+    } catch (eB) {}
     app.endUndoGroup();
 }
 
