@@ -553,6 +553,16 @@ function renderTab(tab) {
         vitems.push(copy);
       }
     });
+    // ...va plugindagi QOLGAN barcha UI-quruvchi toollar (pro tab) - to'liq ombor.
+    // Hammasi editable: yaratgan layerlarini istalgan joyga surasan, keylari ochiq.
+    FX.forEach(function(e) {
+      if (e.tab === 'pro' && !seen[e.id]) {
+        seen[e.id] = 1;
+        var copy = {}; for (var k in e) copy[k] = e[k];
+        copy.sec = '7 · UI OMBOR — ' + (e.sec || 'boshqalar');
+        vitems.push(copy);
+      }
+    });
     vitems.sort(function(a, b) { return a.sec < b.sec ? -1 : (a.sec > b.sec ? 1 : 0); });
     c.innerHTML = renderCards(vitems, true) + '<div class="foot">NYTVIR MOTION v2.0</div>';
     return;
