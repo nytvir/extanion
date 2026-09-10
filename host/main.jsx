@@ -14056,6 +14056,9 @@ function _s44Badge() {
     var b = _s44Ellipse(comp, "[S44] badge", 220, S44_LIME, cx, cy, t0, t1);
     var sh = b.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
     sh.property("ADBE Drop Shadow-0002").setValue(38); sh.property("ADBE Drop Shadow-0004").setValue(14); sh.property("ADBE Drop Shadow-0005").setValue(34);
+    // MUHIM: avval parent (ikkalasi statik), KEYIN animatsiya - parent-trap darsi
+    var tx = _s44Text(comp, q, 38, [0.2, 0.2, 0.2], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 13, t0, t1);
+    tx.name = "[S44] badge text"; tx.parent = b;
     var tk = t0 + 0.4;
     b.position.setValueAtTime(tk, [cx, cy - 700]);
     b.position.setValueAtTime(tk + 0.55, [cx, cy]);
@@ -14067,8 +14070,6 @@ function _s44Badge() {
     _s44Ease(b.rotation, 1, 2);
     b.opacity.setValueAtTime(tk, 0);
     b.opacity.setValueAtTime(tk + 0.12, 100);
-    var tx = _s44Text(comp, q, 38, [0.2, 0.2, 0.2], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 13, t0, t1);
-    tx.name = "[S44] badge text"; tx.parent = b;
     app.endUndoGroup();
 }
 // 200 FOLD-OUT MENU
@@ -14155,8 +14156,8 @@ function _s44Fan() {
     for (var oi = 0; oi < 3; oi++) {
         var i = order[oi];
         var c = _s44Rect(comp, "[S44] fan card " + (i + 1), 300, 400, 18, cols[i], cx, cy, t0, t1);
-        // anchor pastda - yelpig'ich pastdan ochiladi
-        c.anchorPoint.setValue([cx, cy + 200]);
+        // anchor pastda (LAYER-space!) - yelpig'ich pastdan ochiladi
+        c.anchorPoint.setValue([0, 200]);
         c.position.setValue([cx, cy + 200]);
         c.rotation.setValueAtTime(tk, 0);
         c.rotation.setValueAtTime(tk + 0.5, rots[i]);
