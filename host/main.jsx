@@ -140,6 +140,11 @@ function nytvir_execute(cmd) {
         else if (cmd === "s44Tilt") { _s44Tilt(); }
         else if (cmd === "s44Stack") { _s44Stack(); }
         else if (cmd === "s44Dots") { _s44Dots(); }
+        else if (cmd === "s44Drawer") { _s44Drawer(); }
+        else if (cmd === "s44Ripple") { _s44Ripple(); }
+        else if (cmd === "s44Path") { _s44Path(); }
+        else if (cmd === "s44Flip") { _s44Flip(); }
+        else if (cmd === "s44Magic") { _s44Magic(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -13794,6 +13799,214 @@ function _s44Dots() {
         d.parent = pill;
     }
     _s44Enter(pill, t0);
+    app.endUndoGroup();
+}
+
+// S44 v2.41 - board 5 picks: 183 Drawer, 186 Ripple, 189 Path, 190 Flip, 194 Magic Move
+// 183 DRAWER PANEL
+function _s44Drawer() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Menyu qatorlari (vergul)?", "Bosh sahifa,Statistika,Sozlamalar");
+    if (q === null) return;
+    var rows = q.split(",");
+    app.beginUndoGroup("S44 Drawer");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var back = _s44Rect(comp, "[S44] drawer back", 620, 420, 20, [1, 1, 1], cx, cy, t0, t1);
+    var pw = 240, ph = 420;
+    var pan = _s44Rect(comp, "[S44] drawer panel", pw, ph, 20, [0.08, 0.08, 0.08], cx - 310 + pw / 2, cy, t0, t1);
+    var tk = t0 + 0.6;
+    pan.position.setValueAtTime(tk, [cx - 310 - pw / 2, cy]);
+    pan.position.setValueAtTime(tk + 0.5, [cx - 310 + pw / 2, cy]);
+    try { pan.position.expression = AM_BOUNCE; } catch (eB) {}
+    pan.parent = back;
+    for (var i = 0; i < rows.length; i++) {
+        var tx = _s44Text(comp, rows[i], 22, [0.9, 0.9, 0.88], false, ParagraphJustification.LEFT_JUSTIFY, cx - 310 + 30, cy - 120 + i * 64, tk + 0.3, t1);
+        tx.name = "[S44] drawer row " + (i + 1);
+        tx.opacity.setValueAtTime(tk + 0.3 + i * 0.1, 0);
+        tx.opacity.setValueAtTime(tk + 0.45 + i * 0.1, 100);
+        tx.position.setValueAtTime(tk + 0.3 + i * 0.1, [cx - 310 + 10, cy - 120 + i * 64]);
+        tx.position.setValueAtTime(tk + 0.55 + i * 0.1, [cx - 310 + 30, cy - 120 + i * 64]);
+        _s44Ease(tx.position, 1, 2);
+        tx.parent = pan;
+    }
+    _s44Enter(back, t0);
+    app.endUndoGroup();
+}
+// 186 TAP RIPPLE
+function _s44Ripple() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Karta matni?", "Bosildi");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Ripple");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] ripple card", 520, 300, 20, [1, 1, 1], cx, cy, t0, t1);
+    var tx = _s44Text(comp, q, 30, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 10, t0, t1);
+    tx.name = "[S44] ripple text"; tx.parent = card;
+    var tk = t0 + 0.9;
+    for (var i = 0; i < 2; i++) {
+        var rp = comp.layers.addShape(); rp.name = "[S44] ripple " + (i + 1);
+        var g = rp.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var el = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+        el.property("ADBE Vector Ellipse Size").setValue([60, 60]);
+        var st = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+        st.property("ADBE Vector Stroke Color").setValue([0.47, 0.55, 0.12]);
+        st.property("ADBE Vector Stroke Width").setValue(6);
+        rp.position.setValue([cx, cy]);
+        var tki = tk + i * 0.12;
+        rp.inPoint = tki; rp.outPoint = Math.min(tki + 1.0, t1);
+        rp.scale.setValueAtTime(tki, [0, 0]);
+        rp.scale.setValueAtTime(tki + 0.9, [900, 900]);
+        _s44Ease(rp.scale, 1, 2);
+        rp.opacity.setValueAtTime(tki, 100);
+        rp.opacity.setValueAtTime(tki + 0.9, 0);
+        rp.parent = card;
+    }
+    _s44Dip(card, tk);
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 189 PATH TRAVEL (bezier sample -> dot keys + trim chizish)
+function _s44Path() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    app.beginUndoGroup("S44 Path");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var ctrl = comp.layers.addNull(); ctrl.name = "[S44] path CTRL";
+    ctrl.position.setValue([cx, cy]); ctrl.inPoint = t0; ctrl.outPoint = t1;
+    // bezier segmentlar (markazga nisbatan)
+    var segs = [
+        [[-380, 190], [-140, 190], [-140, -140], [60, -140]],
+        [[60, -140], [260, -140], [260, 10], [380, 10]]
+    ];
+    function bez(p, t) {
+        var mt = 1 - t;
+        return [
+            mt * mt * mt * p[0][0] + 3 * mt * mt * t * p[1][0] + 3 * mt * t * t * p[2][0] + t * t * t * p[3][0],
+            mt * mt * mt * p[0][1] + 3 * mt * mt * t * p[1][1] + 3 * mt * t * t * p[2][1] + t * t * t * p[3][1]
+        ];
+    }
+    function mkLine(name, color, w, dash) {
+        var L = comp.layers.addShape(); L.name = name;
+        var g = L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var ph2 = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+        var sh = new Shape();
+        sh.vertices = [segs[0][0], segs[0][3], segs[1][3]];
+        sh.outTangents = [[segs[0][1][0] - segs[0][0][0], segs[0][1][1] - segs[0][0][1]], [segs[1][1][0] - segs[1][0][0], segs[1][1][1] - segs[1][0][1]], [0, 0]];
+        sh.inTangents = [[0, 0], [segs[0][2][0] - segs[0][3][0], segs[0][2][1] - segs[0][3][1]], [segs[1][2][0] - segs[1][3][0], segs[1][2][1] - segs[1][3][1]]];
+        sh.closed = false;
+        ph2.property("ADBE Vector Shape").setValue(sh);
+        var st = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+        st.property("ADBE Vector Stroke Color").setValue(color);
+        st.property("ADBE Vector Stroke Width").setValue(w);
+        try { st.property("ADBE Vector Stroke Line Cap").setValue(2); } catch (eC) {}
+        if (dash) { try { st.property("ADBE Vector Stroke Dashes").addProperty("ADBE Vector Stroke Dash 1").setValue(4); try { st.property("ADBE Vector Stroke Dashes").addProperty("ADBE Vector Stroke Gap 1").setValue(16); } catch (eG) {} } catch (eD) {} }
+        L.position.setValue([cx, cy]); L.inPoint = t0; L.outPoint = t1;
+        return { L: L, g: g };
+    }
+    var trail = mkLine("[S44] path trail", [0.84, 0.83, 0.79], 7, true);
+    trail.L.parent = ctrl;
+    var lime = mkLine("[S44] path line", [0.765, 0.851, 0.306], 10, false);
+    var tr = lime.g.property("ADBE Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    var tk = t0 + 0.5, dur = 1.4;
+    tr.property("ADBE Vector Trim End").setValueAtTime(tk, 0);
+    tr.property("ADBE Vector Trim End").setValueAtTime(tk + dur, 100);
+    _s44Ease(tr.property("ADBE Vector Trim End"), 1, 2);
+    lime.L.parent = ctrl;
+    var dot = _s44Ellipse(comp, "[S44] path dot", 40, S44_LIME, cx + segs[0][0][0], cy + segs[0][0][1], t0, t1);
+    var dsh = dot.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+    dsh.property("ADBE Drop Shadow-0002").setValue(35); dsh.property("ADBE Drop Shadow-0004").setValue(5); dsh.property("ADBE Drop Shadow-0005").setValue(16);
+    var N = 12;
+    for (var k = 0; k <= N; k++) {
+        var half = k / N < 0.5 ? 0 : 1;
+        var tt2 = (k / N < 0.5) ? (k / N) * 2 : (k / N - 0.5) * 2;
+        var pnt = bez(segs[half], tt2);
+        dot.position.setValueAtTime(tk + dur * k / N, [cx + pnt[0], cy + pnt[1]]);
+    }
+    _s44Ease(dot.position, 1, dot.position.numKeys);
+    dot.scale.setValueAtTime(tk + dur, [100, 100]);
+    dot.scale.setValueAtTime(tk + dur + 0.12, [135, 135]);
+    dot.scale.setValueAtTime(tk + dur + 0.28, [100, 100]);
+    try { dot.scale.expression = AM_BOUNCE; } catch (eB) {}
+    dot.parent = ctrl;
+    app.endUndoGroup();
+}
+// 190 3D CARD FLIP
+function _s44Flip() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q1 = prompt("Old tomon matni?", "Old tomon");
+    if (q1 === null) return;
+    var q2 = prompt("Orqa tomon matni?", "Orqa \u2713");
+    if (q2 === null) return;
+    app.beginUndoGroup("S44 Flip");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var ctrl = comp.layers.addNull(); ctrl.name = "[S44] flip CTRL";
+    ctrl.threeDLayer = true;
+    ctrl.position.setValue([cx, cy, 0]); ctrl.inPoint = t0; ctrl.outPoint = t1;
+    var yR = ctrl.property("ADBE Transform Group").property("ADBE Rotate Y");
+    var tk = t0 + 0.9;
+    yR.setValueAtTime(tk, 0);
+    yR.setValueAtTime(tk + 0.7, 180);
+    try { yR.expression = AM_BOUNCE; } catch (eB) {}
+    var mid = tk + 0.35;
+    var front = _s44Rect(comp, "[S44] flip front", 440, 320, 20, [1, 1, 1], cx, cy, t0, t1);
+    front.threeDLayer = true; front.parent = ctrl;
+    front.opacity.setValueAtTime(mid, 100);
+    front.opacity.setValueAtTime(mid + 0.001, 0);
+    var ft = _s44Text(comp, q1, 30, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 10, t0, t1);
+    ft.name = "[S44] flip front text"; ft.threeDLayer = true; ft.parent = front;
+    var back = _s44Rect(comp, "[S44] flip back", 440, 320, 20, [0.08, 0.08, 0.08], cx, cy, t0, t1);
+    back.threeDLayer = true;
+    back.property("ADBE Transform Group").property("ADBE Rotate Y").setValue(180);
+    back.parent = ctrl;
+    back.opacity.setValueAtTime(t0, 0);
+    back.opacity.setValueAtTime(mid, 0);
+    back.opacity.setValueAtTime(mid + 0.001, 100);
+    var bt = _s44Text(comp, q2, 30, [0.898, 0.945, 0.506], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 10, t0, t1);
+    bt.name = "[S44] flip back text"; bt.threeDLayer = true;
+    bt.property("ADBE Transform Group").property("ADBE Rotate Y").setValue(180);
+    bt.parent = back;
+    bt.opacity.setValueAtTime(t0, 0);
+    bt.opacity.setValueAtTime(mid, 0);
+    bt.opacity.setValueAtTime(mid + 0.001, 100);
+    app.endUndoGroup();
+}
+// 194 MAGIC MOVE GRID (Size + Position birga morph)
+function _s44Magic() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    app.beginUndoGroup("S44 Magic");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var tk = t0 + 1.0, dur = 0.7;
+    function mk(name, fill, wA, hA, xA, yA, wB, hB, xB, yB) {
+        var L = comp.layers.addShape(); L.name = name;
+        var g = L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+        var rc = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+        var sz = rc.property("ADBE Vector Rect Size");
+        sz.setValueAtTime(tk, [wA, hA]);
+        sz.setValueAtTime(tk + dur, [wB, hB]);
+        _s44Ease(sz, 1, 2);
+        rc.property("ADBE Vector Rect Roundness").setValue(18);
+        var fl = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+        fl.property("ADBE Vector Fill Color").setValue(fill);
+        L.inPoint = t0; L.outPoint = t1;
+        L.position.setValueAtTime(tk, [cx + xA, cy + yA]);
+        L.position.setValueAtTime(tk + dur, [cx + xB, cy + yB]);
+        try { L.position.expression = AM_BOUNCE; } catch (eB) {}
+        var sh = L.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+        sh.property("ADBE Drop Shadow-0002").setValue(28); sh.property("ADBE Drop Shadow-0004").setValue(10); sh.property("ADBE Drop Shadow-0005").setValue(36);
+        return L;
+    }
+    mk("[S44] magic A", [1, 1, 1], 300, 180, -165, -110, 630, 170, 0, -115);
+    mk("[S44] magic B (lime)", S44_LIME, 300, 180, 165, -110, 300, 190, 165, 90);
+    mk("[S44] magic C", [1, 1, 1], 630, 190, 0, 95, 300, 190, -165, 90);
     app.endUndoGroup();
 }
 
