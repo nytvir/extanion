@@ -144,6 +144,7 @@ input[type=color] { width: 100%; height: 36px; border: none; background: transpa
 <div class="sidebar">
   <div class="logo">⚡</div>
   <div class="nav active" data-tab="pro"><div class="ic">💎</div><div class="lb">Pro</div></div>
+  <div class="nav" data-tab="video"><div class="ic">🎥</div><div class="lb">Video</div></div>
   <div class="nav" data-tab="favs"><div class="ic">⭐</div><div class="lb">Favs</div></div>
   <div class="sep"></div>
   <div class="nav" data-tab="trans"><div class="ic">🎬</div><div class="lb">Trans</div></div>
@@ -174,6 +175,7 @@ try { cs = new CSInterface(); } catch(e){}
 
 var TAB_TITLES = {
   pro: '💎 Pro — eng zo\'r UIlar',
+  video: '🎥 Video — saralangan, videolarda ishlatiladiganlar',
   favs: '⭐ Sevimlilar',
   trans: 'Camera Transitions',
   shapes: 'Shape Morphs',
@@ -512,6 +514,49 @@ function renderTab(tab) {
     return;
   }
 
+  if (tab === 'video') {
+    // Saralangan: videolarda haqiqatan ishlatiladiganlar, maqsad bo'yicha guruhlab.
+    // Kartalar asl tab'laridan ko'chmaydi - bu tab faqat ko'rsatkich.
+    var VIDEO_SET = {
+      amBounce:      '1 · HAR VIDEODA — harakat poydevori',
+      limeProEase:   '1 · HAR VIDEODA — harakat poydevori',
+      bouncrPosition:'1 · HAR VIDEODA — harakat poydevori',
+      bouncrScale:   '1 · HAR VIDEODA — harakat poydevori',
+      txPro02:       '2 · CAPTION / TEXT',
+      txFx05:        '2 · CAPTION / TEXT',
+      txPro13:       '2 · CAPTION / TEXT',
+      srchPaper:     '3 · STORY-REEL (SIMONS uslubi)',
+      msGauge:       '3 · STORY-REEL (SIMONS uslubi)',
+      msErase:       '3 · STORY-REEL (SIMONS uslubi)',
+      msBattery:     '3 · STORY-REEL (SIMONS uslubi)',
+      msSegment:     '3 · STORY-REEL (SIMONS uslubi)',
+      msChecklist:   '3 · STORY-REEL (SIMONS uslubi)',
+      neonChart:     '4 · TRADING',
+      msSlider:      '4 · TRADING',
+      msTimerChip:   '4 · TRADING',
+      saasBallReveal:'5 · SAAS (Main.aep dan)',
+      saasCursorClick:'5 · SAAS (Main.aep dan)',
+      saasStagger:   '5 · SAAS (Main.aep dan)',
+      saasBallWipe:  '5 · SAAS (Main.aep dan)',
+      msUnlock:      '6 · MICRO-PAYOFF',
+      apMorph:       '6 · MICRO-PAYOFF',
+      apProgress:    '6 · MICRO-PAYOFF',
+      apBouncyText:  '6 · MICRO-PAYOFF'
+    };
+    var seen = {};
+    var vitems = [];
+    FX.forEach(function(e) {
+      if (VIDEO_SET[e.id] && !seen[e.id]) {
+        seen[e.id] = 1;
+        var copy = {}; for (var k in e) copy[k] = e[k];
+        copy.sec = VIDEO_SET[e.id];
+        vitems.push(copy);
+      }
+    });
+    vitems.sort(function(a, b) { return a.sec < b.sec ? -1 : (a.sec > b.sec ? 1 : 0); });
+    c.innerHTML = renderCards(vitems, true) + '<div class="foot">NYTVIR MOTION v2.0</div>';
+    return;
+  }
   var items = FX.filter(function(e) { return e.tab === tab; });
   c.innerHTML = renderCards(items, false) + '<div class="foot">NYTVIR MOTION v2.0</div>';
 }
