@@ -115,6 +115,7 @@ function nytvir_execute(cmd) {
         else if (cmd === "s44ChipLime") { _s44ChipLime(); }
         else if (cmd === "s44LabelChip") { _s44LabelChip(); }
         else if (cmd === "s44HeroCard") { _s44HeroCard(); }
+        else if (cmd === "s44Original") { _s44Original(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -12861,6 +12862,54 @@ function _s44HeroCard() {
     var ft = _s44Text(comp, q2, 22, S44_GRAY, false, ParagraphJustification.LEFT_JUSTIFY, cx - 155, cy + 54, t0, t1);
     ft.name = "[S44] hero search"; ft.parent = card;
     _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+
+// S44 ORIGINAL (v2.37) - Main.aep'ni AYNAN o'zini import qilib, original komplarni
+// CTI'ga layer qilib tashlaydi. HAMMA keyframe, ease, effekt 100% asl holida -
+// smooth loyihaning o'zidan. Precomp ichiga kirsang har keyframe ochiq.
+var S44_AEP = "D:/ae lrn/Transition Project File/Main.aep";
+function _s44FindComp(folder, name) {
+    for (var i = 1; i <= folder.numItems; i++) {
+        var it = folder.item(i);
+        if (it instanceof CompItem && it.name === name) return it;
+        if (it instanceof FolderItem) { var r = _s44FindComp(it, name); if (r) return r; }
+    }
+    return null;
+}
+function _s44Original() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var ch = prompt("Qaysi original? 1=Hero (prompt+kursor+kartalar, 4.6s)  2=Ball Dissolve (Transition-1)  3=Order/Map wipe  4=Dot fon  5=Main-Scene wipe", "1");
+    if (ch === null) return;
+    var map = { "1": "Main", "2": "Transition-1", "3": "Order Transition", "4": "dot", "5": "Main - Scene" };
+    var want = map[String(ch).replace(/\s/g, "")] || "Main";
+    app.beginUndoGroup("S44 Original");
+    var proj = app.project;
+    // bir marta import, keyin qayta ishlatiladi
+    var root = null;
+    for (var i = 1; i <= proj.numItems; i++) {
+        if (proj.item(i) instanceof FolderItem && proj.item(i).name === "[S44] originals") { root = proj.item(i); break; }
+    }
+    if (!root) {
+        var f = new File(S44_AEP);
+        if (!f.exists) { alert("Topilmadi: " + S44_AEP); app.endUndoGroup(); return; }
+        var imported = proj.importFile(new ImportOptions(f));
+        if (imported instanceof FolderItem) { imported.name = "[S44] originals"; root = imported; }
+        else {
+            root = proj.items.addFolder("[S44] originals");
+            imported.parentFolder = root;
+        }
+    }
+    var item = _s44FindComp(root, want);
+    if (!item) { alert("Komp topilmadi: " + want); app.endUndoGroup(); return; }
+    var L = comp.layers.add(item);
+    L.name = "[S44 ORIG] " + want;
+    L.startTime = comp.time;
+    var s = comp.width / item.width * 100;
+    L.scale.setValue([s, s]);
+    L.position.setValue([comp.width / 2, comp.height / 2]);
+    L.collapseTransformation = true;
     app.endUndoGroup();
 }
 
