@@ -130,6 +130,16 @@ function nytvir_execute(cmd) {
         else if (cmd === "s44Avatars") { _s44Avatars(); }
         else if (cmd === "s44Range") { _s44Range(); }
         else if (cmd === "s44Success") { _s44Success(); }
+        else if (cmd === "s44Expand") { _s44Expand(); }
+        else if (cmd === "s44Elastic") { _s44Elastic(); }
+        else if (cmd === "s44Carousel") { _s44Carousel(); }
+        else if (cmd === "s44Parallax") { _s44Parallax(); }
+        else if (cmd === "s44Liquid") { _s44Liquid(); }
+        else if (cmd === "s44Swipe") { _s44Swipe(); }
+        else if (cmd === "s44Breath") { _s44Breath(); }
+        else if (cmd === "s44Tilt") { _s44Tilt(); }
+        else if (cmd === "s44Stack") { _s44Stack(); }
+        else if (cmd === "s44Dots") { _s44Dots(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -13501,6 +13511,289 @@ function _s44Success() {
     }
     _s44Dip(card, t0 + 0.6);
     _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+
+// S44 SMOOTH SET (v2.40) - board 4 picks: 171-174, 176-181 (175/182'siz)
+// Butter harakatlar: Size-morph (Scale emas!), AM_BOUNCE springlar, ochiq sin-expressionlar.
+function _s44Ease(prop, k1, k2) { // Soft Flow 75/75
+    try {
+        var e = new KeyframeEase(0, 75);
+        var nd = prop.value instanceof Array ? Math.min(prop.value.length, 3) : 1;
+        var arr = []; for (var d = 0; d < nd; d++) arr.push(e);
+        prop.setTemporalEaseAtKey(k1, arr, arr);
+        prop.setTemporalEaseAtKey(k2, arr, arr);
+    } catch (eE) {}
+}
+// 171 PILL -> CARD EXPAND (Size morph, radius saqlanadi)
+function _s44Expand() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Pill matni?", "Batafsil");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Expand");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var L = comp.layers.addShape(); L.name = "[S44] expand card";
+    var g = L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var rc = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    var szP = rc.property("ADBE Vector Rect Size");
+    var rdP = rc.property("ADBE Vector Rect Roundness");
+    var tk = t0 + 0.8;
+    szP.setValueAtTime(tk, [240, 84]);
+    szP.setValueAtTime(tk + 0.7, [520, 320]);
+    try { szP.expression = AM_BOUNCE; } catch (eB) {}
+    rdP.setValueAtTime(tk, 42);
+    rdP.setValueAtTime(tk + 0.7, 20);
+    var fl = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    fl.property("ADBE Vector Fill Color").setValue([1, 1, 1]);
+    L.position.setValue([cx, cy]); L.inPoint = t0; L.outPoint = t1;
+    var sh = L.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+    sh.property("ADBE Drop Shadow-0002").setValue(30); sh.property("ADBE Drop Shadow-0004").setValue(12); sh.property("ADBE Drop Shadow-0005").setValue(44);
+    var tx = _s44Text(comp, q, 28, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 10, t0, t1);
+    tx.name = "[S44] expand label";
+    tx.position.setValueAtTime(tk, [cx, cy + 10]);
+    tx.position.setValueAtTime(tk + 0.7, [cx, cy - 110]);
+    _s44Ease(tx.position, 1, 2);
+    tx.parent = L;
+    for (var i = 0; i < 3; i++) {
+        var ln = _s44Rect(comp, "[S44] expand line " + (i + 1), 400 - i * 70, 16, 8, [0.906, 0.906, 0.906], cx - (i * 35), cy - 40 + i * 46, tk + 0.4, t1);
+        ln.property("ADBE Effect Parade").property(1).enabled = false;
+        ln.opacity.setValueAtTime(tk + 0.4 + i * 0.1, 0);
+        ln.opacity.setValueAtTime(tk + 0.55 + i * 0.1, 100);
+        ln.parent = L;
+    }
+    _s44Enter(L, t0);
+    app.endUndoGroup();
+}
+// 172 ELASTIC DRAG
+function _s44Elastic() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Chip matni?", "Drag");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Elastic");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var L = _s44Rect(comp, "[S44] elastic chip", 220, 96, 48, S44_LIME, cx, cy, t0, t1);
+    var tk = t0 + 0.6;
+    L.position.setValueAtTime(tk, [cx, cy]);
+    L.position.setValueAtTime(tk + 0.5, [cx + 190, cy]);
+    L.position.setValueAtTime(tk + 0.75, [cx, cy]);
+    try { L.position.expression = AM_BOUNCE; } catch (eB) {}
+    L.scale.setValueAtTime(tk, [100, 100]);
+    L.scale.setValueAtTime(tk + 0.4, [132, 88]);
+    L.scale.setValueAtTime(tk + 0.75, [100, 100]);
+    try { L.scale.expression = AM_BOUNCE; } catch (eB2) {}
+    var tx = _s44Text(comp, q, 28, [0.2, 0.2, 0.2], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 10, t0, t1);
+    tx.name = "[S44] elastic text"; tx.parent = L;
+    app.endUndoGroup();
+}
+// 173 CAROUSEL INERTIA
+function _s44Carousel() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Kartalar (vergul bilan)?", "Reja A,Reja B,Reja C,Reja D");
+    if (q === null) return;
+    var items = q.split(",");
+    app.beginUndoGroup("S44 Carousel");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var ctrl = comp.layers.addNull(); ctrl.name = "[S44] carousel CTRL";
+    ctrl.position.setValue([cx, cy]); ctrl.inPoint = t0; ctrl.outPoint = t1;
+    var step = 340;
+    var tk = t0 + 0.8;
+    ctrl.position.setValueAtTime(tk, [cx, cy]);
+    ctrl.position.setValueAtTime(tk + 0.8, [cx - step, cy]);
+    ctrl.position.setValueAtTime(tk + 2.0, [cx - step * 2, cy]);
+    try { ctrl.position.expression = AM_BOUNCE; } catch (eB) {}
+    _s44Ease(ctrl.position, 1, 3);
+    for (var i = 0; i < items.length; i++) {
+        var card = _s44Rect(comp, "[S44] car card " + (i + 1), 300, 400, 18, (i === 1 ? S44_LIME : [1, 1, 1]), cx + i * step - step, cy, t0, t1);
+        var tx = _s44Text(comp, items[i], 26, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, cx + i * step - step, cy + 150, t0, t1);
+        tx.name = "[S44] car text " + (i + 1); tx.parent = card;
+        card.parent = ctrl;
+    }
+    app.endUndoGroup();
+}
+// 174 PARALLAX FLOAT (ochiq sin-expressionlar, doimiy suzish)
+function _s44Parallax() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    app.beginUndoGroup("S44 Parallax");
+    var t0 = comp.time, t1 = Math.min(t0 + 10, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var ctrl = comp.layers.addNull(); ctrl.name = "[S44] parallax CTRL";
+    ctrl.position.setValue([cx, cy]); ctrl.inPoint = t0; ctrl.outPoint = t1;
+    var main = _s44Rect(comp, "[S44] plx main", 460, 380, 20, [1, 1, 1], cx, cy, t0, t1);
+    main.position.expression = "value + [Math.sin(time*0.7)*6, Math.cos(time*0.55)*5]";
+    main.parent = ctrl;
+    var a = _s44Rect(comp, "[S44] plx lime", 200, 130, 16, S44_LIME, cx - 210, cy - 200, t0, t1);
+    a.position.expression = "value + [Math.sin(time*0.9+1.2)*14, Math.cos(time*0.7)*10]";
+    a.rotation.expression = "Math.sin(time*0.6)*2.5";
+    a.parent = ctrl;
+    var b = _s44Rect(comp, "[S44] plx dark", 180, 115, 16, [0.08, 0.08, 0.08], cx + 215, cy + 195, t0, t1);
+    b.position.expression = "value + [Math.sin(time*0.8+2.6)*16, Math.cos(time*0.65+1)*12]";
+    b.rotation.expression = "Math.sin(time*0.5+2)*2";
+    b.parent = ctrl;
+    app.endUndoGroup();
+}
+// 176 LIQUID PROGRESS (Wave Warp + matte)
+function _s44Liquid() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Foiz (raqam)?", "72");
+    if (q === null) return;
+    var P = parseInt(q, 10); if (isNaN(P)) P = 72;
+    app.beginUndoGroup("S44 Liquid");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var D = 340;
+    var base = _s44Ellipse(comp, "[S44] liq base", D, [1, 1, 1], cx, cy, t0, t1);
+    var bs = base.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+    bs.property("ADBE Drop Shadow-0002").setValue(30); bs.property("ADBE Drop Shadow-0004").setValue(12); bs.property("ADBE Drop Shadow-0005").setValue(40);
+    // suyuqlik: lime katta rect, Wave Warp, matte = doira
+    var liq = _s44Rect(comp, "[S44] liq fill", D + 80, D + 120, 0, S44_LIME, cx, cy, t0, t1);
+    liq.property("ADBE Effect Parade").property(1).enabled = false;
+    try {
+        var ww = liq.property("ADBE Effect Parade").addProperty("ADBE Wave Warp");
+        ww.property("ADBE Wave Warp-0002").setValue(14); // height
+        ww.property("ADBE Wave Warp-0003").setValue(70); // width
+    } catch (eW) {}
+    var yFull = cy + D / 2 + (D + 120) / 2;
+    var yTarget = yFull - (D + 40) * P / 100;
+    liq.position.setValueAtTime(t0 + 0.4, [cx, yFull]);
+    liq.position.setValueAtTime(t0 + 2.0, [cx, yTarget]);
+    _s44Ease(liq.position, 1, 2);
+    var matte = _s44Ellipse(comp, "[S44] liq matte", D, [1, 1, 1], cx, cy, t0, t1);
+    matte.moveBefore(liq);
+    try { liq.setTrackMatte(matte, TrackMatteType.ALPHA); }
+    catch (eM) { try { liq.trackMatteType = TrackMatteType.ALPHA; } catch (eM2) {} }
+    var pt = _s44Text(comp, "0%", 52, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 18, t0, t1);
+    pt.name = "[S44] liq pct";
+    var st = pt.property("Source Text");
+    for (var i = 1; i <= 6; i++) {
+        var td = st.valueAtTime(t0 + 0.4 + i * 0.26, false);
+        td.text = Math.round(P * i / 6) + "%";
+        st.setValueAtTime(t0 + 0.4 + i * 0.26, td);
+    }
+    for (i = 1; i <= st.numKeys; i++) { st.setInterpolationTypeAtKey(i, KeyframeInterpolationType.HOLD); }
+    app.endUndoGroup();
+}
+// 177 SWIPE REVEAL
+function _s44Swipe() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Vazifa matni?", "Vazifa: renderni tugatish");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Swipe");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var under = _s44Rect(comp, "[S44] swipe under", 560, 130, 18, S44_LIME, cx, cy, t0, t1);
+    under.property("ADBE Effect Parade").property(1).enabled = false;
+    var ck = _s44Text(comp, "\u2713", 40, [0.2, 0.2, 0.2], true, ParagraphJustification.LEFT_JUSTIFY, cx - 240, cy + 14, t0, t1);
+    ck.name = "[S44] swipe check"; ck.parent = under;
+    var top = _s44Rect(comp, "[S44] swipe card", 560, 130, 18, [1, 1, 1], cx, cy, t0, t1);
+    var tk = t0 + 0.8;
+    top.position.setValueAtTime(tk, [cx, cy]);
+    top.position.setValueAtTime(tk + 0.4, [cx + 170, cy]);
+    top.position.setValueAtTime(tk + 1.1, [cx, cy]);
+    try { top.position.expression = AM_BOUNCE; } catch (eB) {}
+    top.rotation.setValueAtTime(tk, 0);
+    top.rotation.setValueAtTime(tk + 0.4, 3);
+    top.rotation.setValueAtTime(tk + 1.1, 0);
+    var tx = _s44Text(comp, q, 26, S44_GRAY, false, ParagraphJustification.LEFT_JUSTIFY, cx - 240, cy + 9, t0, t1);
+    tx.name = "[S44] swipe text"; tx.parent = top;
+    app.endUndoGroup();
+}
+// 178 BREATHING CTA (ochiq expression)
+function _s44Breath() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Tugma matni?", "Boshlash");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Breath");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var L = _s44Rect(comp, "[S44] breath cta", 420, 130, 22, [0.08, 0.08, 0.08], cx, cy, t0, t1);
+    L.scale.expression = "s = Math.sin(time*1.9)*2.2; [100+s, 100+s]";
+    var tx = _s44Text(comp, q, 32, [1, 1, 1], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 11, t0, t1);
+    tx.name = "[S44] breath text"; tx.parent = L;
+    _s44Enter(L, t0);
+    app.endUndoGroup();
+}
+// 179 MAGNETIC TILT (3D, ochiq expressionlar)
+function _s44Tilt() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Karta matni?", "Premium Card");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Tilt");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var L = _s44Rect(comp, "[S44] tilt card", 440, 300, 20, [1, 1, 1], cx, cy, t0, t1);
+    L.threeDLayer = true;
+    try {
+        L.property("ADBE Transform Group").property("ADBE Rotate X").expression = "Math.sin(time*0.8)*5";
+        L.property("ADBE Transform Group").property("ADBE Rotate Y").expression = "Math.cos(time*0.65)*7";
+    } catch (e3) {}
+    var tx = _s44Text(comp, q, 28, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 10, t0, t1);
+    tx.name = "[S44] tilt text"; tx.threeDLayer = true; tx.parent = L;
+    _s44Enter(L, t0);
+    app.endUndoGroup();
+}
+// 180 STACK CYCLE (bitta sikl, keylar ochiq)
+function _s44Stack() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    app.beginUndoGroup("S44 Stack");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var tk = t0 + 1.0;
+    // orqa (3): lime-gradientsimon lime
+    var c3 = _s44Rect(comp, "[S44] stack 3", 380, 300, 20, S44_LIME, cx, cy + 32, t0, t1);
+    c3.scale.setValue([88, 88]);
+    c3.position.setValueAtTime(tk, [cx, cy + 32]);
+    c3.position.setValueAtTime(tk + 0.6, [cx, cy + 16]);
+    c3.scale.setValueAtTime(tk, [88, 88]);
+    c3.scale.setValueAtTime(tk + 0.6, [94, 94]);
+    _s44Ease(c3.position, 1, 2); _s44Ease(c3.scale, 1, 2);
+    // o'rta (2)
+    var c2 = _s44Rect(comp, "[S44] stack 2", 380, 300, 20, [0.973, 0.969, 0.957], cx, cy + 16, t0, t1);
+    c2.scale.setValue([94, 94]);
+    c2.position.setValueAtTime(tk, [cx, cy + 16]);
+    c2.position.setValueAtTime(tk + 0.6, [cx, cy]);
+    c2.scale.setValueAtTime(tk, [94, 94]);
+    c2.scale.setValueAtTime(tk + 0.6, [100, 100]);
+    try { c2.scale.expression = AM_BOUNCE; } catch (eB) {}
+    _s44Ease(c2.position, 1, 2);
+    // old (1): pastga suzib, kichrayib, orqaga
+    var c1 = _s44Rect(comp, "[S44] stack 1 (old)", 380, 300, 20, [1, 1, 1], cx, cy, t0, t1);
+    c1.position.setValueAtTime(tk, [cx, cy]);
+    c1.position.setValueAtTime(tk + 0.35, [cx, cy + 190]);
+    c1.position.setValueAtTime(tk + 0.6, [cx, cy + 32]);
+    c1.scale.setValueAtTime(tk, [100, 100]);
+    c1.scale.setValueAtTime(tk + 0.6, [88, 88]);
+    c1.opacity.setValueAtTime(tk + 0.3, 100);
+    c1.opacity.setValueAtTime(tk + 0.45, 60);
+    c1.opacity.setValueAtTime(tk + 0.6, 100);
+    _s44Ease(c1.position, 1, 3);
+    app.endUndoGroup();
+}
+// 181 TYPING DOTS
+function _s44Dots() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    app.beginUndoGroup("S44 Dots");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var pill = _s44Rect(comp, "[S44] dots pill", 240, 110, 30, [1, 1, 1], cx, cy, t0, t1);
+    for (var i = 0; i < 3; i++) {
+        var d = _s44Ellipse(comp, "[S44] dot " + (i + 1), 30, [0.725, 0.71, 0.667], cx - 44 + i * 44, cy, t0, t1);
+        d.position.expression = "ph = " + (i * 0.75) + "; value + [0, -Math.max(0, Math.sin(time*4.6 - ph))*22]";
+        d.parent = pill;
+    }
+    _s44Enter(pill, t0);
     app.endUndoGroup();
 }
 
