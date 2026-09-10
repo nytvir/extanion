@@ -116,6 +116,17 @@ function nytvir_execute(cmd) {
         else if (cmd === "s44LabelChip") { _s44LabelChip(); }
         else if (cmd === "s44HeroCard") { _s44HeroCard(); }
         else if (cmd === "s44Original") { _s44Original(); }
+        else if (cmd === "s44Checklist") { _s44Checklist(); }
+        else if (cmd === "s44Toggle") { _s44Toggle(); }
+        else if (cmd === "s44Toast") { _s44Toast(); }
+        else if (cmd === "s44Pricing") { _s44Pricing(); }
+        else if (cmd === "s44Upload") { _s44Upload(); }
+        else if (cmd === "s44CalFlip") { _s44CalFlip(); }
+        else if (cmd === "s44Rating") { _s44Rating(); }
+        else if (cmd === "s44Wizard") { _s44Wizard(); }
+        else if (cmd === "s44Suggest") { _s44Suggest(); }
+        else if (cmd === "s44LoadBtn") { _s44LoadBtn(); }
+        else if (cmd === "s44Graph") { _s44Graph(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -12910,6 +12921,442 @@ function _s44Original() {
     L.scale.setValue([s, s]);
     L.position.setValue([comp.width / 2, comp.height / 2]);
     L.collapseTransformation = true;
+    app.endUndoGroup();
+}
+
+// S44 YANGI TO'PLAM (v2.38) - board 147-158 (151'siz, user tanlovi).
+// Smooth = USER constants: _s44Enter (166->100/1.13 + AM_BOUNCE), dip 0.94/0.16s, stagger.
+// ASCII only: \u2713 check, \u2191 up, \u2192 right.
+function _s44Dip(L, t) { // sening klik-diping: 6-10%, 0.16s
+    var b = L.scale.valueAtTime(t, false);
+    L.scale.setValueAtTime(t, [b[0], b[1]]);
+    L.scale.setValueAtTime(t + 0.08, [b[0] * 0.94, b[1] * 0.94]);
+    L.scale.setValueAtTime(t + 0.16, [b[0], b[1]]);
+}
+function _s44Ellipse(comp, name, d, fill, cx, cy, t0, t1) {
+    var L = comp.layers.addShape(); L.name = name;
+    var g = L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var el = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    el.property("ADBE Vector Ellipse Size").setValue([d, d]);
+    var fl = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    fl.property("ADBE Vector Fill Color").setValue(fill);
+    L.position.setValue([cx, cy]); L.inPoint = t0; L.outPoint = t1;
+    return L;
+}
+// 147 CHECKLIST
+function _s44Checklist() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Qatorlar (vergul bilan)?", "Reja tuzildi,Risk hisoblandi,Ijro boshlandi");
+    if (q === null) return;
+    var rows = q.split(",");
+    app.beginUndoGroup("S44 Checklist");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var h = rows.length * 78 + 40;
+    var card = _s44Rect(comp, "[S44] checklist", 460, h, 16, [1, 1, 1], cx, cy, t0, t1);
+    for (var i = 0; i < rows.length; i++) {
+        var ry = cy - h / 2 + 60 + i * 78;
+        var ring = _s44Ellipse(comp, "[S44] ring " + (i + 1), 40, [0.8, 0.8, 0.78], cx - 170, ry, t0, t1);
+        ring.parent = card;
+        var tk = t0 + 0.7 + i * 0.45;
+        var chk = _s44Ellipse(comp, "[S44] check " + (i + 1), 40, S44_LIME, cx - 170, ry, t0, t1);
+        chk.scale.setValueAtTime(t0, [0, 0]);
+        chk.scale.setValueAtTime(tk, [0, 0]);
+        chk.scale.setValueAtTime(tk + 0.18, [100, 100]);
+        try { chk.scale.expression = AM_BOUNCE; } catch (eB) {}
+        chk.parent = card;
+        var ct = _s44Text(comp, "\u2713", 24, [0.2, 0.2, 0.2], true, ParagraphJustification.CENTER_JUSTIFY, cx - 170, ry + 8, tk, t1);
+        ct.name = "[S44] tick " + (i + 1); ct.parent = card;
+        var tx = _s44Text(comp, rows[i], 26, S44_GRAY, false, ParagraphJustification.LEFT_JUSTIFY, cx - 130, ry + 9, t0, t1);
+        tx.name = "[S44] row " + (i + 1); tx.parent = card;
+        _s44Dip(card, tk);
+    }
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 148 TOGGLE
+function _s44Toggle() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Label?", "Auto-invest");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Toggle");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] toggle card", 480, 116, 16, [1, 1, 1], cx, cy, t0, t1);
+    var tx = _s44Text(comp, q, 28, S44_GRAY, false, ParagraphJustification.LEFT_JUSTIFY, cx - 190, cy + 10, t0, t1);
+    tx.name = "[S44] toggle label"; tx.parent = card;
+    var tk = t0 + 0.9;
+    var trk = _s44Rect(comp, "[S44] track", 112, 62, 31, [0.84, 0.83, 0.79], cx + 130, cy, t0, t1);
+    trk.property("ADBE Effect Parade").property(1).enabled = false;
+    var tfill = trk.property("ADBE Root Vectors Group").property(1).property("ADBE Vectors Group").property("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color");
+    tfill.setValueAtTime(tk, [0.84, 0.83, 0.79]);
+    tfill.setValueAtTime(tk + 0.12, S44_LIME);
+    trk.parent = card;
+    var knob = _s44Ellipse(comp, "[S44] knob", 50, [1, 1, 1], cx + 105, cy, t0, t1);
+    knob.position.setValueAtTime(tk, [cx + 105, cy]);
+    knob.position.setValueAtTime(tk + 0.22, [cx + 155, cy]);
+    try { knob.position.expression = AM_BOUNCE; } catch (eB) {}
+    knob.parent = card;
+    _s44Dip(card, tk);
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 149 TOAST
+function _s44Toast() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q1 = prompt("Sarlavha?", "Buyurtma qabul qilindi");
+    if (q1 === null) return;
+    var q2 = prompt("Pastki matn?", "2 daqiqa oldin");
+    if (q2 === null) return;
+    app.beginUndoGroup("S44 Toast");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] toast", 560, 120, 18, [1, 1, 1], cx, cy, t0, t1);
+    var ic = _s44Rect(comp, "[S44] toast icon", 74, 74, 16, S44_LIME, cx - 210, cy, t0, t1);
+    ic.property("ADBE Effect Parade").property(1).enabled = false; ic.parent = card;
+    var ck = _s44Text(comp, "\u2713", 34, [0.2, 0.2, 0.2], true, ParagraphJustification.CENTER_JUSTIFY, cx - 210, cy + 12, t0, t1);
+    ck.name = "[S44] toast check"; ck.parent = card;
+    var tA = _s44Text(comp, q1, 27, S44_GRAY, true, ParagraphJustification.LEFT_JUSTIFY, cx - 150, cy - 4, t0, t1);
+    tA.name = "[S44] toast title"; tA.parent = card;
+    var tB = _s44Text(comp, q2, 21, [0.6, 0.6, 0.6], false, ParagraphJustification.LEFT_JUSTIFY, cx - 150, cy + 30, t0, t1);
+    tB.name = "[S44] toast sub"; tB.parent = card;
+    // spring tushish (tepa -> joy), sening bounce'ing bilan
+    card.position.setValueAtTime(t0, [cx, cy - 260]);
+    card.position.setValueAtTime(t0 + 0.6, [cx, cy]);
+    try { card.position.expression = AM_BOUNCE; } catch (eB) {}
+    card.opacity.setValueAtTime(t0, 0); card.opacity.setValueAtTime(t0 + 0.15, 100);
+    app.endUndoGroup();
+}
+// 150 PRICING
+function _s44Pricing() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q1 = prompt("Narx (faqat raqam)?", "29");
+    if (q1 === null) return;
+    var q2 = prompt("CTA matni?", "Boshlash");
+    if (q2 === null) return;
+    var P = parseInt(q1, 10); if (isNaN(P)) P = 29;
+    app.beginUndoGroup("S44 Pricing");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] pricing", 400, 430, 26, [1, 1, 1], cx, cy, t0, t1);
+    var tag = _s44Rect(comp, "[S44] tag", 170, 46, 23, S44_LIME, cx, cy - 215, t0, t1);
+    tag.property("ADBE Effect Parade").property(1).enabled = false; tag.parent = card;
+    var tg = _s44Text(comp, "POPULAR", 18, [0.2, 0.2, 0.2], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy - 209, t0, t1);
+    tg.name = "[S44] tag text"; tg.tracking = 300; tg.parent = card;
+    var pz = _s44Text(comp, "$0", 84, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, cx, cy - 60, t0, t1);
+    pz.name = "[S44] price";
+    var st = pz.property("Source Text");
+    var steps = 5;
+    for (var i = 1; i <= steps; i++) {
+        var td = st.valueAtTime(t0 + 0.4 + i * 0.14, false);
+        td.text = "$" + Math.round(P * i / steps);
+        st.setValueAtTime(t0 + 0.4 + i * 0.14, td);
+    }
+    for (i = 1; i <= st.numKeys; i++) { st.setInterpolationTypeAtKey(i, KeyframeInterpolationType.HOLD); }
+    pz.parent = card;
+    var per = _s44Text(comp, "oyiga / bekor qilish erkin", 20, [0.62, 0.62, 0.62], false, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 0, t0, t1);
+    per.name = "[S44] per"; per.parent = card;
+    var cta = _s44Rect(comp, "[S44] cta", 310, 88, 16, [0.08, 0.08, 0.08], cx, cy + 130, t0, t1);
+    cta.property("ADBE Effect Parade").property(1).enabled = false; cta.parent = card;
+    var ct = _s44Text(comp, q2 + " \u2192", 27, [1, 1, 1], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 140, t0, t1);
+    ct.name = "[S44] cta text"; ct.parent = cta;
+    _s44Dip(cta, t0 + 1.5);
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 152 UPLOAD
+function _s44Upload() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    app.beginUndoGroup("S44 Upload");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    // dashed karta
+    var card = comp.layers.addShape(); card.name = "[S44] upload";
+    var g = card.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var rc = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    rc.property("ADBE Vector Rect Size").setValue([360, 290]);
+    rc.property("ADBE Vector Rect Roundness").setValue(16);
+    var fl = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    fl.property("ADBE Vector Fill Color").setValue([0.984, 0.98, 0.972]);
+    var stk = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    stk.property("ADBE Vector Stroke Color").setValue([0.788, 0.772, 0.729]);
+    stk.property("ADBE Vector Stroke Width").setValue(4);
+    try { stk.property("ADBE Vector Stroke Dashes").addProperty("ADBE Vector Stroke Dash 1").setValue(14); } catch (eD) {}
+    card.position.setValue([cx, cy]); card.inPoint = t0; card.outPoint = t1;
+    var ar = _s44Text(comp, "\u2191", 44, [0.6, 0.6, 0.6], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy - 30, t0, t1);
+    ar.name = "[S44] up arrow";
+    ar.position.setValueAtTime(t0 + 0.5, [cx, cy - 30]);
+    ar.position.setValueAtTime(t0 + 0.7, [cx, cy - 46]);
+    ar.position.setValueAtTime(t0 + 0.9, [cx, cy - 30]);
+    try { ar.position.expression = AM_BOUNCE; } catch (eB) {}
+    ar.parent = card;
+    var bg = _s44Rect(comp, "[S44] bar bg", 250, 16, 8, [0.906, 0.906, 0.906], cx, cy + 60, t0, t1);
+    bg.property("ADBE Effect Parade").property(1).enabled = false; bg.parent = card;
+    var fill = _s44Rect(comp, "[S44] bar fill", 250, 16, 8, S44_LIME, cx, cy + 60, t0, t1);
+    fill.property("ADBE Effect Parade").property(1).enabled = false;
+    fill.anchorPoint.setValue([cx - 125, cy + 60]);
+    fill.position.setValue([cx - 125, cy + 60]);
+    fill.scale.setValueAtTime(t0 + 0.6, [0, 100]);
+    fill.scale.setValueAtTime(t0 + 1.8, [100, 100]);
+    fill.parent = card;
+    var ok = _s44Text(comp, "\u2713", 30, [0.4, 0.55, 0.1], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 70, t0 + 1.85, t1);
+    ok.name = "[S44] up ok";
+    ok.scale.setValueAtTime(t0 + 1.85, [0, 0]);
+    ok.scale.setValueAtTime(t0 + 2.05, [100, 100]);
+    try { ok.scale.expression = AM_BOUNCE; } catch (eB2) {}
+    ok.parent = card;
+    _s44Dip(card, t0 + 1.85);
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 153 CALENDAR FLIP
+function _s44CalFlip() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q1 = prompt("Oy nomi?", "SENTABR");
+    if (q1 === null) return;
+    var q2 = prompt("Sana (eski,yangi)?", "12,13");
+    if (q2 === null) return;
+    var pr = q2.split(","); var d1 = pr[0] || "12", d2 = pr[1] || "13";
+    app.beginUndoGroup("S44 CalFlip");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] calendar", 280, 320, 18, [1, 1, 1], cx, cy, t0, t1);
+    var mo = _s44Text(comp, q1, 20, [0.62, 0.62, 0.62], false, ParagraphJustification.CENTER_JUSTIFY, cx, cy - 95, t0, t1);
+    mo.name = "[S44] month"; mo.tracking = 500; mo.parent = card;
+    var dy = _s44Text(comp, d1, 110, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 35, t0, t1);
+    dy.name = "[S44] day";
+    var tk = t0 + 1.0;
+    dy.scale.setValueAtTime(tk, [100, 100]);
+    dy.scale.setValueAtTime(tk + 0.12, [100, 0]);
+    dy.scale.setValueAtTime(tk + 0.24, [100, 100]);
+    try { dy.scale.expression = AM_BOUNCE; } catch (eB) {}
+    var st = dy.property("Source Text");
+    var td = st.valueAtTime(tk + 0.12, false); td.text = d2; st.setValueAtTime(tk + 0.12, td);
+    for (var i = 1; i <= st.numKeys; i++) { st.setInterpolationTypeAtKey(i, KeyframeInterpolationType.HOLD); }
+    dy.parent = card;
+    for (i = 0; i < 3; i++) {
+        var dt = _s44Ellipse(comp, "[S44] evdot " + (i + 1), 14, i === 1 ? [0.906, 0.906, 0.906] : S44_LIME, cx - 22 + i * 22, cy + 105, t0, t1);
+        dt.parent = card;
+    }
+    _s44Dip(card, tk);
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 154 RATING
+function _s44Rating() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("O'rtacha baho?", "4.8");
+    if (q === null) return;
+    app.beginUndoGroup("S44 Rating");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] rating", 400, 270, 18, [1, 1, 1], cx, cy, t0, t1);
+    var avg = _s44Text(comp, "0.0", 74, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, cx, cy - 25, t0, t1);
+    avg.name = "[S44] avg";
+    var st = avg.property("Source Text");
+    var target = parseFloat(q); if (isNaN(target)) target = 4.8;
+    for (var i = 1; i <= 5; i++) {
+        var td = st.valueAtTime(t0 + 0.4 + i * 0.16, false);
+        td.text = (Math.round(target * i / 5 * 10) / 10).toFixed(1);
+        st.setValueAtTime(t0 + 0.4 + i * 0.16, td);
+    }
+    for (i = 1; i <= st.numKeys; i++) { st.setInterpolationTypeAtKey(i, KeyframeInterpolationType.HOLD); }
+    avg.parent = card;
+    for (i = 0; i < 5; i++) {
+        var base = _s44Ellipse(comp, "[S44] rdot bg " + (i + 1), 34, [0.906, 0.906, 0.906], cx - 76 + i * 38, cy + 60, t0, t1);
+        base.parent = card;
+        var tk = t0 + 0.55 + i * 0.15;
+        var lim = _s44Ellipse(comp, "[S44] rdot " + (i + 1), 34, S44_LIME, cx - 76 + i * 38, cy + 60, t0, t1);
+        lim.scale.setValueAtTime(t0, [0, 0]);
+        lim.scale.setValueAtTime(tk, [0, 0]);
+        lim.scale.setValueAtTime(tk + 0.16, [100, 100]);
+        try { lim.scale.expression = AM_BOUNCE; } catch (eB) {}
+        lim.parent = card;
+    }
+    _s44Enter(card, t0);
+    app.endUndoGroup();
+}
+// 155 WIZARD
+function _s44Wizard() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Necha qadam?", "3");
+    if (q === null) return;
+    var n = parseInt(q, 10); if (isNaN(n) || n < 2) n = 3; if (n > 6) n = 6;
+    app.beginUndoGroup("S44 Wizard");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var ctrl = comp.layers.addNull(); ctrl.name = "[S44] wizard CTRL";
+    ctrl.position.setValue([cx, cy]); ctrl.inPoint = t0; ctrl.outPoint = t1;
+    var span = 170;
+    var x0 = cx - span * (n - 1) / 2;
+    for (var i = 0; i < n; i++) {
+        var sx = x0 + i * span;
+        if (i > 0) {
+            var ln = _s44Rect(comp, "[S44] wline " + i, span - 90, 8, 4, [0.84, 0.83, 0.79], sx - span / 2, cy, t0, t1);
+            ln.property("ADBE Effect Parade").property(1).enabled = false; ln.parent = ctrl;
+            var lf = _s44Rect(comp, "[S44] wline fill " + i, span - 90, 8, 4, S44_LIME, sx - span / 2, cy, t0, t1);
+            lf.property("ADBE Effect Parade").property(1).enabled = false;
+            lf.anchorPoint.setValue([sx - span / 2 - (span - 90) / 2, cy]);
+            lf.position.setValue([sx - span / 2 - (span - 90) / 2, cy]);
+            lf.scale.setValueAtTime(t0 + 0.5 + (i - 1) * 1.0 + 0.35, [0, 100]);
+            lf.scale.setValueAtTime(t0 + 0.5 + (i - 1) * 1.0 + 0.75, [100, 100]);
+            lf.parent = ctrl;
+        }
+        var sq = _s44Rect(comp, "[S44] wstep " + (i + 1), 88, 88, 24, [1, 1, 1], sx, cy, t0, t1);
+        var sfill = sq.property("ADBE Root Vectors Group").property(1).property("ADBE Vectors Group").property("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color");
+        var tk = t0 + 0.5 + i * 1.0;
+        sfill.setValueAtTime(tk, [1, 1, 1]);
+        sfill.setValueAtTime(tk + 0.12, [0.08, 0.08, 0.08]);
+        sq.parent = ctrl;
+        var num = _s44Text(comp, String(i + 1), 30, S44_GRAY, true, ParagraphJustification.CENTER_JUSTIFY, sx, cy + 11, t0, t1);
+        num.name = "[S44] wnum " + (i + 1);
+        // raqam rangi oq bo'ladi (alohida oq nusxa opacity bilan)
+        var numW = _s44Text(comp, String(i + 1), 30, [1, 1, 1], true, ParagraphJustification.CENTER_JUSTIFY, sx, cy + 11, t0, t1);
+        numW.name = "[S44] wnum w " + (i + 1);
+        numW.opacity.setValueAtTime(t0, 0);
+        numW.opacity.setValueAtTime(tk + 0.12, 0);
+        numW.opacity.setValueAtTime(tk + 0.14, 100);
+        num.parent = ctrl; numW.parent = ctrl;
+        _s44Dip(sq, tk);
+        sq.parent = ctrl;
+    }
+    app.endUndoGroup();
+}
+// 156 SUGGEST
+function _s44Suggest() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q1 = prompt("Yoziladigan so'rov?", "samarqand tur");
+    if (q1 === null) return;
+    var q2 = prompt("Takliflar (vergul bilan, 2-chisi tanlanadi)?", "samarqand turlari 2026,samarqand tur narxlari,samarqand tur paketlari");
+    if (q2 === null) return;
+    var items = q2.split(",");
+    app.beginUndoGroup("S44 Suggest");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var fld = _s44Rect(comp, "[S44] sg field", 560, 90, 14, [1, 1, 1], cx, cy - 120, t0, t1);
+    var ty = _s44Text(comp, "", 26, S44_GRAY, false, ParagraphJustification.LEFT_JUSTIFY, cx - 250, cy - 110, t0, t1);
+    ty.name = "[S44] sg typing";
+    var st = ty.property("Source Text");
+    var tt = t0 + 0.3;
+    for (var i = 1; i <= q1.length; i++) {
+        var td = st.valueAtTime(tt, false); td.text = q1.substring(0, i) + "|";
+        st.setValueAtTime(tt, td); tt += 0.085;
+    }
+    var tdF = st.valueAtTime(tt + 0.05, false); tdF.text = q1; st.setValueAtTime(tt + 0.05, tdF);
+    for (i = 1; i <= st.numKeys; i++) { st.setInterpolationTypeAtKey(i, KeyframeInterpolationType.HOLD); }
+    ty.parent = fld;
+    var ddh = items.length * 76 + 20;
+    var dd = _s44Rect(comp, "[S44] sg dropdown", 560, ddh, 14, [1, 1, 1], cx, cy - 120 + 55 + ddh / 2, tt, t1);
+    dd.opacity.setValueAtTime(tt, 0); dd.opacity.setValueAtTime(tt + 0.12, 100);
+    for (i = 0; i < items.length; i++) {
+        var iy = cy - 120 + 90 + i * 76;
+        var tki = tt + 0.15 + i * 0.2;
+        if (i === 1) {
+            var hl = _s44Rect(comp, "[S44] sg hl", 540, 66, 11, S44_LIME, cx, iy, tki, t1);
+            hl.property("ADBE Effect Parade").property(1).enabled = false;
+            hl.opacity.setValueAtTime(tki, 0); hl.opacity.setValueAtTime(tki + 0.1, 100);
+            hl.parent = dd;
+        }
+        var it = _s44Text(comp, items[i], 24, i === 1 ? [0.2, 0.2, 0.2] : [0.55, 0.55, 0.55], false, ParagraphJustification.LEFT_JUSTIFY, cx - 250, iy + 9, tki, t1);
+        it.name = "[S44] sg item " + (i + 1);
+        it.opacity.setValueAtTime(tki, 0); it.opacity.setValueAtTime(tki + 0.12, 100);
+        it.parent = dd;
+    }
+    dd.parent = fld;
+    _s44Enter(fld, t0);
+    app.endUndoGroup();
+}
+// 157 LOADING BUTTON
+function _s44LoadBtn() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q = prompt("Tayyor matni?", "Tayyor");
+    if (q === null) return;
+    app.beginUndoGroup("S44 LoadBtn");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var btn = _s44Rect(comp, "[S44] load btn", 380, 108, 18, [0.08, 0.08, 0.08], cx, cy, t0, t1);
+    var tk = t0 + 1.5;
+    // spinner: trim'langan ellipse, rotation expression (ochiq, o'chirsa bo'ladi)
+    var sp = comp.layers.addShape(); sp.name = "[S44] spinner";
+    var g = sp.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var el = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    el.property("ADBE Vector Ellipse Size").setValue([44, 44]);
+    var stk = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    stk.property("ADBE Vector Stroke Color").setValue([1, 1, 1]);
+    stk.property("ADBE Vector Stroke Width").setValue(6);
+    var tr = g.property("ADBE Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    tr.property("ADBE Vector Trim Start").setValue(0);
+    tr.property("ADBE Vector Trim End").setValue(30);
+    sp.position.setValue([cx, cy]); sp.inPoint = t0; sp.outPoint = tk;
+    sp.rotation.expression = "time*420";
+    sp.parent = btn;
+    // lime flash 3 kadr
+    var fl = _s44Rect(comp, "[S44] btn flash", 380, 108, 18, S44_LIME, cx, cy, tk, Math.min(tk + 0.1, t1));
+    fl.property("ADBE Effect Parade").property(1).enabled = false;
+    fl.parent = btn;
+    var ok = _s44Text(comp, "\u2713 " + q, 30, [1, 1, 1], true, ParagraphJustification.CENTER_JUSTIFY, cx, cy + 11, tk, t1);
+    ok.name = "[S44] btn ok";
+    ok.scale.setValueAtTime(tk, [70, 70]);
+    ok.scale.setValueAtTime(tk + 0.2, [100, 100]);
+    try { ok.scale.expression = AM_BOUNCE; } catch (eB) {}
+    ok.parent = btn;
+    _s44Dip(btn, tk);
+    _s44Enter(btn, t0);
+    app.endUndoGroup();
+}
+// 158 GRAPH CARD
+function _s44Graph() {
+    var comp = app.project.activeItem;
+    if (!(comp instanceof CompItem)) { alert("Komp oching"); return; }
+    var q1 = prompt("Label?", "Daromad");
+    if (q1 === null) return;
+    var q2 = prompt("Foiz chip?", "+66%");
+    if (q2 === null) return;
+    app.beginUndoGroup("S44 Graph");
+    var t0 = comp.time, t1 = Math.min(t0 + 8, comp.duration);
+    var cx = comp.width / 2, cy = comp.height / 2;
+    var card = _s44Rect(comp, "[S44] graph card", 440, 310, 18, [1, 1, 1], cx, cy, t0, t1);
+    var lb = _s44Text(comp, q1, 24, [0.62, 0.62, 0.62], false, ParagraphJustification.LEFT_JUSTIFY, cx - 180, cy - 105, t0, t1);
+    lb.name = "[S44] graph label"; lb.parent = card;
+    var chip = _s44Rect(comp, "[S44] pct chip", 110, 44, 22, S44_LIME, cx + 140, cy - 112, t0, t1);
+    chip.property("ADBE Effect Parade").property(1).enabled = false; chip.parent = card;
+    var pc = _s44Text(comp, q2, 21, [0.2, 0.2, 0.2], true, ParagraphJustification.CENTER_JUSTIFY, cx + 140, cy - 105, t0, t1);
+    pc.name = "[S44] pct"; pc.parent = card;
+    // chiziq: 7 nuqta zigzag yuqoriga, trim bilan chiziladi
+    var ln = comp.layers.addShape(); ln.name = "[S44] graph line";
+    var g = ln.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    var ph = g.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var sh = new Shape();
+    sh.vertices = [[-180, 80], [-120, 88], [-60, 55], [0, 62], [60, 25], [120, 32], [180, -15]];
+    sh.closed = false;
+    ph.property("ADBE Vector Shape").setValue(sh);
+    var stk = g.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    stk.property("ADBE Vector Stroke Color").setValue([0.2, 0.2, 0.2]);
+    stk.property("ADBE Vector Stroke Width").setValue(6);
+    try { stk.property("ADBE Vector Stroke Line Cap").setValue(2); } catch (eC) {}
+    var tr = g.property("ADBE Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    tr.property("ADBE Vector Trim End").setValueAtTime(t0 + 0.4, 0);
+    tr.property("ADBE Vector Trim End").setValueAtTime(t0 + 1.6, 100);
+    ln.position.setValue([cx, cy + 20]); ln.inPoint = t0; ln.outPoint = t1;
+    ln.parent = card;
+    // uch nuqtada lime dot pop
+    var dot = _s44Ellipse(comp, "[S44] graph dot", 22, S44_LIME, cx + 180, cy + 5, t0 + 1.55, t1);
+    dot.scale.setValueAtTime(t0 + 1.55, [0, 0]);
+    dot.scale.setValueAtTime(t0 + 1.75, [100, 100]);
+    try { dot.scale.expression = AM_BOUNCE; } catch (eB) {}
+    dot.parent = card;
+    _s44Dip(card, t0 + 1.6);
+    _s44Enter(card, t0);
     app.endUndoGroup();
 }
 
