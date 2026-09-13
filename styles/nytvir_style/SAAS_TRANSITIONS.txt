@@ -1,0 +1,53 @@
+SAAS TRANSITIONS DARSLIGI — to'liq konspekt
+Manba: D:\ae 2025 disk chache\yRyLdrHcel3HkUn2HxXx+VAk5lMgzdl0.mp4 (4:17, "Best Transitions to Use in SaaS Video", top-3)
+O'rganilgan: 2026-09-10 (kadr-ma-kadr + whisper transkript)
+
+PRINTSIP (hammasi shu ustiga qurilgan):
+"Match cut = bitta obyekt vizual DOIMIY qoladi, atrofidagi hamma narsa almashadi."
+Obyekt: button, card, icon, input, oyna — istalgan UI element.
+Qadamlar: oddiy versiya -> dinamik fon qo'shish -> UI/obyektni stilizatsiya -> kesishdan OLDIN obyektni ozgina animatsiya qilish.
+
+============================================================
+TRANSITION #1 — MATCH CUT + NULL ZOOM (eng muhimi)
+============================================================
+1. Doimiy obyekt hamma sahnada bir joyda/o'lchamda turadi, kesish uning ustida bo'ladi.
+2. SIRLI TRICK — kesish lahzasida nozik zoom:
+   - Hamma layer USTIDA null object yarat
+   - Doimiy obyektni (va kerak bo'lsa sahnani) nullga parent qil
+   - Kesishdan bir necha kadr OLDIN nullda Scale keyframe
+   - Kesishdan keyin ikkinchi Scale keyframe: ~115% (zoom in) yoki teskari (zoom out)
+3. ENG MUHIM QISM — SPEED GRAPH:
+   "Tezlik cho'qqisi AYNAN kesish nuqtasiga tushsin" — V emas, tog' shakli:
+   sekin -> kesishda MAKSIMAL tezlik -> sekin. (Ikkala tomonda ease, o'rtada peak.)
+   Ya'ni: value graph ikki arka bo'lib kesish nuqtasida uchrashadi.
+
+============================================================
+TRANSITION #2 — UI MORPH (shakl boshqa shaklga "aylanadi")
+============================================================
+Yomon yo'l: bitta shape'ni morph qilish (path interpolation) — silliq chiqmaydi.
+To'g'ri yo'l — IKKI ALOHIDA shape layer, kesish nuqtasida bir-biriga ulanadi:
+1. Ikkala shape layer kesish nuqtasida qirqilgan (1-chisi tugaydi, 2-chisi boshlanadi).
+2. 1-shape: Contents > Rectangle 1 > Rectangle Path 1 > SIZE ga keyframe
+   + CONSTRAIN PROPORTIONS NI O'CHIR (X/Y alohida, corner radius buzilmaydi!)
+   MUHIM: Scale emas, SIZE — radius saqlanadi.
+3. Kesish kadrida (1-layerning OXIRGI kadri) Size'ni +10..20% oshir (bitta o'qda).
+4. 2-shape: kesish kadrida Size keyframe, bir necha kadr keyin ikkinchisi.
+   Birinchi keyframe'da o'sha o'qda -10..20% KICHIKROQ qiymatdan boshla.
+   (1-shape kattarib "itaradi", 2-shape kichikdan davom etib joyiga keladi.)
+5. SPEED GRAPH yana hal qiluvchi: eng yuqori tezlik aynan kesish nuqtasida.
+   Videoda ko'rilgan qiymatlar: 118% / 82% (=~1/1.18) juftligi.
+
+============================================================
+TRANSITION #3 — MOCKUP TRANSITION
+============================================================
+Harakatlanayotgan UI animatsiya -> XUDDI O'SHA HARAKAT device ramkasi ichida
+(iPhone/MacBook/istalgan mockup) davom etadi.
+Qoida: SPEED + DIRECTION + TIMING uchalasi kesish orqali o'zgarmaydi.
+(Muallifning alohida 3D iPhone mockup darsligi bor — pluginsiz AE ichida.)
+
+============================================================
+BIZГА OLIB KIRISH (Nytvir Motion uchun g'oyalar):
+- "Match Cut Zoom" tool: null + parent + scale 115% + peak-at-cut speed graph avtomat
+- "UI Morph Pair" tool: tanlangan 2 shape'ga Size juft-keyframe (+18%/-18%) + graph
+- SIMONS/story-reel'larda ko'k karta -> keyingi sahna kesishlarida null-zoom ishlatish
+- Speed-graph "peak at cut" — bizning whip'dan farqi: blur yo'q, faqat tezlik cho'qqisi

@@ -1,0 +1,59 @@
+WYK / SPLIT-CHART FORMAT — to'liq retsept
+Manba: D:\edit\wyk_spring.aep (WYK_0901, 1080x1920, 49.4s, 30fps) — o'rganildi 2026-09-11
+Bu foydalanuvchining O'Z formati: yuqorida jonli chart, pastda selfie.
+
+============================================================
+TUZILISH (komp ierarxiyasi)
+============================================================
+WYK_0901 (asosiy, 1080x1920)
+  [MUS] Music                       - musiqa
+  [CTRL] VIDEO yarmi (null)         - pastki yarmi boshqaruvchisi
+  [CTRL] CHART yarmi (null)         - yuqori yarmi boshqaruvchisi
+  [NEO] Divider (shape + Glow)      - ikki yarim orasidagi yoruq chiziq
+  [Cap] 1..18 (text)                - kapshнlar stacki (har replika = 1 layer)
+  CHART ZONE (precomp)  ^CHART yarmi
+  0901(2).mov           ^VIDEO yarmi  - selfie
+  [SFX] swoosh_in @0.4, plip_big @5.3, plip1/plip2 @11.85/12.25/12.65/13.05 ...
+
+CHART ZONE (precomp, 89 layer)
+  [NEO] CAM (null)   - HAMMA element shunga parent; chart bo'ylab kamera harakati
+  [NEO] Zone BG      - solid #050505 (qora)
+  grid chiziqlar     - ingichka gorizontal
+  candles            - yashil #22E24F / qizil, wick + tana
+  zone/level chiziq  - dashed + label ("support")
+  [NEO] flashN       - shape + Glow, scale 55->185, opacity 0->88->0 (0.6s), beatlarda
+  [NEO] rip          - ripple halqalar
+  [NEO] springBox    - belgilangan hudud (Glow)
+  matn yorliqlari    - SegoeUI-Light + Deep Glow
+
+============================================================
+TIPOGRAFIYA / RANG (aynan)
+============================================================
+Shrift: SegoeUI-Light (hamma joyda!)
+Kapshнlar: oq #FFFFFF, 32-50px (uzun jumlaga kichik, qisqasiga katta), pastda y~1800
+  animatsiya: Position 1816->1800 (0.42s) + Opacity 0->100 (0.28s) + Gaussian Blur (blur-in)
+  chiqish: opacity 100->0 (0.16s)
+Chart yorliqlari:
+  cyan   #59D6FF (0.35,0.84,1)  - asosiy tushuncha ("THE SPRING", "$ max liquidity")
+  yashil #21E34F (0.13,0.89,0.31) - ijobiy ("sign of strength")
+  salmon #FF8073 (1,0.5,0.45)   - xavf/retail ("don't panic sell", "$")
+  oq     #FFFFFF                 - neytral izoh
+  hammasida Deep Glow (yoki Glow)
+
+============================================================
+HARAKAT QONUNLARI
+============================================================
+1. Kamera: [NEO] CAM null hamma chart elementini olib yuradi (pan/zoom).
+2. Flash pulse: har muhim beatda shape scale 55->185 + opacity 0->88->0 (0.6s) + Glow.
+3. Kapshнlar blur-in: Gaussian Blur + pastdan 16px ko'tarilish.
+4. Divider: Glow bilan, ikki yarimni ajratib turadi (butun video davomida).
+5. SFX: swoosh kirishda, plip har yorliqda, plip_big katta beatda, thud tushishda.
+
+============================================================
+QOLIP (yangi video uchun)
+============================================================
+- Yuqori yarmi: chart hikoyasi (narx harakati narrationga qulflangan)
+- Pastki yarmi: selfie (butun video, kesishsiz)
+- Kapshнlar: har SRT replikasi = 1 text layer, blur-in
+- Chart yorliqlari: rang = ma'no (cyan tushuncha / yashil ijobiy / salmon xavf)
+- Musiqa + SFX qatlami

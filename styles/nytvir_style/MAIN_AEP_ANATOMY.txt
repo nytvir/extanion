@@ -1,0 +1,191 @@
+DUMP start
+items=80
+
+=== COMP: Map Reveal | 1920x1080 | dur=53.28 | layers=2
+  L1 [SOLID] map in=0 out=53.28
+  L2 [SOLID] Black Solid 3 in=0 out=53.28
+
+=== COMP: Order Transition | 1920x1080 | dur=53.28 | layers=3
+  L1 [PRECOMP:Map Reveal] Map Reveal in=0 out=53.28
+  L2 [AV] main-back.png in=0 out=53.28
+    FX: Gradient Wipe (ADBE Gradient Wipe)
+      Transition Completion KEYS: (0s 0.76) (2.85s 0)
+    FX: CC Ball Action (CC Ball Action)
+  L3 [AV] YTDown_YouTube_Your-ideas-your-apps-Base44_Media_oIcP3BOvyeY_001_1080p.mp4 in=0 out=3.36
+
+=== COMP: Transition-1 | 1920x1080 | dur=55.43 | layers=10
+  L1 [PRECOMP:Main-Image] Main-Image in=1.92 out=55.2
+  L2 [PRECOMP:Roto - 13] Roto - 13 in=2.15 out=13.58
+  L3 [PRECOMP:Roto - 12] Roto - 12 in=2.15 out=13.58
+  L4 [PRECOMP:Roto - 11] Roto - 11 in=2.15 out=13.58
+  L5 [PRECOMP:T-6] T-6 in=2.15 out=55.43
+  L6 [PRECOMP:T-5] T-5 in=1.63 out=54.92
+  L7 [PRECOMP:T-4] T-4 in=1.27 out=54.55
+  L8 [PRECOMP:T-3] T-3 in=0.85 out=54.13
+  L9 [PRECOMP:T-2] T-2 in=0.47 out=53.75
+  L10 [PRECOMP:T-1] T-1 in=0 out=53.28
+
+=== COMP: arrow | 1920x1080 | dur=53.28 | layers=2
+  L1 [SHAPE] Shape Layer 5 in=0 out=53.28
+  L2 [SHAPE] Shape Layer 4 in=0 out=53.28
+
+=== COMP: Box - 2 | 1920x1080 | dur=53.28 | layers=5
+  L1 [TEXT] %70 in=0 out=53.28
+    TXT: "%70" font=SFProDisplay-Regular size=30
+  L2 [TEXT] %50 in=0 out=53.28
+    TXT: "%50" font=SFProDisplay-Regular size=30
+  L3 [SHAPE] Shape Layer 9 in=0 out=53.28
+  L4 [SHAPE] Shape Layer 8 in=0 out=53.28
+  L5 [SHAPE] Shape Layer 4 in=0 out=53.28
+
+=== COMP: Box - 3 | 1920x1080 | dur=53.28 | layers=4
+  L1 [AV] arrow-set-free-vector.png in=0 out=53.28
+    FX: Color Key (ADBE Color Key)
+  L2 [TEXT] Plan My Next Trip in=0 out=53.28
+    TXT: "Plan My Next Trip" font=SFProDisplay-Regular size=30
+  L3 [SHAPE] Shape Layer 6 in=0 out=53.28
+  L4 [SHAPE] Shape Layer 5 in=0 out=53.28
+
+=== COMP: Crusor | 1920x1080 | dur=53.28 | layers=2
+  L1 [AV] cursor-icon-vector-10.png in=0 out=53.28
+    FX: Fill (ADBE Fill)
+  L2 [SHAPE] Shape Layer 4 in=0 out=53.28
+
+=== COMP: dot | 1920x1080 | dur=41.19 | layers=2
+  L1 [SOLID] Dots_Source in=0 out=41.19
+    FX: Block Dissolve (ADBE Block Dissolve)
+      Transition Completion KEYS: (0s 100) (1.87s 0)
+    FX: CC Ball Action (CC Ball Action)
+  L2 [AV] main-back.png in=0 out=41.19
+    FX: 4-Color Gradient (ADBE 4ColorGradient)
+      Point 1 KEYS: (0.02s [2149.22,1138.23]) (4.37s [5079.22,1138.23])
+      Point 3 KEYS: (0.02s [1962.19,1141.92]) (4.37s [-562.81,1141.92])
+    FX: Invert (ADBE Invert)
+    FX: Colorama (APC Colorama)
+
+=== COMP: Main - Scene | 1920x1080 | dur=53.28 | layers=3
+  L1 [AV] da4a55af5041275980806247474c7cd4.png in=0 out=53.28
+    Opacity KEYS: (1.05s 0) (1.72s 100)
+  L2 [PRECOMP:Grad-3] Grad-3 in=0 out=53.28
+  L3 [AV] da4a55af5041275980806247474c7cd4.png in=0 out=53.28
+    FX: Gradient Wipe (ADBE Gradient Wipe)
+      Transition Completion KEYS: (0s 1) (1.38s 0)
+    FX: CC Ball Action (CC Ball Action)
+      Ball Size KEYS: (1.05s 38) (1.38s 76)
+
+=== COMP: Plus | 1920x1080 | dur=53.28 | layers=2
+  L1 [SHAPE] Shape Layer 5 in=0 out=53.28
+  L2 [SHAPE] Shape Layer 4 in=0 out=53.28
+
+=== COMP: T-1 | 1920x1080 | dur=53.28 | layers=1
+  L1 [AV] da4a55af5041275980806247474c7cd4.png in=0 out=53.28
+    FX: Block Dissolve (ADBE Block Dissolve)
+      Transition Completion KEYS: (0s 100) (1.5s 0)
+    FX: CC Ball Action (CC Ball Action)
+    FX: Tint (ADBE Tint)
+
+=== COMP: T-2 | 1920x1080 | dur=53.28 | layers=1
+  L1 [AV] da4a55af5041275980806247474c7cd4.png in=0 out=53.28
+    FX: Block Dissolve (ADBE Block Dissolve)
+      Transition Completion KEYS: (0s 100) (1.5s 0)
+    FX: CC Ball Action (CC Ball Action)
+    FX: Colorama (APC Colorama)
+      Cycle Repetitions KEYS: (0s 1) (7.17s 5.2)
+
+=== COMP: T-3 | 1920x1080 | dur=53.28 | layers=2
+  L1 [PRECOMP:Grad-1] Grad-1 in=0 out=53.28
+  L2 [AV] da4a55af5041275980806247474c7cd4.png in=0 out=53.28
+    FX: Block Dissolve (ADBE Block Dissolve)
+      Transition Completion KEYS: (0s 30) (1.5s 0)
+    FX: Gradient Wipe (ADBE Gradient Wipe)
+      Transition Completion KEYS: (0s 0.58) (1.5s 0)
+    FX: CC Ball Action (CC Ball Action)
+    FX: Invert (ADBE Invert)
+    FX: Colorama (APC Colorama)
+
+=== COMP: T-4 | 1920x1080 | dur=53.28 | layers=2
+  L1 [PRECOMP:Grad-1] Grad-1 in=0 out=53.28
+  L2 [AV] da4a55af5041275980806247474c7cd4.png in=0 out=53.28
+    FX: Block Dissolve (ADBE Block Dissolve)
+      Transition Completion KEYS: (0s 30) (1.5s 0)
+    FX: Gradient Wipe (ADBE Gradient Wipe)
+      Transition Completion KEYS: (0s 0.58) (1.5s 0)
+    FX: CC Ball Action (CC Ball Action)
+    FX: Invert (ADBE Invert)
+    FX: Colorama (APC Colorama)
+
+=== COMP: T-5 | 1920x1080 | dur=53.28 | layers=2
+  L1 [PRECOMP:Grad-1] Grad-1 in=0 out=53.28
+  L2 [AV] da4a55af5041275980806247474c7cd4.png in=0 out=53.28
+    FX: Block Dissolve (ADBE Block Dissolve)
+      Transition Completion KEYS: (0s 30) (1.5s 0)
+    FX: Gradient Wipe (ADBE Gradient Wipe)
+      Transition Completion KEYS: (0s 0.58) (1.5s 0)
+    FX: CC Ball Action (CC Ball Action)
+    FX: Invert (ADBE Invert)
+    FX: Colorama (APC Colorama)
+
+=== COMP: T-6 | 1920x1080 | dur=53.28 | layers=1
+  L1 [AV] da4a55af5041275980806247474c7cd4.png in=0 out=53.28
+    FX: Block Dissolve (ADBE Block Dissolve)
+      Transition Completion KEYS: (0s 100) (1.5s 18)
+    FX: CC Ball Action (CC Ball Action)
+    FX: Colorama 2 (APC Colorama)
+      Cycle Repetitions KEYS: (1.12s 1) (8.28s 5.2)
+
+=== COMP: Main | 1920x1080 | dur=4.62 | layers=16
+  L1 [NULL] NULL in=0 out=4.62
+    Position KEYS: (1.18s [1357.8,612.31,0]) (1.87s [1548.8,740.31,0])
+  L2 [PRECOMP:Crusor] Crusor in=0 out=4.62 parent=NULL
+    Position KEYS: (0.25s [-568,671,0]) (1.25s [50,50,0])
+    Scale KEYS: (1.17s [8,8,100]) (1.25s [4,4,100]) (1.33s [8,8,100])
+    Rotation KEYS: (0.25s 101) (1.25s 22)
+    Opacity KEYS: (1.18s 80) (1.87s 0)
+  L3 [PRECOMP:Plus] Plus in=0 out=4.62 parent=Shape Layer 2
+  L4 [TEXT] Build a trip planning app that organizes destinations Itineraries, expense and more, focusing on hiking trails AI integrations in=0 out=4.62 parent=Shape Layer 2
+    TXT: "Build a trip planning app that organizes destinations
+Itiner" font=SFProDisplay-Medium size=30
+  L5 [AV] setting.png in=0 out=4.62 parent=Shape Layer 2
+    FX: Fill (ADBE Fill)
+  L6 [PRECOMP:arrow] arrow in=0 out=4.62 parent=Shape Layer 3
+    FX: Fill (ADBE Fill)
+  L7 [SHAPE] Shape Layer 3 in=0 out=4.62 parent=Shape Layer 2
+    Scale KEYS: (1.17s [31,31,100]) (1.25s [28,28,100]) (1.33s [31,31,100])
+  L8 [SHAPE] Shape Layer 2 in=0 out=4.62
+    Position KEYS: (1.18s [960,533,0]) (1.68s [960,392,0])
+    Scale KEYS: (0s [166,166,100]) (1.13s [100,100,100])
+    Opacity KEYS: (1.45s 100) (1.68s 0)
+  L9 [PRECOMP:Pre-comp 2] Box - 1 in=1.15 out=4.62
+    Position KEYS: (3.4s [397,540,0]) (4.4s [960,540,0])
+  L10 [PRECOMP:Box - 2] Box - 2 in=1.15 out=4.62
+    Position KEYS: (3.32s [397,540,0]) (4.32s [960,540,0])
+  L11 [PRECOMP:Box - 3] Box - 3 in=1.15 out=4.62
+    Position KEYS: (3.23s [397,540,0]) (4.23s [960,540,0])
+  L12 [PRECOMP:Box - 4] Box - 4 in=1.15 out=4.62
+    Position KEYS: (2.95s [421.34,497.95,0]) (3.15s [397,540,0]) (4.15s [960,540,0])
+  L13 [PRECOMP:Box - 5] Box - 5 in=1.15 out=4.62
+    Position KEYS: (3.07s [397,540,0]) (4.07s [960,540,0])
+  L14 [SHAPE] Shape Layer 1 in=1.15 out=4.62
+    Scale KEYS: (3.07s [149,149,100]) (4.07s [121,121,100])
+  L15 [PRECOMP:Pre-comp 1] Pre-comp 1 in=1.15 out=4.62 parent=Shape Layer 1
+  L16 [SOLID] Pale Red Solid 1 in=0 out=4.62
+DUMP done
+
+============================================================
+VISUAL LAYOUT (ko'rish tomoni - renderlardan o'qildi)
+============================================================
+Reference (videoplayback.mp4 = Base44 ad) va user rebuild (Main, Transition-1 renderlari):
+
+1. KREM KANVAS + SUZUVCHI KARTALAR: UI hech qachon fram??? to'ldirmaydi.
+   Prompt-karta ~30-40% kenglikda, tepa-markazda; atrofida ulkan negative space.
+2. SCATTER-KOLLAJ: 5-8 skrinshot har xil scale/burchakda sochilib SEKIN drift qiladi.
+   Chuqurlik o'lcham orqali. Hech narsa qotib turmaydi (doimiy 1-3px drift).
+3. SO'Z-TINISH: bo'sh joylarda 2-3 so'zlik guruhlar ("Build / apps / that scale").
+4. GOLOGRAFIK GRADIENT DOG'LAR (Colorama) hissiy interlude -> REAL kontentga morph
+   (gradient-velosiped -> haqiqiy foto). T-stack aynan shu vazifada.
+5. HALFTONE MATERIALLASHISH (loyihaning yuragi): qora -> siyrak oq nuqtalar ->
+   rangli nuqta-klasterlar (Colorama) -> nuqtalar kattarib qo'shiladi -> toza foto.
+   "AI reality from noise" metaforasi. Ketma-ketlik: prompt yoziladi -> klik ->
+   dunyo nuqtalardan quriladi -> UI-chiplar stagger bilan ustiga suzib kiradi.
+6. LOGO-YOLG'IZ KADR: brend krem fonda bir o'zi (tinish belgisi).
+7. Soft shadow + katta radius hamma kartalarda; UI chiplar fotoning USTIDA suzadi.

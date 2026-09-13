@@ -1,0 +1,82 @@
+UI ANIM LESSON — "Apple-style reels" darsligi (25 min, 2026-09-06 o'rganildi)
+==============================================================================
+Manba: v6wjCQk50y5yWKWDCaiC+UoSPeuiLzW4.mp4 (Fullstack Editor Club ustozi).
+Bu HUJJAT = uning butun metodi, raqamlari bilan. Har UI buildda shundan yur.
+
+ARXITEKTURA (eng muhim 3 qoida)
+-------------------------------
+1. HAMMA elementni KARTA shape layeriga parent qil — faqat kartani animatsiya
+   qilasan, qolganlari ergashadi. (Biz har elementni alohida qiynagan edik.)
+2. MORPHING: yangi sahna uchun YANGI karta yasama — o'sha shape'ning Rect Size
+   + Fill Color keyframe bilan morph qilinadi (karta -> widget -> fullscreen).
+   Ichidagi eski elementlar track matte (alpha) bilan kesilib, staggered
+   holda tepaga/pastga chiqib ketadi.
+3. Butun kompozitsiya oxirida NULL'ga bog'lanadi: crash-zoom, wiggle shu nullda.
+
+ENTRANCE RETSEPTI (uning "smooth"i)
+-----------------------------------
+- Kartaga 4 xususiyat birga key: Position + Scale + Rotation + Opacity.
+  Boshlanish: pastroq + kichikroq + ozgina rotate + opacity 0. TEZ kirsin
+  ("way more quick") — 0.3-0.5s oralig'ida.
+- Keyin pos/scale/rot keylariga INERTIAL BOUNCE EXPRESSION (stopwatch'ga
+  alt-click, quyidagi kod). SIR: bounce'ning ishlashi uchun FAQAT BIRINCHI
+  key easy-ease qilinadi, ikkinchisi TEGILMAYDI ("don't ease both keyframes
+  otherwise the bounce doesn't work").
+- Opacity oddiy fade (bounce'siz).
+- Adjustment layer Gaussian Blur 25 -> 0 (entrance'da "fokus" effekti);
+  sahna almashishida 0 -> 25 -> 0 puls.
+- Motion blur HAMMASIDA yoqiq.
+
+INERTIAL BOUNCE EXPRESSION (klassik):
+n=0; if (numKeys>0){ n=nearestKey(time).index; if (key(n).time>time) n--; }
+if (n==0){ t=0; } else { t=time-key(n).time; }
+if (n>0 && t<1){
+  v=velocityAtTime(key(n).time - thisComp.frameDuration/10);
+  amp=.05; freq=4.0; decay=8.0;
+  value + v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t);
+}else{ value }
+(amp=kuch, freq=tebranish soni, decay=so'nish tezligi; freq 2-4, decay 5-8)
+
+BOUNCY TEXT (matn animatori)
+----------------------------
+Text Animator: Position Y=20 + Opacity=0 + Expression Selector, Amount'ga
+xuddi shu uslub expressioni (delay 0.01 = tez, 0.06 = sekin; uzun matnda
+"Based On: Words", qisqada Characters). Animatsiya layer IN POINTidan
+boshlanadi — in pointni alt+[ bilan kerakli joyga qo'y. Animatorni copy/paste
+qilib boshqa textlarga ko'chirsa bo'ladi.
+
+EXIT / STAGGER
+--------------
+Elementlar chiqishda BIR VAQTDA emas: keylarni 2-4 kadr surib "avval avatar,
+keyin matn, keyin 'now'" ritmi. Chiqish easy-ease + graph editorda oxiri
+tezlashadigan qilib.
+
+PROGRESS BAR RETSEPTI
+---------------------
+Pen tool bilan to'g'ri chiziq, qalin stroke, Round Cap. Duplikat + Trim Paths
+= progress qatlami (ochroq rang). Yurish: doira Position + trim End keylari
+BIR XIL vaqtda, ikkalasi easy-ease, speed graphda mos — motion blur farqni
+yeydi. Ustiga Glow: radius KATTA, intensity PAST.
+
+APPLE POLISH (arzon vs qimmat farqi)
+------------------------------------
+- Ikon to'g'ridan-to'g'ri emas — OQ DOIRA ichida kichik ikon ("this makes
+  such a difference between cheap and clean").
+- Soya: Layer Styles > Drop Shadow, Size JUDA KATTA, Distance 0,
+  Opacity ~5% — apple soft shadow. (Effekt Drop Shadow 50% emas!)
+- CC Vignette (angle/amount past) + ixtiyoriy Warp=Fisheye bulge.
+- Nullga wiggle(pos, 20) doimiy harakat — anchor'ni surib scale bilan
+  kompensatsiya qil (chetlari ochilib qolmasin).
+- Rang: off-white fon + ozgina ko'k tint; kontrast qoidasi: oq fonda karta
+  kulrangroq, kul fonda oq. Shrift: SF Pro (bizda fallback Arial/Segoe).
+- Avatar rasmiga Levels (kontrast + qoraytirish) — fondan ajralsin.
+
+BIZNING PIPELINE'GA TATBIQ
+--------------------------
+- _limeInUp / PRO EASE rig'ga MUQOBIL: keylar + inertial bounce expression
+  (skriptda expression string qo'yish oson). Apple/lime uslubda BOUNCE
+  ishlatiladi; chart-explainer calm uslubda esa eski 33/90 rig qoladi.
+- Karta sahnalarini bitta shape morphing arxitekturasiga o'tkazish mumkin
+  (sahna almashish uchun yangi kartalar o'rniga Size/Color morph).
+- Soyalarni layer-style uslubiga almashtirish (size high / dist 0 / 5%).
+- Blur-puls (0->25->0) sahna transitionlarda standart bo'lsin.
