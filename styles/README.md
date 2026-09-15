@@ -12,6 +12,7 @@ Every style is a config-driven ExtendScript (run with `AfterFX.exe -r script.jsx
 | Apple-minimal / Edouard (glass panels, stepper, session bar, checklist, profile, SFX) | amd_edouard/build_pick.jsx, sfx_to_ae.jsx, sfx_cues.txt, add_move_nulls.jsx | D:\edit\amd_clone\amd_pick.aep |
 | Brochu clone (black card windows, one-word captions) | amd_edouard/build_brochu.jsx | amd_brochu.aep |
 | F15 notebook (seam tape captions, music bed) | flip_f15/*.jsx, docs/f15-notebook-format.md | D:\edit\flip_0910 |
+| Apple mini: Dynamic Island + clean captions (voice reels, one thin caption line + one small top element) | apple_island_img3229/ (cap_build.jsx, island_patch.jsx, icons/, ui_kichik.html) + Nytvir Motion S45 tools 203-206 | D:\edit\img3229\img3229.aep |
 | SIMONS montage formula | docs/simons-0908-pipeline.md | D:\edit\simons_0908 |
 | Nikovax 2.0 technique notes (22 tutorials) | nikovax_notes/ | — |
 

@@ -150,6 +150,10 @@ function nytvir_execute(cmd) {
         else if (cmd === "s44Fold") { _s44Fold(); }
         else if (cmd === "s44Blob") { _s44Blob(); }
         else if (cmd === "s44Fan") { _s44Fan(); }
+        else if (cmd === "s45Island") { _s45Island(); }
+        else if (cmd === "s45IslandToggle") { _s45IslandToggle(); }
+        else if (cmd === "s45IslandCount") { _s45IslandCount(); }
+        else if (cmd === "s45CapClean") { _s45CapClean(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -15060,4 +15064,163 @@ function _msDropdown(){
         ot.inPoint=t0+0.55; ot.outPoint=t0+2.3;
     }
     comp.motionBlur=true;
+}
+
+// S45 v2.43 - IMG_3229 picks: Apple mini Dynamic Island (203-205) + Clean captions 1-uslub (206)
+var S45_ACC = { orange: [1, 0.624, 0.039], green: [0.188, 0.82, 0.345], blue: [0.039, 0.518, 1], red: [1, 0.271, 0.227], pink: [1, 0.216, 0.373], gray: [0.557, 0.557, 0.576] };
+function _s45Comp() { var c = app.project.activeItem; if (!(c instanceof CompItem)) { alert("Komp oching"); return null; } return c; }
+function _s45Trim(s) { return String(s || "").replace(/^\s+|\s+$/g, ""); }
+function _s45Ease(pr, inf) { for (var k = 1; k <= pr.numKeys; k++) { var e = new KeyframeEase(0, inf || 70); try { pr.setTemporalEaseAtKey(k, [e], [e]); } catch (x) { try { pr.setTemporalEaseAtKey(k, [e, e], [e, e]); } catch (y) { try { pr.setTemporalEaseAtKey(k, [e, e, e], [e, e, e]); } catch (z) {} } } } }
+function _s45FindP(fx, re) { var n = 0; try { n = fx.numProperties; } catch (e) { return null; } for (var i = 1; i <= n; i++) { try { var pr = fx.property(i); if (re.test(pr.name)) return pr; } catch (e2) {} } return null; }
+function _s45Accent() { var a = prompt("Rang: orange / green / blue / red / pink / gray", "green"); if (a === null) return null; return S45_ACC[_s45Trim(a).toLowerCase()] || S45_ACC.green; }
+function _s45Text(comp, str, font, size, col, right) {
+    var L = comp.layers.addText(str); var sp = L.property("Source Text"), td = sp.value; td.resetCharStyle();
+    td.fontSize = size; td.applyFill = true; td.fillColor = col; td.applyStroke = false; try { td.font = font; } catch (e) {}
+    td.justification = right ? ParagraphJustification.RIGHT_JUSTIFY : ParagraphJustification.LEFT_JUSTIFY; sp.setValue(td);
+    L.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, 0]); return L;
+}
+// Kapsula skeleti: CTRL (v slider 0-100), MOVE null, pill, ikonka doirasi. Hamma joylashuv expression orqali v ga bog'langan.
+function _s45IslandBase(comp, name, acc, hold) {
+    var K = comp.width / 1080, t0 = comp.time, t1 = Math.min(comp.duration, t0 + 0.5 + hold + 0.4);
+    var tag = "[ISLAND " + name + " " + Math.round(t0 * 10) / 10 + "s]";
+    var ctrl = comp.layers.addNull(); ctrl.name = tag + " CTRL"; ctrl.label = 11; ctrl.inPoint = t0; ctrl.outPoint = t1;
+    var sl = ctrl.property("ADBE Effect Parade").addProperty("ADBE Slider Control"); sl.name = "v"; var sv = sl.property(1);
+    sv.setValueAtTime(t0, 0); sv.setValueAtTime(t0 + 0.5, 100); sv.setValueAtTime(t1 - 0.4, 100); sv.setValueAtTime(t1, 0); _s45Ease(sv, 70);
+    var mv = comp.layers.addNull(); mv.name = tag + " MOVE <- surish/kattalashtirish"; mv.label = 9; mv.inPoint = t0; mv.outPoint = t1;
+    mv.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, 0]); mv.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+    var V = 'var K=' + K + '; var v=thisComp.layer("' + tag + ' CTRL").effect("v")("Slider")/100; var w=(300+400*v)*K, h=(78+34*v)*K, cx=' + (comp.width / 2) + ', top=150*K; ';
+    var o = { V: V, CO: V + "Math.pow(v,2.5)*100", t0: t0, t1: t1, K: K, move: mv, tag: tag, layers: [] };
+    var P = comp.layers.addShape(); P.name = tag + " pill"; var tr = P.property("ADBE Transform Group");
+    tr.property("ADBE Anchor Point").setValue([0, 0]); tr.property("ADBE Position").setValue([0, 0]);
+    var rc = P.property("ADBE Root Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    rc.property("ADBE Vector Rect Size").expression = V + "[w,h]"; rc.property("ADBE Vector Rect Position").expression = V + "[cx,top+h/2]"; rc.property("ADBE Vector Rect Roundness").expression = V + "h/2";
+    var st = P.property("ADBE Root Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    st.property("ADBE Vector Stroke Color").setValue([1, 1, 1]); st.property("ADBE Vector Stroke Width").setValue(1.5 * K); st.property("ADBE Vector Stroke Opacity").setValue(8);
+    P.property("ADBE Root Vectors Group").addProperty("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").setValue([0, 0, 0]);
+    tr.property("ADBE Opacity").expression = V + "Math.min(1,v*4)*100";
+    var ds = P.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+    try { _s45FindP(ds, /Distance/).setValue(12 * K); _s45FindP(ds, /Softness/).setValue(40 * K); _s45FindP(ds, /Direction/).setValue(180); } catch (eD) {}
+    var I = comp.layers.addShape(); I.name = tag + " icon"; var it = I.property("ADBE Transform Group");
+    it.property("ADBE Anchor Point").setValue([0, 0]); it.property("ADBE Position").expression = V + "[cx-w/2+60*K, top+h/2]";
+    var gDot = I.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group"); gDot.name = "dot";
+    I.property("ADBE Root Vectors Group").property("dot").property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse").property("ADBE Vector Ellipse Size").setValue([22 * K, 22 * K]);
+    var sDot = I.property("ADBE Root Vectors Group").property("dot").property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Stroke");
+    sDot.property("ADBE Vector Stroke Color").setValue(acc); sDot.property("ADBE Vector Stroke Width").setValue(3.5 * K);
+    var gBg = I.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group"); gBg.name = "badge";
+    I.property("ADBE Root Vectors Group").property("badge").property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse").property("ADBE Vector Ellipse Size").setValue([60 * K, 60 * K]);
+    var fBg = I.property("ADBE Root Vectors Group").property("badge").property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    fBg.property("ADBE Vector Fill Color").setValue(acc); fBg.property("ADBE Vector Fill Opacity").setValue(18);
+    it.property("ADBE Opacity").expression = o.CO;
+    o.layers.push(P, I); return o;
+}
+function _s45IslandFinish(o) { for (var i = 0; i < o.layers.length; i++) { var L = o.layers[i]; L.inPoint = o.t0; L.outPoint = o.t1; L.parent = o.move; } }
+function _s45Title(comp, o, str) {
+    var L = _s45Text(comp, str, "SegoeUI-Semibold", 32 * o.K, [1, 1, 1], false); L.name = o.tag + " title";
+    L.property("ADBE Transform Group").property("ADBE Position").expression = o.V + "[cx-w/2+108*K, top+h/2+11*K]";
+    L.property("ADBE Transform Group").property("ADBE Opacity").expression = o.CO; o.layers.push(L); return L;
+}
+function _s45Value(comp, o, str) {
+    var L = _s45Text(comp, str, "SegoeUI-Semibold", 40 * o.K, [1, 1, 1], true); L.name = o.tag + " value";
+    L.property("ADBE Transform Group").property("ADBE Position").expression = o.V + "[cx+w/2-30*K, top+h/2+14*K]";
+    L.property("ADBE Transform Group").property("ADBE Opacity").expression = o.CO; o.layers.push(L); return L;
+}
+// 203 DYNAMIC ISLAND
+function _s45Island() {
+    var comp = _s45Comp(); if (!comp) return;
+    var q = prompt("Sarlavha | qiymat", "Tomorrow | 5:30"); if (q === null) return; var p = q.split("|");
+    var acc = _s45Accent(); if (!acc) return;
+    app.beginUndoGroup("S45 Dynamic Island");
+    var o = _s45IslandBase(comp, "text", acc, 2.5); _s45Title(comp, o, _s45Trim(p[0])); _s45Value(comp, o, _s45Trim(p[1]));
+    _s45IslandFinish(o); app.endUndoGroup();
+}
+// 204 ISLAND TOGGLE: tugma o'chadi
+function _s45IslandToggle() {
+    var comp = _s45Comp(); if (!comp) return;
+    var q = prompt("Sozlama nomi", "Comfort mode"); if (q === null) return;
+    app.beginUndoGroup("S45 Island Toggle");
+    var o = _s45IslandBase(comp, "toggle", S45_ACC.green, 2.2); _s45Title(comp, o, _s45Trim(q));
+    var OFF = 'function sm(x){x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);} var off=sm((time-' + (o.t0 + 1.7).toFixed(2) + ')/0.35); ';
+    var T = comp.layers.addShape(); T.name = o.tag + " switch"; var tr = T.property("ADBE Transform Group");
+    tr.property("ADBE Anchor Point").setValue([0, 0]); tr.property("ADBE Position").setValue([0, 0]);
+    var gk = T.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group"); gk.name = "knob";   // 1-guruh = ustida
+    var ke = T.property("ADBE Root Vectors Group").property("knob").property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Ellipse");
+    ke.property("ADBE Vector Ellipse Size").setValue([32 * o.K, 32 * o.K]);
+    ke.property("ADBE Vector Ellipse Position").expression = o.V + OFF + "[cx+w/2-30*K-46*K+26*K*(1-off), top+h/2]";
+    T.property("ADBE Root Vectors Group").property("knob").property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").setValue([1, 1, 1]);
+    var gt = T.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group"); gt.name = "track";
+    var tre = T.property("ADBE Root Vectors Group").property("track").property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    tre.property("ADBE Vector Rect Size").setValue([66 * o.K, 40 * o.K]); tre.property("ADBE Vector Rect Roundness").setValue(20 * o.K);
+    tre.property("ADBE Vector Rect Position").expression = o.V + "[cx+w/2-30*K-33*K, top+h/2]";
+    T.property("ADBE Root Vectors Group").property("track").property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").expression = OFF + "off<0.5?[0.188,0.82,0.345,1]:[0.35,0.35,0.37,1]";
+    tr.property("ADBE Opacity").expression = o.CO; o.layers.push(T);
+    _s45IslandFinish(o); app.endUndoGroup();
+}
+// 205 ISLAND COUNTER: raqam sanaydi (68 -> 142 BPM, 100 -> 0 %)
+function _s45IslandCount() {
+    var comp = _s45Comp(); if (!comp) return;
+    var q = prompt("Sarlavha | boshi | oxiri | birlik", "Heart rate | 68 | 142 | BPM"); if (q === null) return;
+    var p = q.split("|"); var a = parseFloat(_s45Trim(p[1])) || 0, b = parseFloat(_s45Trim(p[2])) || 0, unit = _s45Trim(p[3]).replace(/['"\\]/g, "");
+    var acc = _s45Accent(); if (!acc) return;
+    app.beginUndoGroup("S45 Island Counter");
+    var o = _s45IslandBase(comp, "count", acc, 3.0); _s45Title(comp, o, _s45Trim(p[0]));
+    var EX = 'function eo(x){x=Math.max(0,Math.min(1,x));return 1-Math.pow(1-x,3);} var q=eo((time-' + (o.t0 + 1.0).toFixed(2) + ')/1.3); var n=Math.round(' + a + '+(' + (b - a) + ')*q); ';
+    var L = _s45Value(comp, o, String(a) + (unit ? " " + unit : ""));
+    L.property("Source Text").expression = EX + "n+'" + (unit ? " " + unit : "") + "'";
+    var f = L.property("ADBE Effect Parade").addProperty("ADBE Fill"); var cp = _s45FindP(f, /^Color$/);
+    if (cp) cp.expression = EX + "q>0.99?[" + acc[0] + "," + acc[1] + "," + acc[2] + ",1]:[1,1,1,1]";
+    _s45IslandFinish(o); app.endUndoGroup();
+}
+// 206 CLEAN CAPTIONS (1-uslub): whisper so'z SRT (-ml 1) -> bir qatorli, 32 belgigacha teng bo'laklar
+function _s45CapClean() {
+    var comp = _s45Comp(); if (!comp) return;
+    var f = File.openDialog("Whisper so'z SRT (-ml 1) faylini tanlang", "*.srt"); if (!f) return;
+    f.encoding = "UTF-8"; f.open("r"); var raw = f.read(); f.close();
+    function ts(s) { var m = s.match(/(\d+):(\d+):(\d+)[,.](\d+)/); return m ? parseInt(m[1], 10) * 3600 + parseInt(m[2], 10) * 60 + parseInt(m[3], 10) + parseInt(m[4], 10) / 1000 : -1; }
+    var WD = [], bl = raw.split(/\r?\n\r?\n/), i, j;
+    for (i = 0; i < bl.length; i++) {
+        var ln = bl[i].replace(/^\s+/, "").split(/\r?\n/); if (ln.length < 3) continue; var tm = ln[1].split("-->"); if (tm.length < 2) continue;
+        var a = ts(tm[0]), b = ts(tm[1]), rw = ln.slice(2).join(" "); if (a < 0 || !rw.replace(/\s/g, "")) continue;
+        var lead = /^\s/.test(rw), w = _s45Trim(rw);
+        if (!lead && WD.length) { WD[WD.length - 1].raw += w; WD[WD.length - 1].b = b; } else WD.push({ a: a, b: b, raw: w });
+    }
+    if (!WD.length) { alert("SRT ichida so'z topilmadi"); return; }
+    for (i = 0; i < WD.length; i++) { WD[i].w = WD[i].raw.replace(/[.,!?;:]+["']?$/, ""); }
+    var sents = [], cur = [];
+    for (j = 0; j < WD.length; j++) { if (cur.length && WD[j].a - WD[j - 1].b > 0.6) { sents.push(cur); cur = []; } cur.push(WD[j]); if (/[.?!,]["']?$/.test(WD[j].raw)) { sents.push(cur); cur = []; } }
+    if (cur.length) sents.push(cur);
+    var CH = [], MAXC = 32;
+    for (var s = 0; s < sents.length; s++) {
+        var ws = sents[s], cum = [0], tot = 0;
+        for (var c0 = 0; c0 < ws.length; c0++) { tot += ws[c0].w.length + (c0 ? 1 : 0); cum.push(tot); }
+        var n = Math.max(1, Math.ceil(tot / MAXC)); if (n > ws.length) n = ws.length;
+        var cuts = [0], last = 0;
+        for (var bd = 1; bd < n; bd++) { var target = tot * bd / n, best = -1, dmin = 1e9; for (var wi = last + 1; wi <= ws.length - (n - bd); wi++) { var dd = Math.abs(cum[wi] - target); if (dd < dmin) { dmin = dd; best = wi; } } cuts.push(best); last = best; }
+        cuts.push(ws.length);
+        for (var c = 0; c < n; c++) CH.push({ ws: ws.slice(cuts[c], cuts[c + 1]), last: c === n - 1 });
+    }
+    app.beginUndoGroup("S45 Clean Captions");
+    var K = comp.width / 1080, DUR = comp.duration;
+    var cap = comp.layers.addNull(); cap.name = "[CAP] MOVE <- surish/kattalashtirish"; cap.label = 9;
+    cap.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, 0]); cap.property("ADBE Transform Group").property("ADBE Position").setValue([comp.width / 2, 1415 * K]);
+    for (var q = 0; q < CH.length; q++) {
+        var ch = CH[q], nx = CH[q + 1], first = ch.ws[0], lw = ch.ws[ch.ws.length - 1];
+        var tA = Math.max(0, first.a - 0.05), tE = !nx ? Math.min(DUR, lw.b + 1.5) : (ch.last ? Math.min(nx.ws[0].a - 0.05, lw.b + 0.9) : nx.ws[0].a - 0.05);
+        if (tA >= DUR) break; if (tE - tA < 0.15) tE = tA + 0.15;
+        var parts = []; for (var u = 0; u < ch.ws.length; u++) parts.push(ch.ws[u].w); var txt = parts.join(" ");
+        var L = comp.layers.addText(txt); L.name = "[Cap] " + (q + 1) + " " + txt; var sp = L.property("Source Text"), td = sp.value; td.resetCharStyle();
+        td.fontSize = 58 * K; td.applyFill = true; td.fillColor = [1, 1, 1]; td.applyStroke = false; try { td.font = "SegoeUI-Light"; } catch (eF) {}
+        td.tracking = 5; td.justification = ParagraphJustification.CENTER_JUSTIFY; sp.setValue(td);
+        var r = L.sourceRectAtTime(0, false);
+        if (r.width > 960 * K) { td = sp.value; td.fontSize = 58 * K * 960 * K / r.width; sp.setValue(td); r = L.sourceRectAtTime(0, false); }
+        L.parent = cap; var y0 = -(r.top + r.height / 2), pos = L.property("ADBE Transform Group").property("ADBE Position");
+        pos.setValue([0, y0]); L.inPoint = tA; L.outPoint = tE;
+        pos.setValueAtTime(tA, [0, y0 + 12 * K]); pos.setValueAtTime(tA + 0.32, [0, y0]);
+        try { var e1 = new KeyframeEase(0, 80); pos.setTemporalEaseAtKey(2, [e1, e1], [e1, e1]); } catch (eE) { try { pos.setTemporalEaseAtKey(2, [e1], [e1]); } catch (eE2) {} }
+        var op = L.property("ADBE Transform Group").property("ADBE Opacity"); op.setValueAtTime(tA, 0); op.setValueAtTime(tA + 0.22, 100);
+        if (tE - 0.15 > tA + 0.22) { op.setValueAtTime(tE - 0.15, 100); op.setValueAtTime(tE, 0); }
+        try { var gb = L.property("ADBE Effect Parade").addProperty("ADBE Gaussian Blur 2"); var bp = gb.property("ADBE Gaussian Blur 2-0001"); bp.setValueAtTime(tA, 3 * K); bp.setValueAtTime(tA + 0.3, 0); } catch (eB) {}
+        try { var sh = L.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow"); _s45FindP(sh, /Distance/).setValue(2 * K); _s45FindP(sh, /Softness/).setValue(30 * K); _s45FindP(sh, /Direction/).setValue(180); } catch (eS) {}
+    }
+    cap.moveToBeginning(); app.endUndoGroup();
+    alert(CH.length + " ta subtitr qo'shildi. Surish uchun [CAP] MOVE nullidan foydalaning.");
 }
