@@ -6,7 +6,7 @@ CEP extension for Adobe After Effects 2025. Owner: nytvir (Uzbek-speaking TikTok
 
 - `host/main.jsx` (~12k lines, ExtendScript) — the engine. One big command dispatcher near the top (`else if (cmd === "...") { _fn(); }`) + one function per tool appended below, grouped by kit with a version comment (e.g. `// PAPER SEARCH (v2.30)`).
 - `client/index.html` — the panel UI. Tools are entries in one JS array of cards: `{id:'cmdName', tab:'pro', sec:'<section>', icon:'emoji', bg:'gradient', title:'...', desc:'uzbek description'}`. The `id` must equal the dispatcher `cmd`.
-- Current version: v2.44. Each new tool/kit bumps the minor version.
+- Current version: v2.45. Each new tool/kit bumps the minor version.
 
 ## How to add a tool (exact ritual)
 
@@ -46,7 +46,7 @@ CEP extension for Adobe After Effects 2025. Owner: nytvir (Uzbek-speaking TikTok
 
 - LOVES: tactile UI mechanics with a satisfying payoff — sliders, toggles, gauges, steppers, physical objects (stamps, split-flap, coins), labeled row-cascades, digit rolls, typing carets, bounce/overshoot.
 - HATES: brand-logo cards, emoji-as-metaphor, fake system chrome, static/flat mockups, oversized text (phone-first: keep type minimal), shortchanging on quantity ("give 15-20 examples, don't cheat me").
-- Workflow is MOCKUP-FIRST: propose new tools as numbered HTML concept boards (CSS-animated live demos, dark board chrome, numbered cards continuing the global numbering — currently at 262; board 7 = 227-246, board 9 = 247-262). Build ONLY the numbers the owner picks. Never build unpicked concepts.
+- Workflow is MOCKUP-FIRST: propose new tools as numbered HTML concept boards (CSS-animated live demos, dark board chrome, numbered cards continuing the global numbering — currently at 282; board 7 = 227-246, board 9 = 247-262, board 10 = 263-282). Build ONLY the numbers the owner picks. Never build unpicked concepts.
 - AT LEAST 10 examples per concept (presets count). One liked concept = one universal tool + 10+ presets, not one hardcoded look.
 - Default look is Apple style (light iOS: white card, #F2F2F7 rows, SF/Segoe semibold) and universal for ANY personal brand (fitness, cafe, realtor, beauty, tutor, travel...), not only trading.
 - Instagram formats: every tool must fit 9:16 reel, 4:5 feed and 1:1 (derive K = min(w,h)/1080, never hardcode).

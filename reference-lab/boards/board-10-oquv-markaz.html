@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board 10 · O'quv markazlar — 20 xil mexanika (263-282)</title>
+<style>
+  :root{--bg:#0a0a0d;--panel:#121218;--line:#26262f;--txt:#e8e8ee;--dimb:#8a8a99;--mono:'SF Mono',ui-monospace,Menlo,monospace;--gold:#ffb454;
+    --sp:cubic-bezier(.34,1.56,.64,1);--sf:cubic-bezier(.75,0,.25,1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.5 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  .sub{color:var(--dimb);font-size:13px;max-width:800px}
+  .bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 6px}
+  .bar .lb{font:11px var(--mono);color:var(--dimb);letter-spacing:.08em;text-transform:uppercase}
+  .tg{display:inline-flex;background:#1c1c22;border-radius:10px;padding:3px;gap:2px}
+  .tg button{border:0;background:transparent;color:var(--dimb);font:600 12px -apple-system,sans-serif;padding:7px 13px;border-radius:8px;cursor:pointer}
+  .tg button.on{background:#3a3a44;color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:16px}
+  .cardx{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:zoom-in}
+  .cardx:hover{border-color:var(--gold)}
+  .meta{padding:11px 14px 14px}
+  .meta .n{font:700 11px var(--mono);color:var(--gold)}
+  .meta b{display:block;font-size:14px;margin:1px 0 1px}
+  .meta .br{font-size:11.5px;color:var(--gold);opacity:.8}
+  .meta p{font-size:12px;color:var(--dimb);margin-top:4px}
+  .meta code{display:block;margin-top:7px;font:10.5px/1.45 var(--mono);color:#b9b9c7;background:#0d0d12;border:1px solid var(--line);border-radius:7px;padding:6px 8px}
+  .stage{position:relative;overflow:hidden;background:#222}
+  .foot{position:absolute;inset:-20%;filter:blur(18px);animation:drift 14s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-4%,3%) scale(1.08)}}
+  .modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+  .modal.on{display:flex}
+  .modal .stage{width:min(420px,90vw);border-radius:14px}
+
+  /* ---------- 1080-space comp ---------- */
+  .comp{position:absolute;left:0;top:0;width:1080px;height:var(--H,1920px);transform:scale(var(--u,.25));transform-origin:0 0;display:flex;align-items:center;justify-content:center;
+    --card:#fff;--row:#f2f2f7;--track:#e3e3e8;--thumb:#fff;--text:#1c1c1e;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.2);--tsh:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);
+    font:600 30px/1.2 -apple-system,'SF Pro Display','Segoe UI',sans-serif;color:var(--text)}
+  .comp.dark{--card:#1c1c1e;--row:#2c2c2e;--track:#3a3a3c;--thumb:#636366;--text:#fff;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.5);--tsh:none}
+  .comp.top{align-items:flex-start;padding-top:150px}
+  .comp.bot{align-items:flex-end;padding-bottom:250px}
+  .card{position:relative;width:760px;background:var(--card);border-radius:44px;padding:36px;box-shadow:var(--sh)}
+  .ttl{font-size:40px;font-weight:700;margin-bottom:26px;letter-spacing:-.5px}
+  .sb{font-size:26px;color:var(--dim);font-weight:500;margin:-18px 0 28px}
+  .dim{color:var(--dim)}
+  .roll{display:inline-block;height:1.2em;overflow:hidden;vertical-align:bottom}
+  .roll>span{display:block}
+  .roll>span>span{display:block;height:1.2em;line-height:1.2em}
+  .btn{height:100px;border-radius:28px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;margin-top:26px}
+  .row{background:var(--row);border-radius:22px;height:92px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;margin-top:16px}
+  .row .l{color:var(--dim);font-weight:500}
+  .ck::after{content:'';position:absolute;left:50%;top:50%;width:12px;height:22px;margin:-15px 0 0 -6px;border:solid #fff;border-width:0 5px 5px 0;transform:rotate(45deg)}
+
+  /* ---------- generic state keyframes (values come from custom props) ---------- */
+  @keyframes T2{0%,38%{transform:var(--a)}46%,88%{transform:var(--b)}96%,100%{transform:var(--a)}}
+  @keyframes C2{0%,38%{color:var(--ca)}46%,88%{color:var(--cb)}96%,100%{color:var(--ca)}}
+  @keyframes O2{0%,38%{opacity:var(--oa)}46%,88%{opacity:var(--ob)}96%,100%{opacity:var(--oa)}}
+  @keyframes H2{0%,38%{height:var(--ha)}46%,88%{height:var(--hb)}96%,100%{height:var(--ha)}}
+  @keyframes T3{0%,26%{transform:var(--a)}33%,59%{transform:var(--b)}66%,92%{transform:var(--c)}100%{transform:var(--a)}}
+  @keyframes C3{0%,26%{color:var(--ca)}33%,59%{color:var(--cb)}66%,92%{color:var(--cc)}100%{color:var(--ca)}}
+  @keyframes O3{0%,26%{opacity:var(--oa)}33%,59%{opacity:var(--ob)}66%,92%{opacity:var(--oc)}100%{opacity:var(--oa)}}
+  @keyframes H3{0%,26%{height:var(--ha)}33%,59%{height:var(--hb)}66%,92%{height:var(--hc)}100%{height:var(--ha)}}
+  @keyframes W3{0%,26%{width:var(--wa)}33%,59%{width:var(--wb)}66%,92%{width:var(--wc)}100%{width:var(--wa)}}
+  @keyframes B3{0%,26%{background:var(--ba)}33%,59%{background:var(--bb)}66%,92%{background:var(--bc)}100%{background:var(--ba)}}
+  @keyframes T4{0%,18%{transform:var(--a)}25%,43%{transform:var(--b)}50%,68%{transform:var(--c)}75%,93%{transform:var(--d)}100%{transform:var(--a)}}
+  @keyframes C4{0%,18%{color:var(--ca)}25%,43%{color:var(--cb)}50%,68%{color:var(--cc)}75%,93%{color:var(--cd)}100%{color:var(--ca)}}
+  @keyframes O4{0%,18%{opacity:var(--oa)}25%,43%{opacity:var(--ob)}50%,68%{opacity:var(--oc)}75%,93%{opacity:var(--od)}100%{opacity:var(--oa)}}
+  @keyframes B4{0%,18%{background:var(--ba)}25%,43%{background:var(--bb)}50%,68%{background:var(--bc)}75%,93%{background:var(--bd)}100%{background:var(--ba)}}
+  @keyframes W4{0%,18%{width:var(--wa)}25%,43%{width:var(--wb)}50%,68%{width:var(--wc)}75%,93%{width:var(--wd)}100%{width:var(--wa)}}
+  @keyframes H4{0%,18%{height:var(--ha)}25%,43%{height:var(--hb)}50%,68%{height:var(--hc)}75%,93%{height:var(--hd)}100%{height:var(--ha)}}
+  @keyframes cardLoop{0%{opacity:0;transform:translateY(30px) scale(.96)}5%,92%{opacity:1;transform:none}98%,100%{opacity:0;transform:translateY(30px) scale(.96)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* 263 IELTS BAND REVEAL */
+  .c263 .ov{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
+  .c263 .lb{font-size:26px;color:var(--dim);font-weight:500}
+  .c263 .band{font-size:150px;font-weight:700;letter-spacing:-5px;line-height:1.2;animation:c263 7s infinite}
+  @keyframes c263{0%,26%{color:var(--text)}34%,88%{color:var(--acc)}96%,100%{color:var(--text)}}
+  .c263 .bd>span{animation:b263 7s var(--sp) infinite}
+  @keyframes b263{0%,26%{transform:translateY(0)}34%,88%{transform:translateY(-2.4em)}96%,100%{transform:translateY(0)}}
+  .c263 .up{background:#34c759;color:#fff;font-size:30px;padding:10px 20px;border-radius:18px;margin-bottom:44px;animation:u263 7s var(--sp) infinite}
+  @keyframes u263{0%,31%{transform:scale(0)}37%,88%{transform:scale(1)}94%,100%{transform:scale(0)}}
+  .c263 .s{display:flex;align-items:center;gap:22px;height:68px}
+  .c263 .s span{width:160px;font-size:27px;font-weight:500}
+  .c263 .s .tr{flex:1;height:14px;border-radius:7px;background:var(--row);overflow:hidden}
+  .c263 .s .tr i{display:block;height:100%;border-radius:7px;background:var(--acc);animation:f263 7s var(--sf) infinite both;animation-delay:var(--dl)}
+  @keyframes f263{0%,3%{width:0}20%,88%{width:var(--w)}95%,100%{width:0}}
+  .c263 .s b{width:64px;text-align:right;font-size:30px;animation:o263 7s infinite both;animation-delay:var(--dl)}
+  @keyframes o263{0%,15%{opacity:0}21%,88%{opacity:1}94%,100%{opacity:0}}
+
+  /* 264 TIMETABLE DROP */
+  .c264 .tt,.c264 .bk{display:grid;grid-template-columns:78px repeat(6,1fr);grid-template-rows:40px repeat(3,112px);gap:10px}
+  .c264 .tt{position:relative}
+  .c264 .bk{position:absolute;inset:0}
+  .c264 .tt .h{font-size:24px;color:var(--dim);font-weight:500;display:flex;align-items:center;justify-content:center}
+  .c264 .tt .tm{font-size:22px;color:var(--dim);font-weight:500;padding-top:12px}
+  .c264 .tt i{border-radius:18px;background:var(--row)}
+  .c264 .tt b{border-radius:18px;background:var(--bc);color:#fff;padding:14px 10px;display:flex;flex-direction:column;justify-content:space-between;font-size:22px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.28);animation:dr264 7s var(--sp) infinite both;animation-delay:var(--dl)}
+  .c264 .tt b small{font-size:19px;font-weight:500;opacity:.85}
+  @keyframes dr264{0%{transform:translateY(-150px) scale(.92);opacity:0}9%,85%{transform:none;opacity:1}92%,100%{transform:scale(.9);opacity:0}}
+
+  /* 265 TEACHER PROFILE */
+  .c265 .pf{display:flex;align-items:center;gap:28px}
+  .c265 .av{position:relative;flex:none;width:170px;height:170px;display:flex;align-items:center;justify-content:center}
+  .c265 .av b{width:140px;height:140px;border-radius:50%;background:linear-gradient(145deg,#ffc15e,#ff7a00);color:#fff;font-size:50px;display:flex;align-items:center;justify-content:center}
+  .c265 .av svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+  .c265 .av circle{fill:none;stroke:var(--acc);stroke-width:6;stroke-linecap:round;stroke-dasharray:503;animation:a265 7s var(--sf) infinite}
+  @keyframes a265{0%,4%{stroke-dashoffset:503}22%,88%{stroke-dashoffset:0}96%,100%{stroke-dashoffset:503}}
+  .c265 .nm{font-size:36px;font-weight:700}
+  .c265 .nm small{display:block;font-size:26px;color:var(--dim);font-weight:500;margin-top:6px}
+  .c265 .rt{display:flex;align-items:center;gap:18px;margin-top:28px;font-size:32px;font-weight:700}
+  .c265 .rt .dim{font-size:26px;font-weight:500}
+  .c265 .stars{position:relative;flex:none;width:310px;height:54px}
+  .c265 .stars>div{position:absolute;left:0;top:0;height:54px;display:flex;gap:10px;overflow:hidden}
+  .c265 .stars i{flex:none;width:54px;height:54px;background:var(--track);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+  .c265 .stars .fl i{background:#ffcc00}
+  .c265 .stars .fl{width:0;animation:s265 7s var(--sf) infinite}
+  @keyframes s265{0%,10%{width:0}34%,88%{width:296px}96%,100%{width:0}}
+  .c265 .od>span{animation:od265 7s var(--sf) infinite both;animation-delay:var(--dl,0s)}
+  @keyframes od265{0%,10%{transform:translateY(0)}36%,88%{transform:translateY(var(--to))}96%,100%{transform:translateY(0)}}
+  .c265 .tl{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+  .c265 .tl>div{background:var(--row);border-radius:26px;padding:22px 22px 20px}
+  .c265 .tl b{display:block;font-size:50px;letter-spacing:-1px;line-height:1.2}
+  .c265 .tl small{font-size:23px;color:var(--dim);font-weight:500}
+
+  /* 266 SEAT COUNTDOWN */
+  .c266{--bd:color-mix(in srgb,var(--dim) 45%,transparent);--fl:color-mix(in srgb,var(--acc) 18%,var(--card))}
+  .c266 .seats{display:grid;grid-template-columns:repeat(6,100px);gap:16px;justify-content:center}
+  .c266 .seats i{position:relative;height:100px;border-radius:26px;border:3px dashed var(--bd);background:var(--card);color:transparent}
+  .c266 .seats i.f{background:var(--fl);border-color:transparent;color:var(--acc)}
+  .c266 .seats i::before{content:'';position:absolute;left:50%;top:18px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:currentColor}
+  .c266 .seats i::after{content:'';position:absolute;left:50%;top:50px;width:50px;height:26px;margin-left:-25px;border-radius:25px 25px 8px 8px;background:currentColor}
+  .c266 .seats .n1{animation:n266a 7s infinite} .c266 .seats .n2{animation:n266b 7s infinite}
+  .c266 .seats .n3{animation:n266c 7s infinite} .c266 .seats .n4{animation:n266d 7s infinite}
+  @keyframes n266a{0%,14%{background:var(--card);border-color:var(--bd);color:transparent;transform:none}17%{transform:scale(.8);animation-timing-function:cubic-bezier(.34,1.56,.64,1)}22%,88%{background:var(--fl);border-color:transparent;color:var(--acc);transform:none}94%,100%{background:var(--card);border-color:var(--bd);color:transparent;transform:none}}
+  @keyframes n266b{0%,26%{background:var(--card);border-color:var(--bd);color:transparent;transform:none}29%{transform:scale(.8);animation-timing-function:cubic-bezier(.34,1.56,.64,1)}34%,88%{background:var(--fl);border-color:transparent;color:var(--acc);transform:none}94%,100%{background:var(--card);border-color:var(--bd);color:transparent;transform:none}}
+  @keyframes n266c{0%,38%{background:var(--card);border-color:var(--bd);color:transparent;transform:none}41%{transform:scale(.8);animation-timing-function:cubic-bezier(.34,1.56,.64,1)}46%,88%{background:var(--fl);border-color:transparent;color:var(--acc);transform:none}94%,100%{background:var(--card);border-color:var(--bd);color:transparent;transform:none}}
+  @keyframes n266d{0%,50%{background:var(--card);border-color:var(--bd);color:transparent;transform:none}53%{transform:scale(.8);animation-timing-function:cubic-bezier(.34,1.56,.64,1)}58%,88%{background:var(--fl);border-color:transparent;color:var(--acc);transform:none}94%,100%{background:var(--card);border-color:var(--bd);color:transparent;transform:none}}
+  .c266 .lf{display:flex;align-items:baseline;gap:14px;margin-top:34px;font-size:46px;font-weight:700;animation:lc266 7s infinite}
+  .c266 .lf .dim{font-size:32px;font-weight:500}
+  .c266 .lf .roll>span{animation:lf266 7s var(--sp) infinite}
+  @keyframes lf266{0%,17%{transform:translateY(0)}21%,29%{transform:translateY(-1.2em)}33%,41%{transform:translateY(-2.4em)}45%,53%{transform:translateY(-3.6em)}57%,88%{transform:translateY(-4.8em)}96%,100%{transform:translateY(0)}}
+  @keyframes lc266{0%,53%{color:var(--acc);transform:none}57%{color:#ff3b30;transform:translateX(-12px)}59%{transform:translateX(12px)}61%{transform:translateX(-7px)}63%{transform:translateX(4px)}65%,88%{color:#ff3b30;transform:none}96%,100%{color:var(--acc);transform:none}}
+
+  /* 267 ROTARY KNOB */
+  .c267 .kw{position:relative;height:420px}
+  .c267 .tk{position:absolute;left:calc(50% - 165px);top:65px;width:330px;height:330px;border-radius:50%;background:repeating-conic-gradient(from -.75deg,var(--dim) 0 1.5deg,transparent 1.5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 149px,#000 150px,#000 162px,transparent 163px);mask:radial-gradient(circle,transparent 149px,#000 150px,#000 162px,transparent 163px);opacity:.5}
+  .c267 .kn{position:absolute;left:calc(50% - 130px);top:100px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 50% 28%,#fff,#e4e4ea 72%);box-shadow:0 22px 44px rgba(0,0,0,.22),inset 0 -6px 12px rgba(0,0,0,.06);--a:rotate(-60deg);--b:rotate(0deg);--c:rotate(60deg);animation:T3 7.5s var(--sp) infinite}
+  .c267.dark .kn{background:radial-gradient(circle at 50% 28%,#55555a,#232326 72%);box-shadow:0 22px 44px rgba(0,0,0,.6),inset 0 2px 1px rgba(255,255,255,.12)}
+  .c267 .kn::before{content:'';position:absolute;inset:28px;border-radius:50%;background:repeating-conic-gradient(rgba(0,0,0,.05) 0 3deg,transparent 3deg 9deg)}
+  .c267 .kn i{position:absolute;left:50%;top:18px;width:12px;height:50px;margin-left:-6px;border-radius:6px;background:var(--acc);box-shadow:0 0 16px var(--acc)}
+  .c267 .kl{position:absolute;transform:translate(-50%,-50%);font-size:28px;font-weight:600;white-space:nowrap;animation:C3 7.5s infinite}
+  .c267 .am{display:flex;align-items:baseline;justify-content:center;gap:16px}
+  .c267 .am b{font-size:72px;letter-spacing:-2px}
+  .c267 .am .roll>span{--a:translateY(0);--b:translateY(-1.2em);--c:translateY(-2.4em);animation:T3 7.5s var(--sp) infinite}
+  .c267 .am .roll>span>span{text-align:center}
+
+  /* 268 BOOKING MORPH */
+  .c268 .grp{background:var(--row);border-radius:26px;padding:0 28px}
+  .c268 .grp>div{display:flex;justify-content:space-between;align-items:center;height:86px;font-size:29px;border-bottom:2px solid var(--card)}
+  .c268 .grp>div:last-child{border-bottom:0}
+  .c268 .grp span{color:var(--dim);font-weight:500}
+  .c268 .bw{display:flex;justify-content:center;margin-top:28px;height:100px}
+  .c268 .bm{position:relative;flex:none;height:100px;width:688px;border-radius:28px;background:#007aff;color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;white-space:nowrap;animation:bm268 7s cubic-bezier(.75,0,.25,1) infinite}
+  @keyframes bm268{0%,15%{width:688px;border-radius:28px;background:#007aff;transform:none}18%{width:688px;transform:scale(.95)}21%{width:688px;border-radius:28px;transform:none}30%,47%{width:100px;border-radius:50px;background:#007aff;transform:none}50%{width:100px;background:#34c759;transform:scale(1.16);animation-timing-function:cubic-bezier(.34,1.56,.64,1)}55%,88%{width:100px;border-radius:50px;background:#34c759;transform:none}96%,100%{width:688px;border-radius:28px;background:#007aff;transform:none}}
+  .c268 .bm .t{animation:t268 7s infinite}
+  @keyframes t268{0%,20%{opacity:1}24%,91%{opacity:0}97%,100%{opacity:1}}
+  .c268 .bm .spn{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;border:6px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite,s268 7s infinite}
+  @keyframes s268{0%,28%{opacity:0}31%,46%{opacity:1}49%,100%{opacity:0}}
+  .c268 .bm .ok{position:absolute;left:50%;top:50%;width:24px;height:44px;margin:-28px 0 0 -12px;border:solid #fff;border-width:0 7px 7px 0;animation:k268 7s infinite}
+  @keyframes k268{0%,48%{transform:rotate(45deg) scale(0)}52%{transform:rotate(45deg) scale(1.25)}56%,88%{transform:rotate(45deg) scale(1)}93%,100%{transform:rotate(45deg) scale(0)}}
+  .c268 .cf{text-align:center;font-size:27px;color:#34c759;margin-top:20px;animation:cf268 7s var(--sp) infinite}
+  @keyframes cf268{0%,52%{opacity:0;transform:translateY(16px)}58%,88%{opacity:1;transform:none}94%,100%{opacity:0;transform:none}}
+
+  /* 269 RANK CLIMB */
+  .c269 .lbd{display:flex;gap:16px}
+  .c269 .rk{width:40px;flex:none}
+  .c269 .rk span{display:flex;height:96px;margin-bottom:12px;align-items:center;justify-content:center;font-size:30px;font-weight:700;color:var(--dim)}
+  .c269 .rk span:first-child{color:var(--acc)}
+  .c269 .ls{position:relative;flex:1;height:528px}
+  .c269 .p{position:absolute;left:0;right:0;top:0;height:96px;border-radius:24px;background:var(--row);display:flex;align-items:center;gap:18px;padding:0 24px 0 18px;font-size:29px;animation:T2 7s var(--sp) infinite}
+  .c269 .p>i{flex:none;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-style:normal;font-weight:700}
+  .c269 .p .sc{margin-left:auto;font-weight:700}
+  .c269 .me{z-index:2;background:color-mix(in srgb,var(--acc) 16%,var(--card));box-shadow:0 12px 30px rgba(0,0,0,.14);animation:lf269 7s cubic-bezier(.75,0,.25,1) infinite}
+  @keyframes lf269{0%,36%{transform:translateY(324px)}40%{transform:translateY(324px) scale(1.04)}47%{transform:translateY(0) scale(1.04);animation-timing-function:cubic-bezier(.34,1.56,.64,1)}52%,88%{transform:translateY(0) scale(1)}96%,100%{transform:translateY(324px) scale(1)}}
+  .c269 .me .roll>span{--a:translateY(0);--b:translateY(-1.2em);animation:T2 7s var(--sp) infinite}
+  .c269 .ar{display:inline-block;width:16px;height:16px;border:solid #34c759;border-width:5px 0 0 5px;transform:rotate(45deg);margin:0 0 0 12px;vertical-align:1px;--oa:0;--ob:1;animation:O2 7s infinite}
+  .c269 .gn{margin-left:auto;font-size:22px;color:#fff;background:#34c759;padding:6px 12px;border-radius:12px;--a:scale(0);--b:scale(1);animation:T2 7s var(--sp) infinite}
+  .c269 .me .sc{margin-left:0}
+
+  /* 270 STAMP THUD */
+  .c270 .card{padding:28px}
+  .c270 .cert{position:relative;background:#fbf8f1;color:#1c1c1e;border-radius:28px;padding:50px 44px 44px;text-align:center;box-shadow:inset 0 0 0 2px #e6dcc6,inset 0 0 0 12px #fbf8f1,inset 0 0 0 14px #e6dcc6;animation:sh270 7s infinite}
+  @keyframes sh270{0%,28.8%{transform:none}30%{transform:translate(3px,6px) scale(.99)}31.5%{transform:translate(-3px,-2px)}33%,100%{transform:none}}
+  .c270 .k{font-size:22px;letter-spacing:.42em;color:#a2845e;font-weight:700}
+  .c270 .t{font-size:27px;color:#8e8e93;font-weight:500;margin-top:8px}
+  .c270 .gv{font-size:22px;color:#8e8e93;font-weight:500;margin-top:34px}
+  .c270 .nm{font:italic 600 56px/1.2 'New York',Georgia,'Times New Roman',serif;margin-top:6px}
+  .c270 .ln{width:62%;height:2px;background:#e6dcc6;margin:16px auto 28px}
+  .c270 .gr{display:flex;align-items:flex-end;gap:44px;min-height:112px;text-align:left;font-size:27px;padding-right:180px}
+  .c270 .gr small{display:block;font-size:20px;color:#8e8e93;font-weight:500;margin-bottom:4px}
+  .c270 .sp{position:absolute;right:40px;bottom:26px;width:156px;height:156px}
+  .c270 .sm{width:100%;height:100%;border-radius:50%;border:6px solid #e0352b;box-shadow:inset 0 0 0 5px #fbf8f1,inset 0 0 0 8px #e0352b;color:#e0352b;display:flex;flex-direction:column;align-items:center;justify-content:center;mix-blend-mode:multiply;animation:st270 7s infinite}
+  .c270 .sm b{font-size:52px;line-height:1}
+  .c270 .sm span{font-size:12px;letter-spacing:.06em;font-weight:800;margin-top:6px}
+  @keyframes st270{0%,22%{opacity:0;transform:rotate(-14deg) scale(2.3);animation-timing-function:cubic-bezier(.55,0,1,.45)}29%{opacity:.92;transform:rotate(-14deg) scale(.9);animation-timing-function:cubic-bezier(.34,1.56,.64,1)}35%,88%{opacity:.9;transform:rotate(-14deg) scale(1)}95%,100%{opacity:0;transform:rotate(-14deg) scale(1)}}
+  .c270 .rp{position:absolute;inset:0;border-radius:50%;border:4px solid #e0352b;opacity:0;animation:rp270 7s ease-out infinite}
+  @keyframes rp270{0%,28.5%{opacity:0;transform:scale(.9)}29%{opacity:.45;transform:scale(.95)}40%,100%{opacity:0;transform:scale(1.7)}}
+
+  /* 271 ATTENDANCE POP */
+  .c271 .cal{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:40px;grid-auto-rows:72px;gap:6px}
+  .c271 .cal>span{position:relative;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:500}
+  .c271 .cal>.h{font-size:22px;color:var(--dim)}
+  .c271 .cal b{position:relative;font-weight:600}
+  .c271 .cal .l{animation:tc271 7s infinite both;animation-delay:var(--dl)}
+  .c271 .cal .l i{position:absolute;left:50%;top:50%;width:62px;height:62px;margin:-31px 0 0 -31px;border-radius:50%;background:var(--acc);animation:d271 7s var(--sp) infinite both;animation-delay:var(--dl)}
+  .c271 .cal .m{animation:none}
+  .c271 .cal .m i{background:transparent;border:4px solid #ff9500}
+  @keyframes d271{0%,3%{transform:scale(0)}9%,86%{transform:scale(1)}92%,100%{transform:scale(0)}}
+  @keyframes tc271{0%,5%{color:var(--text)}7%,87%{color:#fff}91%,100%{color:var(--text)}}
+  .c271 .pg{display:flex;align-items:center;gap:22px;margin-top:26px}
+  .c271 .pg .l{color:var(--dim);font-weight:500;font-size:27px}
+  .c271 .pg .bar{flex:1;height:14px;border-radius:7px;background:var(--row);overflow:hidden}
+  .c271 .pg .bar i{display:block;height:100%;border-radius:7px;background:var(--acc);animation:w271 7s var(--sf) infinite}
+  @keyframes w271{0%,3%{width:0}40%,88%{width:92%}95%,100%{width:0}}
+  .c271 .pg b{font-size:34px}
+  .c271 .od>span{animation:od271 7s var(--sf) infinite}
+  @keyframes od271{0%,3%{transform:translateY(0)}40%,88%{transform:translateY(var(--to))}95%,100%{transform:translateY(0)}}
+
+  /* 272 HOMEWORK RING */
+  .c272 .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .c272 .hd .ttl{margin:0}
+  .c272 .hd .dim{font-size:26px;font-weight:500;margin-top:6px}
+  .c272 .rg{position:relative;width:150px;height:150px}
+  .c272 .rg svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .c272 .rg .bg{fill:none;stroke:var(--row);stroke-width:14}
+  .c272 .rg .fg{fill:none;stroke:var(--acc);stroke-width:14;stroke-linecap:round;stroke-dasharray:390;animation:r272 7s var(--sf) infinite}
+  @keyframes r272{0%,18%{stroke-dashoffset:292}25%,43%{stroke-dashoffset:195}50%,68%{stroke-dashoffset:97}75%,93%{stroke-dashoffset:0}100%{stroke-dashoffset:292}}
+  .c272 .pc{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700}
+  .c272 .pc .roll>span{--a:translateY(0);--b:translateY(-1.2em);--c:translateY(-2.4em);--d:translateY(-3.6em);animation:T4 7s var(--sp) infinite}
+  .c272 .pc .roll>span>span{text-align:right}
+  .c272 .it{display:flex;align-items:center;gap:22px;height:90px;border-top:2px solid var(--row);font-size:29px;font-weight:500}
+  .c272 .cb{position:relative;flex:none;width:48px;height:48px;border-radius:50%;border:4px solid color-mix(in srgb,var(--dim) 60%,transparent)}
+  .c272 .cb b{position:absolute;inset:-4px;border-radius:50%;background:var(--acc);animation:O4 7s infinite,T4 7s var(--sp) infinite}
+  .c272 .tx{position:relative;display:inline-block;animation:C4 7s infinite}
+  .c272 .tx::after{content:'';position:absolute;left:-4px;top:54%;height:3px;border-radius:2px;background:var(--dim);animation:W4 7s var(--sf) infinite}
+  .c272 .i1{--oa:1;--ob:1;--oc:1;--od:1;--a:none;--b:none;--c:none;--d:none;--wa:calc(100% + 8px);--wb:calc(100% + 8px);--wc:calc(100% + 8px);--wd:calc(100% + 8px);--ca:var(--dim);--cb:var(--dim);--cc:var(--dim);--cd:var(--dim)}
+  .c272 .i2{--oa:0;--ob:1;--oc:1;--od:1;--a:scale(.3);--b:none;--c:none;--d:none;--wa:0%;--wb:calc(100% + 8px);--wc:calc(100% + 8px);--wd:calc(100% + 8px);--ca:var(--text);--cb:var(--dim);--cc:var(--dim);--cd:var(--dim)}
+  .c272 .i3{--oa:0;--ob:0;--oc:1;--od:1;--a:scale(.3);--b:scale(.3);--c:none;--d:none;--wa:0%;--wb:0%;--wc:calc(100% + 8px);--wd:calc(100% + 8px);--ca:var(--text);--cb:var(--text);--cc:var(--dim);--cd:var(--dim)}
+  .c272 .i4{--oa:0;--ob:0;--oc:0;--od:1;--a:scale(.3);--b:scale(.3);--c:scale(.3);--d:none;--wa:0%;--wb:0%;--wc:0%;--wd:calc(100% + 8px);--ca:var(--text);--cb:var(--text);--cc:var(--text);--cd:var(--dim)}
+  .c272 .dn{margin-top:20px;text-align:center;background:color-mix(in srgb,var(--acc) 16%,transparent);color:#248a3d;font-size:28px;border-radius:20px;padding:18px;--oa:0;--ob:0;--oc:0;--od:1;--a:translateY(16px) scale(.9);--b:translateY(16px) scale(.9);--c:translateY(16px) scale(.9);--d:none;animation:O4 7s infinite,T4 7s var(--sp) infinite}
+
+  /* 273 MOCK TEST */
+  .c273 .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  .c273 .hd .ttl{margin:0}
+  .c273 .tm{display:flex;align-items:center;gap:12px;background:color-mix(in srgb,var(--acc) 18%,transparent);color:var(--acc);font-size:34px;font-weight:700;padding:12px 22px;border-radius:22px;font-variant-numeric:tabular-nums}
+  .c273 .tm i{width:14px;height:14px;border-radius:50%;background:var(--acc);animation:pl273 1s infinite}
+  @keyframes pl273{0%,100%{opacity:1}50%{opacity:.25}}
+  .c273 .tm .roll>span{animation:tk273 7s var(--sp) infinite}
+  @keyframes tk273{0%,10.3%{transform:translateY(0)}14.3%,24.6%{transform:translateY(-1.2em)}28.6%,38.9%{transform:translateY(-2.4em)}42.9%,53.2%{transform:translateY(-3.6em)}57.1%,67.4%{transform:translateY(-4.8em)}71.4%,81.7%{transform:translateY(-6em)}85.7%,96%{transform:translateY(-7.2em)}100%{transform:translateY(0)}}
+  .c273 .pb{height:8px;border-radius:4px;background:var(--row);overflow:hidden;margin:-6px 0 28px}
+  .c273 .pb i{display:block;height:100%;border-radius:4px;background:var(--acc);--wa:40%;--wb:43.3%;--wc:46.7%;--wd:50%;animation:W4 7s var(--sp) infinite}
+  .c273 .qd{position:relative;display:grid;grid-template-columns:repeat(10,1fr);gap:16px}
+  .c273 .qd i{height:54px;border-radius:50%;background:var(--row);color:var(--dim);font-size:21px;font-style:normal;display:flex;align-items:center;justify-content:center}
+  .c273 .qd i.a{background:var(--acc);color:#1c1c1e}
+  .c273 .qd i.q{animation:B4 7s infinite,C4 7s infinite}
+  .c273 .qd b{position:absolute;left:134.8px;top:64.4px;width:66px;height:66px;border-radius:50%;border:4px solid var(--acc);--a:translateX(0);--b:translateX(70.4px);--c:translateX(140.8px);--d:translateX(211.2px);animation:T4 7s var(--sp) infinite}
+  .c273 .row .roll>span{--a:translateY(0);--b:translateY(-1.2em);--c:translateY(-2.4em);--d:translateY(-3.6em);animation:T4 7s var(--sp) infinite}
+  .c273 .btn{color:#1c1c1e;animation:pr273 7s infinite}
+  @keyframes pr273{0%,14%,20%,39%,45%,64%,70%,100%{transform:none;filter:none}17%,42%,67%{transform:scale(.95);filter:brightness(.85)}}
+
+  /* 274 LEVEL GAUGE */
+  .c274 .gw{position:relative;width:600px;height:330px;margin:0 auto}
+  .c274 svg{position:absolute;inset:0;width:100%;height:100%}
+  .c274 .ab{fill:none;stroke:var(--row);stroke-width:34}
+  .c274 .af{fill:none;stroke:var(--acc);stroke-width:34;stroke-dasharray:754 800;stroke-dashoffset:754;animation:g274 7s cubic-bezier(.45,0,.35,1) infinite}
+  @keyframes g274{0%,12%{stroke-dashoffset:754}28%{stroke-dashoffset:327}33%{stroke-dashoffset:398}37%{stroke-dashoffset:369}40%,88%{stroke-dashoffset:377}96%,100%{stroke-dashoffset:754}}
+  .c274 .nd{position:absolute;left:294px;bottom:30px;width:12px;height:150px;background:var(--text);clip-path:polygon(35% 0,65% 0,100% 100%,0 100%);transform-origin:50% 100%;animation:n274 7s cubic-bezier(.45,0,.35,1) infinite}
+  @keyframes n274{0%,12%{transform:rotate(-90deg)}28%{transform:rotate(12deg)}33%{transform:rotate(-5deg)}37%{transform:rotate(2deg)}40%,88%{transform:rotate(0deg)}96%,100%{transform:rotate(-90deg)}}
+  .c274 .hub{position:absolute;left:280px;bottom:10px;width:40px;height:40px;border-radius:50%;background:var(--text);box-shadow:0 0 0 8px var(--card)}
+  .c274 .lv{position:absolute;transform:translate(-50%,-50%);font-size:26px;color:var(--dim);font-weight:600}
+  .c274 .lv.on{animation:lb274 7s infinite}
+  @keyframes lb274{0%,36%{color:var(--dim)}40%,88%{color:var(--acc)}96%,100%{color:var(--dim)}}
+  .c274 .rs{display:flex;align-items:baseline;justify-content:center;gap:20px;margin-top:14px}
+  .c274 .rs b{font-size:80px;letter-spacing:-2px}
+  .c274 .rs .roll>span{animation:l274 7s var(--sp) infinite}
+  @keyframes l274{0%,16%{transform:translateY(0)}20%,22%{transform:translateY(-1.2em)}26%,88%{transform:translateY(-2.4em)}96%,100%{transform:translateY(0)}}
+  .c274 .rs .dim{font-size:28px;font-weight:500}
+
+  /* 275 STUDY PATH */
+  .c275 .rm{position:relative}
+  .c275 .tr{position:absolute;left:19px;top:56px;width:6px;height:448px;border-radius:3px;background:var(--track)}
+  .c275 .tr i{display:block;width:100%;border-radius:3px;background:var(--acc);--ha:112px;--hb:224px;--hc:336px;--hd:448px;animation:H4 7s var(--sp) infinite}
+  .c275 .m{position:relative;display:flex;align-items:center;gap:30px;height:112px;animation:O4 7s infinite}
+  .c275 .nd{position:relative;flex:none;width:44px;height:44px;border-radius:50%;background:var(--row);color:transparent;box-shadow:0 0 0 8px var(--card),inset 0 0 0 3px rgba(128,128,140,.25);animation:B4 7s infinite,C4 7s infinite}
+  .c275 .nd::after{content:'';position:absolute;left:16px;top:9px;width:9px;height:18px;border:solid currentColor;border-width:0 5px 5px 0;transform:rotate(45deg)}
+  .c275 .m>div{flex:1}
+  .c275 .m b{display:block;font-size:30px}
+  .c275 .m small{display:block;font-size:24px;color:var(--dim);font-weight:500;margin-top:4px}
+  .c275 .m>span{font-size:24px;color:var(--dim);font-weight:500}
+  .c275 .m1{--ba:var(--acc);--bb:var(--acc);--bc:var(--acc);--bd:var(--acc);--ca:#fff;--cb:#fff;--cc:#fff;--cd:#fff;--oa:1;--ob:1;--oc:1;--od:1}
+  .c275 .m2{--ba:var(--row);--bb:var(--acc);--bc:var(--acc);--bd:var(--acc);--ca:transparent;--cb:#fff;--cc:#fff;--cd:#fff;--oa:1;--ob:1;--oc:1;--od:1}
+  .c275 .m3{--ba:var(--row);--bb:var(--row);--bc:var(--acc);--bd:var(--acc);--ca:transparent;--cb:transparent;--cc:#fff;--cd:#fff;--oa:.4;--ob:1;--oc:1;--od:1}
+  .c275 .m4{--ba:var(--row);--bb:var(--row);--bc:var(--row);--bd:var(--acc);--ca:transparent;--cb:transparent;--cc:transparent;--cd:#fff;--oa:.4;--ob:.4;--oc:1;--od:1}
+  .c275 .m5{--ba:var(--row);--bb:var(--row);--bc:var(--row);--bd:var(--row);--ca:transparent;--cb:transparent;--cc:transparent;--cd:transparent;--oa:.4;--ob:.4;--oc:.4;--od:1}
+  .c275 .pl{position:absolute;left:-8px;top:26px;width:60px;height:60px;--a:translateY(112px);--b:translateY(224px);--c:translateY(336px);--d:translateY(448px);animation:T4 7s var(--sp) infinite}
+  .c275 .pl::before,.c275 .pl::after{content:'';position:absolute;inset:0;border-radius:50%;border:4px solid var(--acc)}
+  .c275 .pl::after{animation:pu275 1.4s ease-out infinite}
+  @keyframes pu275{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+
+  /* 276 SCORE GROWTH */
+  .c276 .tot{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+  .c276 .tot b{font-size:96px;letter-spacing:-3px;line-height:1.2}
+  .c276 .tot .roll>span{--a:translateY(0);--b:translateY(-1.2em);animation:T2 7s var(--sp) infinite}
+  .c276 .tot .dl{margin-left:auto;align-self:center;background:#34c759;color:#fff;font-size:30px;padding:10px 18px;border-radius:16px;--a:scale(0);--b:scale(1);animation:T2 7s var(--sp) infinite}
+  .c276 .ch{display:flex;height:300px;padding-top:50px;border-bottom:2px solid var(--row)}
+  .c276 .g{flex:1;display:flex;justify-content:center;align-items:flex-end;gap:14px}
+  .c276 .g i{position:relative;width:84px;border-radius:16px 16px 6px 6px}
+  .c276 .g .o{background:var(--track)}
+  .c276 .g .nw{background:var(--acc);animation:H2 7s var(--sp) infinite both;animation-delay:var(--dl)}
+  .c276 .g em{position:absolute;left:50%;top:-50px;width:80px;margin-left:-40px;text-align:center;font-style:normal;font-size:26px;color:#34c759;font-weight:700;--oa:0;--ob:1;animation:O2 7s infinite both;animation-delay:var(--dl)}
+  .c276 .lb{display:flex;margin-top:12px}
+  .c276 .lb span{flex:1;text-align:center;font-size:24px;color:var(--dim);font-weight:500}
+  .c276 .lg{display:flex;gap:34px;justify-content:center;margin-top:22px;font-size:24px;color:var(--dim);font-weight:500}
+  .c276 .lg i{display:inline-block;width:18px;height:18px;border-radius:5px;margin-right:10px;vertical-align:-1px}
+
+  /* 277 PARENT ALERTS */
+  .c277 .stk{position:relative;width:800px;height:482px}
+  .c277 .nt{position:absolute;left:0;right:0;top:0;height:150px;display:flex;align-items:center;gap:24px;padding:0 30px;border-radius:40px;background:color-mix(in srgb,var(--card) 90%,transparent);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 18px 50px rgba(0,0,0,.22);transform-origin:50% 0;animation:T4 7s var(--sp) infinite,O4 7s infinite}
+  .c277 .nt>i{flex:none;width:76px;height:76px;border-radius:20px;background:linear-gradient(145deg,#30d158,#0a8f6a);color:#fff;font-style:normal;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .c277 .nt>div{flex:1;min-width:0}
+  .c277 .nt .ap{display:flex;justify-content:space-between;font-size:22px;color:var(--dim);font-weight:500}
+  .c277 .nt b{display:block;font-size:29px;margin-top:4px}
+  .c277 .nt small{display:block;font-size:24px;color:var(--dim);font-weight:500;margin-top:2px}
+  .c277 .n1{--a:translateY(0);--b:translateY(166px);--c:translateY(332px);--d:translateY(40px) scale(.9);--oa:1;--ob:1;--oc:1;--od:1}
+  .c277 .n2{--a:translateY(-90px) scale(.96);--b:translateY(0);--c:translateY(166px);--d:translateY(20px) scale(.95);--oa:0;--ob:1;--oc:1;--od:1}
+  .c277 .n3{--a:translateY(-90px) scale(.96);--b:translateY(-90px) scale(.96);--c:translateY(0);--d:translateY(0);--oa:0;--ob:0;--oc:1;--od:1}
+
+  /* 278 MODULE UNLOCK */
+  .c278 .grp{background:var(--row);border-radius:26px;padding:0 26px}
+  .c278 .md{display:flex;align-items:center;gap:24px;height:104px;border-bottom:2px solid var(--card)}
+  .c278 .md:last-child{border-bottom:0}
+  .c278 .ic{position:relative;flex:none;width:56px;height:56px}
+  .c278 .lk{position:absolute;left:10px;bottom:6px;width:36px;height:28px;border-radius:7px;background:var(--dim);animation:O4 7s infinite both;animation-delay:.3s}
+  .c278 .lk b{position:absolute;left:7px;bottom:22px;width:22px;height:24px;border:5px solid var(--dim);border-bottom:0;border-radius:12px 12px 0 0;animation:T4 7s var(--sp) infinite}
+  .c278 .ic .ck{position:absolute;inset:2px;border-radius:50%;background:var(--acc);animation:T4 7s var(--sp) infinite both;animation-delay:.3s}
+  .c278 .tx{flex:1;animation:O4 7s infinite both;animation-delay:.3s}
+  .c278 .tx b{display:block;font-size:30px}
+  .c278 .tx small{display:block;font-size:24px;color:var(--dim);font-weight:500;margin-top:4px}
+  .c278 .md>span{font-size:24px;color:var(--dim);font-weight:500}
+  .c278 .m1 .lk{display:none} .c278 .m1 .ck,.c278 .m1 .tx{animation:none}
+  .c278 .m2 .lk{--oa:1;--ob:0;--oc:0;--od:0} .c278 .m2 .lk b{--a:none;--b:translateY(-10px);--c:translateY(-10px);--d:translateY(-10px)} .c278 .m2 .ck{--a:scale(0);--b:none;--c:none;--d:none} .c278 .m2 .tx{--oa:.45;--ob:1;--oc:1;--od:1}
+  .c278 .m3 .lk{--oa:1;--ob:1;--oc:0;--od:0} .c278 .m3 .lk b{--a:none;--b:none;--c:translateY(-10px);--d:translateY(-10px)} .c278 .m3 .ck{--a:scale(0);--b:scale(0);--c:none;--d:none} .c278 .m3 .tx{--oa:.45;--ob:.45;--oc:1;--od:1}
+  .c278 .m4 .lk{--oa:1;--ob:1;--oc:1;--od:0} .c278 .m4 .lk b{--a:none;--b:none;--c:none;--d:translateY(-10px)} .c278 .m4 .ck{--a:scale(0);--b:scale(0);--c:scale(0);--d:none} .c278 .m4 .tx{--oa:.45;--ob:.45;--oc:.45;--od:1}
+  .c278 .pg{display:flex;align-items:center;gap:22px;margin-top:28px}
+  .c278 .pg .l{color:var(--dim);font-weight:500;font-size:27px}
+  .c278 .pg .bar{flex:1;height:14px;border-radius:7px;background:var(--row);overflow:hidden}
+  .c278 .pg .bar i{display:block;height:100%;border-radius:7px;background:var(--acc);--wa:25%;--wb:50%;--wc:75%;--wd:100%;animation:W4 7s var(--sp) infinite}
+  .c278 .pg b{font-size:32px}
+  .c278 .pg .roll>span{--a:translateY(0);--b:translateY(-1.2em);--c:translateY(-2.4em);--d:translateY(-3.6em);animation:T4 7s var(--sp) infinite}
+  .c278 .pg .roll>span>span{text-align:right}
+
+  /* 279 REFERRAL SLOTS */
+  .c279 .dc{display:flex;align-items:baseline;gap:18px}
+  .c279 .dc b{font-size:128px;letter-spacing:-4px;color:var(--acc);line-height:1.2}
+  .c279 .dc .roll>span{--a:translateY(0);--b:translateY(-1.2em);--c:translateY(-2.4em);--d:translateY(-3.6em);animation:T4 7s var(--sp) infinite}
+  .c279 .dc .roll>span>span{text-align:right}
+  .c279 .dc .dim{font-size:32px;font-weight:500}
+  .c279 .fr{display:flex;justify-content:space-around;margin-top:14px}
+  .c279 .sl{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .c279 .sl>div{position:relative;width:130px;height:130px;border-radius:50%;border:4px dashed color-mix(in srgb,var(--dim) 55%,transparent)}
+  .c279 .sl>div::before,.c279 .sl>div::after{content:'';position:absolute;left:50%;top:50%;width:34px;height:4px;margin:-2px 0 0 -17px;border-radius:2px;background:var(--dim)}
+  .c279 .sl>div::after{transform:rotate(90deg)}
+  .c279 .sl i{position:absolute;inset:-4px;z-index:1;border-radius:50%;color:#fff;font-style:normal;font-size:40px;font-weight:700;display:flex;align-items:center;justify-content:center;animation:T4 7s var(--sp) infinite}
+  .c279 .sl span{font-size:26px;font-weight:500;animation:O4 7s infinite}
+  .c279 .s1{--a:scale(0);--b:none;--c:none;--d:none;--oa:0;--ob:1;--oc:1;--od:1}
+  .c279 .s2{--a:scale(0);--b:scale(0);--c:none;--d:none;--oa:0;--ob:0;--oc:1;--od:1}
+  .c279 .s3{--a:scale(0);--b:scale(0);--c:scale(0);--d:none;--oa:0;--ob:0;--oc:0;--od:1}
+  .c279 .pb{position:relative;height:14px;border-radius:7px;background:var(--row);margin-top:28px;overflow:hidden}
+  .c279 .pb i{position:absolute;left:0;top:0;bottom:0;border-radius:7px;background:var(--acc);--wa:0%;--wb:33.3%;--wc:66.6%;--wd:100%;animation:W4 7s var(--sp) infinite}
+  .c279 .pb em{position:absolute;top:0;bottom:0;width:4px;background:var(--card);z-index:1}
+  .c279 .row .roll>span{--a:translateY(0);--b:translateY(-1.2em);--c:translateY(-2.4em);--d:translateY(-3.6em);animation:T4 7s var(--sp) infinite}
+  .c279 .row .roll>span>span{text-align:right}
+
+  /* 280 QUIZ FEEDBACK */
+  .c280{--rd:color-mix(in srgb,#ff3b30 14%,var(--card));--gr:color-mix(in srgb,#34c759 16%,var(--card))}
+  .c280 .qh{display:flex;justify-content:space-between;align-items:center;font-size:26px;font-weight:500;height:44px}
+  .c280 .pt{background:#34c759;color:#fff;font-weight:700;padding:6px 16px;border-radius:14px;animation:pt280 7s var(--sp) infinite}
+  @keyframes pt280{0%,52%{transform:scale(0)}57%,88%{transform:scale(1)}94%,100%{transform:scale(0)}}
+  .c280 .qb{height:10px;border-radius:5px;background:var(--row);margin:16px 0 28px;overflow:hidden}
+  .c280 .qb i{display:block;width:50%;height:100%;background:var(--acc);border-radius:5px}
+  .c280 .q{font-size:36px;font-weight:700;line-height:1.25;margin-bottom:10px}
+  .c280 .op{display:flex;align-items:center;gap:22px;height:92px;margin-top:14px;padding:0 22px;border-radius:24px;background:var(--row);border:4px solid transparent;font-size:30px;font-weight:500}
+  .c280 .op .k{width:48px;height:48px;border-radius:14px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--dim)}
+  .c280 .oa{animation:wa280 7s infinite}
+  @keyframes wa280{0%,17%{transform:none;background:var(--row);border-color:transparent}19%{transform:scale(.97)}22%{transform:translateX(0);background:var(--rd);border-color:#ff3b30}24.5%{transform:translateX(-16px)}27%{transform:translateX(14px)}29.5%{transform:translateX(-10px)}32%{transform:translateX(6px)}34.5%,88%{transform:none;background:var(--rd);border-color:#ff3b30}95%,100%{transform:none;background:var(--row);border-color:transparent}}
+  .c280 .ob{animation:wb280 7s infinite}
+  @keyframes wb280{0%,42%{transform:none;background:var(--row);border-color:transparent}44%{transform:scale(.97)}47%{transform:scale(1.05);background:var(--gr);border-color:#34c759;animation-timing-function:cubic-bezier(.34,1.56,.64,1)}53%,88%{transform:none;background:var(--gr);border-color:#34c759}95%,100%{transform:none;background:var(--row);border-color:transparent}}
+  .c280 .mk{position:relative;margin-left:auto;width:46px;height:46px;border-radius:50%}
+  .c280 .oa .mk{background:#ff3b30;animation:ma280 7s var(--sp) infinite}
+  .c280 .oa .mk::before,.c280 .oa .mk::after{content:'';position:absolute;left:50%;top:50%;width:24px;height:5px;margin:-2.5px 0 0 -12px;border-radius:3px;background:#fff;transform:rotate(45deg)}
+  .c280 .oa .mk::after{transform:rotate(-45deg)}
+  .c280 .ob .mk{background:#34c759;animation:mb280 7s var(--sp) infinite}
+  @keyframes ma280{0%,20%{transform:scale(0)}25%,88%{transform:scale(1)}95%,100%{transform:scale(0)}}
+  @keyframes mb280{0%,45%{transform:scale(0)}50%,88%{transform:scale(1)}95%,100%{transform:scale(0)}}
+
+  /* 281 FLIP COUNTDOWN */
+  .c281 .card{animation:cardLoop 7s infinite}
+  .c281 .fc{display:flex;justify-content:center;align-items:flex-start;gap:12px;margin:4px 0 6px}
+  .c281 .u{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .c281 .u small{font-size:22px;color:var(--dim);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+  .c281 .cl{font-size:76px;color:var(--dim);line-height:200px;height:200px}
+  .c281 .fl{position:relative;width:176px;height:200px;perspective:700px}
+  .c281 .fl>span{position:absolute;left:0;right:0;height:100px;overflow:hidden;background:var(--row);-webkit-backface-visibility:hidden;backface-visibility:hidden}
+  .c281 .fl>span>b{display:block;height:200px;line-height:200px;text-align:center;font-size:116px;letter-spacing:-2px;font-weight:700}
+  .c281 .fl .t{top:0;border-radius:24px 24px 0 0;transform-origin:50% 100%}
+  .c281 .fl .b{top:100px;border-radius:0 0 24px 24px;transform-origin:50% 0}
+  .c281 .fl .b>b{margin-top:-100px}
+  .c281 .fl::after{content:'';position:absolute;left:0;right:0;top:99px;height:3px;background:var(--card);z-index:20}
+  .c281 .mv .t{animation:T4 7s cubic-bezier(.55,0,1,.45) infinite}
+  .c281 .mv .b{animation:T4 7s cubic-bezier(.34,1.56,.64,1) infinite both;animation-delay:.22s}
+  .c281 .t0{z-index:8;--a:none;--b:rotateX(-90deg);--c:rotateX(-90deg);--d:rotateX(-90deg)}
+  .c281 .t1{z-index:7;--a:none;--b:none;--c:rotateX(-90deg);--d:rotateX(-90deg)}
+  .c281 .t2{z-index:6;--a:none;--b:none;--c:none;--d:rotateX(-90deg)}
+  .c281 .mv .t3{z-index:5;animation:none}
+  .c281 .mv .b0{z-index:1;animation:none}
+  .c281 .b1{z-index:2;--a:rotateX(90deg);--b:none;--c:none;--d:none}
+  .c281 .b2{z-index:3;--a:rotateX(90deg);--b:rotateX(90deg);--c:none;--d:none}
+  .c281 .b3{z-index:4;--a:rotateX(90deg);--b:rotateX(90deg);--c:rotateX(90deg);--d:none}
+
+  /* 282 BRANCH SEARCH */
+  .c282 .sr{position:relative;display:flex;align-items:center;height:84px;border-radius:22px;background:var(--row);padding:0 24px;font-size:30px;font-weight:500}
+  .c282 .mg{position:relative;flex:none;width:26px;height:26px;border-radius:50%;border:4px solid var(--dim);margin:-4px 22px 0 0}
+  .c282 .mg::after{content:'';position:absolute;right:-9px;bottom:-10px;width:4px;height:12px;border-radius:2px;background:var(--dim);transform:rotate(-45deg)}
+  .c282 .ty{display:flex}
+  .c282 .ty em{display:block;font-style:normal;max-width:0;overflow:hidden;animation:ty282 8s infinite both;animation-delay:var(--dl)}
+  @keyframes ty282{0%,8.9%{max-width:0}9%,86%{max-width:40px}88%,100%{max-width:0}}
+  .c282 .cr{width:3px;height:38px;background:var(--acc);border-radius:2px;margin-left:2px;animation:bl282 1s steps(1) infinite}
+  @keyframes bl282{50%{opacity:0}}
+  .c282 .ph{position:absolute;left:92px;color:var(--dim);animation:ph282 8s infinite}
+  @keyframes ph282{0%,8.9%{opacity:1}9%,86%{opacity:0}88%,100%{opacity:1}}
+  .c282 .br{position:relative;display:flex;align-items:center;gap:22px;height:104px;margin-top:14px;padding:0 24px;border-radius:24px;background:var(--row);border:4px solid transparent;overflow:hidden}
+  .c282 .br.h{animation:hd282 8s var(--sf) infinite}
+  @keyframes hd282{0%,20%{height:104px;margin-top:14px;opacity:1;border-width:4px}30%,88%{height:0;margin-top:0;opacity:0;border-width:0}95%,100%{height:104px;margin-top:14px;opacity:1;border-width:4px}}
+  .c282 .br.s{animation:se282 8s infinite}
+  @keyframes se282{0%,32%{border-color:transparent;background:var(--row);transform:none}34%{transform:scale(.97);border-color:transparent;background:var(--row)}38%,88%{transform:none;border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card))}95%,100%{transform:none;border-color:transparent;background:var(--row)}}
+  .c282 .pin{position:relative;flex:none;width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--acc)}
+  .c282 .pin::after{content:'';position:absolute;left:10px;top:10px;width:10px;height:10px;border-radius:50%;background:#fff}
+  .c282 .br>div{flex:1;min-width:0}
+  .c282 .br b{display:block;font-size:30px}
+  .c282 .br small{display:block;font-size:23px;color:var(--dim);font-weight:500;margin-top:4px;white-space:nowrap}
+  .c282 .br>span{font-size:24px;color:var(--dim);font-weight:500}
+  .c282 .br .ck{position:relative;flex:none;width:44px;height:44px;border-radius:50%;background:var(--acc);animation:ck282 8s var(--sp) infinite}
+  @keyframes ck282{0%,35%{transform:scale(0)}40%,88%{transform:scale(1)}95%,100%{transform:scale(0)}}
+  .c282 .btn{animation:bt282 8s infinite}
+  @keyframes bt282{0%,38%{opacity:.35}43%,88%{opacity:1}95%,100%{opacity:.35}}
+  .c267 .am .dim{position:relative;top:-14px}
+  .c276 .tot .dim{position:relative;top:-18px}
+  .c279 .dc .dim{position:relative;top:-24px}
+  .c266 .lf .dim{position:relative;top:-8px}
+</style>
+</head>
+<body><div class="wrap">
+<header>
+  <div class="kicker">Board 10 · Nytvir Motion · 263-282 · O'quv markazlar</div>
+  <h1>O'quv markazlar — 20 xil mexanika, 20 xil markaz</h1>
+  <p class="sub">IELTS, SAT, IT, til kurslari, bolalar markazi, robototexnika, mental arifmetika, maktabga tayyorlov va boshqalar uchun Apple uslubidagi jonli UI: band ball, jadval, ustoz, joylar, bo'lib to'lash, sinov darsi, reyting, sertifikat, davomat, uy vazifasi, test taymeri, daraja, o'quv yo'li, natija o'sishi, ota-onaga xabar, modullar, referal, viktorina, flip taymer, filial qidiruv. Reels uchun IG formatlariga moslashadi. Kartani bossangiz kattalashadi.</p>
+</header>
+<div class="bar">
+  <span class="lb">Format</span><div class="tg" id="fmt"><button data-v="1920" class="on">9:16 Reel</button><button data-v="1350">4:5 Feed</button><button data-v="1080">1:1</button></div>
+  <span class="lb">Tema</span><div class="tg" id="thm"><button data-v="preset" class="on">Preset</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+</div>
+<div class="grid" id="grid">
+
+<!-- 263 -->
+<div class="cardx"><div class="stage" data-bg="#b3b5f0,#4a4c8a,#15162a"><div class="comp c263" style="--acc:#5856d6"><div class="card">
+  <div class="ttl">Mock IELTS natijasi</div>
+  <div class="sb">Azizbek Karimov · Academic · 12-sentabr</div>
+  <div class="ov"><div><div class="lb">Umumiy band</div><div class="band"><span class="roll bd"><span><span>5</span><span>6</span><span>7</span></span></span>.5</div></div><span class="up">+2.0</span></div>
+  <div class="s" style="--w:88.9%;--dl:0s"><span>Listening</span><div class="tr"><i></i></div><b>8.0</b></div>
+  <div class="s" style="--w:83.3%;--dl:.2s"><span>Reading</span><div class="tr"><i></i></div><b>7.5</b></div>
+  <div class="s" style="--w:72.2%;--dl:.4s"><span>Writing</span><div class="tr"><i></i></div><b>6.5</b></div>
+  <div class="s" style="--w:77.8%;--dl:.6s"><span>Speaking</span><div class="tr"><i></i></div><b>7.0</b></div>
+  <div class="btn">Xatolar tahlili</div>
+</div></div></div><div class="meta"><div class="n">263</div><b>Band Reveal</b><div class="br">IELTS markazi · natija e'loni</div><p>Ko'nikma chiziqlari ketma-ket to'ladi, umumiy band 5.5 dan 7.5 ga aylanadi, +2.0 otilib chiqadi.</p><code>prompt: "ism | L,R,W,S ballari | eski band → yangi band"</code></div></div>
+
+<!-- 264 -->
+<div class="cardx"><div class="stage" data-bg="#8fd0ff,#1f5f8a,#0a1f2e"><div class="comp c264 dark" data-theme="dark" style="--acc:#0a84ff"><div class="card">
+  <div class="ttl">Dars jadvali</div>
+  <div class="sb">Frontend dasturlash · 3-guruh</div>
+  <div class="tt">
+    <span></span><span class="h">Du</span><span class="h">Se</span><span class="h">Ch</span><span class="h">Pa</span><span class="h">Ju</span><span class="h">Sh</span>
+    <span class="tm">09:00</span><i></i><i></i><i></i><i></i><i></i><i></i>
+    <span class="tm">14:00</span><i></i><i></i><i></i><i></i><i></i><i></i>
+    <span class="tm">18:00</span><i></i><i></i><i></i><i></i><i></i><i></i>
+    <div class="bk"><b style="grid-area:2/2;--bc:#0a84ff;--dl:.3s">HTML<small>Xona 2</small></b>
+    <b style="grid-area:2/4;--bc:#0a84ff;--dl:.5s">CSS<small>Xona 2</small></b>
+    <b style="grid-area:3/3;--bc:#ff9f0a;--dl:.7s">JS<small>Xona 4</small></b>
+    <b style="grid-area:3/5;--bc:#ff9f0a;--dl:.9s">JS<small>Xona 4</small></b>
+    <b style="grid-area:4/6;--bc:#bf5af2;--dl:1.1s">React<small>Lab</small></b>
+    <b style="grid-area:3/7;--bc:#30d158;--dl:1.3s">Loyiha<small>Lab</small></b></div>
+  </div>
+  <div class="row"><span class="l">Keyingi dars</span><span>Du, 09:00 · HTML</span></div>
+</div></div></div><div class="meta"><div class="n">264</div><b>Timetable Drop</b><div class="br">IT akademiya · dars jadvali</div><p>Haftalik to'rga dars bloklari tepadan prujina bilan birin-ketin tushadi, har fan o'z rangida.</p><code>prompt: "kunlar | vaqtlar | fan@kun,vaqt ; ... | fan=rang"</code></div></div>
+
+<!-- 265 -->
+<div class="cardx"><div class="stage" data-bg="#ffc98a,#8a4f1a,#24140a"><div class="comp c265" style="--acc:#ff9500"><div class="card">
+  <div class="pf"><div class="av"><b>DM</b><svg viewBox="0 0 170 170"><circle cx="85" cy="85" r="80"/></svg></div><div class="nm">Dilnoza Mirzayeva<small>SAT Math ustozi · 6 yil</small></div></div>
+  <div class="rt"><div class="stars"><div><i></i><i></i><i></i><i></i><i></i></div><div class="fl"><i></i><i></i><i></i><i></i><i></i></div></div>
+    <span><span class="roll od" style="--to:-4.8em"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span>.<span class="roll od" style="--to:-10.8em;--dl:.08s"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span></span><span class="dim">312 sharh</span></div>
+  <div class="tl">
+    <div><b><span class="roll od" style="--to:-1.2em"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span> <span class="roll od" style="--to:-2.4em;--dl:.06s"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span><span class="roll od" style="--to:-4.8em;--dl:.12s"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span><span class="roll od" style="--to:-12em;--dl:.18s"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span></b><small>o'quvchi</small></div>
+    <div><b><span class="roll od" style="--to:-1.2em"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span> <span class="roll od" style="--to:-4.8em;--dl:.06s"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span><span class="roll od" style="--to:-10.8em;--dl:.12s"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span><span class="roll od" style="--to:-12em;--dl:.18s"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span></b><small>o'rtacha SAT</small></div>
+    <div><b><span class="roll od" style="--to:-10.8em"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span><span class="roll od" style="--to:-2.4em;--dl:.06s"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span>%</b><small>grant oldi</small></div>
+  </div>
+  <div class="btn">Sinov darsiga yozilish</div>
+</div></div></div><div class="meta"><div class="n">265</div><b>Teacher Profile</b><div class="br">SAT markazi · ustoz tanishtiruvi</div><p>Avatar halqasi chiziladi, yulduzlar to'ladi, statistika raqamlari odometrdek aylanib chiqadi.</p><code>prompt: "ism | fan, tajriba | reyting | 3 ta raqam=izoh"</code></div></div>
+
+<!-- 266 -->
+<div class="cardx"><div class="stage" data-bg="#9cc3e6,#46607a,#1a2330"><div class="comp c266" style="--acc:#007aff"><div class="card">
+  <div class="ttl">Robototexnika to'garagi</div>
+  <div class="sb">8-12 yosh · yangi guruh 1-oktabrda</div>
+  <div class="seats"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="n1"></i><i class="n2"></i><i class="n3"></i><i class="n4"></i><i></i></div>
+  <div class="lf"><span class="roll"><span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></span></span><span class="dim">ta joy qoldi</span></div>
+  <div class="btn">Joy band qilish</div>
+</div></div></div><div class="meta"><div class="n">266</div><b>Seat Countdown</b><div class="br">Robototexnika to'garagi · qabul</div><p>O'rinlar birin-ketin band bo'ladi, "joy qoldi" raqami kamayib qizaradi va silkinadi.</p><code>prompt: "jami o'rin | band | nechtasi to'lsin | matn"</code></div></div>
+
+<!-- 267 -->
+<div class="cardx"><div class="stage" data-bg="#d7a8f0,#5a2f7a,#1a0f24"><div class="comp c267" style="--acc:#af52de"><div class="card">
+  <div class="ttl">Bo'lib to'lash</div>
+  <div class="sb">Grafik dizayn · 6 oy · 4 800 000 so'm</div>
+  <div class="kw">
+    <div class="tk"></div>
+    <span class="kl" style="left:171px;top:130px;--ca:var(--acc);--cb:var(--dim);--cc:var(--dim)">3 oy</span>
+    <span class="kl" style="left:344px;top:30px;--ca:var(--dim);--cb:var(--acc);--cc:var(--dim)">6 oy</span>
+    <span class="kl" style="left:517px;top:130px;--ca:var(--dim);--cb:var(--dim);--cc:var(--acc)">12 oy</span>
+    <div class="kn"><i></i></div>
+  </div>
+  <div class="am"><span class="dim">Oyiga</span><b><span class="roll"><span><span>1 600 000</span><span>800 000</span><span>400 000</span></span></span></b><span class="dim">so'm</span></div>
+  <div class="row"><span class="l">Ustama</span><span>0% · shartnoma asosida</span></div>
+</div></div></div><div class="meta"><div class="n">267</div><b>Rotary Knob</b><div class="br">Grafik dizayn kursi · bo'lib to'lash</div><p>Burama tugma 3 / 6 / 12 oyga prujina bilan buriladi, oylik summa aylanib kamayadi.</p><code>prompt: "kurs narxi | muddatlar 3,6,12 | ustama %"</code></div></div>
+
+<!-- 268 -->
+<div class="cardx"><div class="stage" data-bg="#7fe0a0,#1f6b3a,#0a2412"><div class="comp c268" style="--acc:#34c759"><div class="card">
+  <div class="ttl">Bepul sinov darsi</div>
+  <div class="grp">
+    <div><span>Kurs</span>Rus tili · noldan</div>
+    <div><span>Sana</span>Shanba, 3-oktabr</div>
+    <div><span>Vaqt</span>10:00 – 11:30</div>
+    <div><span>Ustoz</span>Malika Sobirova</div>
+  </div>
+  <div class="bw"><div class="bm"><span class="t">Yozilish</span><i class="spn"></i><i class="ok"></i></div></div>
+  <div class="cf">Joy band qilindi · ertaga eslatamiz</div>
+</div></div></div><div class="meta"><div class="n">268</div><b>Booking Morph</b><div class="br">Rus tili kursi · sinov darsi</div><p>Tugma bosiladi, doiraga qisqaradi, spinner aylanadi, yashil galochka bilan tasdiqlanadi.</p><code>prompt: "kurs | sana | vaqt | ustoz | tasdiq matni"</code></div></div>
+
+<!-- 269 -->
+<div class="cardx"><div class="stage" data-bg="#ffd66b,#8a6a10,#241c05"><div class="comp c269" style="--acc:#ff9f0a"><div class="card">
+  <div class="ttl">Haftalik reyting</div>
+  <div class="sb">Mental arifmetika · 2-daraja guruhi</div>
+  <div class="lbd">
+    <div class="rk"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+    <div class="ls">
+      <div class="p" style="--a:translateY(0);--b:translateY(108px)"><i style="background:linear-gradient(145deg,#ff6482,#ff2d55)">MA</i>Madina A.<span class="sc">910</span></div>
+      <div class="p" style="--a:translateY(108px);--b:translateY(216px)"><i style="background:linear-gradient(145deg,#64d2ff,#0a84ff)">JT</i>Jasur T.<span class="sc">880</span></div>
+      <div class="p" style="--a:translateY(216px);--b:translateY(324px)"><i style="background:linear-gradient(145deg,#b18cff,#5e5ce6)">ON</i>Oysha N.<span class="sc">850</span></div>
+      <div class="p" style="transform:translateY(432px);animation:none"><i style="background:linear-gradient(145deg,#8ee6a8,#30b158)">BQ</i>Bekzod Q.<span class="sc">790</span></div>
+      <div class="p me"><i style="background:linear-gradient(145deg,#ffc15e,#ff8a00)">SR</i><span>Sardor R.<em class="ar"></em></span><span class="gn">+140</span><span class="sc"><span class="roll"><span><span>820</span><span>960</span></span></span></span></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">269</div><b>Rank Climb</b><div class="br">Mental arifmetika · haftalik reyting</div><p>O'quvchi qatori ko'tarilib 4-o'rindan 1-ga chiqadi, qolganlar pastga suriladi, ball aylanadi.</p><code>prompt: "5 ta ism=ball | kim ko'tariladi | yangi ball"</code></div></div>
+
+<!-- 270 -->
+<div class="cardx"><div class="stage" data-bg="#e6e0d6,#7a6f60,#1e1b17"><div class="comp c270" style="--acc:#a2845e"><div class="card">
+  <div class="cert">
+    <div class="k">SERTIFIKAT</div>
+    <div class="t">Nemis tili · B1 daraja</div>
+    <div class="gv">Ushbu sertifikat egasi</div>
+    <div class="nm">Kamola Yusupova</div>
+    <div class="ln"></div>
+    <div class="gr"><div><small>Umumiy ball</small>86 / 100</div><div><small>Sana</small>27.09.2026</div></div>
+    <div class="sp"><div class="rp"></div><div class="sm"><b>B1</b><span>TASDIQLANDI</span></div></div>
+  </div>
+  <div class="row"><span class="l">Kurs davomiyligi</span><span>8 oy · 192 soat</span></div>
+</div></div></div><div class="meta"><div class="n">270</div><b>Stamp Thud</b><div class="br">Nemis tili markazi · sertifikat</div><p>Sertifikat ustiga muhr zarb bilan tushadi, qog'oz silkinadi, siyoh halqasi tarqaladi.</p><code>prompt: "til, daraja | ism | ball | sana | muhr matni"</code></div></div>
+
+<!-- 271 -->
+<div class="cardx"><div class="stage" data-bg="#8fe3d6,#1f6f66,#0a2420"><div class="comp c271" style="--acc:#30b0c7"><div class="card">
+  <div class="ttl">Davomat · Sentabr</div>
+  <div class="sb">Muhammadali · tayyorlov guruhi, 6 yosh</div>
+  <div class="cal">
+    <span class="h">Du</span><span class="h">Se</span><span class="h">Ch</span><span class="h">Pa</span><span class="h">Ju</span><span class="h">Sh</span><span class="h">Ya</span>
+    <span></span><span><b>1</b></span><span class="l" style="--dl:.2s"><i></i><b>2</b></span><span><b>3</b></span><span class="l" style="--dl:.38s"><i></i><b>4</b></span><span><b>5</b></span><span><b>6</b></span>
+    <span class="l" style="--dl:.56s"><i></i><b>7</b></span><span><b>8</b></span><span class="l" style="--dl:.74s"><i></i><b>9</b></span><span><b>10</b></span><span class="l" style="--dl:.92s"><i></i><b>11</b></span><span><b>12</b></span><span><b>13</b></span>
+    <span class="l" style="--dl:1.1s"><i></i><b>14</b></span><span><b>15</b></span><span class="l" style="--dl:1.28s"><i></i><b>16</b></span><span><b>17</b></span><span class="l m" style="--dl:1.46s"><i></i><b>18</b></span><span><b>19</b></span><span><b>20</b></span>
+    <span class="l" style="--dl:1.64s"><i></i><b>21</b></span><span><b>22</b></span><span class="l" style="--dl:1.82s"><i></i><b>23</b></span><span><b>24</b></span><span class="l" style="--dl:2s"><i></i><b>25</b></span><span><b>26</b></span><span><b>27</b></span>
+    <span class="l" style="--dl:2.18s"><i></i><b>28</b></span><span><b>29</b></span><span class="l" style="--dl:2.36s"><i></i><b>30</b></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="pg"><span class="l">Qatnashdi</span><div class="bar"><i></i></div><b><span class="roll od" style="--to:-10.8em"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span><span class="roll od" style="--to:-2.4em"><span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span></span>%</b></div>
+</div></div></div><div class="meta"><div class="n">271</div><b>Attendance Pop</b><div class="br">Bolalar markazi · ota-onaga hisobot</div><p>Oy kalendarida dars kunlari birma-bir doira bo'lib to'ladi, qoldirilgan kun halqa, foiz odometrdek chiqadi.</p><code>prompt: "oy | 1-kun hafta kuni | dars kunlari | qoldirilganlar"</code></div></div>
+
+<!-- 272 -->
+<div class="cardx"><div class="stage" data-bg="#b8e986,#4a7a2a,#15240c"><div class="comp c272" style="--acc:#34c759"><div class="card">
+  <div class="hd"><div><div class="ttl">Uy vazifasi</div><div class="dim">Bugun · 4 ta topshiriq</div></div>
+    <div class="rg"><svg viewBox="0 0 150 150"><circle class="bg" cx="75" cy="75" r="62"/><circle class="fg" cx="75" cy="75" r="62"/></svg><div class="pc"><span class="roll"><span><span>25</span><span>50</span><span>75</span><span>100</span></span></span>%</div></div></div>
+  <div class="it i1"><i class="cb"><b class="ck"></b></i><span class="tx">Harflarni yozish: A, B, D</span></div>
+  <div class="it i2"><i class="cb"><b class="ck"></b></i><span class="tx">20 gacha sanash</span></div>
+  <div class="it i3"><i class="cb"><b class="ck"></b></i><span class="tx">Rasm bo'yash: kuz</span></div>
+  <div class="it i4"><i class="cb"><b class="ck"></b></i><span class="tx">She'r yodlash</span></div>
+  <div class="dn">Barakalla! Hammasi bajarildi</div>
+</div></div></div><div class="meta"><div class="n">272</div><b>Homework Ring</b><div class="br">Maktabga tayyorlov · uy vazifasi</div><p>Topshiriqlar belgilanib chiziladi, halqa 25 dan 100% gacha to'ladi, oxirida "Barakalla" chiqadi.</p><code>prompt: "4 ta topshiriq | yakuniy matn"</code></div></div>
+
+<!-- 273 -->
+<div class="cardx"><div class="stage" data-bg="#ffb86b,#7a3f10,#200f05"><div class="comp c273 dark" data-theme="dark" style="--acc:#ff9f0a"><div class="card">
+  <div class="hd"><div class="ttl">Blok test</div><div class="tm"><i></i><span>38:2<span class="roll"><span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></span></span></span></div></div>
+  <div class="sb">Matematika · 30 savol · 60 daqiqa</div>
+  <div class="pb"><i></i></div>
+  <div class="qd">
+    <i class="a">1</i><i class="a">2</i><i class="a">3</i><i class="a">4</i><i class="a">5</i><i class="a">6</i><i class="a">7</i><i class="a">8</i><i class="a">9</i><i class="a">10</i>
+    <i class="a">11</i><i class="a">12</i>
+    <i class="q" style="--ba:var(--row);--bb:var(--acc);--bc:var(--acc);--bd:var(--acc);--ca:var(--dim);--cb:#1c1c1e;--cc:#1c1c1e;--cd:#1c1c1e">13</i>
+    <i class="q" style="--ba:var(--row);--bb:var(--row);--bc:var(--acc);--bd:var(--acc);--ca:var(--dim);--cb:var(--dim);--cc:#1c1c1e;--cd:#1c1c1e">14</i>
+    <i class="q" style="--ba:var(--row);--bb:var(--row);--bc:var(--row);--bd:var(--acc);--ca:var(--dim);--cb:var(--dim);--cc:var(--dim);--cd:#1c1c1e">15</i>
+    <i>16</i><i>17</i><i>18</i><i>19</i><i>20</i>
+    <i>21</i><i>22</i><i>23</i><i>24</i><i>25</i><i>26</i><i>27</i><i>28</i><i>29</i><i>30</i>
+    <b></b>
+  </div>
+  <div class="row"><span class="l">Javob berildi</span><span><span class="roll"><span><span>12</span><span>13</span><span>14</span><span>15</span></span></span> / 30</span></div>
+  <div class="btn">Keyingi savol</div>
+</div></div></div><div class="meta"><div class="n">273</div><b>Mock Test</b><div class="br">Abituriyent markazi · blok test</div><p>Taymer soniyalab sanaydi, tugma bosilganda savol nuqtasi to'ladi, halqa keyingi savolga sakraydi.</p><code>prompt: "fan | savollar soni | nechanchi savol | qolgan vaqt"</code></div></div>
+
+<!-- 274 -->
+<div class="cardx"><div class="stage" data-bg="#f2a3a3,#7a2a2a,#240a0a"><div class="comp c274" style="--acc:#ff3b30"><div class="card">
+  <div class="ttl">Daraja testi</div>
+  <div class="sb">Turk tili · 40 savol · 25 daqiqa</div>
+  <div class="gw">
+    <svg viewBox="0 0 600 330"><path class="ab" d="M60 300 A240 240 0 0 1 540 300"/><path class="af" d="M60 300 A240 240 0 0 1 540 300"/></svg>
+    <span class="lv" style="left:119px;top:241px">A1</span><span class="lv" style="left:188px;top:146px">A2</span><span class="lv on" style="left:300px;top:110px">B1</span><span class="lv" style="left:412px;top:146px">B2</span><span class="lv" style="left:481px;top:241px">C1</span>
+    <div class="nd"></div><div class="hub"></div>
+  </div>
+  <div class="rs"><b><span class="roll"><span><span>A1</span><span>A2</span><span>B1</span></span></span></b><span class="dim">24 / 40 to'g'ri</span></div>
+  <div class="btn">B1 guruhga yozilish</div>
+</div></div></div><div class="meta"><div class="n">274</div><b>Level Gauge</b><div class="br">Turk tili markazi · daraja testi</div><p>Strelka A1 dan B1 ga tebranib to'xtaydi, yoy to'ladi, daraja nomi pog'onama-pog'ona aylanadi.</p><code>prompt: "darajalar | natija | to'g'ri javoblar"</code></div></div>
+
+<!-- 275 -->
+<div class="cardx"><div class="stage" data-bg="#a8c8ff,#2f4a8a,#0d1530"><div class="comp c275" style="--acc:#5e5ce6"><div class="card">
+  <div class="ttl">O'quv yo'li</div>
+  <div class="sb">Koreys tili · noldan 4-darajagacha</div>
+  <div class="rm">
+    <div class="tr"><i></i></div>
+    <div class="m m1"><i class="nd"></i><div><b>Hangul alifbosi</b><small>12 dars</small></div><span>2 hafta</span></div>
+    <div class="m m2"><i class="nd"></i><div><b>1-daraja · boshlang'ich</b><small>48 dars</small></div><span>2 oy</span></div>
+    <div class="m m3"><i class="nd"></i><div><b>2-daraja · so'zlashuv</b><small>72 dars</small></div><span>3 oy</span></div>
+    <div class="m m4"><i class="nd"></i><div><b>3-daraja · grammatika</b><small>72 dars</small></div><span>3 oy</span></div>
+    <div class="m m5"><i class="nd"></i><div><b>Imtihonga tayyorlov</b><small>32 dars</small></div><span>2 oy</span></div>
+    <div class="pl"></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">275</div><b>Study Path</b><div class="br">Koreys tili markazi · o'quv yo'li</div><p>Vertikal yo'l bo'ylab chiziq o'sadi, bosqichlar galochka bilan ochiladi, joriy nuqta puls beradi.</p><code>prompt: "bosqich=darslar=muddat ; ... (3-6 ta)"</code></div></div>
+
+<!-- 276 -->
+<div class="cardx"><div class="stage" data-bg="#b5d8f5,#3c6e9a,#0f1d2b"><div class="comp c276" style="--acc:#007aff"><div class="card">
+  <div class="ttl">3 oydagi o'sish</div>
+  <div class="sb">Matematika · Abdulloh Rahimov</div>
+  <div class="tot"><b><span class="roll"><span><span>12</span><span>27</span></span></span></b><span class="dim">/ 30 ball</span><span class="dl">+15</span></div>
+  <div class="ch">
+    <div class="g"><i class="o" style="height:40%"></i><i class="nw" style="--ha:40%;--hb:90%;--dl:0s"><em>+5</em></i></div>
+    <div class="g"><i class="o" style="height:20%"></i><i class="nw" style="--ha:20%;--hb:80%;--dl:.12s"><em>+6</em></i></div>
+    <div class="g"><i class="o" style="height:60%"></i><i class="nw" style="--ha:60%;--hb:100%;--dl:.24s"><em>+4</em></i></div>
+  </div>
+  <div class="lb"><span>Algebra</span><span>Geometriya</span><span>Mantiq</span></div>
+  <div class="lg"><span><i style="background:var(--track)"></i>Iyun</span><span><i style="background:var(--acc)"></i>Sentabr</span></div>
+</div></div></div><div class="meta"><div class="n">276</div><b>Score Growth</b><div class="br">Matematika markazi · oldin / keyin</div><p>Kulrang "oldin" yonida ko'k ustunlar o'sadi, ustida +ball chiqadi, umumiy ball 12 dan 27 ga aylanadi.</p><code>prompt: "mavzu=oldin→keyin ; ... | maksimal ball"</code></div></div>
+
+<!-- 277 -->
+<div class="cardx"><div class="stage" data-bg="#bfe7c9,#3f7a55,#0f2217"><div class="comp c277" style="--acc:#30d158"><div class="stk">
+  <div class="nt n1"><i>KB</i><div><div class="ap"><span>Kimyo-biologiya markazi</span><span>32 daq</span></div><b>Farzandingiz darsga keldi</b><small>Kimyo · 14:02 · 3-xona</small></div></div>
+  <div class="nt n2"><i>KB</i><div><div class="ap"><span>Kimyo-biologiya markazi</span><span>12 daq</span></div><b>Baho qo'yildi: Kimyo — 5</b><small>Nazorat ishi · ustoz Nodira Qodirova</small></div></div>
+  <div class="nt n3"><i>KB</i><div><div class="ap"><span>Kimyo-biologiya markazi</span><span>hozir</span></div><b>Test natijasi: 86 / 100</b><small>Biologiya · haftalik test · guruhda 3-o'rin</small></div></div>
+</div></div></div><div class="meta"><div class="n">277</div><b>Parent Alerts</b><div class="br">Kimyo-biologiya markazi · ota-onaga xabar</div><p>Xabarlar tepadan tushib eskisini pastga suradi, oxirida hammasi bitta stakka yig'iladi.</p><code>prompt: "markaz nomi | 3 ta xabar: sarlavha | izoh | vaqt"</code></div></div>
+
+<!-- 278 -->
+<div class="cardx"><div class="stage" data-bg="#c9c2b0,#5a5040,#1a1712"><div class="comp c278 dark" data-theme="dark" style="--acc:#30d158"><div class="card">
+  <div class="ttl">Kurs dasturi</div>
+  <div class="sb">Shaxmat maktabi · boshlang'ich · 36 dars</div>
+  <div class="grp">
+    <div class="md m1"><div class="ic"><i class="lk"><b></b></i><i class="ck"></i></div><div class="tx"><b>Donalar yurishi</b><small>6 dars</small></div><span>1-oy</span></div>
+    <div class="md m2"><div class="ic"><i class="lk"><b></b></i><i class="ck"></i></div><div class="tx"><b>Mat qo'yish usullari</b><small>8 dars</small></div><span>2-oy</span></div>
+    <div class="md m3"><div class="ic"><i class="lk"><b></b></i><i class="ck"></i></div><div class="tx"><b>Debyut asoslari</b><small>10 dars</small></div><span>3-oy</span></div>
+    <div class="md m4"><div class="ic"><i class="lk"><b></b></i><i class="ck"></i></div><div class="tx"><b>Taktika: vilka, bog'lash</b><small>12 dars</small></div><span>4-oy</span></div>
+  </div>
+  <div class="pg"><span class="l">Progress</span><div class="bar"><i></i></div><b><span class="roll"><span><span>25</span><span>50</span><span>75</span><span>100</span></span></span>%</b></div>
+</div></div></div><div class="meta"><div class="n">278</div><b>Module Unlock</b><div class="br">Shaxmat maktabi · kurs dasturi</div><p>Qulf halqasi ko'tariladi, qulf so'nib galochka otiladi, modul yorishadi, progress to'ladi.</p><code>prompt: "modul=darslar=muddat ; ... (2-6 ta)"</code></div></div>
+
+<!-- 279 -->
+<div class="cardx"><div class="stage" data-bg="#f2b5c4,#8a4a5c,#2a1419"><div class="comp c279" style="--acc:#ff2d55"><div class="card">
+  <div class="ttl">Do'stingni olib kel</div>
+  <div class="sb">General English · har bir do'st uchun −10%</div>
+  <div class="dc"><b><span class="roll"><span><span>0</span><span>10</span><span>20</span><span>30</span></span></span>%</b><span class="dim">chegirma</span></div>
+  <div class="fr">
+    <div class="sl s1"><div><i style="background:linear-gradient(145deg,#ff9f0a,#ff6b00)">L</i></div><span>Lola</span></div>
+    <div class="sl s2"><div><i style="background:linear-gradient(145deg,#64d2ff,#007aff)">T</i></div><span>Timur</span></div>
+    <div class="sl s3"><div><i style="background:linear-gradient(145deg,#b18cff,#7d4cdb)">A</i></div><span>Anvar</span></div>
+  </div>
+  <div class="pb"><i></i><em style="left:33.3%"></em><em style="left:66.6%"></em></div>
+  <div class="row"><span class="l">Oylik to'lov</span><span class="roll"><span><span>650 000</span><span>585 000</span><span>520 000</span><span>455 000</span></span></span></div>
+</div></div></div><div class="meta"><div class="n">279</div><b>Referral Slots</b><div class="br">Ingliz tili kursi · do'stingni olib kel</div><p>Bo'sh doiralarga do'stlar avatari otilib kiradi, chegirma 0 dan 30% gacha, oylik narx kamayadi.</p><code>prompt: "chegirma qadami % | 3 ta ism | oylik narx"</code></div></div>
+
+<!-- 280 -->
+<div class="cardx"><div class="stage" data-bg="#a6e3c8,#2f6f55,#0c2219"><div class="comp c280" style="--acc:#007aff"><div class="card">
+  <div class="qh"><span class="dim">5 / 10 savol</span><span class="pt">+10 ball</span></div>
+  <div class="qb"><i></i></div>
+  <div class="q">“Kitob” so'zining arabcha ko'plik shakli qaysi?</div>
+  <div class="op oa"><span class="k">A</span>maktab<i class="mk"></i></div>
+  <div class="op ob"><span class="k">B</span>kutub<i class="mk ck"></i></div>
+  <div class="op"><span class="k">C</span>kotib</div>
+  <div class="op"><span class="k">D</span>kitobat</div>
+</div></div></div><div class="meta"><div class="n">280</div><b>Quiz Feedback</b><div class="br">Arab tili markazi · mini test</div><p>Noto'g'ri javob qizarib silkinadi, to'g'risi yashil bo'lib sakraydi, +10 ball otilib chiqadi.</p><code>prompt: "savol | 4 variant | noto'g'ri tanlov | to'g'ri javob"</code></div></div>
+
+<!-- 281 -->
+<div class="cardx"><div class="stage" data-bg="#8fb0ff,#23407a,#0a1226"><div class="comp c281 dark" data-theme="dark" style="--acc:#0a84ff"><div class="card">
+  <div class="ttl">Yangi guruh boshlanishiga</div>
+  <div class="sb">Prezident maktabiga tayyorlov · 4-sinflar</div>
+  <div class="fc">
+    <div class="u"><div class="fl"><span class="t"><b>03</b></span><span class="b"><b>03</b></span></div><small>kun</small></div>
+    <span class="cl">:</span>
+    <div class="u"><div class="fl"><span class="t"><b>14</b></span><span class="b"><b>14</b></span></div><small>soat</small></div>
+    <span class="cl">:</span>
+    <div class="u"><div class="fl mv">
+      <span class="t t0"><b>27</b></span><span class="t t1"><b>26</b></span><span class="t t2"><b>25</b></span><span class="t t3"><b>24</b></span>
+      <span class="b b0"><b>27</b></span><span class="b b1"><b>26</b></span><span class="b b2"><b>25</b></span><span class="b b3"><b>24</b></span>
+    </div><small>daqiqa</small></div>
+  </div>
+  <div class="row"><span class="l">Boshlanish</span><span>1-oktabr, 09:00</span></div>
+  <div class="btn">Joyni band qilish</div>
+</div></div></div><div class="meta"><div class="n">281</div><b>Flip Countdown</b><div class="br">Prezident maktabiga tayyorlov · yangi guruh</div><p>Kun : soat : daqiqa taymeri, daqiqa kartasi mexanik flip bilan varaqlanib, prujina bilan qo'nadi.</p><code>prompt: "kun | soat | daqiqa | sarlavha | sana"</code></div></div>
+
+<!-- 282 -->
+<div class="cardx"><div class="stage" data-bg="#e0c3f5,#6a3f8f,#1d1128"><div class="comp c282" style="--acc:#af52de"><div class="card">
+  <div class="ttl">Filialni tanlang</div>
+  <div class="sb">Buxgalteriya kursi · Toshkentda 4 filial</div>
+  <div class="sr"><i class="mg"></i><span class="ty"><em style="--dl:0s">Y</em><em style="--dl:.15s">u</em><em style="--dl:.3s">n</em><em style="--dl:.45s">u</em><em style="--dl:.6s">s</em></span><i class="cr"></i><span class="ph">Tuman yoki mo'ljal</span></div>
+  <div class="br h"><i class="pin"></i><div><b>Chilonzor</b><small>Bunyodkor shoh ko'chasi, 12</small></div><span>2.4 km</span></div>
+  <div class="br s"><i class="pin"></i><div><b>Yunusobod</b><small>Amir Temur ko'chasi, 108</small></div><span>5.1 km</span><i class="ck"></i></div>
+  <div class="br h"><i class="pin"></i><div><b>Mirzo Ulug'bek</b><small>Buyuk Ipak yo'li, 45</small></div><span>6.8 km</span></div>
+  <div class="br h"><i class="pin"></i><div><b>Sergeli</b><small>Yangi Sergeli ko'chasi, 7</small></div><span>11.3 km</span></div>
+  <div class="btn">Tanlash</div>
+</div></div></div><div class="meta"><div class="n">282</div><b>Branch Search</b><div class="br">Buxgalteriya kursi · filial tanlash</div><p>Qidiruvga harflar yoziladi, mos kelmagan filiallar yig'iladi, topilgani tanlanib galochka oladi.</p><code>prompt: "filial=manzil=masofa ; ... | yoziladigan so'z"</code></div></div>
+
+</div></div>
+<div class="modal" id="modal"></div>
+<script>
+var H=1920, theme="preset";
+function fit(st){
+  var u=st.clientWidth/1080; st.style.height=(H*u)+"px";
+  var c=st.querySelector(".comp"); c.style.setProperty("--u",u); c.style.setProperty("--H",H+"px");
+  var dark=theme==="dark"||(theme==="preset"&&c.dataset.theme==="dark"); c.classList.toggle("dark",dark);
+}
+function all(){document.querySelectorAll(".stage").forEach(fit)}
+document.querySelectorAll(".stage").forEach(function(st){
+  var b=st.dataset.bg.split(","); var f=document.createElement("div"); f.className="foot";
+  f.style.background="radial-gradient(circle at 30% 25%,"+b[0]+",transparent 55%),radial-gradient(circle at 75% 70%,"+b[1]+",transparent 60%),"+b[2];
+  st.insertBefore(f,st.firstChild);
+});
+function wire(id,fn){document.getElementById(id).addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  this.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b)});fn(b.dataset.v);all();});}
+wire("fmt",function(v){H=+v}); wire("thm",function(v){theme=v});
+var modal=document.getElementById("modal");
+document.querySelectorAll(".cardx").forEach(function(cx){cx.addEventListener("click",function(){
+  modal.innerHTML=""; var st=cx.querySelector(".stage").cloneNode(true); modal.appendChild(st); modal.classList.add("on"); fit(st);});});
+modal.addEventListener("click",function(){modal.classList.remove("on");modal.innerHTML=""});
+window.addEventListener("resize",all); all();
+var m=location.hash.match(/t=([\d.]+)/); if(m){document.getAnimations().forEach(function(a){a.pause();a.currentTime=parseFloat(m[1])*1000;});}
+</script>
+</body>
+</html>
