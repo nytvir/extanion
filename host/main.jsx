@@ -171,6 +171,26 @@ function nytvir_execute(cmd) {
         else if (cmd === "s47Before") { _s47Before(); }
         else if (cmd === "s47IslandSw") { _s47IslandSw(); }
         else if (cmd === "s47Ring") { _s47Ring(); }
+        else if (cmd === "s48Band") { _s48Band(); }
+        else if (cmd === "s48Timetable") { _s48Timetable(); }
+        else if (cmd === "s48Teacher") { _s48Teacher(); }
+        else if (cmd === "s48Seats") { _s48Seats(); }
+        else if (cmd === "s48Knob") { _s48Knob(); }
+        else if (cmd === "s48Booking") { _s48Booking(); }
+        else if (cmd === "s48Rank") { _s48Rank(); }
+        else if (cmd === "s48Stamp") { _s48Stamp(); }
+        else if (cmd === "s48Attend") { _s48Attend(); }
+        else if (cmd === "s48Homework") { _s48Homework(); }
+        else if (cmd === "s48MockTest") { _s48MockTest(); }
+        else if (cmd === "s48Gauge") { _s48Gauge(); }
+        else if (cmd === "s48Path") { _s48Path(); }
+        else if (cmd === "s48Growth") { _s48Growth(); }
+        else if (cmd === "s48Alerts") { _s48Alerts(); }
+        else if (cmd === "s48Unlock") { _s48Unlock(); }
+        else if (cmd === "s48Referral") { _s48Referral(); }
+        else if (cmd === "s48Quiz") { _s48Quiz(); }
+        else if (cmd === "s48Flip") { _s48Flip(); }
+        else if (cmd === "s48Branch") { _s48Branch(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -16719,5 +16739,1620 @@ function _s47Ring() {
         if (cap[i]) _s47Txt(x, cap[i], 30 * K, "reg", "C", "izoh " + (i + 1), "[" + cx + ", " + (rc + 72 * K) + "+(" + i + "-s)*" + (30 * K) + "]", _s47Col(x, "Dim"), "op*st(" + i + ")");
     }
     if (M[1]) _s47Btn(x, M[1], cx, y + 396 * K + 78 * K, CW - 2 * PAD);
+    _s47Finish(x);
+}
+
+// ============================================================
+// S48 O'QUV MARKAZ SET (v2.46) - board 10 picks: all 20 (263-282)
+// Built on the S47 rig (_s47Begin/_s47Finish + helpers). Numbers match
+// reference-lab/boards/board-10-oquv-markaz.html.
+// ============================================================
+
+// ---------- 263 BAND REVEAL ----------
+// Skill bars fill one after another (state 1), the big score rolls old -> new in accent
+// colour and the growth badge pops (state 2), button tap.
+var S48_P263 = [
+    ["IELTS markazi", "Azizbek Karimov \u00B7 Academic \u00B7 12-sentabr", "Listening = 8.0 / 9; Reading = 7.5 / 9; Writing = 6.5 / 9; Speaking = 7.0 / 9", "Umumiy band | 5.5, 6.0, 6.5, 7.0, 7.5 | +2.0", "Mock IELTS natijasi | Xatolar tahlili | light | indigo"],
+    ["SAT markazi", "Madina Yusupova \u00B7 Digital SAT \u00B7 5-oktabr", "Math = 740 / 800; Reading & Writing = 650 / 800", "Umumiy ball | 1150, 1230, 1310, 1390 | +240", "SAT sinov natijasi | Grant imkoniyati | light | blue"],
+    ["IT akademiya", "Jasur Aliyev \u00B7 Frontend \u00B7 3-oy yakuni", "HTML/CSS = 92 / 100; JavaScript = 84 / 100; React = 78 / 100; Loyiha = 95 / 100", "O'rtacha ball | 61, 70, 80, 87 | +26", "Modul imtihoni | Sertifikat olish | dark | blue"],
+    ["Koreys tili markazi", "Sevara Qodirova \u00B7 TOPIK II \u00B7 mock", "Tinglash = 78 / 100; O'qish = 72 / 100; Yozish = 58 / 100", "Umumiy ball | 142, 165, 188, 208 | +66", "TOPIK sinov natijasi | Keyingi daraja | light | red"],
+    ["Rus tili kursi", "Diyora Rahimova \u00B7 B1 guruh \u00B7 yakuniy test", "Grammatika = 34 / 40; Leksika = 31 / 40; Tinglash = 27 / 40; Nutq = 30 / 40", "Umumiy natija | 68%, 74%, 80%, 76% | +8%", "Rus tili: B1 testi | Natijani yuklash | light | teal"],
+    ["Abituriyent markazi", "Bobur Tursunov \u00B7 DTM sinov \u00B7 3-blok", "Matematika = 83.7 / 93; Fizika = 56.7 / 63; Majburiy fanlar = 29.7 / 33", "Umumiy ball | 142.5, 151.2, 160.8, 170.1 | +27.6", "DTM sinov testi | Tahlilni ko'rish | light | green"],
+    ["Mental arifmetika", "Samir, 8 yosh \u00B7 3-bosqich \u00B7 oylik test", "Tezlik = 45 / 50; Aniqlik = 48 / 50; Flesh-karta = 38 / 50", "Umumiy ball | 96, 110, 124, 131 | +35", "Oylik natija | Ota-onaga yuborish | light | orange"],
+    ["Turk tili kursi", "Kamola Ergasheva \u00B7 B2 \u00B7 TOMER mock", "Tinglash = 21 / 25; O'qish = 22 / 25; Yozish = 17 / 25; Gapirish = 19 / 25", "Umumiy ball | 62, 68, 74, 79 | +17", "TOMER sinovi | Sertifikatga tayyorlov | light | purple"],
+    ["Arab tili markazi", "Abdulloh Karimov \u00B7 2-bosqich \u00B7 oraliq", "Qiroat = 18 / 20; Grammatika = 16 / 20; Lug'at = 17 / 20; Tinglash = 15 / 20", "Umumiy ball | 51, 58, 66 | +15", "Oraliq nazorat | Natijani ko'rish | light | brown"],
+    ["Olimpiada matematika", "Temur Ahmedov \u00B7 7-sinf \u00B7 viloyat bosqichi", "Algebra = 18 / 20; Geometriya = 15 / 20; Kombinatorika = 12 / 20; Mantiq = 17 / 20", "Umumiy ball | 44, 50, 56, 62 | +18", "Olimpiada sinovi | Tayyorlovga yozilish | dark | purple"]
+];
+function _s48Band() {
+    var PR = _s47Pick("Band Reveal (263)", S48_P263); if (!PR) return;
+    var q1 = prompt("Kichik yozuv: ism, imtihon, sana (bo'sh = yo'q)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Ko'nikmalar (2-5), ; bilan:  Nom = ball / maksimal", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Umumiy yozuv | eski ball, ..., yangi ball (vergul) | badge (bo'sh = yo'q)", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Sarlavha | Tugma (bo'sh = yo'q) | light/dark | rang", PR[4]); if (q4 === null) return;
+    var rr = String(q2).split(";"), rows = [], i;
+    for (i = 0; i < rr.length && rows.length < 5; i++) {
+        var r = _s45Trim(rr[i]); if (!r) continue;
+        var eq = r.indexOf("="), nm = _s45Trim(eq >= 0 ? r.substring(0, eq) : r), vm = _s47Split(eq >= 0 ? r.substring(eq + 1) : "", 2, "/");
+        var mx = parseFloat(vm[1]); if (!(mx > 0)) mx = 100;
+        rows.push([nm, vm[0], Math.max(0, Math.min(1, (parseFloat(vm[0]) || 0) / mx))]);
+    }
+    if (rows.length < 1) { alert("Kamida 1 ta ko'nikma kerak: Nom = 7.5 / 9"); return; }
+    var B = _s47Split(q3, 3), BV = _s47List(B[1]), M = _s47Split(q4, 4), sub = _s45Trim(q1), n = rows.length;
+    if (BV.length < 1) BV = ["0"];
+    var x = _s47Begin("BAND", { states: 3, look: _s47Look(M[2], M[3]), tap: !!M[1], first: 1.1, hold: 1.4, extraEnd: M[1] ? 0 : 0.8,
+        colors: { "Badge": [0.204, 0.78, 0.349], "Badge matni": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, RH = 68 * K, BF = 150 * K;
+    var H = PAD + (M[0] ? 74 * K : 0) + (sub ? 41 * K : 0) + 225 * K + n * RH + (M[1] ? 130 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.85], _s47Col(x, "Text")); y += 74 * K; }
+    if (sub) { _s47Txt(x, sub, 26 * K, "reg", "L", "kichik yozuv", [left, y + 26 * K * 0.85 - 18 * K], _s47Col(x, "Dim")); y += 41 * K; }
+    // overview: label, rolling score, badge
+    _s47Txt(x, B[0] || "Umumiy", 26 * K, "reg", "L", "umumiy yozuv", [left, y + 26 * K * 0.85], _s47Col(x, "Dim"));
+    y += 31 * K;
+    var bb = y + BF * 0.93, nb = BV.length, RL = "var r=Math.max(0,(s-1.1)/0.9)*" + (nb - 1) + "; ";
+    var BC = "var a=" + _s47Col(x, "Text") + ".value, b=" + _s47Col(x, "Accent") + ".value; add(a, mul(sub(b,a), cl((s-1.1)/0.9)))";
+    for (i = 0; i < nb; i++) {
+        var bl = _s47Txt(x, BV[i], BF, "bold", "L", "ball " + (i + 1), RL + "[" + left + ", " + bb + "+(" + i + "-r)*" + (BF * 0.5) + "]", BC, RL + "op*cl(1-Math.abs(" + i + "-r)*1.7)");
+        bl.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + RL + "var k=100-8*cl(Math.abs(sp.velocity)/10)*cl(1-Math.abs(" + i + "-r)); [k,k]";
+    }
+    y += BF * 1.2;
+    if (B[2]) {
+        var bw = (B[2].length * 17 + 44) * K, bh = 56 * K, bx = right - bw / 2, by = y - 44 * K - bh / 2;
+        var PO = "var q=sp.valueAtTime(time-0.15); var k=Math.max(0,(q-1.2)/0.8)*100; [k,k]";
+        var bg = _s47Rect(x, "badge", [bw, bh], [0, 0], 18 * K, _s47Col(x, "Badge"));
+        bg.property("ADBE Transform Group").property("ADBE Position").setValue([bx, by]);
+        bg.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + PO;
+        var bt = _s47Txt(x, B[2], 30 * K, "semi", "C", "badge matni", [0, 0], _s47Col(x, "Badge matni"));
+        bt.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, -10.5 * K]);
+        bt.property("ADBE Transform Group").property("ADBE Position").setValue([bx, by]);
+        bt.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + PO;
+    }
+    y += 14 * K;
+    // skill rows: label | track + fill | value (staggered through time so retiming still works)
+    var lw = 0; for (i = 0; i < n; i++) lw = Math.max(lw, rows[i][0].length * 27 * 0.55 * K);
+    lw = Math.max(120 * K, Math.min(280 * K, lw)); var vw = 70 * K, trL = left + lw + 22 * K, trW = right - vw - 22 * K - trL;
+    for (i = 0; i < n; i++) {
+        var yc = y + RH * (i + 0.5), nm2 = "qator " + (i + 1), Q = "var u=cl(sp.valueAtTime(time-" + (i * 0.12) + ")); u=u*u*(3-2*u); ";
+        _s47Txt(x, rows[i][0], 27 * K, "reg", "L", nm2 + " nom", [left, yc + 27 * K * 0.35], _s47Col(x, "Text"));
+        _s47Rect(x, nm2 + " yo'lak", [trW, 14 * K], [trL + trW / 2, yc], 7 * K, _s47Col(x, "Row"));
+        var FW = Q + "var w=Math.max(" + (0.5 * K) + ", " + (trW * rows[i][2]) + "*u); ";
+        _s47Rect(x, nm2 + " to'lish", FW + "[w, " + (14 * K) + "]", FW + "[" + trL + "+w/2, " + yc + "]", 7 * K, _s47Col(x, "Accent"), Q + "op*cl(u*6)");
+        _s47Txt(x, rows[i][1], 30 * K, "semi", "R", nm2 + " ball", [right, yc + 30 * K * 0.35], _s47Col(x, "Text"), Q + "op*cl((u-0.55)/0.45)");
+    }
+    y += n * RH;
+    if (M[1]) _s47Btn(x, M[1], cx, y + 26 * K + 52 * K, IW);
+    _s47Finish(x);
+}
+
+// ---------- 264 TIMETABLE DROP ----------
+// Weekly grid (days x times). On the switch every lesson block drops from above with a spring,
+// one after another (delay read from s through time, so retiming the Tab key still works).
+var S48_P264 = [
+    ["IT akademiya", "Du, Se, Ch, Pa, Ju, Sh | 09:00, 14:00, 18:00", "HTML / Du / 09:00 / Xona 2 / #0a84ff; CSS / Ch / 09:00 / Xona 2; JS / Se / 14:00 / Xona 4 / #ff9f0a; JS / Pa / 14:00 / Xona 4; React / Ju / 18:00 / Lab / #bf5af2; Loyiha / Sh / 14:00 / Lab / #30d158", "Keyingi dars = Du, 09:00 \u00B7 HTML", "Dars jadvali | Frontend dasturlash \u00B7 3-guruh | dark | blue"],
+    ["IELTS markazi", "Du, Se, Ch, Pa, Ju | 08:00, 15:00, 19:00", "Reading / Du / 08:00 / Xona 5 / #5856d6; Writing / Se / 15:00 / Xona 5 / #ff9500; Reading / Ch / 08:00 / Xona 5; Speaking / Pa / 19:00 / Klub / #34c759; Mock / Ju / 15:00 / Zal / #ff3b30", "Mock IELTS = Juma, 15:00 \u00B7 Zal", "IELTS 7.0 guruhi | Haftalik jadval | light | indigo"],
+    ["Bolalar markazi", "Du, Se, Ch, Pa, Ju | 10:00, 16:00", "Lego / Du / 10:00 / Xona 1 / #ff9500; Rasm / Se / 16:00 / Xona 3 / #ff2d55; Ingliz / Ch / 10:00 / Xona 2 / #007aff; Shaxmat / Pa / 16:00 / Xona 1 / #34c759; Raqs / Ju / 10:00 / Zal / #af52de", "Keyingi mashg'ulot = Du, 10:00 \u00B7 Lego", "Bolajon jadvali | 5-7 yosh \u00B7 kichik guruh | light | orange"],
+    ["Koreys tili", "Du, Ch, Ju | 09:00, 15:00, 18:30", "Grammatika / Du / 09:00 / Xona 3 / #ff3b30; Hangul / Ch / 09:00 / Xona 3 / #ff9500; Suhbat / Ju / 15:00 / Xona 1 / #5ac8fa; TOPIK / Ch / 18:30 / Zal / #5856d6", "Keyingi dars = Du, 09:00 \u00B7 Grammatika", "Koreys tili | TOPIK I \u00B7 2-guruh | light | red"],
+    ["Abituriyent markazi", "Du, Se, Ch, Pa, Ju, Sh | 08:30, 14:00", "Algebra / Du / 08:30 / 12-xona / #007aff; Fizika / Se / 14:00 / 7-xona / #ff9500; Geometr. / Ch / 08:30 / 12-xona; Fizika / Pa / 14:00 / 7-xona; Test / Sh / 08:30 / Zal / #ff3b30", "Blok test = Shanba, 08:30", "DTM tayyorlov | Matematika + Fizika | light | blue"],
+    ["Rus tili kursi", "Du, Se, Ch, Pa, Ju | 09:00, 17:00, 19:00", "Grammat. / Du / 17:00 / Xona 4 / #34aadc; Nutq / Ch / 17:00 / Xona 4 / #34c759; Diktant / Ju / 19:00 / Xona 2 / #ff9500; Kino / Se / 19:00 / Zal / #af52de", "Keyingi dars = Du, 17:00 \u00B7 Grammatika", "Rus tili A2 | Kechki guruh \u00B7 12 kishi | light | teal"],
+    ["Robototexnika", "Se, Pa, Sh | 10:00, 15:00", "Arduino / Se / 10:00 / Lab 1 / #007aff; Sensor / Pa / 10:00 / Lab 1 / #5ac8fa; Montaj / Pa / 15:00 / Lab 2 / #ff9500; Musobaqa / Sh / 15:00 / Zal / #ff3b30", "Keyingi mashg'ulot = Se, 10:00 \u00B7 Lab 1", "Robototexnika | 10-14 yosh \u00B7 Arduino guruhi | dark | blue"],
+    ["Mental arifmetika", "Du, Se, Ch, Pa, Ju, Sh | 09:00, 16:00", "Abakus / Du / 16:00 / Xona 2 / #ff9500; Flesh / Ch / 16:00 / Xona 2 / #34c759; Abakus / Ju / 16:00 / Xona 2; Olimp. / Sh / 09:00 / Zal / #af52de", "Keyingi dars = Du, 16:00 \u00B7 Abakus", "Mental arifmetika | 6-9 yosh \u00B7 2-bosqich | light | orange"],
+    ["Dizayn kursi", "Du, Se, Ch, Pa, Ju | 10:00, 14:00, 19:00", "Figma / Du / 19:00 / Mac lab / #af52de; PS / Se / 19:00 / Mac lab / #007aff; Figma / Ch / 19:00 / Mac lab; Brending / Pa / 14:00 / Xona 6 / #ff9500; Portfolio / Ju / 10:00 / Mac lab / #34c759", "Keyingi dars = Du, 19:00 \u00B7 Figma", "Grafik dizayn | Kechki guruh \u00B7 3-oy | light | purple"],
+    ["Arab tili markazi", "Du, Se, Ch, Pa, Ju | 07:00, 18:00", "Qiroat / Du / 07:00 / Xona 1 / #34c759; Sarf / Se / 18:00 / Xona 2 / #ff9500; Nahv / Ch / 18:00 / Xona 2 / #007aff; Suhbat / Ju / 07:00 / Xona 1 / #af52de", "Keyingi dars = Du, 07:00 \u00B7 Qiroat", "Arab tili | Boshlang'ich \u00B7 ertalabki guruh | light | green"]
+];
+function _s48Timetable() {
+    var PR = _s47Pick("Timetable Drop (264)", S48_P264); if (!PR) return;
+    var q1 = prompt("Kunlar (vergul, 2-7) | Vaqtlar (vergul, 1-4)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Darslar (1-10), ; bilan:  Fan / kun / vaqt / xona / #rang\n(rang bo'sh = shu fanning oldingi rangi)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Pastki qator: nom = qiymat   (bo'sh = qatorsiz)", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Sarlavha | kichik yozuv | light/dark | rang", PR[4]); if (q4 === null) return;
+    var G = _s47Split(q1, 2), D = _s47List(G[0]), T = _s47List(G[1]), i, j;
+    if (D.length < 1) D = ["Du", "Se", "Ch", "Pa", "Ju"]; if (D.length > 7) D.length = 7;
+    if (T.length < 1) T = ["09:00"]; if (T.length > 4) T.length = 4;
+    var ls = String(q2).split(";"), BL = [], cols = {}, cn = [], last = {};
+    for (i = 0; i < ls.length && BL.length < 10; i++) {
+        if (!_s45Trim(ls[i])) continue;
+        var p = _s47Split(ls[i], 5, "/"), di = -1, ti = -1;
+        for (j = 0; j < D.length; j++) if (D[j].toLowerCase() === p[1].toLowerCase()) di = j;
+        for (j = 0; j < T.length; j++) if (T[j] === p[2]) ti = j;
+        if (di < 0 || ti < 0 || !p[0]) continue;
+        var ck = "Fan: " + p[0].replace(/"/g, "");
+        if (!cols[ck]) { cols[ck] = p[4] ? _s47Hex(p[4]) : [0.04, 0.52, 1]; cn.push(ck); } else if (p[4]) cols[ck] = _s47Hex(p[4]);
+        BL.push({ nm: p[0], room: p[3], d: di, t: ti, ck: ck });
+    }
+    if (!BL.length) { alert("Darslar topilmadi: kun va vaqt yuqoridagi ro'yxatda bo'lishi kerak"); return; }
+    var M = _s47Split(q4, 4), rowS = _s45Trim(q3), rl = "", rv = "", nb = BL.length;
+    if (rowS) { var eq = rowS.indexOf("="); rl = _s45Trim(eq >= 0 ? rowS.substring(0, eq) : rowS); rv = eq >= 0 ? _s45Trim(rowS.substring(eq + 1)) : ""; }
+    cols["Blok matni"] = [1, 1, 1];
+    var DL = 0.3, ST = 0.13, x = _s47Begin("TTBL", { states: 2, look: _s47Look(M[2], M[3]), first: 0.9, extraEnd: DL + ST * nb + 1.0, colors: cols }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, GP = 10 * K, TW = 78 * K, HH = 40 * K;
+    var RH = (T.length > 3 ? 96 : 112) * K, nd = D.length, cw = (IW - TW - nd * GP) / nd;
+    var GH = HH + T.length * (RH + GP);
+    var H = PAD + (M[0] ? 74 * K : 0) + (M[1] ? 41 * K : 0) + GH + (rl ? 108 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.85], _s47Col(x, "Text")); y += 74 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 26 * K * 0.85 - 18 * K], _s47Col(x, "Dim")); y += 41 * K; }
+    var colX = function (d) { return left + TW + GP + d * (cw + GP) + cw / 2; };
+    var rowY = function (t) { return y + HH + GP + t * (RH + GP) + RH / 2; };
+    for (j = 0; j < nd; j++) _s47Txt(x, D[j], 24 * K, "reg", "C", "kun " + (j + 1), [colX(j), y + HH / 2 + 24 * K * 0.35], _s47Col(x, "Dim"));
+    for (i = 0; i < T.length; i++) {
+        _s47Txt(x, T[i], 22 * K, "reg", "L", "vaqt " + (i + 1), [left, rowY(i) - RH / 2 + 12 * K + 22 * K * 0.8], _s47Col(x, "Dim"));
+        for (j = 0; j < nd; j++) _s47Rect(x, "katak " + (i + 1) + "-" + (j + 1), [cw, RH], [colX(j), rowY(i)], 18 * K, _s47Col(x, "Row"));
+    }
+    // lesson blocks: rect + 2 texts share one drop expression; texts anchored on the block centre so scale matches
+    for (i = 0; i < nb; i++) {
+        var b = BL[i], bx = colX(b.d), by = rowY(b.t), nm = "dars " + (i + 1);
+        var Q = "var q=sp.valueAtTime(time-" + (DL + ST * i) + "); ";
+        var PS = x.PRE + Q + "[" + bx + ", " + by + "-(1-q)*" + (150 * K) + "]", SC = x.PRE + Q + "var k=92+8*cl(q); [k,k]", OP = Q + "op*cl(q*2.5)";
+        var fs = Math.max(15 * K, Math.min(22 * K, (cw - 22 * K) / Math.max(1, b.nm.length * 0.6)));
+        var L = [_s47Rect(x, nm, [cw, RH], [0, 0], 18 * K, _s47Col(x, b.ck), OP),
+            _s47Txt(x, b.nm, fs, "bold", "L", nm + " fan", [0, 0], _s47Col(x, "Blok matni"), OP)];
+        var loc = [[0, 0], [bx - (bx - cw / 2 + 11 * K), by - (by - RH / 2 + 14 * K + fs * 0.8)]];
+        if (b.room) { L.push(_s47Txt(x, b.room, 19 * K, "reg", "L", nm + " xona", [0, 0], _s47Col(x, "Blok matni"), Q + "op*cl(q*2.5)*0.85")); loc.push([cw / 2 - 11 * K, -(RH / 2 - 14 * K - 19 * K * 0.15)]); }
+        _s46Shadow(L[0], 71, 8 * K, 20 * K);
+        for (j = 0; j < L.length; j++) {
+            var tr = L[j].property("ADBE Transform Group");
+            tr.property("ADBE Anchor Point").setValue(loc[j]); tr.property("ADBE Position").expression = PS; tr.property("ADBE Scale").expression = SC;
+        }
+        L[0].motionBlur = true;
+    }
+    y += GH;
+    if (rl) {
+        var rc = y + 16 * K + 46 * K;
+        _s47Rect(x, "qator", [IW, 92 * K], [cx, rc], 22 * K, _s47Col(x, "Row"));
+        _s47Txt(x, rl, 30 * K, "reg", "L", "qator nom", [left + 28 * K, rc + 30 * K * 0.35], _s47Col(x, "Dim"));
+        if (rv) _s47Txt(x, rv, 30 * K, "semi", "R", "qator qiymat", [right - 28 * K, rc + 30 * K * 0.35], _s47Col(x, "Text"),
+            "var q=sp.valueAtTime(time-" + (DL + ST * nb) + "); op*cl(q)");
+    }
+    _s47Finish(x);
+}
+
+// ---------- 265 TEACHER PROFILE ----------
+// Avatar ring draws (Trim Paths by s), stars pop in one by one up to the rating,
+// rating + 3 stat numbers count up (Source Text from s), button tap.
+var S48_P265 = [
+    ["SAT markazi", "Dilnoza Mirzayeva | SAT Math ustozi \u00B7 6 yil | DM", "4.8 | 312 sharh", "1 240 = o'quvchi; 1 480 = o'rtacha SAT; 92% = grant oldi", " | Sinov darsiga yozilish | light | orange | ff8a00"],
+    ["IELTS markazi", "Sardor Rahimov | IELTS Speaking \u00B7 8 yil | SR", "4.9 | 540 sharh", "2 100 = o'quvchi; 7.5 = o'rtacha band; 86% = 7+ oldi", " | Bepul sinov darsi | light | indigo | 5856d6"],
+    ["IT akademiya", "Otabek Xolmatov | Python backend \u00B7 5 yil | OX", "4.7 | 186 sharh", "860 = bitiruvchi; 64% = ishga kirdi; 12 = real loyiha", " | Kursga yozilish | dark | blue | 0a84ff"],
+    ["Koreys tili", "Nilufar Saidova | Koreys tili \u00B7 TOPIK 6 \u00B7 7 yil | NS", "4.9 | 228 sharh", "950 = o'quvchi; 74% = TOPIK II; 38 = Koreyaga grant", " | Guruhga yozilish | light | red | ff3b30"],
+    ["Rus tili kursi", "Elena Kim | Rus tili \u00B7 filolog \u00B7 12 yil | EK", "4.8 | 405 sharh", "3 400 = o'quvchi; 96% = davomat; 15 = guruh", " | Sinov darsi | light | teal | 30b0c7"],
+    ["Mental arifmetika", "Gulnoza Tosheva | Mental arifmetika \u00B7 4 yil | GT", "5.0 | 158 sharh", "420 = bola; 60 = olimpiada g'olibi; 98% = ota-ona mamnun", " | Bepul sinov darsi | light | orange | ff9f0a"],
+    ["Abituriyent markazi", "Behruz Qodirov | Matematika \u00B7 DTM \u00B7 10 yil | BQ", "4.9 | 610 sharh", "1 850 = abituriyent; 89% = talaba bo'ldi; 172 = o'rtacha ball", "Ustoz bilan tanishing | Yozilish | light | green | 34c759"],
+    ["Robototexnika", "Aziz Nazarov | Robototexnika \u00B7 3 yil | AN", "4.8 | 97 sharh", "310 = o'quvchi; 24 = musobaqa; 11 = sovrinli o'rin", " | Sinov darsiga yozilish | dark | blue | 5ac8fa"],
+    ["Turk tili kursi", "Mehmet Yilmaz | Turk tili \u00B7 ona tili \u00B7 9 yil | MY", "4.9 | 276 sharh", "1 120 = o'quvchi; 81% = B2 va yuqori; 45 = Turkiyaga grant", " | Guruhga yozilish | light | red | e0443a"],
+    ["Dizayn kursi", "Kamila Usmonova | Grafik dizayn \u00B7 7 yil | KU", "4.7 | 142 sharh", "530 = bitiruvchi; 71% = frilansda; $450 = o'rtacha daromad", " | Kursga yozilish | light | purple | af52de"]
+];
+// filled 5-point star (closed path) centred on pos; scale by expression
+function _s48_265Star(x, name, r, pos, fill, scE) {
+    var L = x.comp.layers.addShape(), P = [[50, 0], [61, 35], [98, 35], [68, 57], [79, 91], [50, 70], [21, 91], [32, 57], [2, 35], [39, 35]], v = [], i;
+    for (i = 0; i < P.length; i++) v.push([(P[i][0] - 50) / 50 * r, (P[i][1] - 52) / 50 * r]);
+    L.name = x.tag + " " + name;
+    var pg = L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var shp = new Shape(); shp.vertices = v; shp.closed = true; pg.property("ADBE Vector Shape").setValue(shp);
+    L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").expression = x.PRE + fill;
+    var tr = L.property("ADBE Transform Group"); tr.property("ADBE Anchor Point").setValue([0, 0]); tr.property("ADBE Position").setValue(pos);
+    if (scE) tr.property("ADBE Scale").expression = x.PRE + scE;
+    tr.property("ADBE Opacity").expression = x.PRE + "op";
+    x.layers.push(L); return L;
+}
+// "1 240" / "92%" / "$450" / "7.5" -> Source Text expression counting 0 -> value by q
+function _s48_265Count(str, qE) {
+    var m = String(str).match(/^([^0-9]*)([0-9]+(?: [0-9]{3})*(\.[0-9]+)?)(.*)$/);
+    if (!m) return null;
+    var q = function (t) { return '"' + String(t).replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"'; };
+    var num = parseFloat(m[2].replace(/ /g, "")), dec = m[3] ? m[3].length - 1 : 0, sp = m[2].indexOf(" ") > 0 ? 1 : 0;
+    return qE + "var n=" + num + "*cl(q); var t=n.toFixed(" + dec + ").split('.'); var a=t[0], o=''; " +
+        "if(" + sp + "){ while(a.length>3){ o=' '+a.substr(a.length-3)+o; a=a.substr(0,a.length-3); } } " +
+        q(m[1]) + "+a+o+(t.length>1?'.'+t[1]:'')+" + q(m[4]);
+}
+function _s48Teacher() {
+    var PR = _s47Pick("Teacher Profile (265)", S48_P265); if (!PR) return;
+    var q1 = prompt("Ism | fan, tajriba | initsial (bo'sh = avto)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Reyting (0-5) | sharhlar yozuvi", PR[2]); if (q2 === null) return;
+    var q3 = prompt("3 ta raqam, ; bilan:  qiymat = izoh", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Sarlavha (bo'sh = yo'q) | Tugma (bo'sh = yo'q) | light/dark | rang | avatar rangi (hex)", PR[4]); if (q4 === null) return;
+    var A = _s47Split(q1, 3), R = _s47Split(q2, 2), M = _s47Split(q4, 5), ss = String(q3).split(";"), S = [], i;
+    for (i = 0; i < ss.length && S.length < 3; i++) {
+        var t = _s45Trim(ss[i]); if (!t) continue; var eq = t.indexOf("=");
+        S.push([_s45Trim(eq >= 0 ? t.substring(0, eq) : t), eq >= 0 ? _s45Trim(t.substring(eq + 1)) : ""]);
+    }
+    var rt = parseFloat(R[0]); if (!(rt >= 0)) rt = 5; rt = Math.min(5, rt);
+    var ini = A[2]; if (!ini) { var w = A[0].split(" "); ini = ""; for (i = 0; i < w.length && ini.length < 2; i++) if (w[i]) ini += w[i].charAt(0).toUpperCase(); }
+    var x = _s47Begin("TEACH", { states: 2, look: _s47Look(M[2], M[3]), tap: !!M[1], first: 0.9, extraEnd: M[1] ? 0.8 : 1.6,
+        colors: { "Avatar": _s47Hex(M[4] || "ff8a00"), "Avatar matni": [1, 1, 1], "Yulduz": [1, 0.8, 0] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, n = S.length;
+    var H = PAD + (M[0] ? 74 * K : 0) + 170 * K + 28 * K + 54 * K + (n ? 28 * K + 130 * K : 0) + (M[1] ? 130 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.85], _s47Col(x, "Text")); y += 74 * K; }
+    // avatar + ring + name
+    var ax = left + 85 * K, ay = y + 85 * K;
+    _s47Ellipse(x, "avatar", [140 * K, 140 * K], [ax, ay], _s47Col(x, "Avatar"));
+    _s47Txt(x, ini, 50 * K, "bold", "C", "initsial", [ax, ay + 50 * K * 0.35], _s47Col(x, "Avatar matni"));
+    var rg = _s47Ellipse(x, "halqa", [160 * K, 160 * K], [ax, ay], null, null, { col: _s47Col(x, "Accent"), w: 6 * K, cap: true });
+    rg.property("ADBE Root Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    var tm = rg.property("ADBE Root Vectors Group").property(rg.property("ADBE Root Vectors Group").numProperties);
+    tm.property("ADBE Vector Trim End").expression = x.PRE + "var q=cl(sp.valueAtTime(time)); q*q*(3-2*q)*100";
+    var nx = left + 198 * K;
+    _s47Txt(x, A[0], 36 * K, "bold", "L", "ism", [nx, ay - 40 * K + 36 * K * 0.85], _s47Col(x, "Text"));
+    if (A[1]) _s47Txt(x, A[1], 26 * K, "reg", "L", "fan", [nx, ay + 9 * K + 26 * K * 0.85], _s47Col(x, "Dim"));
+    y += 170 * K + 28 * K;
+    // stars (grey track + gold star scaling in, partial last star = smaller) + rating + reviews
+    var sy = y + 27 * K;
+    for (i = 0; i < 5; i++) {
+        var sx = left + 27 * K + 64 * K * i, fr = Math.max(0, Math.min(1, rt - i));
+        _s48_265Star(x, "yulduz fon " + (i + 1), 27 * K, [sx, sy], _s47Col(x, "Track"));
+        if (fr > 0) _s48_265Star(x, "yulduz " + (i + 1), 27 * K, [sx, sy], _s47Col(x, "Yulduz"),
+            "var q=sp.valueAtTime(time-" + (0.15 + 0.08 * i) + "); var k=Math.max(0,q)*" + (fr * 100) + "; [k,k]");
+    }
+    var rx = left + 328 * K, rl = _s47Txt(x, R[0] || "5.0", 32 * K, "bold", "L", "reyting", [rx, sy + 32 * K * 0.35], _s47Col(x, "Text"));
+    rl.property("Source Text").expression = x.PRE + "var q=sp.valueAtTime(time-0.15); (" + rt + "*cl(q)).toFixed(1)";
+    if (R[1]) _s47Txt(x, R[1], 26 * K, "reg", "L", "sharhlar", 'var w=thisComp.layer("' + rl.name + '").sourceRectAtTime().width; [' + rx + '+w+' + (18 * K) + ', ' + (sy + 26 * K * 0.35) + ']', _s47Col(x, "Dim"));
+    y += 54 * K;
+    // stat tiles: numbers count up one after another
+    if (n) {
+        y += 28 * K; var tw = (IW - 14 * K * (n - 1)) / n;
+        for (i = 0; i < n; i++) {
+            var tx = left + i * (tw + 14 * K), nm = "raqam " + (i + 1), QE = "var q=sp.valueAtTime(time-" + (0.25 + 0.1 * i) + "); q=cl(q); q=1-Math.pow(1-q,3); ";
+            _s47Rect(x, nm + " fon", [tw, 130 * K], [tx + tw / 2, y + 65 * K], 26 * K, _s47Col(x, "Row"));
+            var fs = Math.min(50 * K, (tw - 40 * K) / Math.max(1, S[i][0].length * 0.58));
+            var vl = _s47Txt(x, S[i][0], fs, "bold", "L", nm, [tx + 22 * K, y + 22 * K + 50 * K * 0.95], _s47Col(x, "Text"));
+            var ce = _s48_265Count(S[i][0], QE); if (ce) vl.property("Source Text").expression = x.PRE + ce;
+            if (S[i][1]) _s47Txt(x, S[i][1], Math.min(23 * K, (tw - 36 * K) / Math.max(1, S[i][1].length * 0.55)), "reg", "L", nm + " izoh", [tx + 22 * K, y + 104 * K], _s47Col(x, "Dim"));
+        }
+        y += 130 * K;
+    }
+    if (M[1]) _s47Btn(x, M[1], cx, y + 26 * K + 52 * K, IW);
+    _s47Finish(x);
+}
+
+// ---------- 266 SEAT COUNTDOWN ----------
+// Seat grid: pre-booked seats are filled, then one seat fills on every Tab key (pop + tint + person icon),
+// "N seats left" rolls down, turns red on the last one and shakes (shake timed from the last Tab key).
+var S48_P266 = [
+    ["Robototexnika", "12 | 7 | 4", "8-12 yosh \u00B7 yangi guruh 1-oktabrda | ta joy qoldi", "Robototexnika to'garagi | Joy band qilish | light | blue"],
+    ["IELTS markazi", "12 | 6 | 4", "Intensiv 7.0 \u00B7 start 15-oktabr | ta joy qoldi", "IELTS intensiv guruh | Joy band qilish | light | indigo"],
+    ["IT akademiya", "18 | 11 | 5", "Frontend bootcamp \u00B7 4 oy \u00B7 kechki | ta joy qoldi", "IT bootcamp qabuli | Ariza qoldirish | dark | blue"],
+    ["Bolalar markazi", "10 | 5 | 3", "5-7 yosh \u00B7 o'yin orqali ingliz tili | ta joy qoldi", "Kids English guruhi | Yozilish | light | orange"],
+    ["Koreys tili", "12 | 8 | 3", "TOPIK I \u00B7 ertalabki guruh | ta joy qoldi", "Koreys tili: yangi guruh | Joy band qilish | light | red"],
+    ["Mental arifmetika", "8 | 3 | 4", "6-9 yosh \u00B7 kichik guruh, 8 bola | ta joy qoldi", "Mental arifmetika | Sinov darsiga yozilish | light | orange"],
+    ["SAT markazi", "10 | 5 | 4", "Digital SAT \u00B7 3 oylik intensiv | ta joy qoldi", "SAT 1400+ guruhi | Joy band qilish | light | purple"],
+    ["Rus tili kursi", "15 | 10 | 3", "So'zlashuv kursi \u00B7 kechki 19:00 | ta joy qoldi", "Rus tili: A1 guruh | Yozilish | light | teal"],
+    ["Dizayn kursi", "12 | 7 | 4", "Mac lab \u00B7 Figma + Photoshop | ta kompyuter qoldi", "Grafik dizayn guruhi | Joy band qilish | dark | purple"],
+    ["Maktabga tayyorlov", "16 | 10 | 5", "6 yoshlilar \u00B7 o'qish, yozish, mantiq | ta joy qoldi", "Maktabga tayyorlov | Ro'yxatdan o'tish | light | green"]
+];
+function _s48Seats() {
+    var PR = _s47Pick("Seat Countdown (266)", S48_P266); if (!PR) return;
+    var q1 = prompt("Jami o'rin (2-24) | oldindan band | yana nechtasi to'lsin (1-6)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Kichik yozuv (bo'sh = yo'q) | raqamdan keyingi matn", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Sarlavha | Tugma (bo'sh = yo'q) | light/dark | rang", PR[3]); if (q3 === null) return;
+    var A = _s47Split(q1, 3), T = _s47Split(q2, 2), M = _s47Split(q3, 4), i;
+    var tot = Math.max(2, Math.min(24, parseInt(A[0], 10) || 12)), bk = Math.max(0, Math.min(tot - 1, parseInt(A[1], 10) || 0));
+    var nf = Math.max(1, Math.min(6, tot - bk, parseInt(A[2], 10) || 1)), l0 = tot - bk;
+    var x = _s47Begin("SEAT", { states: nf + 1, look: _s47Look(M[2], M[3]), tap: !!M[1], first: 1.0, hold: 0.55, extraEnd: M[1] ? 0.6 : 1.4,
+        colors: { "Ogohlantirish": [1, 0.231, 0.188] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, GP = 16 * K;
+    var cols = (tot <= 6) ? tot : (tot % 6 === 0 ? 6 : (tot % 5 === 0 ? 5 : (tot === 8 ? 4 : 6))), rows = Math.ceil(tot / cols);
+    var SZ = Math.min(100 * K, (IW - (cols - 1) * GP) / cols), f = SZ / 100, gw = cols * SZ + (cols - 1) * GP, SH = rows * SZ + (rows - 1) * GP;
+    var H = PAD + (M[0] ? 74 * K : 0) + (T[0] ? 41 * K : 0) + SH + 34 * K + 56 * K + (M[1] ? 130 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.85], _s47Col(x, "Text")); y += 74 * K; }
+    if (T[0]) { _s47Txt(x, T[0], 26 * K, "reg", "L", "kichik yozuv", [left, y + 26 * K * 0.85 - 18 * K], _s47Col(x, "Dim")); y += 41 * K; }
+    var CA = "var a=" + _s47Col(x, "Accent") + ".value, cc=" + _s47Col(x, "Card") + ".value, fl=add(cc, mul(sub(a,cc),0.18)); ";
+    var BD = "var d=" + _s47Col(x, "Dim") + ".value, cc=" + _s47Col(x, "Card") + ".value; add(cc, mul(sub(d,cc),0.45))";
+    var gl = cx - gw / 2;
+    for (i = 0; i < tot; i++) {
+        var sx = gl + (i % cols) * (SZ + GP) + SZ / 2, sy = y + Math.floor(i / cols) * (SZ + GP) + SZ / 2, nm = "joy " + (i + 1), k = i - bk;
+        if (k >= nf) k = -2; else if (k < 0) k = -1;
+        var U = k >= 0 ? "var u=cl((s-" + k + "-0.1)/0.8); u=u*u*(3-2*u); " : (k === -2 ? "var u=0; " : "var u=1; ");
+        var L = [];
+        if (k !== -2) L.push(_s47Rect(x, nm + " fon", [SZ, SZ], [0, 0], 26 * f, U + CA + "add(cc, mul(sub(fl,cc),u))"));
+        if (k !== -1) {
+            var bo = _s47Rect(x, nm + " chegara", [SZ - 3 * f, SZ - 3 * f], [0, 0], 25 * f, null, U + "op*(1-u)", { col: BD, w: 3 * f }); L.push(bo);
+            try {
+                bo.property("ADBE Root Vectors Group").property("ADBE Vector Graphic - Stroke").property("ADBE Vector Stroke Dashes").addProperty("ADBE Vector Stroke Dash 1");
+                bo.property("ADBE Root Vectors Group").property("ADBE Vector Graphic - Stroke").property("ADBE Vector Stroke Dashes").addProperty("ADBE Vector Stroke Gap 1");
+                var dg = bo.property("ADBE Root Vectors Group").property("ADBE Vector Graphic - Stroke").property("ADBE Vector Stroke Dashes");
+                dg.property("ADBE Vector Stroke Dash 1").setValue(10 * f); dg.property("ADBE Vector Stroke Gap 1").setValue(7 * f);
+            } catch (eD) {}
+        }
+        if (k !== -2) {
+            L.push(_s47Ellipse(x, nm + " bosh", [26 * f, 26 * f], [0, -19 * f], _s47Col(x, "Accent"), U + "op*u"));
+            L.push(_s47Rect(x, nm + " tana", [50 * f, 26 * f], [0, 13 * f], 11 * f, _s47Col(x, "Accent"), U + "op*u"));
+        }
+        for (var j = 0; j < L.length; j++) {
+            var tr = L[j].property("ADBE Transform Group"); tr.property("ADBE Position").setValue([sx, sy]);
+            if (k >= 0) tr.property("ADBE Scale").expression = x.PRE + U + "var z=100-22*Math.sin(Math.PI*u); [z,z]";
+        }
+    }
+    y += SH + 34 * K;
+    // counter: rolling number + text, red on the last fill, shake after the last Tab key
+    var SK = 'var p=c.effect("Tab")("Slider"), sh=0; if(p.numKeys>1){ var w=time-p.key(p.numKeys).time-0.12; if(w>0) sh=' + (12 * K) + '*Math.sin(w*40)*Math.exp(-w*8); } ';
+    var base = y + 46 * K * 0.85, NW = "var nw=0; ";
+    for (i = 0; i <= nf; i++) NW += 'nw+=st(' + i + ')*thisComp.layer("' + x.tag + ' qoldi ' + (i + 1) + '").sourceRectAtTime().width; ';
+    var RC = "var w2=cl(s-" + (nf - 1) + "), a=" + _s47Col(x, "Accent") + ".value, r=" + _s47Col(x, "Ogohlantirish") + ".value; add(a, mul(sub(r,a), w2))";
+    for (i = 0; i <= nf; i++) {
+        _s47Txt(x, String(l0 - i), 46 * K, "bold", "L", "qoldi " + (i + 1), SK + "[" + left + "+sh, " + base + "+(" + i + "-s)*" + (50 * K) + "]", RC, "op*sm(1-Math.abs(s-" + i + ")*1.6)");
+    }
+    if (T[1]) _s47Txt(x, T[1], 32 * K, "reg", "L", "matn", SK + NW + "[" + left + "+nw+" + (14 * K) + "+sh, " + base + "]", _s47Col(x, "Dim"));
+    y += 56 * K;
+    if (M[1]) _s47Btn(x, M[1], cx, y + 26 * K + 52 * K, IW);
+    _s47Finish(x);
+}
+
+// ---------- 267 ROTARY KNOB ----------
+// Knob indicator turns to each term with the spring (rotation = a0 + step*s), the active term label
+// lights up in accent, the monthly amount rolls (auto: price * (1 + markup%) / months).
+var S48_P267 = [
+    ["Dizayn kursi", "4 800 000 | 3, 6, 12 | oy | 0", "Oyiga | so'm", "Ustama = 0% \u00B7 shartnoma asosida", "Bo'lib to'lash | Grafik dizayn \u00B7 6 oy \u00B7 4 800 000 so'm | light | purple"],
+    ["IT akademiya", "12 000 000 | 4, 8, 12 | oy | 0", "Oyiga | so'm", "Ustama = 0% \u00B7 bank kartasi orqali", "Muddatli to'lov | Full-stack dasturlash \u00B7 12 oy | dark | blue"],
+    ["IELTS markazi", "3 600 000 | 2, 3, 6 | oy | 0", "Oyiga | so'm", "Birinchi dars = bepul \u00B7 sinov", "Bo'lib to'lash | IELTS 7.0 kursi \u00B7 6 oy | light | indigo"],
+    ["SAT markazi", "9 000 000 | 3, 6, 9 | oy | 5", "Oyiga | so'm", "Ustama = 5% \u00B7 muddatli to'lov", "To'lov rejasi | SAT 1400+ \u00B7 9 oylik tayyorlov | light | blue"],
+    ["Koreys tili", "6 000 000 | 3, 6, 10 | oy | 0", "Oyiga | so'm", "Ustama = 0% \u00B7 darsliklar ichida", "Bo'lib to'lash | Koreys tili \u00B7 TOPIK II \u00B7 10 oy | light | red"],
+    ["Robototexnika", "2 400 000 | 2, 4, 8 | oy | 0", "Oyiga | so'm", "Konstruktor = markaz beradi", "Oylik to'lov | Robototexnika \u00B7 8 oy \u00B7 10-14 yosh | light | teal"],
+    ["Mental arifmetika", "4 200 000 | 3, 6, 12 | oy | 0", "Oyiga | so'm", "Abakus = sovg'a \u00B7 1-oyda", "Bo'lib to'lash | Mental arifmetika \u00B7 12 oy | light | orange"],
+    ["Abituriyent markazi", "7 200 000 | 3, 6, 9, 12 | oy | 0", "Oyiga | so'm", "Ustama = 0% \u00B7 ota-ona nomiga shartnoma", "Muddatli to'lov | DTM tayyorlov \u00B7 2 fan \u00B7 12 oy | light | green"],
+    ["Rus tili kursi", "2 700 000 | 3, 9 | oy | 0", "Oyiga | so'm", "Guruh = 12 kishi \u00B7 kechki", "To'lov rejasi | Rus tili A1-B1 \u00B7 9 oy | light | teal"],
+    ["Arab tili markazi", "5 400 000 | 3, 6, 12 | oy | 10", "Oyiga | so'm", "Ustama = 10% \u00B7 12 oyda", "Bo'lib to'lash | Arab tili \u00B7 qiroat + grammatika | light | green"]
+];
+function _s48_267Fmt(v) { var s = String(Math.round(v)), o = ""; while (s.length > 3) { o = " " + s.substr(s.length - 3) + o; s = s.substr(0, s.length - 3); } return s + o; }
+function _s48Knob() {
+    var PR = _s47Pick("Rotary Knob (267)", S48_P267); if (!PR) return;
+    var q1 = prompt("Kurs narxi | muddatlar (vergul, 2-4 ta) | birlik | ustama %", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Summa oldidagi yozuv | valyuta", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Pastki qator: nom = qiymat   (bo'sh = qatorsiz)", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Sarlavha | kichik yozuv | light/dark | rang", PR[4]); if (q4 === null) return;
+    var A = _s47Split(q1, 4), P = _s47Split(q2, 2), M = _s47Split(q4, 4), tm = _s47List(A[1]), am = [], i;
+    var price = parseFloat(String(A[0]).replace(/[^0-9.]/g, "")) || 0, pct = parseFloat(A[3]) || 0;
+    for (i = 0; i < tm.length && am.length < 4; i++) { var m = parseFloat(tm[i]); if (m > 0) am.push([tm[i], _s48_267Fmt(Math.round(price * (1 + pct / 100) / m / 1000) * 1000)]); }
+    if (am.length < 2) { alert("Kamida 2 ta muddat kerak: 3, 6, 12"); return; }
+    var rowS = _s45Trim(q3), rl = "", rv = "", N = am.length;
+    if (rowS) { var eq = rowS.indexOf("="); rl = _s45Trim(eq >= 0 ? rowS.substring(0, eq) : rowS); rv = eq >= 0 ? _s45Trim(rowS.substring(eq + 1)) : ""; }
+    var dk = _s47Look(M[2], M[3]).theme === "dark";
+    var x = _s47Begin("KNOB", { states: N, look: _s47Look(M[2], M[3]), first: 1.2, hold: 1.3, extraEnd: 0.9,
+        colors: { "Knob": dk ? [0.25, 0.25, 0.26] : [0.957, 0.957, 0.969], "Knob ichi": dk ? [0.2, 0.2, 0.21] : [0.925, 0.925, 0.941] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD;
+    var H = PAD + (M[0] ? 74 * K : 0) + (M[1] ? 41 * K : 0) + 420 * K + 86 * K + (rl ? 108 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.85], _s47Col(x, "Text")); y += 74 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 26 * K * 0.85 - 18 * K], _s47Col(x, "Dim")); y += 41 * K; }
+    var ky = y + 230 * K, step = N <= 3 ? 60 : 50, a0 = -step * (N - 1) / 2, D2R = Math.PI / 180;
+    // tick ring (24 ticks, every 15 deg)
+    for (i = 0; i < 24; i++) {
+        var ta = i * 15, tk = _s47Rect(x, "belgi " + (i + 1), [4 * K, 12 * K], [0, 0], 2 * K, _s47Col(x, "Dim"), "op*0.5");
+        var ttr = tk.property("ADBE Transform Group");
+        ttr.property("ADBE Position").setValue([cx + 156 * K * Math.sin(ta * D2R), ky - 156 * K * Math.cos(ta * D2R)]);
+        ttr.property("ADBE Rotate Z").setValue(ta);
+    }
+    // term labels around the knob
+    for (i = 0; i < N; i++) {
+        var la = a0 + step * i, lr = (200 + 30 * Math.abs(Math.sin(la * D2R))) * K;
+        _s47Txt(x, am[i][0] + (A[2] ? " " + A[2] : ""), 28 * K, "semi", "C", "muddat " + (i + 1), [cx + lr * Math.sin(la * D2R), ky - lr * Math.cos(la * D2R) + 28 * K * 0.35],
+            "var d=" + _s47Col(x, "Dim") + ".value, a=" + _s47Col(x, "Accent") + ".value; add(d, mul(sub(a,d), st(" + i + ")))");
+    }
+    // knob body + inner disc + rotating indicator
+    var kb = _s47Ellipse(x, "knob", [260 * K, 260 * K], [cx, ky], _s47Col(x, "Knob"));
+    _s46Shadow(kb, dk ? 150 : 56, 22 * K, 44 * K);
+    _s47Ellipse(x, "knob ichi", [204 * K, 204 * K], [cx, ky], _s47Col(x, "Knob ichi"));
+    var ind = _s47Rect(x, "ko'rsatkich", [12 * K, 50 * K], [0, -87 * K], 6 * K, _s47Col(x, "Accent"));
+    var itr = ind.property("ADBE Transform Group");
+    itr.property("ADBE Position").setValue([cx, ky]);
+    itr.property("ADBE Rotate Z").expression = x.PRE + (a0 + "+" + step + "*s");
+    ind.motionBlur = true;
+    y += 420 * K;
+    // "Oyiga  1 600 000  so'm" centred group; amount width = st()-weighted mix of every amount layer
+    var base = y + 72 * K * 0.95, g = 16 * K, fa = 30 * K;
+    var NW = "var nw=0; "; for (i = 0; i < N; i++) NW += 'nw+=st(' + i + ')*thisComp.layer("' + x.tag + ' summa ' + (i + 1) + '").sourceRectAtTime().width; ';
+    NW += (P[0] ? 'var pw=thisComp.layer("' + x.tag + ' summa yozuvi").sourceRectAtTime().width+' + g + '; ' : 'var pw=0; ') +
+        (P[1] ? 'var cw=thisComp.layer("' + x.tag + ' valyuta").sourceRectAtTime().width+' + g + '; ' : 'var cw=0; ') + "var x0=" + cx + "-(pw+nw+cw)/2; ";
+    if (P[0]) _s47Txt(x, P[0], fa, "reg", "L", "summa yozuvi", NW + "[x0, " + base + "]", _s47Col(x, "Dim"));
+    for (i = 0; i < N; i++) {
+        var sl = _s47Txt(x, am[i][1], 72 * K, "bold", "L", "summa " + (i + 1), NW + "[x0+pw, " + base + "+(" + i + "-s)*" + (64 * K) + "]", _s47Col(x, "Text"), "op*sm(1-Math.abs(s-" + i + ")*1.6)");
+        sl.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + "var k=100-5*cl(Math.abs(sp.velocity)/6)*st(" + i + "); [k,k]";
+    }
+    if (P[1]) _s47Txt(x, P[1], fa, "reg", "L", "valyuta", NW + "[x0+pw+nw+" + g + ", " + base + "]", _s47Col(x, "Dim"));
+    y += 86 * K;
+    if (rl) {
+        var rc = y + 16 * K + 46 * K;
+        _s47Rect(x, "qator", [IW, 92 * K], [cx, rc], 22 * K, _s47Col(x, "Row"));
+        _s47Txt(x, rl, 30 * K, "reg", "L", "qator nom", [left + 28 * K, rc + 30 * K * 0.35], _s47Col(x, "Dim"));
+        if (rv) _s47Txt(x, rv, 30 * K, "semi", "R", "qator qiymat", [right - 28 * K, rc + 30 * K * 0.35], _s47Col(x, "Text"));
+    }
+    _s47Finish(x);
+}
+
+// ---------- 268 BOOKING MORPH ----------
+// Info rows + CTA. Press -> button shrinks to a circle with a spinner (state 1),
+// turns green with a pop + check mark, confirmation line rises (state 2).
+var S48_P268 = [
+    ["Rus tili kursi", "Kurs = Rus tili \u00B7 noldan; Sana = Shanba, 3-oktabr; Vaqt = 10:00 - 11:30; Ustoz = Malika Sobirova", "Joy band qilindi \u00B7 ertaga eslatamiz", "Bepul sinov darsi | Yozilish | light | blue | 34c759"],
+    ["IELTS markazi", "Kurs = IELTS Intensive 6.5+; Sana = Dushanba, 5-oktabr; Vaqt = 14:00 - 16:00; Narx = 890 000 so'm / oy", "Joy band qilindi \u00B7 SMS yubordik", "Daraja testiga yozilish | Band qilish | light | indigo | 34c759"],
+    ["SAT tayyorlov", "Kurs = SAT Math + English; Sana = Seshanba, 6-oktabr; Vaqt = 18:00 - 20:00; Mentor = Javohir Rahimov", "Joy tasdiqlandi \u00B7 link Telegramda", "Mock SAT imtihoni | Joy olish | dark | blue | 30d158"],
+    ["IT akademiya", "Kurs = Python backend; Sana = Chorshanba, 7-oktabr; Vaqt = 19:00 - 21:00; Filial = Chilonzor, 2-qavat", "Ro'yxatdan o'tdingiz \u00B7 noutbuk olib keling", "Ochiq dars | Yozilish | dark | purple | 30d158"],
+    ["Bolalar markazi", "Guruh = 4-6 yosh; Sana = Shanba, 10-oktabr; Vaqt = 09:30 - 10:30; Ustoz = Dilnoza Karimova", "Joy band qilindi \u00B7 ota-onaga eslatamiz", "Tanishuv darsi | Yozilish | light | orange | 34c759"],
+    ["Matematika markazi", "Kurs = Prezident maktabiga; Sana = Payshanba, 8-oktabr; Vaqt = 15:00 - 16:30; Narx = 650 000 so'm / oy", "Test kuni belgilandi \u00B7 omad!", "Kirish testi | Yozilish | light | teal | 34c759"],
+    ["Koreys tili", "Kurs = Koreys tili \u00B7 TOPIK I; Sana = Juma, 9-oktabr; Vaqt = 17:00 - 18:30; Ustoz = Kim Su Jin", "Joy band qilindi \u00B7 ertaga kutamiz", "Bepul sinov darsi | Yozilish | light | red | 34c759"],
+    ["Nemis tili", "Kurs = Nemis tili \u00B7 A1; Sana = Dushanba, 12-oktabr; Vaqt = 11:00 - 12:30; Narx = 700 000 so'm / oy", "Joy band qilindi \u00B7 manzil SMS'da", "Guruhga yozilish | Band qilish | light | black | 34c759"],
+    ["Shaxmat maktabi", "Guruh = 7-10 yosh, boshlang'ich; Sana = Yakshanba, 11-oktabr; Vaqt = 10:00 - 11:00; Murabbiy = Sardor Aliyev", "Joy band qilindi \u00B7 doska bizdan", "Sinov mashg'uloti | Yozilish | light | brown | 34c759"],
+    ["Robototexnika", "Kurs = Arduino \u00B7 robot yig'ish; Sana = Shanba, 17-oktabr; Vaqt = 13:00 - 14:30; Yosh = 10-14 yosh", "Joy band qilindi \u00B7 robot yig'amiz!", "Ochiq dars | Joy olish | dark | orange | 30d158"]
+];
+function _s48_268Rows(str, max) {
+    var R = [], rr = String(str).split(";"), i;
+    for (i = 0; i < rr.length && R.length < max; i++) {
+        var r = _s45Trim(rr[i]); if (!r) continue; var eq = r.indexOf("=");
+        R.push(eq >= 0 ? [_s45Trim(r.substring(0, eq)), _s45Trim(r.substring(eq + 1))] : [r, ""]);
+    }
+    return R;
+}
+function _s48Booking() {
+    var PR = _s47Pick("Booking Morph (268)", S48_P268); if (!PR) return;
+    var q1 = prompt("Qatorlar (1-5), ; bilan:  Nom = qiymat", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Tasdiq matni (bo'sh = yo'q)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Sarlavha | Tugma | light/dark | rang | tasdiq rangi (hex)", PR[3]); if (q3 === null) return;
+    var R = _s48_268Rows(q1, 5), cf = _s45Trim(q2), M = _s47Split(q3, 5), n = R.length, i;
+    var x = _s47Begin("BOOK", { states: 3, look: _s47Look(M[2], M[3]), hold: 1.3, first: 1.4, extraEnd: 0.8,
+        colors: { "Tasdiq": _s47Hex(M[4] || "34c759") } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, RH = 86 * K, BH = 104 * K;
+    var H = PAD + (M[0] ? 66 * K : 0) + (n ? n * RH + 28 * K : 0) + BH + (cf ? 64 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - CW / 2 + PAD, right = cx + CW / 2 - PAD, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 42 * K, "bold", "L", "sarlavha", [left, y + 42 * K * 0.78], _s47Col(x, "Text")); y += 66 * K; }
+    if (n) {
+        _s47Rect(x, "guruh", [IW, n * RH], [cx, y + n * RH / 2], 26 * K, _s47Col(x, "Row"));
+        for (i = 0; i < n; i++) {
+            var yc = y + RH * (i + 0.5), nm = "qator " + (i + 1);
+            if (i > 0) _s47Rect(x, nm + " chiziq", [IW - 56 * K, 2 * K], [cx, y + RH * i], 0, _s47Col(x, "Card"));
+            _s47Txt(x, R[i][0], 29 * K, "reg", "L", nm + " nom", [left + 28 * K, yc + 29 * K * 0.35], _s47Col(x, "Dim"));
+            if (R[i][1]) _s47Txt(x, R[i][1], 29 * K, "semi", "R", nm + " qiymat", [right - 28 * K, yc + 29 * K * 0.35], _s47Col(x, "Text"));
+        }
+        y += n * RH + 28 * K;
+    }
+    var by = y + BH / 2;
+    // pr = press bump just before the 2nd Tab key (follows retimed keys); u = shrink, g = success
+    var U = 'var p=c.effect("Tab")("Slider"); var pr=0; if(p.numKeys>1){ var q=(time-(p.key(2).time-0.14))/0.28; if(q>=0&&q<=1) pr=Math.sin(Math.PI*q); } ' +
+        "var u=cl(s), g=cl(s-1); ";
+    var b = _s47Rect(x, "tugma", U + "[lp(" + IW + "," + BH + ",u), " + BH + "]", [0, 0], U + "lp(" + (28 * K) + "," + (BH / 2) + ",u)",
+        U + "var a=" + _s47Col(x, "Accent") + ".value, t=" + _s47Col(x, "Tasdiq") + ".value; var cc=add(a, mul(sub(t,a), g)); var k=1-0.12*pr; [cc[0]*k,cc[1]*k,cc[2]*k,1]");
+    var btr = b.property("ADBE Transform Group"); btr.property("ADBE Position").setValue([cx, by]);
+    btr.property("ADBE Scale").expression = x.PRE + U + "var k=(100-5*pr)*(1+0.16*Math.sin(Math.PI*g)); [k,k]";
+    b.motionBlur = true;
+    var lb = _s47Txt(x, M[1] || "Yozilish", 34 * K, "semi", "C", "tugma matni", [cx, by + 34 * K * 0.35], _s47Col(x, "Tugma matni"), U + "op*cl(1-u*2.6)");
+    lb.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + U + "var k=100-5*pr; [k,k]";
+    // spinner: faint ring + rotating arc (rotation = time since the 2nd Tab key)
+    var SV = "var w=cl((s-0.55)/0.35)*cl((1.3-s)/0.2); ";
+    var sp1 = _s47Ellipse(x, "spinner fon", [44 * K, 44 * K], [0, 0], null, SV + "op*0.3*w", { col: _s47Col(x, "Tugma matni"), w: 6 * K });
+    var sp2 = _s47Ellipse(x, "spinner", [44 * K, 44 * K], [0, 0], null, SV + "op*w", { col: _s47Col(x, "Tugma matni"), w: 6 * K, cap: true });
+    sp2.property("ADBE Root Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    var tm = sp2.property("ADBE Root Vectors Group").property(sp2.property("ADBE Root Vectors Group").numProperties);
+    tm.property("ADBE Vector Trim End").setValue(27);
+    sp1.property("ADBE Transform Group").property("ADBE Position").setValue([cx, by]);
+    sp2.property("ADBE Transform Group").property("ADBE Position").setValue([cx, by]);
+    sp2.property("ADBE Transform Group").property("ADBE Rotate Z").expression = x.PRE +
+        'var p=c.effect("Tab")("Slider"); var t0=(p.numKeys>1)?p.key(2).time:0; Math.max(0,time-t0)*500';
+    // check mark pops in (0 -> 125% -> 100%)
+    var ck = _s47Path(x, "galochka", [[-17 * K, 1 * K], [-5 * K, 13 * K], [18 * K, -12 * K]], false, 7 * K, _s47Col(x, "Tugma matni"), [cx, by], "op*cl((s-1.15)/0.25)");
+    ck.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + "var g=cl((s-1.15)/0.7); var k=100*g*(1+0.25*Math.sin(Math.PI*g)); [k,k]";
+    if (cf) _s47Txt(x, cf, 28 * K, "semi", "C", "tasdiq matni", "var g=cl((s-1.3)/0.7); [" + cx + ", " + (by + BH / 2 + 22 * K + 28 * K * 0.8) + "+(1-g)*" + (16 * K) + "]",
+        _s47Col(x, "Tasdiq"), "var g=cl((s-1.3)/0.7); op*g*g");
+    _s47Finish(x);
+}
+
+// ---------- 269 RANK CLIMB ----------
+// Leaderboard: one student row lifts from its place to a higher one (spring),
+// rows in between slide down, score rolls old -> new, green arrow + gain badge.
+var S48_P269 = [
+    ["Mental arifmetika", "Madina A. = 910; Jasur T. = 880; Oysha N. = 850; Sardor R. = 820; Bekzod Q. = 790", "4 | 1 | 960", "Haftalik reyting | Mental arifmetika \u00B7 2-daraja guruhi | light | orange", "ff2d55, 0a84ff, 5e5ce6, ff8a00, 30b158, 34c759"],
+    ["IELTS markazi", "Nilufar S. = 7.5; Azizbek M. = 7.0; Shahzoda K. = 7.0; Doniyor E. = 6.5; Kamron U. = 6.0", "5 | 2 | 7.5", "Mock IELTS natijalari | Speaking guruhi \u00B7 oktabr | light | indigo", "ff2d55, 0a84ff, 5e5ce6, 30b158, ff8a00, 34c759"],
+    ["SAT tayyorlov", "Ibrohim N. = 1480; Laylo R. = 1450; Temur S. = 1410; Mohira B. = 1390; Akmal D. = 1350", "5 | 1 | 1510", "Mock SAT reytingi | SAT Math + English \u00B7 3-oy | dark | blue", "ff2d55, 0a84ff, 5e5ce6, 30b158, ff8a00, 34c759"],
+    ["IT akademiya", "Otabek X. = 2 340; Zarina M. = 2 180; Ulug'bek T. = 2 050; Dilshod A. = 1 990; Sevara J. = 1 870", "4 | 2 | 2 260", "Frontend guruhi reytingi | Uy vazifa ballari \u00B7 9-hafta | dark | purple", "ff2d55, 0a84ff, 5e5ce6, ff8a00, 30b158, 34c759"],
+    ["Shaxmat maktabi", "Behruz K. = 1 620; Asadbek R. = 1 580; Mubina H. = 1 540; Sanjar O. = 1 500; Umid E. = 1 470", "5 | 1 | 1 640", "Klub turniri \u00B7 reyting | 8-12 yosh guruhi | light | brown", "ff2d55, 0a84ff, 5e5ce6, 30b158, ff8a00, 34c759"],
+    ["Matematika markazi", "Muhammad Y. = 96; Robiya S. = 94; Abdulloh N. = 91; Hadicha T. = 88; Firdavs M. = 85", "4 | 1 | 98", "Olimpiada tayyorlov | Haftalik test \u00B7 7-sinf | light | teal", "ff2d55, 0a84ff, 5e5ce6, ff8a00, 30b158, 34c759"],
+    ["Koreys tili", "Sabina Q. = 188; Javlon I. = 182; Malika F. = 176; Rustam N. = 171; Diyora A. = 165", "4 | 2 | 185", "TOPIK mock reyting | Koreys tili \u00B7 TOPIK II guruhi | light | red", "ff2d55, 0a84ff, 5e5ce6, ff8a00, 30b158, 34c759"],
+    ["Rus tili kursi", "Aziza M. = 48; Shohruh B. = 45; Kamola D. = 43; Sherzod U. = 40; Nodira T. = 38", "5 | 2 | 47", "So'z yodlash poygasi | Rus tili \u00B7 noldan guruhi | light | pink", "ff2d55, 0a84ff, 5e5ce6, 30b158, ff8a00, 34c759"],
+    ["Robototexnika", "Xurshid A. = 640; Amina R. = 610; Jahongir S. = 590; Asal M. = 560; Bobur K. = 540", "5 | 1 | 680", "Robot poygasi natijasi | Arduino guruhi \u00B7 12 yosh | dark | green", "ff2d55, 0a84ff, 5e5ce6, 30b158, ff8a00, 34c759"],
+    ["Bolalar markazi", "Soliha = 32; Ali = 30; Yasina = 29; Abdurahmon = 27; Zahro = 25", "3 | 1 | 34", "Yulduzchalar reytingi | Tayyorlov guruhi \u00B7 6 yosh | light | purple", "ff2d55, 0a84ff, ff8a00, 5e5ce6, 30b158, 34c759"]
+];
+function _s48_269Ini(nm) {
+    var w = _s45Trim(nm).replace(/\./g, "").split(/\s+/), r = "";
+    for (var i = 0; i < w.length && r.length < 2; i++) if (w[i]) r += w[i].charAt(0).toUpperCase();
+    return r;
+}
+function _s48_269Num(str) { var v = parseFloat(String(str).replace(/[^0-9.\-]/g, "")); return isNaN(v) ? null : v; }
+function _s48Rank() {
+    var PR = _s47Pick("Rank Climb (269)", S48_P269); if (!PR) return;
+    var q1 = prompt("Reyting (3-6 kishi, yuqoridan pastga), ; bilan:  Ism = ball", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Kim ko'tariladi (o'rni) | qaysi o'ringa | yangi ball", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Sarlavha | kichik yozuv | light/dark | rang", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Avatar ranglari (hex, vergul bilan, har kishiga) | o'sish rangi oxirida", PR[4]); if (q4 === null) return;
+    var E = [], rr = String(q1).split(";"), i, j;
+    for (i = 0; i < rr.length && E.length < 6; i++) {
+        var r = _s45Trim(rr[i]); if (!r) continue; var eq = r.indexOf("=");
+        E.push(eq >= 0 ? [_s45Trim(r.substring(0, eq)), _s45Trim(r.substring(eq + 1))] : [r, ""]);
+    }
+    if (E.length < 2) { alert("Kamida 2 ta kishi kerak (; bilan)"); return; }
+    var n = E.length, A = _s47Split(q2, 3), M = _s47Split(q3, 4), hx = _s47List(q4);
+    var f = parseInt(A[0], 10) - 1, t = parseInt(A[1], 10) - 1; if (!(f >= 1 && f < n)) f = n - 1; if (!(t >= 0 && t < f)) t = 0;
+    var nw = A[2] || E[f][1], o = _s48_269Num(E[f][1]), nv = _s48_269Num(nw), gain = "";
+    if (o !== null && nv !== null && nv > o) gain = "+" + (Math.round((nv - o) * 10) / 10);
+    var cols = { "Oq": [1, 1, 1], "O'sish": _s47Hex(hx.length > n ? hx[hx.length - 1] : "34c759") };
+    var DEF = ["ff2d55", "0a84ff", "5e5ce6", "ff8a00", "30b158", "bf5af2"];
+    for (i = 0; i < n; i++) cols["Avatar " + (i + 1)] = _s47Hex(hx[i] || DEF[i]);
+    var x = _s47Begin("RANK", { states: 2, look: _s47Look(M[2], M[3]), first: 1.4, extraEnd: 0.8, colors: cols }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, RH = 96 * K, STEP = 108 * K;
+    var H = PAD + (M[0] ? 60 * K : 0) + (M[1] ? 56 * K : 0) + n * STEP - 12 * K + PAD;
+    var top = x.cy - H / 2, left = cx - CW / 2 + PAD, right = cx + CW / 2 - PAD, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.78], _s47Col(x, "Text")); y += 60 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 26 * K * 0.8], _s47Col(x, "Dim")); y += 56 * K; }
+    var LL = left + 56 * K, LW = right - LL, LC = LL + LW / 2;
+    for (i = 0; i < n; i++) _s47Txt(x, String(i + 1), 30 * K, "bold", "C", "o'rin " + (i + 1), [left + 20 * K, y + i * STEP + RH / 2 + 30 * K * 0.35], _s47Col(x, i === 0 ? "Accent" : "Dim"));
+    var rows = []; for (i = 0; i < n; i++) if (i !== f) rows.push(i);
+    rows.push(f);
+    for (j = 0; j < rows.length; j++) {
+        i = rows[j];
+        var me = i === f, to = me ? t : ((i >= t && i < f) ? i + 1 : i), nm = me ? "men" : "qator " + (i + 1);
+        var YY = "var yy=lp(" + (y + i * STEP + RH / 2) + "," + (y + to * STEP + RH / 2) + ",s); ", SC = "var lf=Math.sin(Math.PI*cl(s)); ";
+        var bg = _s47Rect(x, nm + " fon", me ? SC + "[" + LW + "*(1+0.04*lf), " + RH + "*(1+0.04*lf)]" : [LW, RH], YY + "[" + LC + ", yy]", 24 * K,
+            me ? "var a=" + _s47Col(x, "Accent") + ".value, b=" + _s47Col(x, "Card") + ".value; add(b, mul(sub(a,b), 0.16))" : _s47Col(x, "Row"));
+        if (me) _s46Shadow(bg, x.theme === "light" ? 36 : 90, 12 * K, 30 * K);
+        _s47Ellipse(x, nm + " avatar", [60 * K, 60 * K], YY + "[" + (LL + 48 * K) + ", yy]", _s47Col(x, "Avatar " + (i + 1)));
+        _s47Txt(x, _s48_269Ini(E[i][0]), 22 * K, "bold", "C", nm + " harflar", YY + "[" + (LL + 48 * K) + ", yy+" + (22 * K * 0.35) + "]", _s47Col(x, "Oq"));
+        var nt = _s47Txt(x, E[i][0], 29 * K, "semi", "L", nm + " ism", YY + "[" + (LL + 96 * K) + ", yy+" + (29 * K * 0.35) + "]", _s47Col(x, "Text"));
+        if (!me) { _s47Txt(x, E[i][1], 29 * K, "bold", "R", nm + " ball", YY + "[" + (right - 24 * K) + ", yy+" + (29 * K * 0.35) + "]", _s47Col(x, "Text")); continue; }
+        _s47Path(x, "men strelka", [[-8 * K, 5 * K], [0, -3 * K], [8 * K, 5 * K]], false, 5 * K, _s47Col(x, "O'sish"),
+            YY + 'var r=thisComp.layer("' + nt.name + '").sourceRectAtTime(); [' + (LL + 96 * K) + '+r.width+' + (22 * K) + ', yy-' + (2 * K) + '+(1-cl(s))*' + (8 * K) + ']', "op*cl(s)");
+        var sn = [];
+        for (var k = 0; k < 2; k++) sn.push(_s47Txt(x, k ? nw : E[i][1], 29 * K, "bold", "R", "men ball " + (k + 1), YY + "[" + (right - 24 * K) + ", yy+" + (29 * K * 0.35) + "+(" + k + "-s)*" + (34 * K) + "]", _s47Col(x, "Text"), "op*st(" + k + ")"));
+        if (!gain) continue;
+        var BX = YY + 'var sw=thisComp.layer("' + sn[1].name + '").sourceRectAtTime().width, gw=thisComp.layer("' + x.tag + ' men badge matni").sourceRectAtTime().width+' + (24 * K) + '; var bx=' + (right - 24 * K - 14 * K) + '-sw-gw/2; ';
+        var pl = _s47Rect(x, "men badge", BX + "[gw, " + (38 * K) + "]", [0, 0], 12 * K, _s47Col(x, "O'sish"));
+        var gt = _s47Txt(x, gain, 22 * K, "semi", "C", "men badge matni", [0, 0], _s47Col(x, "Oq"));
+        pl.property("ADBE Transform Group").property("ADBE Position").expression = x.PRE + BX + "[bx, yy]";
+        gt.property("ADBE Transform Group").property("ADBE Position").expression = x.PRE + BX + "[bx, yy+" + (22 * K * 0.35) + "]";
+        pl.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + "var k=Math.max(0,s)*100; [k,k]";
+        gt.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + "var k=Math.max(0,s)*100; [k,k]";
+    }
+    _s47Finish(x);
+}
+
+// ---------- 270 STAMP THUD ----------
+// Certificate on a card. At the 2nd Tab key a rotated stamp falls (2.3x -> 0.9x),
+// hits with a thud: card shakes, ink ring spreads, stamp settles to 1x. All timing
+// is read from the Tab key, so retiming the key retimes the hit.
+var S48_P270 = [
+    ["Nemis tili", "SERTIFIKAT | Nemis tili \u00B7 B1 daraja | Ushbu sertifikat egasi | Kamola Yusupova", "Umumiy ball = 86 / 100 | Sana = 27.09.2026 | B1 | TASDIQLANDI", "Kurs davomiyligi = 8 oy \u00B7 192 soat", "light | brown | e0352b | fbf8f1"],
+    ["IELTS markazi", "SERTIFIKAT | IELTS Academic \u00B7 kurs bitiruvi | Ushbu sertifikat egasi | Jasur Toshmatov", "Mock band = 7.5 | Sana = 14.10.2026 | 7.5 | IELTS READY", "Kurs davomiyligi = 4 oy \u00B7 96 soat", "light | indigo | e0352b | fbf8f1"],
+    ["SAT tayyorlov", "SERTIFIKAT | SAT Math + English | Ushbu sertifikat egasi | Laylo Rahimova", "Mock SAT = 1480 / 1600 | Sana = 03.11.2026 | 1480 | TOP 5%", "Mashg'ulotlar = 24 hafta \u00B7 30 ta mock", "light | blue | d7263d | f7f9fc"],
+    ["IT akademiya", "DIPLOM | Frontend dasturlash \u00B7 React | Ushbu diplom egasi | Otabek Xolmatov", "Yakuniy loyiha = 94 / 100 | Sana = 20.12.2026 | A+ | HIMOYA QILINDI", "O'qish muddati = 9 oy \u00B7 12 loyiha", "dark | purple | e0352b | fbf8f1"],
+    ["Koreys tili", "SERTIFIKAT | Koreys tili \u00B7 TOPIK II | Ushbu sertifikat egasi | Sabina Qodirova", "Umumiy ball = 186 / 300 | Sana = 18.11.2026 | 3 | DARAJA", "Kurs davomiyligi = 10 oy \u00B7 240 soat", "light | red | c8102e | fbf8f1"],
+    ["Rus tili kursi", "SERTIFIKAT | Rus tili \u00B7 so'zlashuv B2 | Ushbu sertifikat egasi | Shohruh Bakirov", "Og'zaki imtihon = 91 / 100 | Sana = 05.10.2026 | B2 | TASDIQLANDI", "Kurs davomiyligi = 6 oy \u00B7 144 soat", "light | blue | e0352b | fbf8f1"],
+    ["Mental arifmetika", "GUVOHNOMA | Mental arifmetika \u00B7 5-daraja | Ushbu guvohnoma egasi | Madina Akramova", "Tezlik = 60 misol / 3 daq | Sana = 30.09.2026 | 5 | DARAJA", "Mashg'ulotlar = 1 yil \u00B7 96 dars", "light | orange | e0352b | fffaf0"],
+    ["Shaxmat maktabi", "SERTIFIKAT | Shaxmat \u00B7 3-razryad | Ushbu sertifikat egasi | Behruz Karimov", "Turnir natijasi = 6.5 / 9 | Sana = 22.11.2026 | III | RAZRYAD", "Klub reytingi = 1 620 \u00B7 1-o'rin", "light | brown | b0302a | f6f1e6"],
+    ["Robototexnika", "SERTIFIKAT | Robototexnika \u00B7 Arduino | Ushbu sertifikat egasi | Xurshid Alimov", "Robot poygasi = 1-o'rin | Sana = 12.12.2026 | 1 | G'OLIB", "Kurs davomiyligi = 5 oy \u00B7 40 dars", "dark | teal | e0352b | f4f8f8"],
+    ["Maktabga tayyorlov", "GUVOHNOMA | Maktabga tayyorlov guruhi | Ushbu guvohnoma egasi | Muhammadali Yusupov", "Harflar va sanash = 100% | Sana = 31.08.2026 | A'LO | BITIRUVCHI", "Tayyorlov = 9 oy \u00B7 6 yosh guruhi", "light | green | e0352b | fbf8f1"]
+];
+function _s48_270Serif(L) {
+    var c = ["Georgia-BoldItalic", "Georgia-Italic", "TimesNewRomanPS-BoldItalicMT"];
+    try { for (var i = 0; i < c.length; i++) if (app.fonts.getFontsByPostScriptName(c[i]).length > 0) { var sp = L.property("Source Text"), td = sp.value; td.font = c[i]; sp.setValue(td); return; } } catch (e) {}
+}
+function _s48_270KV(s) { var e = String(s).indexOf("="); return e >= 0 ? [_s45Trim(s.substring(0, e)), _s45Trim(s.substring(e + 1))] : ["", _s45Trim(s)]; }
+function _s48Stamp() {
+    var PR = _s47Pick("Stamp Thud (270)", S48_P270); if (!PR) return;
+    var q1 = prompt("Sarlavha | kurs, daraja | kichik yozuv | ism", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Nom = qiymat | Nom = qiymat | muhr katta yozuv | muhr kichik yozuv", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Pastki qator: Nom = qiymat (bo'sh = yo'q)", PR[3]); if (q3 === null) return;
+    var q4 = prompt("light/dark | rang | muhr rangi (hex) | qog'oz rangi (hex)", PR[4]); if (q4 === null) return;
+    var T = _s47Split(q1, 4), G = _s47Split(q2, 4), M = _s47Split(q4, 4), g1 = _s48_270KV(G[0]), g2 = _s48_270KV(G[1]), bot = _s45Trim(q3) ? _s48_270KV(q3) : null, i;
+    var x = _s47Begin("STAMP", { states: 2, look: _s47Look(M[0], M[1]), first: 1.2, extraEnd: 1.0,
+        colors: { "Muhr": _s47Hex(M[2] || "e0352b"), "Qog'oz": _s47Hex(M[3] || "fbf8f1"), "Hoshiya": [0.902, 0.863, 0.776], "Qog'oz matni": [0.11, 0.11, 0.118] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, P = 28 * K, cx = x.cx, PW = CW - 2 * P;
+    var CH = 50 * K + (T[0] ? 34 * K : 0) + (T[1] ? 32 * K : 0) + 34 * K + (T[2] ? 32 * K : 0) + 67 * K + 46 * K + 112 * K + 44 * K;
+    var H = P + CH + (bot ? 108 * K : 0) + P, top = x.cy - H / 2, y = top + P, pl = cx - PW / 2, pr = cx + PW / 2, pc = y + CH / 2;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    _s47Rect(x, "qog'oz", [PW, CH], [cx, pc], 28 * K, _s47Col(x, "Qog'oz"), null, { col: _s47Col(x, "Hoshiya"), w: 2 * K });
+    _s47Rect(x, "hoshiya", [PW - 26 * K, CH - 26 * K], [cx, pc], 20 * K, null, null, { col: _s47Col(x, "Hoshiya"), w: 2 * K });
+    y += 50 * K;
+    if (T[0]) { _s47Txt(x, T[0].split("").join(" "), 22 * K, "bold", "C", "sarlavha", [cx, y + 22 * K * 0.8], _s47Col(x, "Accent")); y += 34 * K; }
+    if (T[1]) { _s47Txt(x, T[1], 27 * K, "reg", "C", "kurs", [cx, y + 27 * K * 0.85], _s47Col(x, "Dim")); y += 32 * K; }
+    y += 34 * K;
+    if (T[2]) { _s47Txt(x, T[2], 22 * K, "reg", "C", "kichik yozuv", [cx, y + 22 * K * 0.8], _s47Col(x, "Dim")); y += 32 * K; }
+    _s48_270Serif(_s47Txt(x, T[3] || " ", 54 * K, "bold", "C", "ism", [cx, y + 54 * K * 0.9], _s47Col(x, "Qog'oz matni")));
+    y += 67 * K + 16 * K;
+    _s47Rect(x, "chiziq", [PW * 0.62, 2 * K], [cx, y], 0, _s47Col(x, "Hoshiya"));
+    y += 30 * K;
+    var gx = pl + 44 * K, vb = y + 104 * K, lb = vb - 38 * K;
+    var l1 = _s47Txt(x, g1[0] || " ", 20 * K, "reg", "L", "ball nomi", [gx, lb], _s47Col(x, "Dim"));
+    var v1 = _s47Txt(x, g1[1] || " ", 27 * K, "semi", "L", "ball", [gx, vb], _s47Col(x, "Qog'oz matni"));
+    var X2 = 'var w=Math.max(thisComp.layer("' + l1.name + '").sourceRectAtTime().width, thisComp.layer("' + v1.name + '").sourceRectAtTime().width); ';
+    if (G[1]) {
+        _s47Txt(x, g2[0] || " ", 20 * K, "reg", "L", "sana nomi", X2 + "[" + gx + "+w+" + (44 * K) + ", " + lb + "]", _s47Col(x, "Dim"));
+        _s47Txt(x, g2[1] || " ", 27 * K, "semi", "L", "sana", X2 + "[" + gx + "+w+" + (44 * K) + ", " + vb + "]", _s47Col(x, "Qog'oz matni"));
+    }
+    y += 112 * K + 44 * K;
+    // stamp: fall (f) until impact T, then damped settle; everything rotated -14 deg around the stamp centre
+    var sx = pr - 40 * K - 78 * K, sy = y - 26 * K - 78 * K, RZ = -14, cs = Math.cos(RZ * Math.PI / 180), sn = Math.sin(RZ * Math.PI / 180);
+    var IM = 'var p=c.effect("Tab")("Slider"); var T=(p.numKeys>1)?p.key(2).time+0.22:(s>0.5?-99:1e5); var dt=time-T; var f=cl((dt+0.22)/0.22); ' +
+        "var k=(dt<0)?2.3-1.4*f*f:1-0.1*Math.exp(-9*dt)*Math.cos(dt*20); var so=(dt<0)?op*0.92*cl(f*2.5):op*0.9; ";
+    var bigS = G[2] || "OK", bfs = Math.min(52, 118 / Math.max(1, bigS.length * 0.62)) * K;
+    var parts = [["muhr halqa", 150 * K, 6 * K], ["muhr ichki halqa", 128 * K, 3 * K]];
+    for (i = 0; i < 2; i++) {
+        var e = _s47Ellipse(x, parts[i][0], [parts[i][1], parts[i][1]], [0, 0], null, IM + "so", { col: _s47Col(x, "Muhr"), w: parts[i][2] });
+        e.property("ADBE Transform Group").property("ADBE Position").setValue([sx, sy]);
+        e.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + IM + "[k*100,k*100]";
+    }
+    var sfs = Math.min(14, 96 / Math.max(1, String(G[3]).length * 0.62)) * K, tx = [[bigS, bfs, "bold", 8 * K, "muhr yozuv"], [G[3], sfs, "bold", 34 * K, "muhr kichik yozuv"]];
+    for (i = 0; i < 2; i++) {
+        if (!tx[i][0]) continue;
+        var dy = tx[i][3], ox = -dy * sn, oy = dy * cs;
+        var tl = _s47Txt(x, tx[i][0], tx[i][1], tx[i][2], "C", tx[i][4], IM + "[" + sx + "+k*" + ox + ", " + sy + "+k*" + oy + "]", _s47Col(x, "Muhr"), IM + "so");
+        tl.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(RZ);
+        tl.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + IM + "[k*100,k*100]";
+    }
+    var rp = _s47Ellipse(x, "siyoh halqa", [156 * K, 156 * K], [0, 0], null, IM + "(dt<0)?0:op*0.45*cl(1-dt/0.75)", { col: _s47Col(x, "Muhr"), w: 4 * K });
+    rp.property("ADBE Transform Group").property("ADBE Position").setValue([sx, sy]);
+    rp.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + IM + "var r=(dt<0)?95:95+75*(1-Math.exp(-5*dt)); [r,r]";
+    if (bot) {
+        var rc = y + 16 * K + 46 * K;
+        _s47Rect(x, "qator", [PW, 92 * K], [cx, rc], 22 * K, _s47Col(x, "Row"));
+        _s47Txt(x, bot[0], 28 * K, "reg", "L", "qator nom", [pl + 28 * K, rc + 28 * K * 0.35], _s47Col(x, "Dim"));
+        _s47Txt(x, bot[1], 28 * K, "semi", "R", "qator qiymat", [pr - 28 * K, rc + 28 * K * 0.35], _s47Col(x, "Text"));
+    }
+    _s47Finish(x);
+    // thud shake on the whole card (ANIM null), keeps the rig's rise-in
+    x.anim.property("ADBE Transform Group").property("ADBE Position").expression = x.PRE + IM +
+        "var dx=0, dy=0; if(dt>=0){ var e=Math.exp(-14*dt); dx=" + (4 * K) + "*e*Math.cos(dt*62); dy=" + (7 * K) + "*e*Math.cos(dt*62+0.5); } [" + x.cx + "+dx, " + x.cy + "+(1-v)*" + (30 * K) + "+dy]";
+    _s46Sfx(x.comp, "thud_neg.wav", -8, x.switchT[0] + 0.2, x.tag);
+}
+
+// ---------- 271 ATTENDANCE POP ----------
+// Month calendar: lesson days fill one by one (one Tab state per lesson, spring pop),
+// a missed day gets an outline ring, progress bar + percent count up to the final rate.
+var S48_P271 = [
+    ["Bolalar markazi", "Davomat \u00B7 Sentabr | Muhammadali \u00B7 tayyorlov guruhi, 6 yosh", "2 | 30 | Du, Se, Ch, Pa, Ju, Sh, Ya", "2, 4, 7, 9, 11, 14, 16, 18, 21, 23, 25, 28, 30 | 18", "Qatnashdi | light | teal | ff9500"],
+    ["IELTS markazi", "Davomat \u00B7 Oktabr | Nilufar \u00B7 IELTS 7.0 intensiv | ", "4 | 31 | Du, Se, Ch, Pa, Ju, Sh, Ya", "1, 3, 6, 8, 10, 13, 15, 17, 20, 22, 24, 27, 29, 31 | 13, 24", "Qatnashdi | light | indigo | ff9500"],
+    ["SAT tayyorlov", "Davomat \u00B7 Noyabr | Ibrohim \u00B7 SAT Math guruhi", "7 | 30 | Du, Se, Ch, Pa, Ju, Sh, Ya", "3, 5, 7, 10, 12, 14, 17, 19, 21, 24, 26, 28 | 12", "Qatnashdi | dark | blue | ff9f0a"],
+    ["IT akademiya", "Davomat \u00B7 Oktabr | Zarina \u00B7 Python backend, 3-oy", "4 | 31 | Du, Se, Ch, Pa, Ju, Sh, Ya", "2, 5, 7, 9, 12, 14, 16, 19, 21, 23, 26, 28, 30 | 16, 26", "Darsda | dark | purple | ff9f0a"],
+    ["Matematika markazi", "Davomat \u00B7 Sentabr | Abdulloh \u00B7 Prezident maktabiga tayyorlov", "2 | 30 | Du, Se, Ch, Pa, Ju, Sh, Ya", "1, 3, 5, 8, 10, 12, 15, 17, 19, 22, 24, 26, 29 | ", "Qatnashdi | light | green | ff9500"],
+    ["Rus tili kursi", "Davomat \u00B7 Oktabr | Kamola \u00B7 Rus tili, noldan", "4 | 31 | Du, Se, Ch, Pa, Ju, Sh, Ya", "1, 6, 8, 13, 15, 20, 22, 27, 29 | 20", "Qatnashdi | light | blue | ff9500"],
+    ["Koreys tili", "Davomat \u00B7 Noyabr | Diyora \u00B7 TOPIK I guruhi", "7 | 30 | Du, Se, Ch, Pa, Ju, Sh, Ya", "2, 4, 6, 9, 11, 13, 16, 18, 20, 23, 25, 27, 30 | 11, 25", "Qatnashdi | light | red | ff9500"],
+    ["Shaxmat maktabi", "Davomat \u00B7 Dekabr | Behruz \u00B7 7-10 yosh guruhi", "2 | 31 | Du, Se, Ch, Pa, Ju, Sh, Ya", "2, 5, 6, 9, 12, 13, 16, 19, 20, 23, 26, 27, 30 | 19", "Mashg'ulotda | light | brown | ff9500"],
+    ["Mental arifmetika", "Davomat \u00B7 Sentabr | Madina \u00B7 2-daraja, 8 yosh", "2 | 30 | Du, Se, Ch, Pa, Ju, Sh, Ya", "1, 3, 5, 8, 10, 12, 15, 17, 19, 22, 24, 26, 29 | 10", "Qatnashdi | light | orange | ff3b30"],
+    ["Robototexnika", "Davomat \u00B7 Oktabr | Bobur \u00B7 Arduino, 12 yosh", "4 | 31 | Du, Se, Ch, Pa, Ju, Sh, Ya", "3, 4, 10, 11, 17, 18, 24, 25, 31 | ", "Qatnashdi | dark | teal | ff9f0a"]
+];
+function _s48_271Nums(str, max) {
+    var a = _s47List(str), r = [], i, j;
+    for (i = 0; i < a.length; i++) {
+        var v = parseInt(a[i], 10), dup = false; if (!(v >= 1 && v <= max)) continue;
+        for (j = 0; j < r.length; j++) if (r[j] === v) dup = true;
+        if (!dup) r.push(v);
+    }
+    r.sort(function (p, q) { return p - q; }); return r;
+}
+function _s48Attend() {
+    var PR = _s47Pick("Attendance Pop (271)", S48_P271); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv (bo'sh = yo'q)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("1-kun hafta kuni (1=Du ... 7=Ya) | oyda necha kun | hafta kunlari (vergul bilan)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Dars kunlari (vergul bilan) | qoldirilgan kunlar (vergul bilan)", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Pastki yozuv | light/dark | rang | qoldirilgan rangi (hex)", PR[4]); if (q4 === null) return;
+    var T = _s47Split(q1, 2), C = _s47Split(q2, 3), D = _s47Split(q3, 2), M = _s47Split(q4, 4), i, j;
+    var fd = parseInt(C[0], 10) - 1; if (!(fd >= 0 && fd < 7)) fd = 0;
+    var nd = parseInt(C[1], 10); if (!(nd >= 28 && nd <= 31)) nd = 30;
+    var wd = _s47List(C[2]); while (wd.length < 7) wd.push("");
+    var L = _s48_271Nums(D[0], nd), ms = _s48_271Nums(D[1], nd), n = L.length;
+    if (n < 1) { alert("Kamida 1 ta dars kuni kerak"); return; }
+    // miss flag per lesson + cumulative attended count per state
+    var mf = [], at = [0], pc = [0];
+    for (i = 0; i < n; i++) { var m = 0; for (j = 0; j < ms.length; j++) if (ms[j] === L[i]) m = 1; mf.push(m); at.push(at[i] + (m ? 0 : 1)); }
+    for (i = 1; i <= n; i++) pc.push(Math.round(at[i] / n * 100));
+    var x = _s47Begin("DAVOM", { states: n + 1, look: _s47Look(M[1], M[2]), first: 1.0, hold: Math.max(0.1, Math.min(0.2, 2.4 / n)), extraEnd: 0.9,
+        colors: { "Qoldirilgan": _s47Hex(M[3] || "ff9500") } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, G = 6 * K, CWd = (IW - 6 * G) / 7, RWd = 72 * K;
+    var nr = Math.ceil((fd + nd) / 7);
+    var H = PAD + (T[0] ? 62 * K : 0) + (T[1] ? 50 * K : 0) + 40 * K + nr * (RWd + G) + 26 * K + 44 * K + PAD;
+    var top = x.cy - H / 2, left = cx - CW / 2 + PAD, right = cx + CW / 2 - PAD, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (T[0]) { _s47Txt(x, T[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.78], _s47Col(x, "Text")); y += 62 * K; }
+    if (T[1]) { _s47Txt(x, T[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 26 * K * 0.8], _s47Col(x, "Dim")); y += 50 * K; }
+    for (i = 0; i < 7; i++) if (wd[i]) _s47Txt(x, wd[i], 22 * K, "reg", "C", "hafta " + (i + 1), [left + CWd * (i + 0.5) + G * i, y + 20 * K + 22 * K * 0.35], _s47Col(x, "Dim"));
+    y += 40 * K + G;
+    for (var d = 1; d <= nd; d++) {
+        var cell = fd + d - 1, dx = left + (CWd + G) * (cell % 7) + CWd / 2, dy = y + (RWd + G) * Math.floor(cell / 7) + RWd / 2, li = -1;
+        for (j = 0; j < n; j++) if (L[j] === d) li = j;
+        if (li < 0) { _s47Txt(x, String(d), 26 * K, "reg", "C", "kun " + d, [dx, dy + 26 * K * 0.35], _s47Col(x, "Text")); continue; }
+        // u = pop progress of this lesson (state li+1), with overshoot bump
+        var U = "var u=cl((s-" + li + "-0.1)/0.9); var k=100*u*(1+0.22*Math.sin(Math.PI*u)); ";
+        var dot = _s47Ellipse(x, "dars " + d, [62 * K, 62 * K], [0, 0], mf[li] ? null : _s47Col(x, "Accent"), null, mf[li] ? { col: _s47Col(x, "Qoldirilgan"), w: 4 * K } : null);
+        dot.property("ADBE Transform Group").property("ADBE Position").setValue([dx, dy]);
+        dot.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + U + "[k,k]";
+        _s47Txt(x, String(d), 26 * K, "semi", "C", "kun " + d, [dx, dy + 26 * K * 0.35],
+            mf[li] ? _s47Col(x, "Text") : U + "var a=" + _s47Col(x, "Text") + ".value, b=" + _s47Col(x, "Tugma matni") + ".value; add(a, mul(sub(b,a), cl(u*2)))");
+    }
+    y += nr * (RWd + G) - G + 26 * K;
+    var yc = y + 22 * K, PCT = "var P=[" + pc.join(",") + "]; var i0=Math.max(0,Math.min(" + (n - 1) + ",Math.floor(s))); var pv=lp(P[i0],P[i0+1],cl(s-i0)); ";
+    var lb = _s47Txt(x, M[0] || "Qatnashdi", 27 * K, "reg", "L", "yozuv", [left, yc + 27 * K * 0.35], _s47Col(x, "Dim"));
+    var bl = 'var bl=' + left + '+thisComp.layer("' + lb.name + '").sourceRectAtTime().width+' + (22 * K) + ', br=' + (right - 110 * K) + '; ';
+    _s47Rect(x, "chiziq fon", bl + "[br-bl, " + (14 * K) + "]", bl + "[(bl+br)/2, " + yc + "]", 7 * K, _s47Col(x, "Row"));
+    _s47Rect(x, "chiziq", bl + PCT + "var w=Math.max(" + (14 * K) + ",(br-bl)*pv/100); [w, " + (14 * K) + "]", bl + PCT + "var w=Math.max(" + (14 * K) + ",(br-bl)*pv/100); [bl+w/2, " + yc + "]", 7 * K,
+        _s47Col(x, "Accent"), PCT + "op*cl(pv)");
+    var pt = _s47Txt(x, "0%", 34 * K, "bold", "R", "foiz", [right, yc + 34 * K * 0.35], _s47Col(x, "Text"));
+    pt.property("Source Text").expression = x.PRE + PCT + 'Math.round(pv) + "%"';
+    _s47Finish(x);
+}
+
+// ---------- 272 HOMEWORK RING ----------
+// Checklist: each state ticks the next task (filled circle + check, text dims, strike line
+// draws), the ring fills and the percent rolls; last state shows the "done" banner.
+var S48_P272 = [
+    ["Maktabga tayyorlov", "Harflarni yozish: A, B, D; 20 gacha sanash; Rasm bo'yash: kuz; She'r yodlash", "1", "Barakalla! Hammasi bajarildi", "Uy vazifasi | Bugun \u00B7 4 ta topshiriq | light | green"],
+    ["IELTS markazi", "Writing Task 2 \u00B7 250 so'z; Listening test 4; 30 ta yangi so'z; Speaking: Part 2 yozib olish", "0", "Zo'r! Bugungi reja yopildi", "IELTS vazifalar | Payshanba \u00B7 band 7.0 sari | light | indigo"],
+    ["SAT tayyorlov", "Math: 20 ta misol; Reading: 2 ta passage; Grammar test; Xatolar tahlili", "1", "Ajoyib! Ertaga mock test", "SAT reja | Bugun \u00B7 4 ta blok | dark | blue"],
+    ["IT akademiya", "Git: branch va merge; API: 3 ta endpoint; Unit test yozish; Kodni review'ga berish", "0", "Zo'r ish! PR yuborildi", "Sprint vazifalari | Python backend \u00B7 9-hafta | dark | purple"],
+    ["Matematika markazi", "Kasrlar: 15 ta misol; Tenglamalar: 10 ta; Geometriya: 5 ta masala; Test: 20 savol", "1", "Barakalla! Hammasi yechildi", "Uy vazifasi | 6-sinf \u00B7 olimpiadaga tayyorlov | light | teal"],
+    ["Rus tili kursi", "Alifbo: 10 ta harf; 20 ta so'z yodlash; Matn o'qish: 1 bet; Audio tinglash", "1", "Molodets! Hammasi tayyor", "Domashnee zadanie | Rus tili \u00B7 noldan | light | blue"],
+    ["Koreys tili", "Hangul: 14 ta undosh; 25 ta so'z; Grammatika: -ayo/-eoyo; Dialog yodlash", "0", "Barakalla! TOPIK sari yana bir qadam", "Koreys tili vazifa | Bugun \u00B7 4 ta topshiriq | light | red"],
+    ["Nemis tili", "Artikllar: der, die, das; 30 ta so'z; Hoeren: 2 ta audio; Brief yozish", "1", "Sehr gut! Hammasi bajarildi", "Hausaufgabe | Nemis tili \u00B7 A2 guruhi | light | orange"],
+    ["Shaxmat maktabi", "10 ta taktik masala; Debyut: Italyan partiyasi; 2 ta blits o'yin; Partiya tahlili", "0", "Zo'r! Murabbiyga yuborildi", "Shaxmat mashqi | Bugun \u00B7 4 ta topshiriq | light | brown"],
+    ["Mental arifmetika", "Abakus: 5 daqiqa; Flesh kartalar: 50 ta; Yoddan qo'shish: 20 ta; Tezlik testi", "1", "Barakalla! Yulduzcha olding", "Kunlik mashq | Mental arifmetika \u00B7 2-daraja | light | pink"]
+];
+function _s48Homework() {
+    var PR = _s47Pick("Homework Ring (272)", S48_P272); if (!PR) return;
+    var q1 = prompt("Topshiriqlar (2-6), ; bilan", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Boshida nechtasi bajarilgan (0 ...)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Yakuniy matn (bo'sh = yo'q)", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Sarlavha | kichik yozuv | light/dark | rang", PR[4]); if (q4 === null) return;
+    var W = [], ww = String(q1).split(";"), i;
+    for (i = 0; i < ww.length && W.length < 6; i++) if (_s45Trim(ww[i])) W.push(_s45Trim(ww[i]));
+    if (W.length < 2) { alert("Kamida 2 ta topshiriq kerak (; bilan)"); return; }
+    var n = W.length, d0 = parseInt(q2, 10), dn = _s45Trim(q3), M = _s47Split(q4, 4); if (!(d0 >= 0 && d0 < n)) d0 = 0;
+    var N = n - d0 + 1, look = _s47Look(M[2], M[3]), a = look.acc, lt = look.theme === "light";
+    var x = _s47Begin("UYV", { states: N, look: look, first: 1.2, hold: 0.9, extraEnd: 0.8,
+        colors: { "Yakun matni": lt ? [a[0] * 0.7, a[1] * 0.7, a[2] * 0.7] : a, "Galochka": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IH = 90 * K, RG = 150 * K;
+    var H = PAD + RG + 18 * K + n * IH + (dn ? 20 * K + 70 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - CW / 2 + PAD, right = cx + CW / 2 - PAD, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    var hc = y + RG / 2, rx = right - RG / 2, R = 124 * K;
+    if (M[0]) _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, hc + (M[1] ? -8 * K : 14 * K)], _s47Col(x, "Text"));
+    if (M[1]) _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, hc + (M[0] ? 34 * K : 9 * K)], _s47Col(x, "Dim"));
+    _s47Ellipse(x, "halqa fon", [R, R], [rx, hc], null, null, { col: _s47Col(x, "Row"), w: 14 * K });
+    var fg = _s47Ellipse(x, "halqa", [R, R], [rx, hc], null, null, { col: _s47Col(x, "Accent"), w: 14 * K, cap: true });
+    fg.property("ADBE Root Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    var tm = fg.property("ADBE Root Vectors Group").property(fg.property("ADBE Root Vectors Group").numProperties);
+    tm.property("ADBE Vector Trim End").expression = x.PRE + "cl((" + d0 + "+s)/" + n + ")*sm(v)*100";
+    for (i = 0; i < N; i++) {
+        var pc = Math.round((d0 + i) / n * 100) + "%";
+        _s47Txt(x, pc, 34 * K, "bold", "C", "foiz " + (i + 1), "[" + rx + ", " + (hc + 34 * K * 0.35) + "+(" + i + "-s)*" + (40 * K) + "]", _s47Col(x, "Text"), "op*sm(1-Math.abs(s-" + i + ")*1.6)");
+    }
+    y += RG + 18 * K;
+    for (i = 0; i < n; i++) {
+        var yc = y + IH * (i + 0.5), nm = "vazifa " + (i + 1), cbx = left + 24 * K;
+        // u = how done task i is (instantly 1 for tasks done at start)
+        var U = (i < d0) ? "var u=1; " : "var u=cl((s-" + (i - d0) + "-0.12)/0.88); ";
+        _s47Rect(x, nm + " chiziq", [CW - 2 * PAD, 2 * K], [cx, y + IH * i], 0, _s47Col(x, "Row"));
+        _s47Ellipse(x, nm + " doira", [44 * K, 44 * K], [cbx, yc], null, U + "op*0.6*(1-u)", { col: _s47Col(x, "Dim"), w: 4 * K });
+        var fb = _s47Ellipse(x, nm + " belgi fon", [52 * K, 52 * K], [0, 0], _s47Col(x, "Accent"), U + "op*cl(u*3)");
+        fb.property("ADBE Transform Group").property("ADBE Position").setValue([cbx, yc]);
+        fb.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + U + "var k=30+70*u; [k,k]";
+        var ck = _s47Path(x, nm + " galochka", [[-10 * K, 1 * K], [-3 * K, 8 * K], [11 * K, -7 * K]], false, 5 * K, _s47Col(x, "Galochka"), [cbx, yc], U + "op*cl(u*2-0.3)");
+        ck.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + U + "var k=30+70*u; [k,k]";
+        var tx = _s47Txt(x, W[i], 29 * K, "semi", "L", nm, [cbx + 46 * K, yc + 29 * K * 0.35],
+            U + "var t=" + _s47Col(x, "Text") + ".value, d=" + _s47Col(x, "Dim") + ".value; add(t, mul(sub(d,t), cl(u)))");
+        _s47Rect(x, nm + " ustidan", U + 'var w=(thisComp.layer("' + tx.name + '").sourceRectAtTime().width+' + (8 * K) + ')*cl(u); [w, ' + (3 * K) + ']',
+            U + 'var w=(thisComp.layer("' + tx.name + '").sourceRectAtTime().width+' + (8 * K) + ')*cl(u); [' + (cbx + 42 * K) + '+w/2, ' + (yc + 1 * K) + ']', 1.5 * K, _s47Col(x, "Dim"), U + "op*(u>0.01?1:0)");
+    }
+    y += n * IH;
+    if (dn) {
+        var D = "var g=cl((s-" + (N - 2) + "-0.15)/0.85); ", by = y + 20 * K + 35 * K;
+        var bb = _s47Rect(x, "yakun fon", D + "[" + (CW - 2 * PAD) + "*(0.9+0.1*g), " + (70 * K) + "*(0.9+0.1*g)]", D + "[" + cx + ", " + by + "+(1-g)*" + (16 * K) + "]", 20 * K,
+            "var a=" + _s47Col(x, "Accent") + ".value, b=" + _s47Col(x, "Card") + ".value; add(b, mul(sub(a,b), 0.16))", D + "op*g");
+        var bt = _s47Txt(x, dn, 28 * K, "semi", "C", "yakun matni", D + "[" + cx + ", " + (by + 28 * K * 0.35) + "+(1-g)*" + (16 * K) + "]", _s47Col(x, "Yakun matni"), D + "op*g");
+        bt.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + D + "var k=90+10*g; [k,k]";
+    }
+    _s47Finish(x);
+}
+
+// ---------- 273 MOCK TEST ----------
+// Timer ticks down (seconds since the first Tab key, last digit rolls), every Tab key presses
+// the button: current question fills, focus ring jumps to the next one, progress + counter roll.
+var S48_P273 = [
+    ["Abituriyent markazi", "Matematika \u00B7 30 savol \u00B7 60 daqiqa | Javob berildi", "30 | 12 | 3 | 38:27", "Blok test | Keyingi savol | dark | orange"],
+    ["IELTS markazi", "Reading \u00B7 40 savol \u00B7 60 daqiqa | Javob berildi", "40 | 26 | 3 | 21:40", "IELTS Mock | Keyingi savol | light | red"],
+    ["SAT markazi", "Math \u00B7 22 savol \u00B7 35 daqiqa | Javob berildi", "22 | 9 | 3 | 18:05", "SAT Practice | Next | light | blue"],
+    ["Prezident maktabiga tayyorlov", "Mantiq \u00B7 20 savol \u00B7 40 daqiqa | Yechildi", "20 | 6 | 3 | 27:12", "Kirish sinovi | Keyingi savol | light | indigo"],
+    ["IT akademiya", "Python asoslari \u00B7 25 savol \u00B7 30 daqiqa | Bajarildi", "25 | 14 | 3 | 12:36", "Kirish testi | Keyingi | dark | green"],
+    ["Kimyo-biologiya markazi", "Biologiya \u00B7 30 savol \u00B7 60 daqiqa | Javob berildi", "30 | 18 | 3 | 22:45", "DTM sinov | Keyingi savol | light | teal"],
+    ["Fizika markazi", "Mexanika \u00B7 25 savol \u00B7 45 daqiqa | Yechildi", "25 | 11 | 3 | 29:58", "Fizika blok | Keyingi masala | dark | blue"],
+    ["Rus tili kursi", "Grammatika \u00B7 30 savol \u00B7 40 daqiqa | Javob berildi", "30 | 21 | 3 | 14:20", "Test po-russki | Keyingi savol | light | purple"],
+    ["Nemis tili markazi", "Goethe A2 \u00B7 Lesen \u00B7 20 savol | Javob berildi", "20 | 13 | 3 | 09:47", "Goethe Mock | Weiter | light | black"],
+    ["Milliy sertifikat (ona tili)", "Ona tili \u00B7 35 savol \u00B7 50 daqiqa | Javob berildi", "35 | 19 | 3 | 31:03", "Sertifikat sinovi | Keyingi savol | light | pink"]
+];
+function _s48MockTest() {
+    var PR = _s47Pick("Mock Test (273)", S48_P273); if (!PR) return;
+    var q1 = prompt("Izoh (sarlavha ostida, bo'sh = yo'q) | qator matni", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Savollar soni (5-40) | javob berilgan | necha marta bosilsin (1-5) | qolgan vaqt mm:ss", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Sarlavha | Tugma | light/dark | rang", PR[3]); if (q3 === null) return;
+    var A = _s47Split(q1, 2), B = _s47Split(q2, 4), M = _s47Split(q3, 4), i;
+    var tot = parseInt(B[0], 10); if (!(tot >= 5)) tot = 30; if (tot > 40) tot = 40;
+    var a0 = parseInt(B[1], 10); if (!(a0 >= 0)) a0 = 0; if (a0 > tot - 2) a0 = tot - 2;
+    var np = parseInt(B[2], 10); if (!(np >= 1)) np = 3; if (np > 5) np = 5; if (a0 + np > tot - 1) np = tot - 1 - a0;
+    var tm = String(B[3]).split(":"), sec = (parseInt(tm[0], 10) || 0) * 60 + (parseInt(tm[1], 10) || 0); if (tm.length < 2) sec = (parseInt(tm[0], 10) || 0) * 60;
+    var x = _s47Begin("MOCK", { states: np + 1, look: _s47Look(M[2], M[3]), hold: 1.0, first: 1.2, extraEnd: 0.8 }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, GP = 16 * K, CS = (IW - 9 * GP) / 10, PT = CS + GP;
+    var nr = Math.ceil(tot / 10), GH = nr * PT - GP, sub = A[0], rl = A[1];
+    var H = PAD + 66 * K + (sub ? 44 * K : 0) + 8 * K + 28 * K + GH + (rl ? 112 * K : 0) + 26 * K + 104 * K + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    // header: title + countdown pill (prefix right-aligned, last digit rolls every second)
+    var hc = y + 30 * K;
+    _s47Txt(x, M[0] || "Test", 44 * K, "bold", "L", "sarlavha", [left, hc + 44 * K * 0.36], _s47Col(x, "Text"));
+    var TI = 'var p=c.effect("Tab")("Slider"); var T0=p.numKeys?p.key(1).time:0; var u=Math.max(0,time-T0); var k=Math.floor(u); ' +
+        'function F(r){ r=Math.max(0,r); var m=Math.floor(r/60), q=r%60; return (m<10?"0":"")+m+":"+(q<10?"0":"")+q; } ' +
+        'var g=(k==0)?1:sm((u-k)/0.28); var now=F(' + sec + '-k), old=F(' + sec + '-k+1); ';
+    var xd = right - 22 * K - 21 * K, fb = hc + 34 * K * 0.36, pn = x.tag + " taymer";
+    var PW = 'var pw=thisComp.layer("' + pn + '").sourceRectAtTime().width+' + (22 * K + 14 * K + 12 * K + 21 * K + 22 * K) + '; ';
+    _s47Rect(x, "taymer fon", PW + "[pw, " + (64 * K) + "]", PW + "[" + right + "-pw/2, " + hc + "]", 22 * K,
+        "var a=" + _s47Col(x, "Accent") + ".value, b=" + _s47Col(x, "Card") + ".value; add(b, mul(sub(a,b),0.18))");
+    _s47Ellipse(x, "taymer nuqta", [14 * K, 14 * K], PW + "[" + right + "-pw+" + (29 * K) + ", " + hc + "]", _s47Col(x, "Accent"), TI + "op*(0.625+0.375*Math.cos(2*Math.PI*u))");
+    var pf = _s47Txt(x, "00:0", 34 * K, "bold", "R", "taymer", [xd, fb], _s47Col(x, "Accent"));
+    pf.property("Source Text").expression = x.PRE + TI + "now.substr(0,now.length-1)";
+    var d1 = _s47Txt(x, "0", 34 * K, "bold", "L", "taymer raqam", TI + "[" + xd + ", " + fb + "+(1-g)*" + (22 * K) + "]", _s47Col(x, "Accent"), TI + "op*g");
+    d1.property("Source Text").expression = x.PRE + TI + "now.substr(now.length-1)";
+    var d0 = _s47Txt(x, "0", 34 * K, "bold", "L", "taymer eski", TI + "[" + xd + ", " + fb + "-g*" + (22 * K) + "]", _s47Col(x, "Accent"), TI + "op*(1-g)");
+    d0.property("Source Text").expression = x.PRE + TI + "old.substr(old.length-1)";
+    y += 66 * K;
+    if (sub) { _s47Txt(x, sub, 28 * K, "reg", "L", "izoh", [left, y + 28 * K * 0.8], _s47Col(x, "Dim")); y += 44 * K; }
+    // progress bar
+    _s47Rect(x, "progress fon", [IW, 8 * K], [cx, y + 4 * K], 4 * K, _s47Col(x, "Row"));
+    var PB = "var w=" + IW + "*Math.max(0," + a0 + "+s)/" + tot + "; ";
+    _s47Rect(x, "progress", PB + "[Math.max(" + (8 * K) + ",w), " + (8 * K) + "]", PB + "[" + left + "+Math.max(" + (8 * K) + ",w)/2, " + (y + 4 * K) + "]", 4 * K, _s47Col(x, "Accent"));
+    y += 8 * K + 28 * K;
+    // question grid
+    var gy = y + CS / 2, FS = 21 * K;
+    for (i = 0; i < tot; i++) {
+        var px = left + CS / 2 + (i % 10) * PT, py = gy + Math.floor(i / 10) * PT, q = i + 1, nm = "savol " + q, dot;
+        if (i < a0) {
+            _s47Ellipse(x, nm, [CS, CS], [px, py], _s47Col(x, "Accent"));
+            _s47Txt(x, String(q), FS, "semi", "C", nm + " raqam", [px, py + FS * 0.35], _s47Col(x, "Tugma matni"));
+        } else if (i < a0 + np) {
+            var F = "var f=cl(s-" + (i - a0) + "); ";
+            dot = _s47Ellipse(x, nm, [CS, CS], [0, 0], "var r=" + _s47Col(x, "Row") + ".value, a=" + _s47Col(x, "Accent") + ".value; " + F + "add(r, mul(sub(a,r), f))");
+            dot.property("ADBE Transform Group").property("ADBE Position").setValue([px, py]);
+            dot.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + F + "var k=100+16*Math.sin(Math.PI*f); [k,k]";
+            _s47Txt(x, String(q), FS, "semi", "C", nm + " raqam", [px, py + FS * 0.35], "var d=" + _s47Col(x, "Dim") + ".value, t=" + _s47Col(x, "Tugma matni") + ".value; " + F + "add(d, mul(sub(t,d), f))");
+        } else {
+            _s47Ellipse(x, nm, [CS, CS], [px, py], _s47Col(x, "Row"));
+            _s47Txt(x, String(q), FS, "semi", "C", nm + " raqam", [px, py + FS * 0.35], _s47Col(x, "Dim"));
+        }
+    }
+    var RP = "function P(i){ i=Math.max(0,Math.min(" + (tot - 1) + ",i)); return [" + (left + CS / 2) + "+(i%10)*" + PT + ", " + gy + "+Math.floor(i/10)*" + PT + "]; } " +
+        "var j=" + a0 + "+Math.max(0,s), k=Math.floor(j), f=j-k, A=P(k), B=P(k+1); ";
+    var ring = _s47Ellipse(x, "halqa", "var q=cl(Math.abs(sp.velocity)/5); [" + (CS + 12 * K) + "*(1+0.12*q), " + (CS + 12 * K) + "*(1+0.12*q)]",
+        RP + "[A[0]+(B[0]-A[0])*f, A[1]+(B[1]-A[1])*f]", null, null, { col: _s47Col(x, "Accent"), w: 4 * K });
+    ring.motionBlur = true;
+    y += GH;
+    // answered counter row
+    if (rl) {
+        var rc = y + 16 * K + 48 * K;
+        _s47Rect(x, "qator", [IW, 96 * K], [cx, rc], 22 * K, _s47Col(x, "Row"));
+        _s47Txt(x, rl, 32 * K, "reg", "L", "qator nom", [left + 28 * K, rc + 11 * K], _s47Col(x, "Dim"));
+        for (i = 0; i <= np; i++) _s47Txt(x, (a0 + i) + " / " + tot, 36 * K, "semi", "R", "qator qiymat " + (i + 1),
+            "[" + (right - 28 * K) + ", " + (rc + 12.6 * K) + "+(" + i + "-s)*" + (26 * K) + "]", _s47Col(x, "Text"), "op*st(" + i + ")");
+        y += 112 * K;
+    }
+    // button pressed on every Tab key (follows retimed keys)
+    _s47Btn(x, M[1] || "Keyingi savol", cx, y + 26 * K + 52 * K, IW);
+    var PRS = 'var p=c.effect("Tab")("Slider"); var pr=0; for(var n=2;n<=p.numKeys;n++){ var e=(time-(p.key(n).time-0.1))/0.26; if(e>=0&&e<=1) pr=Math.sin(Math.PI*e); } ';
+    var bt = x.layers[x.layers.length - 2], bl = x.layers[x.layers.length - 1];
+    bt.property("ADBE Root Vectors Group").property("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").expression =
+        x.PRE + PRS + "var a=" + _s47Col(x, "Accent") + ".value; var k=1-0.12*pr; [a[0]*k,a[1]*k,a[2]*k,1]";
+    bt.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + PRS + "var k=100-5*pr; [k,k]";
+    bl.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + PRS + "var k=100-5*pr; [k,k]";
+    _s47Finish(x);
+}
+
+// ---------- 274 LEVEL GAUGE ----------
+// Needle sweeps from the first level to the result and wobbles to rest (slow spring),
+// arc fills behind it, passing level labels light up, result name rolls, score counts up, button tap.
+var S48_P274 = [
+    ["Turk tili markazi", "A1, A2, B1, B2, C1", "B1 | 24 | 40 | to'g'ri", "Turk tili \u00B7 40 savol \u00B7 25 daqiqa", "Daraja testi | B1 guruhga yozilish | light | red"],
+    ["Ingliz tili (General English)", "A1, A2, B1, B2, C1, C2", "B2 | 38 | 50 | to'g'ri", "Placement test \u00B7 50 savol \u00B7 bepul", "Darajangiz | B2 guruh \u00B7 590 000 so'm | light | blue"],
+    ["Koreys tili markazi", "1, 2, 3, 4, 5, 6", "3 | 58 | 100 | ball", "TOPIK mock \u00B7 tinglash + o'qish", "TOPIK darajasi | 3-daraja guruhiga yozilish | light | indigo"],
+    ["Yapon tili markazi", "N5, N4, N3, N2, N1", "N4 | 41 | 60 | to'g'ri", "JLPT sinov \u00B7 60 savol \u00B7 50 daqiqa", "JLPT darajasi | N4 guruh \u00B7 650 000 so'm | light | pink"],
+    ["Nemis tili markazi", "A1, A2, B1, B2, C1", "A2 | 18 | 30 | to'g'ri", "Goethe placement \u00B7 30 savol", "Nemis tili darajasi | A2 guruhga yozilish | dark | orange"],
+    ["IT akademiya", "Nol, Start, Junior, Middle, Senior", "Junior | 27 | 40 | to'g'ri", "Frontend \u00B7 kirish testi \u00B7 40 savol", "Sizning darajangiz | Junior oqimiga yozilish | dark | blue"],
+    ["Shaxmat maktabi", "4-r, 3-r, 2-r, 1-r, KMS", "2-r | 14 | 20 | yechildi", "Taktik test \u00B7 20 masala \u00B7 30 daqiqa", "Shaxmat darajasi | 2-razryad guruhi | light | black"],
+    ["Mental arifmetika", "1, 2, 3, 4, 5, 6, 7", "4 | 45 | 60 | to'g'ri", "Bolalar uchun \u00B7 flesh-karta testi", "Bosqichingiz | 4-bosqichga yozilish | light | orange"],
+    ["Matematika markazi", "Past, O'rta, Yaxshi, A'lo", "Yaxshi | 18 | 25 | to'g'ri", "7-sinf \u00B7 diagnostika \u00B7 25 masala", "Matematika darajasi | Guruh \u00B7 450 000 so'm | light | green"],
+    ["Rus tili kursi", "A1, A2, B1, B2, C1", "B1 | 29 | 45 | to'g'ri", "Rus tili \u00B7 45 savol \u00B7 30 daqiqa", "Uroven' yazyka | B1 guruhga yozilish | light | teal"]
+];
+function _s48_274Q(s) { return '"' + String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"'; }
+function _s48_274Poly(x, name, pts, pos, fill) {
+    var L = x.comp.layers.addShape(); L.name = x.tag + " " + name;
+    var pg = L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var shp = new Shape(); shp.vertices = pts; shp.closed = true; pg.property("ADBE Vector Shape").setValue(shp);
+    L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").expression = x.PRE + fill;
+    var tr = L.property("ADBE Transform Group"); tr.property("ADBE Anchor Point").setValue([0, 0]); tr.property("ADBE Position").setValue(pos);
+    tr.property("ADBE Opacity").expression = x.PRE + "op";
+    x.layers.push(L); return L;
+}
+function _s48Gauge() {
+    var PR = _s47Pick("Level Gauge (274)", S48_P274); if (!PR) return;
+    var q1 = prompt("Darajalar (vergul bilan, 3-7 ta, qisqa)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Natija darajasi | to'g'ri javob | jami savol | so'z (bo'sh = hisobsiz)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Izoh (sarlavha ostida, bo'sh = yo'q)", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Sarlavha | Tugma (bo'sh = yo'q) | light/dark | rang", PR[4]); if (q4 === null) return;
+    var lv = _s47List(q1); if (lv.length < 3) lv = ["A1", "A2", "B1", "B2", "C1"]; if (lv.length > 7) lv.length = 7;
+    var n = lv.length, B = _s47Split(q2, 4), M = _s47Split(q4, 4), sub = _s45Trim(q3), res = n - 1, i;
+    for (i = 0; i < n; i++) { if (lv[i].toLowerCase() === B[0].toLowerCase()) res = i; }
+    if (!B[0]) res = Math.floor(n / 2);
+    var cor = parseFloat(B[1]), tot = parseFloat(B[2]), hasSc = !!B[3] || (cor >= 0 && tot > 0);
+    var x = _s47Begin("GAUGE", { states: 2, look: _s47Look(M[2], M[3]), tap: !!M[1], first: 1.0, extraEnd: 0.8 }); if (!x) return;
+    x.fx.property("Prujina (s)").property(1).setValue(0.95); x.fx.property("Damping").property(1).setValue(0.42);
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, R = 240 * K, SW = 34 * K;
+    var H = PAD + (M[0] ? 66 * K : 0) + (sub ? 44 * K : 0) + 330 * K + 110 * K + (M[1] ? 130 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 44 * K, "bold", "L", "sarlavha", [left, y + 44 * K * 0.78], _s47Col(x, "Text")); y += 66 * K; }
+    if (sub) { _s47Txt(x, sub, 28 * K, "reg", "L", "izoh", [left, y + 28 * K * 0.8], _s47Col(x, "Dim")); y += 44 * K; }
+    // u = needle position in level units (0..n), spring overshoot = wobble
+    var gy = y + 300 * K, U = "var u=Math.max(0,s)*" + (res + 0.5) + "; ";
+    var arcs = [["yoy fon", _s47Col(x, "Row"), "50"], ["yoy", _s47Col(x, "Accent"), U + "Math.max(0,Math.min(50,50*u/" + n + "))"]];
+    for (i = 0; i < 2; i++) {
+        var ar = _s47Ellipse(x, arcs[i][0], [2 * R, 2 * R], [0, 0], null, null, { col: arcs[i][1], w: SW });
+        ar.property("ADBE Transform Group").property("ADBE Position").setValue([cx, gy]);
+        ar.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(-90);
+        ar.property("ADBE Root Vectors Group").addProperty("ADBE Vector Filter - Trim");
+        var tm = ar.property("ADBE Root Vectors Group").property(ar.property("ADBE Root Vectors Group").numProperties);
+        tm.property("ADBE Vector Trim End").expression = x.PRE + arcs[i][2];
+    }
+    var ml = 0; for (i = 0; i < n; i++) ml = Math.max(ml, lv[i].length);
+    var LR = Math.max(150, 190 - 8 * Math.max(0, ml - 4)) * K;
+    for (i = 0; i < n; i++) {
+        var an = Math.PI * (i + 0.5) / n, lx = cx - LR * Math.cos(an), ly = gy - LR * Math.sin(an);
+        _s47Txt(x, lv[i], 26 * K, "semi", "C", "daraja " + (i + 1), [lx, ly + 26 * K * 0.35],
+            U + "var w=cl(1-Math.abs(u-" + (i + 0.5) + ")*1.4); var d=" + _s47Col(x, "Dim") + ".value, a=" + _s47Col(x, "Accent") + ".value; add(d, mul(sub(a,d), w))");
+    }
+    var nd = _s48_274Poly(x, "strelka", [[-6 * K, 0], [6 * K, 0], [2 * K, -Math.min(150 * K, LR - 36 * K)], [-2 * K, -Math.min(150 * K, LR - 36 * K)]], [cx, gy], _s47Col(x, "Text"));
+    nd.property("ADBE Transform Group").property("ADBE Rotate Z").expression = x.PRE + U + "-90+180*u/" + n;
+    nd.motionBlur = true;
+    _s47Ellipse(x, "markaz halqa", [56 * K, 56 * K], [cx, gy], _s47Col(x, "Card"));
+    _s47Ellipse(x, "markaz", [40 * K, 40 * K], [cx, gy], _s47Col(x, "Text"));
+    y += 330 * K;
+    // result: rolling level name + counting score, centred as one group
+    var rb = y + 14 * K + 80 * K * 0.85, rn = x.tag + " natija " + (res + 1), dn = x.tag + " hisob";
+    var GX = 'var wr=thisComp.layer("' + rn + '").sourceRectAtTime().width, wd=' + (hasSc ? 'thisComp.layer("' + dn + '").sourceRectAtTime().width+' + (20 * K) : '0') + '; var gl=' + cx + '-(wr+wd)/2; ';
+    var Q = U + "var q=Math.max(0,Math.min(" + res + ",u-0.5)); ";
+    for (i = 0; i <= res; i++) _s47Txt(x, lv[i], 80 * K, "bold", "L", "natija " + (i + 1), GX + Q + "[gl, " + rb + "+(" + i + "-q)*" + (60 * K) + "]", _s47Col(x, "Text"), Q + "op*sm(1-Math.abs(q-" + i + ")*1.3)");
+    if (hasSc) {
+        var sc = (cor >= 0 ? cor : 0), sw = (sc === Math.round(sc)) ? 0 : 1, fin = sc + " / " + (tot > 0 ? tot : "") + (B[3] ? " " + B[3] : "");
+        var dt = _s47Txt(x, fin, 28 * K, "reg", "L", "hisob", GX + "[gl+wr+" + (20 * K) + ", " + rb + "]", _s47Col(x, "Dim"));
+        dt.property("Source Text").expression = x.PRE + "var k=Math.pow(10," + sw + "); (Math.round(" + sc + "*cl(s)*k)/k) + " + _s48_274Q(" / " + (tot > 0 ? tot : "") + (B[3] ? " " + B[3] : ""));
+    }
+    y += 110 * K;
+    if (M[1]) _s47Btn(x, M[1], cx, y + 26 * K + 52 * K, IW);
+    _s47Finish(x);
+}
+
+// ---------- 275 STUDY PATH ----------
+// Vertical roadmap: accent line grows node to node, each reached stage fills + pops a check,
+// future stages stay dim, the current node pulses (loop timed from the first Tab key).
+var S48_P275 = [
+    ["Koreys tili markazi", "Hangul alifbosi = 12 dars = 2 hafta; 1-daraja \u00B7 boshlang'ich = 48 dars = 2 oy; 2-daraja \u00B7 so'zlashuv = 72 dars = 3 oy; 3-daraja \u00B7 grammatika = 72 dars = 3 oy; Imtihonga tayyorlov = 32 dars = 2 oy", "Koreys tili \u00B7 noldan 4-darajagacha | 1", "O'quv yo'li |  | light | indigo"],
+    ["IELTS markazi", "Diagnostika = 1 test = 1 kun; Foundation = 36 dars = 3 oy; Pre-IELTS = 36 dars = 3 oy; IELTS 6.5+ = 48 dars = 4 oy; Mock imtihonlar = 8 test = 1 oy", "Oyiga 690 000 so'm \u00B7 haftada 3 dars | 1", "IELTS 7.0 gacha yo'l | Bepul sinov darsi | light | red"],
+    ["IT akademiya", "HTML va CSS = 24 dars = 1 oy; JavaScript = 48 dars = 2 oy; React = 36 dars = 1.5 oy; Portfolio loyiha = 12 dars = 1 oy; Stajirovka = 3 oy = kompaniyada", "Frontend dasturchi \u00B7 8 oyda kasb | 1", "Frontend yo'li | Kursga yozilish | dark | blue"],
+    ["Abituriyent markazi", "Asoslarni takrorlash = 24 dars = 1 oy; Mavzulashtirilgan test = 48 dars = 2 oy; Blok testlar = 32 dars = 2 oy; DTM sinov imtihoni = 4 test = 1 oy", "Matematika + fizika \u00B7 oyiga 550 000 so'm | 1", "Grantga yo'l |  | light | green"],
+    ["Bolalar markazi (4-6 yosh)", "Harflar bilan tanishuv = 16 dars = 1 oy; Bo'g'inlab o'qish = 24 dars = 2 oy; Hisob 1-20 = 16 dars = 1 oy; Maktabga tayyor = 8 dars = 1 oy", "Maktabgacha tayyorlov \u00B7 kuniga 2 soat | 1", "Farzandingiz yo'li | Joy band qilish | light | orange"],
+    ["Robototexnika maktabi", "Lego WeDo = 16 dars = 2 oy; Arduino asoslari = 24 dars = 3 oy; Sensorlar = 16 dars = 2 oy; Robot yig'ish = 12 dars = 2 oy; Musobaqa = 1 tur = may", "8-14 yosh \u00B7 oyiga 480 000 so'm | 2", "Muhandis bo'lish yo'li |  | dark | teal"],
+    ["SAT markazi", "Diagnostika = 1 test = 1 kun; Math core = 32 dars = 2 oy; Reading & Writing = 32 dars = 2 oy; Full practice = 6 test = 1 oy", "1400+ maqsad \u00B7 haftada 4 dars | 1", "SAT 1400 yo'li | Guruhga yozilish | light | blue"],
+    ["Arab tili markazi", "Alifbo va tajvid = 20 dars = 1 oy; Sarf = 36 dars = 2 oy; Nahv = 48 dars = 3 oy; Matn o'qish = 36 dars = 2 oy", "Arab tili \u00B7 noldan kitob o'qishgacha | 1", "O'quv dasturi |  | light | brown"],
+    ["Kimyo-biologiya markazi", "Umumiy kimyo = 24 dars = 2 oy; Organik kimyo = 24 dars = 2 oy; Botanika va zoologiya = 24 dars = 2 oy; Odam anatomiyasi = 24 dars = 2 oy; Tibbiyotga test = 8 test = 1 oy", "Tibbiyot OTMga tayyorlov | 2", "Shifokor bo'lish yo'li | Sinov darsiga yozilish | light | pink"],
+    ["Mental arifmetika", "Abakus bilan tanishuv = 8 dars = 1 oy; Kichik do'stlar = 16 dars = 2 oy; Katta do'stlar = 16 dars = 2 oy; Flesh-anzan = 24 dars = 3 oy", "5-12 yosh \u00B7 oyiga 350 000 so'm | 1", "Bosqichlar |  | light | purple"]
+];
+function _s48Path() {
+    var PR = _s47Pick("Study Path (275)", S48_P275); if (!PR) return;
+    var q1 = prompt("Bosqichlar (3-6 ta), ; bilan:  nom = darslar = muddat", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Izoh (bo'sh = yo'q) | boshida nechta bajarilgan", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Sarlavha | Tugma (bo'sh = yo'q) | light/dark | rang", PR[3]); if (q3 === null) return;
+    var R = [], rr = String(q1).split(";"), i;
+    for (i = 0; i < rr.length && R.length < 6; i++) { if (_s45Trim(rr[i])) R.push(_s47Split(rr[i], 3, "=")); }
+    if (R.length < 3) { alert("Kamida 3 ta bosqich kerak: nom = darslar = muddat ; ..."); return; }
+    var n = R.length, B = _s47Split(q2, 2), M = _s47Split(q3, 4), sub = B[0], d0 = parseInt(B[1], 10);
+    if (!(d0 >= 0)) d0 = 1; if (d0 > n - 2) d0 = n - 2;
+    var x = _s47Begin("PATH", { states: n - d0, look: _s47Look(M[2], M[3]), tap: !!M[1], hold: 1.0, first: 1.2, extraEnd: 0.6 }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, RH = 112 * K;
+    var H = PAD + (M[0] ? 66 * K : 0) + (sub ? 44 * K : 0) + n * RH + (M[1] ? 130 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 44 * K, "bold", "L", "sarlavha", [left, y + 44 * K * 0.78], _s47Col(x, "Text")); y += 66 * K; }
+    if (sub) { _s47Txt(x, sub, 28 * K, "reg", "L", "izoh", [left, y + 28 * K * 0.8], _s47Col(x, "Dim")); y += 44 * K; }
+    var nx = left + 22 * K, c0 = y + RH / 2, tx = nx + 52 * K;
+    // track + growing accent line
+    _s47Rect(x, "yo'l", [6 * K, (n - 1) * RH], [nx, c0 + (n - 1) * RH / 2], 3 * K, _s47Col(x, "Track"));
+    var LH = "var h=Math.max(" + (6 * K) + ", Math.min(" + ((n - 1) * RH) + ", (" + d0 + "+s)*" + RH + "-" + (30 * K) + ")); ";
+    _s47Rect(x, "yo'l to'la", LH + "[" + (6 * K) + ", h]", LH + "[" + nx + ", " + c0 + "+h/2]", 3 * K, _s47Col(x, "Accent"));
+    for (i = 0; i < n; i++) {
+        var rc = c0 + i * RH, nm = "bosqich " + (i + 1), k = i - d0;
+        var D = (i < d0) ? "var D=1; " : "var D=cl(s-" + k + "); ", AO = (i <= d0) ? "op" : "op*(0.4+0.6*cl(s-" + (k - 1) + "))";
+        _s47Ellipse(x, nm + " halqa", [60 * K, 60 * K], [nx, rc], _s47Col(x, "Card"));
+        var nd = _s47Ellipse(x, nm + " nuqta", [44 * K, 44 * K], [0, 0], D + "var r=" + _s47Col(x, "Row") + ".value, a=" + _s47Col(x, "Accent") + ".value; add(r, mul(sub(a,r), D))");
+        _s47Ellipse(x, nm + " chegara", [41 * K, 41 * K], [nx, rc], null, D + "op*0.3*(1-D)", { col: _s47Col(x, "Dim"), w: 3 * K });
+        var ck = _s47Path(x, nm + " belgi", [[-9 * K, 1 * K], [-3 * K, 7 * K], [9 * K, -6 * K]], false, 5 * K, _s47Col(x, "Tugma matni"), [nx, rc], D + "op*cl(D*2-0.6)");
+        nd.property("ADBE Transform Group").property("ADBE Position").setValue([nx, rc]);
+        nd.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + D + "var q=100+18*Math.sin(Math.PI*D); [q,q]";
+        ck.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + D + "var q=100*(0.5+0.5*D)+18*Math.sin(Math.PI*D); [q,q]";
+        var two = !!R[i][1];
+        _s47Txt(x, R[i][0], 30 * K, "semi", "L", nm + " nom", [tx, two ? rc - 6 * K : rc + 30 * K * 0.35], _s47Col(x, "Text"), AO);
+        if (two) _s47Txt(x, R[i][1], 24 * K, "reg", "L", nm + " darslar", [tx, rc + 28 * K], _s47Col(x, "Dim"), AO);
+        if (R[i][2]) _s47Txt(x, R[i][2], 24 * K, "reg", "R", nm + " muddat", [right, rc + 24 * K * 0.35], _s47Col(x, "Dim"), AO);
+    }
+    // current stage marker: ring follows s + pulse ring (1.4 s loop from the first Tab key)
+    var CY = "var y=" + c0 + "+(" + d0 + "+s)*" + RH + "; ";
+    var PU = 'var p=c.effect("Tab")("Slider"); var T0=p.numKeys?p.key(1).time:0; var e=((Math.max(0,time-T0))%1.4)/1.4; ';
+    _s47Ellipse(x, "joriy", [60 * K, 60 * K], CY + "[" + nx + ", y]", null, null, { col: _s47Col(x, "Accent"), w: 4 * K });
+    var pl = _s47Ellipse(x, "puls", [60 * K, 60 * K], [0, 0], null, PU + "op*0.7*(1-e)", { col: _s47Col(x, "Accent"), w: 4 * K });
+    pl.property("ADBE Transform Group").property("ADBE Position").expression = x.PRE + CY + "[" + nx + ", y]";
+    pl.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + PU + "var q=100+60*(1-Math.pow(1-e,2)); [q,q]";
+    y += n * RH;
+    if (M[1]) _s47Btn(x, M[1], cx, y + 26 * K + 52 * K, IW);
+    _s47Finish(x);
+}
+
+// ---------- 276 SCORE GROWTH ----------
+// Grey "before" bars stand, accent "after" bars grow from the same height with a stagger,
+// +delta pops above each bar, total counts up and the green badge scales in.
+var S48_P276 = [
+    ["Matematika markazi", "Algebra = 4 > 9; Geometriya = 2 > 8; Mantiq = 6 > 10", "10 | ball | Iyun | Sentabr", "Matematika \u00B7 Abdulloh Rahimov", "3 oydagi o'sish |  | light | blue"],
+    ["IELTS markazi", "Listening = 22 > 34; Reading = 20 > 31", "40 | to'g'ri | Fevral | May", "IELTS \u00B7 Madina Yusupova \u00B7 3 oy", "Natija o'sishi | Sinov darsiga yozilish | light | red"],
+    ["SAT markazi", "Math = 520 > 690; Reading & Writing = 480 > 640", "800 | ball | Mart | Iyun", "Digital SAT \u00B7 Jasur Aliyev", "SAT: oldin va keyin |  | light | indigo"],
+    ["Abituriyent markazi", "Matematika = 14 > 26; Fizika = 11 > 23; Ona tili = 4 > 9", "30 | savol | Sentabr | Dekabr", "DTM sinov \u00B7 Bobur Tursunov", "4 oyda natija |  | light | green"],
+    ["Bolalar ingliz tili", "Grammar = 12 > 18; Words = 10 > 19; Speaking = 8 > 16", "20 | ball | 1-oy | 3-oy", "Kids English \u00B7 Samira, 9 yosh", "Farzandingiz o'sishi | Joy band qilish | light | orange"],
+    ["Rus tili kursi", "Grammatika = 18 > 32; Leksika = 20 > 35; O'qish = 15 > 30", "40 | ball | Oktabr | Yanvar", "Rus tili \u00B7 oyiga 450 000 so'm", "3 oyda natija |  | light | teal"],
+    ["Kimyo-biologiya markazi", "Kimyo = 12 > 24; Biologiya = 15 > 27", "30 | to'g'ri | Sentabr | Fevral", "Tibbiyotga tayyorlov \u00B7 Diyora Rahimova", "Test natijalari |  | light | pink"],
+    ["Fizika markazi", "Mexanika = 5 > 11; Elektr = 3 > 9; Optika = 4 > 10; Termodinamika = 2 > 8", "12 | masala | Yanvar | Aprel", "Fizika \u00B7 Temur Ahmedov", "Masala yechish |  | dark | blue"],
+    ["Mental arifmetika", "Tezlik = 20 > 45; Aniqlik = 30 > 48", "50 | ball | 1-bosqich | 3-bosqich", "Mental arifmetika \u00B7 Samir, 8 yosh", "Bolangiz natijasi | Sinov darsi \u00B7 bepul | light | purple"],
+    ["IT akademiya", "HTML/CSS = 40 > 90; JavaScript = 25 > 75; Git = 30 > 85", "100 | ball | Kirish | 4-oy", "Frontend \u00B7 oyiga 900 000 so'm", "Ko'nikmalar o'sishi |  | dark | green"]
+];
+function _s48_276Fmt(v) { var r = Math.round(v * 10) / 10; return String(r); }
+function _s48Growth() {
+    var PR = _s47Pick("Score Growth (276)", S48_P276); if (!PR) return;
+    var q1 = prompt("Mavzular (2-5), ; bilan:  nom = oldin > keyin", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Har mavzu maksimali | birlik | oldin nomi | keyin nomi", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Izoh (sarlavha ostida, bo'sh = yo'q)", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Sarlavha | Tugma (bo'sh = yo'q) | light/dark | rang", PR[4]); if (q4 === null) return;
+    var G = [], rr = String(q1).split(";"), i, mx = 0, s0 = 0, s1 = 0;
+    for (i = 0; i < rr.length && G.length < 5; i++) {
+        var r = _s45Trim(rr[i]); if (!r) continue;
+        var eq = r.indexOf("="), vv = _s47Split(eq >= 0 ? r.substring(eq + 1) : "", 2, ">"), a = parseFloat(vv[0]) || 0, b = parseFloat(vv[1]);
+        if (isNaN(b)) b = a;
+        G.push([_s45Trim(eq >= 0 ? r.substring(0, eq) : r), Math.max(0, a), Math.max(0, b)]); mx = Math.max(mx, a, b); s0 += a; s1 += b;
+    }
+    if (G.length < 2) { alert("Kamida 2 ta mavzu kerak: nom = oldin > keyin ; ..."); return; }
+    var n = G.length, P = _s47Split(q2, 4), M = _s47Split(q4, 4), sub = _s45Trim(q3), pm = parseFloat(P[0]);
+    if (pm >= mx) mx = pm; if (!(mx > 0)) mx = 1;
+    var LK = _s47Look(M[2], M[3]);
+    var x = _s47Begin("GROW", { states: 2, look: LK, tap: !!M[1], first: 1.2, extraEnd: 1.3, colors: { "Oldin": LK.theme === "dark" ? [0.227, 0.227, 0.235] : [0.89, 0.89, 0.91], "Yashil": [0.204, 0.78, 0.349], "Oq": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, BH = 250 * K;
+    var H = PAD + (M[0] ? 66 * K : 0) + (sub ? 44 * K : 0) + 118 * K + 300 * K + 40 * K + 46 * K + (M[1] ? 130 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 44 * K, "bold", "L", "sarlavha", [left, y + 44 * K * 0.78], _s47Col(x, "Text")); y += 66 * K; }
+    if (sub) { _s47Txt(x, sub, 28 * K, "reg", "L", "izoh", [left, y + 28 * K * 0.8], _s47Col(x, "Dim")); y += 44 * K; }
+    // total: count-up number + "/ max unit" after its width + green delta badge
+    var tb = y + 96 * K * 0.8, tn = x.tag + " jami", dec = (Math.round(s0) !== s0 || Math.round(s1) !== s1) ? 10 : 1;
+    var tt = _s47Txt(x, _s48_276Fmt(s1), 96 * K, "bold", "L", "jami", [left, tb], _s47Col(x, "Text"));
+    tt.property("Source Text").expression = x.PRE + "String(Math.round(lp(" + s0 + "," + s1 + ",cl(s))*" + dec + ")/" + dec + ")";
+    _s47Txt(x, "/ " + _s48_276Fmt(mx * n) + (P[1] ? " " + P[1] : ""), 30 * K, "semi", "L", "maksimal", 'var w=thisComp.layer("' + tn + '").sourceRectAtTime().width; [' + left + '+w+' + (14 * K) + ', ' + (tb - 4 * K) + ']', _s47Col(x, "Dim"));
+    var dl = (s1 >= s0 ? "+" : "") + _s48_276Fmt(s1 - s0), bw = (dl.length * 19 + 40) * K, bx = right - bw / 2, by = tb - 34 * K;
+    var bg = _s47Rect(x, "badge", [bw, 56 * K], [0, 0], 16 * K, _s47Col(x, "Yashil"));
+    var bt = _s47Txt(x, dl, 30 * K, "semi", "C", "badge matni", [bx, by + 10.5 * K], _s47Col(x, "Oq"));
+    bg.property("ADBE Transform Group").property("ADBE Position").setValue([bx, by]);
+    bg.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + "var k=Math.max(0,s)*100; [k,k]";
+    bt.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + "var k=Math.max(0,s)*100; [k,k]";
+    y += 118 * K;
+    // bars
+    var bot = y + 300 * K, gw = IW / n, bwd = Math.min(84 * K, (gw - 40 * K) / 2), gap = 14 * K;
+    _s47Rect(x, "o'q", [IW, 2 * K], [cx, bot + 1 * K], 0, _s47Col(x, "Row"));
+    for (i = 0; i < n; i++) {
+        var gc = left + gw * (i + 0.5), ox = gc - gap / 2 - bwd / 2, nx = gc + gap / 2 + bwd / 2;
+        var ho = G[i][1] / mx * BH, hn = G[i][2] / mx * BH, rn = Math.min(16 * K, bwd / 2), nm = "mavzu " + (i + 1);
+        var OH = "var h=Math.max(" + (8 * K) + "," + ho + "*sm(v)); ";
+        _s47Rect(x, nm + " oldin", OH + "[" + bwd + ", h]", OH + "[" + ox + ", " + bot + "-h/2]", rn, _s47Col(x, "Oldin"));
+        var NH = "var q=sp.valueAtTime(time-" + (i * 0.12) + "); var h=Math.max(" + (8 * K) + ",lp(" + ho + "," + hn + ",q)*sm(v)); ";
+        _s47Rect(x, nm + " keyin", NH + "[" + bwd + ", h]", NH + "[" + nx + ", " + bot + "-h/2]", rn, _s47Col(x, "Accent"));
+        var d = G[i][2] - G[i][1];
+        if (d !== 0) _s47Txt(x, (d > 0 ? "+" : "") + _s48_276Fmt(d), 26 * K, "bold", "C", nm + " farq", NH + "[" + nx + ", " + bot + "-h-" + (18 * K) + "-(1-cl(q))*" + (12 * K) + "]", _s47Col(x, "Yashil"), NH + "op*cl(q*2.5-1.2)");
+        _s47Txt(x, G[i][0], 24 * K, "reg", "C", nm + " nom", [gc, bot + 12 * K + 24 * K * 0.8], _s47Col(x, "Dim"));
+    }
+    y += 300 * K + 40 * K;
+    // legend: [sq] before   [sq] after, centred as a group
+    var l1 = x.tag + " legenda 1", l2 = x.tag + " legenda 2", lb = y + 22 * K + 24 * K * 0.35;
+    var LG = 'var a=thisComp.layer("' + l1 + '").sourceRectAtTime().width, b=thisComp.layer("' + l2 + '").sourceRectAtTime().width; var gl=' + cx + '-(a+b+' + (2 * 28 * K + 34 * K) + ')/2; ';
+    _s47Rect(x, "legenda kv 1", [18 * K, 18 * K], LG + "[gl+" + (9 * K) + ", " + (y + 22 * K) + "]", 5 * K, _s47Col(x, "Oldin"));
+    _s47Txt(x, P[2] || "Oldin", 24 * K, "reg", "L", "legenda 1", LG + "[gl+" + (28 * K) + ", " + lb + "]", _s47Col(x, "Dim"));
+    _s47Rect(x, "legenda kv 2", [18 * K, 18 * K], LG + "[gl+a+" + (28 * K + 34 * K + 9 * K) + ", " + (y + 22 * K) + "]", 5 * K, _s47Col(x, "Accent"));
+    _s47Txt(x, P[3] || "Keyin", 24 * K, "reg", "L", "legenda 2", LG + "[gl+a+" + (2 * 28 * K + 34 * K) + ", " + lb + "]", _s47Col(x, "Dim"));
+    y += 46 * K;
+    if (M[1]) _s47Btn(x, M[1], cx, y + 26 * K + 52 * K, IW);
+    _s47Finish(x);
+}
+
+// ---------- 277 PARENT ALERTS ----------
+// iOS-style notifications drop in from the top one per Tab key and push the older ones down;
+// last key collapses them into one stack (newest in front). The stack re-centres on every step.
+// Each notification = its own null (position/scale by s), parts parented to it.
+var S48_P277 = [
+    ["Kimyo-biologiya markazi", "Farzandingiz darsga keldi | Kimyo \u00B7 14:02 \u00B7 3-xona | 32 daq; Baho qo'yildi: Kimyo - 5 | Nazorat ishi \u00B7 ustoz Nodira Qodirova | 12 daq; Test natijasi: 86 / 100 | Biologiya \u00B7 haftalik test \u00B7 guruhda 3-o'rin | hozir", "Kimyo-biologiya markazi | KB | light | green"],
+    ["Bolalar markazi", "Farzandingiz yetib keldi | 08:45 \u00B7 kichik guruh | 3 soat; Tushlik qildi | Mastava va kompot \u00B7 to'liq yedi | 1 soat; Bugun 5 ta yangi harf o'rgandi | Ustoz Dilnoza \u00B7 rasm ilova qilindi | hozir", "Quvnoq bolajon | QB | light | orange"],
+    ["IELTS markazi", "Darsda qatnashdi | Speaking \u00B7 16:00 \u00B7 204-xona | 1 soat; Mock natija: 6.5 | Listening 7.0 \u00B7 Reading 6.5 | 20 daq; To'lov eslatmasi | Oktabr: 690 000 so'm \u00B7 5-sanagacha | hozir", "Everest IELTS | EI | light | red"],
+    ["IT akademiya", "Darsga keldi | Python \u00B7 15:00 \u00B7 2-laboratoriya | 2 soat; Uy vazifasi tekshirildi | Telegram bot loyiha \u00B7 92 / 100 | 40 daq; To'lov qabul qilindi | 900 000 so'm \u00B7 noyabr oyi uchun | hozir", "Najot IT akademiya | IT | dark | blue"],
+    ["Abituriyent markazi", "Darsga kechikdi | Matematika \u00B7 09:15 \u00B7 15 daqiqa | 3 soat; Blok test: 164.3 ball | Matematika + fizika \u00B7 guruhda 2-o'rin | 1 soat; Ota-onalar majlisi | Shanba 10:00 \u00B7 asosiy bino | hozir", "Ilm ziyo markazi | IZ | light | indigo"],
+    ["Robototexnika maktabi", "Mashg'ulot boshlandi | Arduino \u00B7 16:30 \u00B7 robot-lab | 1 soat; Loyiha tayyor: chiziq robot | Jamoada 1-o'rin \u00B7 video ilova | 25 daq; Musobaqaga taklif | Toshkent Robo Cup \u00B7 14-dekabr | hozir", "RoboKids | RK | dark | teal"],
+    ["Koreys tili markazi", "Darsda qatnashdi | 2-daraja \u00B7 18:00 \u00B7 5-xona | 2 soat; Lug'at testi: 48 / 50 | 120 ta so'z \u00B7 a'lo natija | 30 daq; TOPIK ro'yxatga olish | Imtihon 17-noyabr \u00B7 to'lov 350 000 so'm | hozir", "Seoul Hangul | SH | light | pink"],
+    ["Mental arifmetika", "Farzandingiz darsda | 3-bosqich \u00B7 15:00 | 1 soat; Flesh-anzan: 20 ta misol | Xatosiz \u00B7 8 soniyada | 15 daq; Olimpiadaga tanlandi | Shahar bosqichi \u00B7 30-noyabr | hozir", "Aqlvoy mental | AM | light | purple"],
+    ["Matematika markazi", "Davomat: darsda | Algebra \u00B7 14:00 \u00B7 7-sinf guruhi | 2 soat; Uy vazifasi bajarilmadi | 12-mavzu \u00B7 ertagacha topshirsin | 45 daq; Oylik natija: 27 / 30 | 3 oyda +15 ball \u00B7 guruhda 1-o'rin | hozir", "Pifagor maktabi | PM | light | blue"],
+    ["Turk tili markazi", "Darsga keldi | B1 guruh \u00B7 17:00 \u00B7 2-xona | 2 soat; Yozma ish: 18 / 20 | Mavzu: Mening shahrim | 30 daq; Chegirma: do'st taklif qiling | Keyingi oy 10% arzon \u00B7 520 000 so'm | hozir", "Anadolu Til | AT | light | red"]
+];
+function _s48Alerts() {
+    var PR = _s47Pick("Parent Alerts (277)", S48_P277); if (!PR) return;
+    var q1 = prompt("Xabarlar (2-4), ; bilan:  sarlavha | izoh | vaqt", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Markaz nomi | ikon harflari | light/dark | rang", PR[2]); if (q2 === null) return;
+    var N = [], rr = String(q1).split(";"), i, j;
+    for (i = 0; i < rr.length && N.length < 4; i++) { if (_s45Trim(rr[i])) N.push(_s47Split(rr[i], 3)); }
+    if (N.length < 2) { alert("Kamida 2 ta xabar kerak: sarlavha | izoh | vaqt ; ..."); return; }
+    var m = N.length, M = _s47Split(q2, 4);
+    var x = _s47Begin("ALERT", { states: m + 1, look: _s47Look(M[2], M[3]), hold: 1.1, first: 1.0, extraEnd: 0.6 }); if (!x) return;
+    var K = x.K, cx = x.cx, NW = 800 * K, NH = 150 * K, PS = 166 * K, CP = 20 * K, Y0 = x.cy, NL = cx - NW / 2, kids = [];
+    // stack top (re-centred) + per-notification slot p, visibility, collapse c
+    var ST = "var a=Math.max(0,Math.min(s," + (m - 1) + ")), c=Math.max(0,s-" + (m - 1) + "); " +
+        "var Hv=lp(a*" + PS + "+" + NH + ", " + (NH + (m - 1) * CP) + ", Math.min(1,c)); var top=" + x.cy + "-Hv/2; ";
+    for (j = 0; j < m; j++) {
+        var G = ST + "var p=Math.min(s," + (m - 1) + ")-" + j + "; var vis=cl(1+p*1.8); var yy=(p<0)?p*" + (90 * K) + ":p*" + PS + "; var sc=(p<0)?lp(0.96,1,vis):1; " +
+            "var sl=" + (m - 1 - j) + "; yy=lp(yy, sl*" + CP + ", c); sc=lp(sc, 1-0.05*sl, c); ";
+        var gn = x.comp.layers.addNull(); gn.name = x.tag + " xabar " + (j + 1); gn.label = 16;
+        var gt = gn.property("ADBE Transform Group"); gt.property("ADBE Anchor Point").setValue([cx, Y0]); gt.property("ADBE Position").setValue([cx, Y0]);
+        x.layers.push(gn);
+        var k0 = x.layers.length, nm = "xabar " + (j + 1), TV = G + "op*vis*(1-Math.min(1,c)*Math.min(1,sl))";
+        var bg = _s47Rect(x, nm + " fon", [NW, NH], [cx, Y0 + NH / 2], 40 * K,
+            G + "var a1=" + _s47Col(x, "Card") + ".value, b1=" + _s47Col(x, "Row") + ".value; add(a1, mul(sub(b1,a1), 0.6*Math.min(1,c)*Math.min(1,sl)))", G + "op*vis");
+        _s46Shadow(bg, x.theme === "light" ? 56 : 128, 18 * K, 50 * K);
+        _s47Rect(x, nm + " ikon", [76 * K, 76 * K], [NL + 68 * K, Y0 + NH / 2], 20 * K, _s47Col(x, "Accent"), TV);
+        _s47Txt(x, M[1] || "UZ", 28 * K, "bold", "C", nm + " ikon harf", [NL + 68 * K, Y0 + NH / 2 + 28 * K * 0.35], _s47Col(x, "Tugma matni"), TV);
+        _s47Txt(x, M[0] || "O'quv markazi", 22 * K, "reg", "L", nm + " markaz", [NL + 130 * K, Y0 + 48 * K], _s47Col(x, "Dim"), TV);
+        if (N[j][2]) _s47Txt(x, N[j][2], 22 * K, "reg", "R", nm + " vaqt", [NL + NW - 30 * K, Y0 + 48 * K], _s47Col(x, "Dim"), TV);
+        _s47Txt(x, N[j][0], 29 * K, "semi", "L", nm + " sarlavha", [NL + 130 * K, Y0 + (N[j][1] ? 88 : 98) * K], _s47Col(x, "Text"), TV);
+        if (N[j][1]) _s47Txt(x, N[j][1], 24 * K, "reg", "L", nm + " izoh", [NL + 130 * K, Y0 + 121 * K], _s47Col(x, "Dim"), TV);
+        var part = x.layers.splice(k0, x.layers.length - k0);
+        for (i = 0; i < part.length; i++) { part[i].parent = gn; kids.push(part[i]); }
+        gt.property("ADBE Position").expression = x.PRE + G + "[" + cx + ", top+yy]";
+        gt.property("ADBE Scale").expression = x.PRE + G + "[sc*100, sc*100]";
+    }
+    _s47Finish(x);
+    for (i = 0; i < kids.length; i++) { kids[i].inPoint = x.t0; kids[i].outPoint = Math.min(x.comp.duration, x.t1); }
+}
+
+// ---------- 278 MODULE UNLOCK ----------
+// Course modules unlock one by one: shackle lifts, lock fades, check pops, row brightens,
+// progress bar fills and the percent rolls.
+var S48_P278 = [
+    ["Shaxmat maktabi", "Donalar yurishi = 6 dars = 1-oy; Mat qo'yish usullari = 8 dars = 2-oy; Debyut asoslari = 10 dars = 3-oy; Taktika: vilka, bog'lash = 12 dars = 4-oy", "Progress | 1", "Kurs dasturi | Shaxmat maktabi \u00B7 boshlang'ich \u00B7 36 dars |  | dark | green"],
+    ["IELTS markazi", "Listening strategiyasi = 8 dars = 1-oy; Reading: skimming = 10 dars = 2-oy; Writing Task 2 = 12 dars = 3-oy; Speaking mock = 6 dars = 4-oy", "Progress | 1", "IELTS 7.0 dasturi | Chilonzor filiali \u00B7 36 dars \u00B7 4 oy |  | light | red"],
+    ["IT akademiya", "HTML va CSS = 12 dars = 1-oy; JavaScript asoslari = 16 dars = 2-oy; React = 16 dars = 3-oy; Git va deploy = 6 dars = 4-oy; Portfolio loyiha = 8 dars = 5-oy", "Bajarildi | 2", "Frontend dasturi | IT akademiya \u00B7 Yunusobod \u00B7 58 dars | Davom etish | dark | blue"],
+    ["Robototexnika", "Arduino bilan tanishuv = 4 dars = 1-oy; Sensorlar = 6 dars = 2-oy; Motor va g'ildirak = 6 dars = 3-oy; Musobaqa roboti = 8 dars = 4-oy", "Progress | 1", "Robot yig'amiz | Bolalar robototexnikasi \u00B7 9-13 yosh |  | light | orange"],
+    ["Mental arifmetika", "Abakus bilan tanishuv = 8 dars = 1-oy; Qo'shish va ayirish = 12 dars = 2-oy; Ko'paytirish = 12 dars = 3-oy", "Progress | 1", "Mental arifmetika | Sergeli filiali \u00B7 6-10 yosh \u00B7 32 dars |  | light | teal"],
+    ["Arab tili markazi", "Alifbo va talaffuz = 10 dars = 1-oy; O'qish qoidalari = 12 dars = 2-oy; Grammatika: fe'l = 14 dars = 3-oy; Suhbat amaliyoti = 10 dars = 4-oy", "Progress | 1", "Arab tili dasturi | Olmazor filiali \u00B7 noldan \u00B7 46 dars |  | light | green"],
+    ["Buxgalteriya kursi", "Buxgalteriya asoslari = 8 dars = 1-oy; 1C: Buxgalteriya = 12 dars = 2-oy; Soliq hisobotlari = 10 dars = 3-oy; Ish haqi hisobi = 6 dars = 4-oy", "O'zlashtirildi | 1", "Buxgalter bo'lamiz | Mirzo Ulug'bek \u00B7 kechki guruh | Sertifikat olish | light | indigo"],
+    ["SAT markazi", "Math: Algebra = 10 dars = 1-oy; Math: Advanced = 10 dars = 2-oy; Reading = 12 dars = 3-oy; Writing = 8 dars = 4-oy; Practice test = 4 dars = 5-oy; Final mock = 2 dars = 6-oy", "Progress | 2", "Digital SAT yo'li | SAT markazi \u00B7 1400+ maqsad |  | light | purple"],
+    ["Koreys tili", "Hangul alifbosi = 6 dars = 1-oy; TOPIK I grammatika = 16 dars = 2-oy; TOPIK II tayyorlov = 20 dars = 4-oy", "Progress | 1", "TOPIK dasturi | Koreys tili markazi \u00B7 Yashnobod |  | light | pink"],
+    ["Bolajon ingliz tili", "Harflar va ranglar = 8 dars = 1-oy; Hayvonlar va raqamlar = 8 dars = 2-oy; Oila va uy = 8 dars = 3-oy; Kichik suhbatlar = 8 dars = 4-oy", "Progress | 1", "Kids English | Bolalar markazi \u00B7 5-8 yosh \u00B7 32 dars | Yozilish | light | #ff9f0a"]
+];
+function _s48Unlock() {
+    var PR = _s47Pick("Module Unlock (278)", S48_P278); if (!PR) return;
+    var q1 = prompt("Modullar (2-6), ; bilan:  Nom = darslar = muddat", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Progress yozuvi | boshida nechta modul ochiq (1..)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Sarlavha | kichik yozuv | Tugma (bo'sh = yo'q) | light/dark | rang", PR[3]); if (q3 === null) return;
+    var R = [], rr = String(q1).split(";"), i;
+    for (i = 0; i < rr.length && R.length < 6; i++) { var r = _s45Trim(rr[i]); if (r) R.push(_s47Split(r, 3, "=")); }
+    if (R.length < 2) { alert("Kamida 2 ta modul kerak (; bilan)"); return; }
+    var n = R.length, P = _s47Split(q2, 2), M = _s47Split(q3, 5), u0 = parseInt(P[1], 10);
+    if (!(u0 >= 1)) u0 = 1; if (u0 > n - 1) u0 = n - 1;
+    var x = _s47Begin("UNLOCK", { states: n - u0 + 1, look: _s47Look(M[3], M[4]), tap: !!M[2], first: 1.2, hold: 1.0, extraEnd: M[2] ? 0.4 : 0.8, colors: { "Belgi": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, RH = 104 * K;
+    var HD = (M[0] ? 56 * K : 0) + (M[1] ? 44 * K : 0) + ((M[0] || M[1]) ? 14 * K : 0);
+    var H = PAD + HD + n * RH + 28 * K + 40 * K + (M[2] ? 26 * K + 104 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 34 * K], _s47Col(x, "Text")); y += 56 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 22 * K], _s47Col(x, "Dim")); y += 44 * K; }
+    if (M[0] || M[1]) y += 14 * K;
+    _s47Rect(x, "guruh", [IW, n * RH], [cx, y + n * RH / 2], 26 * K, _s47Col(x, "Row"));
+    var ix = left + 26 * K + 28 * K, tx = ix + 28 * K + 24 * K;
+    for (i = 0; i < n; i++) {
+        var rc = y + RH * (i + 0.5), nm = "modul " + (i + 1), lk = i >= u0;
+        // k: 0 = locked, 1 = open (s-driven, module i opens at state i-u0+1)
+        var KX = lk ? "var k=s-" + (i - u0) + "; " : "var k=1; ";
+        var POP = KX + "var g=cl((k-0.45)/0.5)+0.25*Math.sin(Math.PI*cl((k-0.6)/0.4)); var q=100*Math.max(0,g); [q,q]";
+        if (i > 0) _s47Rect(x, nm + " chiziq", [IW, 2 * K], [cx, y + RH * i], 0, _s47Col(x, "Card"));
+        if (lk) {
+            var LO = KX + "op*(1-sm((k-0.35)/0.4))";
+            _s47Path(x, nm + " qulf halqa", [[-8.5 * K, 2 * K], [-8.5 * K, -8 * K], [-6 * K, -13.5 * K], [0, -15.5 * K], [6 * K, -13.5 * K], [8.5 * K, -8 * K], [8.5 * K, 2 * K]], false, 5 * K,
+                _s47Col(x, "Dim"), KX + "[" + ix + ", " + (rc - 6 * K) + "-" + (10 * K) + "*sm(k/0.4)]", LO);
+            _s47Rect(x, nm + " qulf", [36 * K, 28 * K], [ix, rc + 8 * K], 7 * K, _s47Col(x, "Dim"), LO);
+        }
+        var ck = _s47Ellipse(x, nm + " doira", [52 * K, 52 * K], [0, 0], _s47Col(x, "Accent"));
+        var cm = _s47Path(x, nm + " belgi", [[-10 * K, 1 * K], [-3 * K, 8 * K], [11 * K, -7 * K]], false, 5 * K, _s47Col(x, "Belgi"), [ix, rc]);
+        ck.property("ADBE Transform Group").property("ADBE Position").setValue([ix, rc]);
+        ck.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + POP;
+        cm.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + POP;
+        var TO = KX + "op*(0.45+0.55*sm(k))";
+        _s47Txt(x, R[i][0], 30 * K, "semi", "L", nm + " nom", [tx, rc + (R[i][1] ? -4 * K : 10 * K)], _s47Col(x, "Text"), TO);
+        if (R[i][1]) _s47Txt(x, R[i][1], 24 * K, "reg", "L", nm + " darslar", [tx, rc + 30 * K], _s47Col(x, "Dim"), TO);
+        if (R[i][2]) _s47Txt(x, R[i][2], 24 * K, "reg", "R", nm + " muddat", [right - 26 * K, rc + 8 * K], _s47Col(x, "Dim"), TO);
+    }
+    y += n * RH + 28 * K;
+    var pc = y + 20 * K, pl = x.tag + " progress yozuv";
+    _s47Txt(x, P[0] || "Progress", 27 * K, "reg", "L", "progress yozuv", [left, pc + 9.5 * K], _s47Col(x, "Dim"));
+    var BL = 'var bl=' + left + '+thisComp.layer("' + pl + '").sourceRectAtTime().width+' + (22 * K) + ', br=' + (right - 100 * K) + ', bw=Math.max(0,br-bl); ';
+    _s47Rect(x, "progress yo'lak", BL + "[bw, " + (14 * K) + "]", BL + "[(bl+br)/2, " + pc + "]", 7 * K, _s47Col(x, "Row"));
+    var FW = BL + "var w=Math.max(0, bw*cl((" + u0 + "+s)/" + n + ")); ";
+    _s47Rect(x, "progress to'lish", FW + "[w, " + (14 * K) + "]", FW + "[bl+w/2, " + pc + "]", 7 * K, _s47Col(x, "Accent"));
+    for (i = 0; i <= n - u0; i++) {
+        _s47Txt(x, Math.round((u0 + i) / n * 100) + "%", 32 * K, "bold", "R", "foiz " + (i + 1), "[" + right + ", " + (pc + 11 * K) + "+(" + i + "-s)*" + (26 * K) + "]",
+            _s47Col(x, "Text"), "op*sm(1-Math.abs(s-" + i + ")*1.6)");
+    }
+    y += 40 * K;
+    if (M[2]) _s47Btn(x, M[2], cx, y + 26 * K + 52 * K, IW);
+    _s47Finish(x);
+}
+
+// ---------- 279 REFERRAL SLOTS ----------
+// Friend avatars pop into empty dashed slots one by one; discount % rolls up in accent,
+// segmented bar fills, monthly price rolls down.
+var S48_P279 = [
+    ["Ingliz tili kursi", "Lola, Timur, Anvar", "10 | 650000 | so'm | Oylik to'lov | chegirma", "Do'stingni olib kel | General English \u00B7 har bir do'st uchun -10% |  | light | pink"],
+    ["IELTS markazi", "Aziza, Jasur, Madina", "10 | 900000 | so'm | Oylik to'lov | chegirma", "Birga o'qisak arzon | IELTS intensiv \u00B7 Yunusobod filiali |  | light | indigo"],
+    ["IT akademiya", "Bekzod, Nilufar, Sardor, Kamola", "5 | 1200000 | so'm | Oylik to'lov | chegirma", "Jamoa bilan keling | Python backend \u00B7 har do'stga -5% |  | dark | blue"],
+    ["Bolalar markazi", "Ali, Zarina, Muhammad", "15 | 450000 | so'm | Oylik to'lov | chegirma", "Do'stlar bilan quvnoq | Bolalar markazi \u00B7 Sergeli \u00B7 4-7 yosh | Joy band qilish | light | orange"],
+    ["Matematika markazi", "Diyor, Shahzoda, Otabek", "10 | 550000 | so'm | Oylik to'lov | chegirma", "Sinfdoshingni olib kel | Matematika \u00B7 DTM tayyorlov \u00B7 Chilonzor |  | light | teal"],
+    ["Arab tili markazi", "Abdulloh, Oysha, Yusuf", "10 | 500000 | so'm | Oylik to'lov | chegirma", "Birodaring bilan o'qi | Arab tili \u00B7 Olmazor filiali |  | light | green"],
+    ["Robototexnika", "Temur, Malika", "20 | 700000 | so'm | Oylik to'lov | chegirma", "Juftlikda arzonroq | Robototexnika \u00B7 har do'stga -20% |  | light | purple"],
+    ["Shaxmat maktabi", "Sanjar, Durdona, Islom", "10 | 400000 | so'm | Oylik to'lov | chegirma", "Raqibingni olib kel | Shaxmat maktabi \u00B7 Mirobod |  | dark | orange"],
+    ["Buxgalteriya kursi", "Dilfuza, Rustam, Gulnora", "10 | 1500000 | so'm | Kurs narxi | chegirma", "Hamkasbing bilan keling | 1C Buxgalteriya \u00B7 Mirzo Ulug'bek |  | light | blue"],
+    ["Prezident maktabi tayyorlov", "Asadbek, Mohinur, Sherzod, Laylo", "5 | 800000 | so'm | Oylik to'lov | chegirma", "Guruh bo'lib tayyorlaning | Prezident maktabiga tayyorlov \u00B7 4-sinf | Yozilish | dark | indigo"]
+];
+function _s48Referral() {
+    var PR = _s47Pick("Referral Slots (279)", S48_P279); if (!PR) return;
+    var q1 = prompt("Do'stlar ismlari (2-4 ta, vergul bilan)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Chegirma qadami % | oylik narx (raqam) | valyuta | qator nomi | chegirma so'zi", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Sarlavha | kichik yozuv | Tugma (bo'sh = yo'q) | light/dark | rang", PR[3]); if (q3 === null) return;
+    var F = _s47List(q1), D = _s47Split(q2, 5), M = _s47Split(q3, 5), i;
+    if (F.length < 1) { alert("Kamida 1 ta ism kerak"); return; } if (F.length > 4) F.length = 4;
+    var n = F.length, stp = parseFloat(D[0]) || 10, base = parseFloat(String(D[1]).replace(/[^0-9.]/g, "")) || 0;
+    var x = _s47Begin("REFER", { states: n + 1, look: _s47Look(M[3], M[4]), tap: !!M[2], first: 1.2, hold: 1.0, extraEnd: M[2] ? 0.4 : 0.8,
+        colors: { "Avatar 1": [1, 0.62, 0.04], "Avatar 2": [0, 0.478, 1], "Avatar 3": [0.49, 0.3, 0.86], "Avatar 4": [0.204, 0.78, 0.349], "Belgi": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD;
+    var HD = (M[0] ? 56 * K : 0) + (M[1] ? 44 * K : 0) + ((M[0] || M[1]) ? 14 * K : 0);
+    var H = PAD + HD + 150 * K + 188 * K + 42 * K + (D[3] ? 112 * K : 0) + (M[2] ? 130 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 34 * K], _s47Col(x, "Text")); y += 56 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 22 * K], _s47Col(x, "Dim")); y += 44 * K; }
+    if (M[0] || M[1]) y += 14 * K;
+    // big discount roll + label after the widest value
+    var db = y + 112 * K, WS = "var mw=0; ";
+    for (i = 0; i <= n; i++) {
+        var pt = _s47Txt(x, Math.round(stp * i) + "%", 128 * K, "bold", "L", "foiz " + (i + 1), "[" + left + ", " + db + "+(" + i + "-s)*" + (56 * K) + "]", _s47Col(x, "Accent"), "op*sm(1-Math.abs(s-" + i + ")*1.6)");
+        pt.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + "var k=100+6*cl(Math.abs(sp.velocity)/8)*st(" + i + "); [k,k]";
+        WS += 'mw=Math.max(mw, thisComp.layer("' + pt.name + '").sourceRectAtTime().width); ';
+    }
+    if (D[4]) _s47Txt(x, D[4], 32 * K, "reg", "L", "chegirma yozuv", WS + "[" + left + "+mw+" + (30 * K) + ", " + (db - 24 * K) + "]", _s47Col(x, "Dim"));
+    y += 150 * K;
+    // slots: dashed ring + plus, avatar pops in (slot i fills at state i+1)
+    var sc = y + 14 * K + 65 * K;
+    for (i = 0; i < n; i++) {
+        var sx = left + IW * (i + 0.5) / n, nm = "joy " + (i + 1), KX = "var k=s-" + i + "; ";
+        var POP = KX + "var g=cl((k-0.4)/0.5)+0.22*Math.sin(Math.PI*cl((k-0.55)/0.45)); var q=100*Math.max(0,g); [q,q]";
+        var ring = _s47Ellipse(x, nm + " halqa", [126 * K, 126 * K], [sx, sc], null, "op*0.55", { col: _s47Col(x, "Dim"), w: 4 * K });
+        try { var dg = ring.property("ADBE Root Vectors Group").property("ADBE Vector Graphic - Stroke").property("ADBE Vector Stroke Dashes"); dg.addProperty("ADBE Vector Stroke Dash 1").setValue(12 * K); } catch (eD) {}
+        _s47Rect(x, nm + " plus h", [34 * K, 4 * K], [sx, sc], 2 * K, _s47Col(x, "Dim"));
+        _s47Rect(x, nm + " plus v", [4 * K, 34 * K], [sx, sc], 2 * K, _s47Col(x, "Dim"));
+        var av = _s47Ellipse(x, nm + " avatar", [138 * K, 138 * K], [0, 0], _s47Col(x, "Avatar " + (i + 1)));
+        av.property("ADBE Transform Group").property("ADBE Position").setValue([sx, sc]);
+        av.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + POP;
+        var ini = _s47Txt(x, F[i].charAt(0).toUpperCase(), 40 * K, "bold", "C", nm + " harf", [sx, sc], _s47Col(x, "Belgi"));
+        ini.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, -14 * K]);
+        ini.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + POP;
+        _s47Txt(x, F[i], 26 * K, "semi", "C", nm + " ism", KX + "[" + sx + ", " + (sc + 99 * K) + "+(1-cl(k))*" + (10 * K) + "]", _s47Col(x, "Text"), KX + "op*sm(k)");
+    }
+    y += 188 * K + 28 * K;
+    var by = y + 7 * K;
+    _s47Rect(x, "bar yo'lak", [IW, 14 * K], [cx, by], 7 * K, _s47Col(x, "Row"));
+    var FW = "var w=Math.max(0, " + IW + "*cl(s/" + n + ")); ";
+    _s47Rect(x, "bar to'lish", FW + "[w, " + (14 * K) + "]", FW + "[" + left + "+w/2, " + by + "]", 7 * K, _s47Col(x, "Accent"));
+    for (i = 1; i < n; i++) _s47Rect(x, "bar ajratgich " + i, [4 * K, 14 * K], [left + IW * i / n, by], 0, _s47Col(x, "Card"));
+    y += 14 * K;
+    if (D[3]) {
+        var rc = y + 16 * K + 48 * K;
+        _s47Rect(x, "qator", [IW, 96 * K], [cx, rc], 22 * K, _s47Col(x, "Row"));
+        _s47Txt(x, D[3], 32 * K, "reg", "L", "qator nom", [left + 28 * K, rc + 11 * K], _s47Col(x, "Dim"));
+        for (i = 0; i <= n; i++) {
+            var pv = base * (1 - stp * i / 100); pv = base >= 100000 ? Math.round(pv / 1000) * 1000 : Math.round(pv * 100) / 100;
+            _s47Txt(x, _s47_256Fmt(Math.max(0, pv), D[2]), 36 * K, "semi", "R", "narx " + (i + 1), "[" + (right - 28 * K) + ", " + (rc + 12.6 * K) + "+(" + i + "-s)*" + (30 * K) + "]",
+                _s47Col(x, "Text"), "op*sm(1-Math.abs(s-" + i + ")*1.6)");
+        }
+        y += 112 * K;
+    }
+    if (M[2]) _s47Btn(x, M[2], cx, y + 26 * K + 52 * K, IW);
+    _s47Finish(x);
+}
+
+// ---------- 280 QUIZ FEEDBACK ----------
+// Wrong answer turns red and shakes (state 1), the right one turns green and bounces,
+// check + score pill pop, progress bar steps forward (state 2).
+var S48_P280 = [
+    ["Arab tili markazi", "\"Kitob\" so'zining arabcha ko'plik shakli qaysi?", "maktab | kutub | kotib | kitobat", "1 | 2 | +10 ball", "5 / 10 savol | light | blue"],
+    ["IELTS markazi", "\"Rapid\" so'zining sinonimini toping", "slow | quick | heavy | calm", "4 | 2 | +10 ball", "3 / 15 savol | light | red"],
+    ["Matematika markazi", "12 x 15 nechaga teng?", "170 | 190 | 180 | 175", "2 | 3 | +5 ball", "7 / 20 savol | light | indigo"],
+    ["SAT markazi", "Agar 3x + 5 = 20 bo'lsa, x nechaga teng?", "3 | 4 | 5 | 6", "2 | 3 | +20 ball", "12 / 44 savol | dark | purple"],
+    ["Prezident maktabi tayyorlov", "Suvning kimyoviy formulasi qaysi?", "CO2 | H2O2 | H2O | NaCl", "2 | 3 | +10 ball", "9 / 30 savol | light | teal"],
+    ["IT akademiya", "Python'da ro'yxat uzunligini qaysi funksiya qaytaradi?", "size() | len() | count() | length()", "4 | 2 | +10 XP", "4 / 12 savol | dark | green"],
+    ["Shaxmat maktabi", "Qaysi figura faqat diagonal bo'ylab yuradi?", "Ot | Rux | Fil | Farzin", "1 | 3 | +10 ball", "2 / 8 savol | light | brown"],
+    ["Bolajon ingliz tili", "Qaysi so'z hayvon nomi?", "table | cat | book | pen", "1 | 2 | +1 yulduz", "2 / 8 savol | light | orange"],
+    ["Buxgalteriya kursi", "O'zbekistonda QQS stavkasi hozir necha foiz?", "10% | 15% | 12% | 20%", "2 | 3 | +10 ball", "6 / 25 savol | light | green"],
+    ["Koreys tili markazi", "\"Rahmat\" koreys tilida qanday aytiladi?", "annyeong | kamsahamnida | saranghae | juseyo", "1 | 2 | +10 ball", "TOPIK I \u00B7 4 / 20 | light | pink"]
+];
+function _s48_280Wrap(s, mx) {
+    var w = String(s).split(" "), L = [], cur = "", i;
+    for (i = 0; i < w.length; i++) { if (!w[i]) continue; if (cur && (cur + " " + w[i]).length > mx && L.length < 2) { L.push(cur); cur = w[i]; } else cur = cur ? cur + " " + w[i] : w[i]; }
+    if (cur) L.push(cur); return L;
+}
+function _s48_280Put(x, L, E, ex, ey, cx, oc, pop) {
+    var tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Position").expression = x.PRE + E + "[" + cx + "+sh+(" + (ex - cx) + ")*q, " + oc + "+(" + (ey - oc) + ")*q]";
+    tr.property("ADBE Scale").expression = x.PRE + E + (pop || "var g=1; ") + "[100*q*g, 100*q*g]";
+}
+function _s48Quiz() {
+    var PR = _s47Pick("Quiz Feedback (280)", S48_P280); if (!PR) return;
+    var q1 = prompt("Savol (uzun bo'lsa 2-3 qatorga o'zi bo'linadi)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("4 ta variant ( | bilan)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Noto'g'ri tanlov (0 = yo'q) | to'g'ri javob (1-4) | ball yozuvi", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Yuqori yozuv (masalan 5 / 10 savol) | light/dark | rang", PR[4]); if (q4 === null) return;
+    var O = _s47Split(q2, 0), A = _s47Split(q3, 3), M = _s47Split(q4, 3), i;
+    while (O.length && !O[O.length - 1]) O.length = O.length - 1;
+    if (O.length < 2) { alert("Kamida 2 ta variant kerak ( | bilan)"); return; } if (O.length > 4) O.length = 4;
+    var no = O.length, wr = parseInt(A[0], 10) - 1, rt = parseInt(A[1], 10) - 1;
+    if (!(rt >= 0 && rt < no)) rt = 0; if (!(wr >= 0 && wr < no) || wr === rt) wr = -1;
+    var sw = wr >= 0 ? 1 : -1, sc = wr >= 0 ? 2 : 1, QL = _s48_280Wrap(q1, 32);
+    var fm = String(M[0]).match(/(\d+)\s*\/\s*(\d+)/), fa = 0.4, fb = 0.5;
+    if (fm && parseInt(fm[2], 10) > 0) { fb = Math.min(1, parseInt(fm[1], 10) / parseInt(fm[2], 10)); fa = Math.max(0, fb - 1 / parseInt(fm[2], 10)); }
+    var x = _s47Begin("QUIZ", { states: sc + 1, look: _s47Look(M[1], M[2]), first: 1.2, hold: 1.2, extraEnd: 0.8,
+        colors: { "Xato": [1, 0.231, 0.188], "To'g'ri": [0.204, 0.78, 0.349], "Belgi": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD;
+    var H = PAD + 44 * K + 54 * K + QL.length * 45 * K + 10 * K + no * 106 * K + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    var KC = 'var tb=c.effect("Tab")("Slider").value; var k=tb>=' + (sc + 1) + ' ? s-' + (sc - 1) + ' : 0; ';
+    var POP = "var g=Math.max(0, cl((k-0.4)/0.5)+0.22*Math.sin(Math.PI*cl((k-0.55)/0.45))); ";
+    if (M[0]) _s47Txt(x, M[0], 26 * K, "reg", "L", "savol raqami", [left, y + 31 * K], _s47Col(x, "Dim"));
+    if (A[2]) {
+        var bn = x.tag + " ball matni", BW = 'var bw=thisComp.layer("' + bn + '").sourceRectAtTime().width+' + (32 * K) + '; ';
+        var pl = _s47Rect(x, "ball", BW + "[bw, " + (42 * K) + "]", BW + "[-bw/2, 0]", 14 * K, _s47Col(x, "To'g'ri"));
+        var pt = _s47Txt(x, A[2], 26 * K, "bold", "R", "ball matni", [right, y + 22 * K], _s47Col(x, "Belgi"));
+        pt.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([16 * K, -9.5 * K]);
+        pl.property("ADBE Transform Group").property("ADBE Position").setValue([right, y + 22 * K]);
+        pl.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + KC + POP + "[100*g, 100*g]";
+        pt.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + KC + POP + "[100*g, 100*g]";
+    }
+    y += 44 * K + 16 * K;
+    _s47Rect(x, "progress yo'lak", [IW, 10 * K], [cx, y + 5 * K], 5 * K, _s47Col(x, "Row"));
+    var FW = KC + "var w=" + IW + "*lp(" + fa + "," + fb + ",cl(k)); ";
+    _s47Rect(x, "progress to'lish", FW + "[w, " + (10 * K) + "]", FW + "[" + left + "+w/2, " + (y + 5 * K) + "]", 5 * K, _s47Col(x, "Accent"));
+    y += 10 * K + 28 * K;
+    for (i = 0; i < QL.length; i++) _s47Txt(x, QL[i], 36 * K, "bold", "L", "savol " + (i + 1), [left, y + 29 * K + i * 45 * K], _s47Col(x, "Text"));
+    y += QL.length * 45 * K + 10 * K;
+    var SH = 'var p=c.effect("Tab")("Slider"); var sh=0; if(p.numKeys>=2){ var d=time-p.key(2).time-0.08; if(d>0&&d<0.8) sh=' + (-16 * K) + '*Math.sin(d*40)*Math.exp(-d*6); } ';
+    for (i = 0; i < no; i++) {
+        var oc = y + i * 106 * K + 14 * K + 46 * K, nm = "variant " + (i + 1), bad = i === wr, ok = i === rt, CN = bad ? "Xato" : "To'g'ri";
+        var E = bad ? "var k=s-" + (sw - 1) + "; var w=cl(k); var q=1-0.03*Math.sin(Math.PI*cl(k*2)); " + SH
+            : ok ? KC + "var w=cl(k); var q=1-0.03*Math.sin(Math.PI*cl(k/0.3))+0.05*Math.sin(Math.PI*cl((k-0.3)/0.7)); var sh=0; " : "var k=0, w=0, q=1, sh=0; ";
+        var FL = (bad || ok) ? E + "var r=" + _s47Col(x, "Row") + ".value, t=add(mul(" + _s47Col(x, "Card") + ".value,0.86), mul(" + _s47Col(x, CN) + ".value,0.14)); add(r, mul(sub(t,r), w))" : _s47Col(x, "Row");
+        var bg = _s47Rect(x, nm, E + "[" + IW + "-" + (4 * K) + "*w, " + (92 * K) + "-" + (4 * K) + "*w]", [0, 0], 24 * K, FL, null, { col: _s47Col(x, CN), w: E + (4 * K) + "*w" });
+        _s48_280Put(x, bg, E, cx, oc, cx, oc);
+        var kx = left + 22 * K + 24 * K;
+        _s48_280Put(x, _s47Rect(x, nm + " harf fon", [48 * K, 48 * K], [0, 0], 14 * K, _s47Col(x, "Card")), E, kx, oc, cx, oc);
+        _s48_280Put(x, _s47Txt(x, String.fromCharCode(65 + i), 24 * K, "bold", "C", nm + " harf", [kx, oc], _s47Col(x, "Dim")), E, kx, oc + 8.5 * K, cx, oc);
+        _s48_280Put(x, _s47Txt(x, O[i], 30 * K, "reg", "L", nm + " matn", [kx, oc], _s47Col(x, "Text")), E, left + 92 * K, oc + 10.5 * K, cx, oc);
+        if (!bad && !ok) continue;
+        var mx = right - 22 * K - 23 * K, MP = POP;
+        _s48_280Put(x, _s47Ellipse(x, nm + " belgi fon", [46 * K, 46 * K], [0, 0], _s47Col(x, CN), E + "op*cl(k*3-1)"), E, mx, oc, cx, oc, MP);
+        if (bad) {
+            for (var j = 0; j < 2; j++) {
+                var xl = _s47Rect(x, nm + " x " + (j + 1), [24 * K, 5 * K], [0, 0], 2.5 * K, _s47Col(x, "Belgi"), E + "op*cl(k*3-1)");
+                xl.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(j ? -45 : 45);
+                _s48_280Put(x, xl, E, mx, oc, cx, oc, MP);
+            }
+        } else _s48_280Put(x, _s47Path(x, nm + " belgi", [[-10 * K, 1 * K], [-3 * K, 8 * K], [11 * K, -7 * K]], false, 5 * K, _s47Col(x, "Belgi"), [mx, oc], E + "op*cl(k*3-1)"), E, mx, oc, cx, oc, MP);
+    }
+    _s47Finish(x);
+}
+
+// ---------- 281 FLIP COUNTDOWN ----------
+// Split-flap timer counts DOWN only: on every Tab key the changed tiles flip (top half folds
+// to the hinge, new value springs out of it). Flip = time since each Tab key, so it never
+// runs backwards and follows retimed keys.
+var S48_P281 = [
+    ["Prezident maktabi tayyorlov", "03 | 14 | 27", "kun, soat, daqiqa | 3", "Boshlanish = 1-oktabr, 09:00", "Yangi guruh boshlanishiga | Prezident maktabiga tayyorlov \u00B7 4-sinflar | Joyni band qilish | dark | blue"],
+    ["IELTS markazi", "02 | 06 | 45", "kun, soat, daqiqa | 3", "Mock imtihon = 5-oktabr, 10:00", "Mock IELTS imtihoniga | IELTS markazi \u00B7 Chilonzor filiali | Joy olish | light | red"],
+    ["IT akademiya", "05 | 00 | 02", "kun, soat, daqiqa | 4", "Guruhda = 12 ta joy qoldi", "Qabul yopilishiga | Frontend guruh \u00B7 Yunusobod | Ro'yxatdan o'tish | dark | green"],
+    ["SAT markazi", "10 | 08 | 30", "kun, soat, daqiqa | 3", "Sinov testi = 7-noyabr, 09:30", "Digital SAT sinoviga | SAT markazi \u00B7 Mirobod | Testga yozilish | light | purple"],
+    ["Bolalar markazi", "06 | 12 | 01", "kun, soat, daqiqa | 3", "Lager = 15-iyun, Sergeli", "Yozgi lager boshlanishiga | Bolalar markazi \u00B7 6-11 yosh | Joy band qilish | light | orange"],
+    ["Matematika olimpiadasi", "01 | 20 | 15", "soat, daqiqa, soniya | 4", "Bosqich = Shahar olimpiadasi", "Ro'yxat yopilishiga | Matematika markazi \u00B7 7-9 sinflar | Ishtirok etish | light | indigo"],
+    ["Arab tili markazi", "04 | 09 | 40", "kun, soat, daqiqa | 3", "Boshlanish = 12-oktabr, 18:00", "Yangi guruhga | Arab tili \u00B7 noldan \u00B7 Olmazor | Yozilish | light | green"],
+    ["Shaxmat maktabi", "02 | 03 | 10", "kun, soat, daqiqa | 3", "Turnir = Yakkasaroy, 11:00", "Turnir boshlanishiga | Shaxmat maktabi \u00B7 U-12 bolalar | Qatnashish | dark | orange"],
+    ["Buxgalteriya kursi", "11 | 58", "soat, daqiqa | 3", "Aksiya = -20% faqat bugun", "Chegirma tugashiga | 1C Buxgalteriya kursi | Chegirma bilan olish | light | teal"],
+    ["Robototexnika", "03 | 23 | 59", "kun, soat, daqiqa | 3", "Musobaqa = WRO Uzbekistan", "Ro'yxat yopilishiga | Robototexnika \u00B7 jamoa 3 kishi | Jamoa yozish | dark | purple"]
+];
+function _s48Flip() {
+    var PR = _s47Pick("Flip Countdown (281)", S48_P281); if (!PR) return;
+    var q1 = prompt("Boshlang'ich qiymatlar (2-3 ta, | bilan): kun | soat | daqiqa", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Birliklar nomi (vergul bilan) | necha marta flip (1-5)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Qator: nom = qiymat  (bo'sh = qatorsiz)", PR[3]); if (q3 === null) return;
+    var q4 = prompt("Sarlavha | kichik yozuv | Tugma (bo'sh = yo'q) | light/dark | rang", PR[4]); if (q4 === null) return;
+    var V = _s47Split(q1, 0), Q = _s47Split(q2, 2), U = _s47List(Q[0]), M = _s47Split(q4, 5), rowS = _s45Trim(q3), i, j, f;
+    var cur = [], base = []; for (i = 0; i < V.length && cur.length < 3; i++) { var vv = parseInt(V[i], 10); if (vv >= 0) cur.push(vv); }
+    if (cur.length < 1) { alert("Kamida 1 ta raqam kerak"); return; }
+    var nu = cur.length, nf = parseInt(Q[1], 10); if (!(nf >= 1)) nf = 3; if (nf > 5) nf = 5;
+    for (j = 0; j < nu; j++) { var ul = String(U[j] || "").toLowerCase(); base.push(j === 0 ? 0 : (/^(soat|hour)/.test(ul) ? 24 : 60)); }
+    // values per state: forward countdown with borrow; stops at all-zero
+    var VAL = [], CH = []; for (j = 0; j < nu; j++) { VAL.push([cur[j]]); CH.push([0]); }
+    for (f = 1; f <= nf; f++) {
+        var z = true; for (j = 0; j < nu; j++) if (cur[j] > 0) z = false;
+        var old = cur.slice(0);
+        if (!z) { j = nu - 1; while (j >= 0) { if (cur[j] > 0) { cur[j]--; break; } cur[j] = base[j] - 1; j--; } }
+        for (j = 0; j < nu; j++) { VAL[j].push(cur[j]); CH[j].push(cur[j] !== old[j] ? 1 : 0); }
+    }
+    var rl = "", rv = ""; if (rowS) { var eq = rowS.indexOf("="); rl = _s45Trim(eq >= 0 ? rowS.substring(0, eq) : rowS); rv = eq >= 0 ? _s45Trim(rowS.substring(eq + 1)) : ""; }
+    var x = _s47Begin("FLIP", { states: nf + 1, look: _s47Look(M[3], M[4]), tap: !!M[2], first: 1.3, hold: 1.0, extraEnd: M[2] ? 0.3 : 0.8 }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, TH = 200 * K, CG = 60 * K;
+    var TW = Math.min(176 * K, (IW - (nu - 1) * CG) / nu), FS = 116 * K * TW / (176 * K);
+    var HD = (M[0] ? 56 * K : 0) + (M[1] ? 44 * K : 0) + ((M[0] || M[1]) ? 14 * K : 0);
+    var H = PAD + HD + 4 * K + TH + 51 * K + (rl ? 112 * K : 0) + (M[2] ? 130 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 34 * K], _s47Col(x, "Text")); y += 56 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 22 * K], _s47Col(x, "Dim")); y += 44 * K; }
+    if (M[0] || M[1]) y += 14 * K;
+    var hy = y + 4 * K + TH / 2, x0 = cx - (nu * TW + (nu - 1) * CG) / 2;
+    // n = flips started, u = seconds since the last one; el = spring landing
+    var FP = 'var p=c.effect("Tab")("Slider"); var n=0, u=99; for(var kk=2;kk<=p.numKeys;kk++){ if(time>=p.key(kk).time){ n=kk-1; u=time-p.key(kk).time; } } ' +
+        'function el(w){ return 1-Math.exp(-10*w)*Math.cos(14*w); } ';
+    for (j = 0; j < nu; j++) {
+        var ux = x0 + TW / 2 + j * (TW + CG), nm = "flip " + (j + 1), UF = FP + "var CH=[" + CH[j].join(",") + "]; var ch=CH[n]; ", any = false;
+        for (f = 1; f <= nf; f++) if (CH[j][f]) any = true;
+        _s47Rect(x, nm + " karta", [TW, TH], [ux, hy], 24 * K, _s47Col(x, "Row"));
+        if (any) {
+            var GT = UF + "var g=(ch&&u<0.16)?1-Math.pow(u/0.16,2):0; ", GB = UF + "var g=(ch&&u>=0.16&&u<0.5)?Math.min(1,el(u-0.16)):0; ";
+            var SHD = "var r=" + _s47Col(x, "Row") + ".value; var e=1-0.12*(1-g); [r[0]*e, r[1]*e, r[2]*e, 1]";
+            var ft = _s47Rect(x, nm + " qopqoq tepa", [TW, TH / 2], [0, -TH / 4], 24 * K, GT + SHD, GT + "op*(g>0.01?1:0)");
+            var fb = _s47Rect(x, nm + " qopqoq past", [TW, TH / 2], [0, TH / 4], 24 * K, GB + SHD, GB + "op*(g>0.01?1:0)");
+            ft.property("ADBE Transform Group").property("ADBE Position").setValue([ux, hy]);
+            fb.property("ADBE Transform Group").property("ADBE Position").setValue([ux, hy]);
+            ft.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + GT + "[100, 100*g]";
+            fb.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + GB + "[100, 100*g]";
+        }
+        for (i = 0; i <= nf; i++) {
+            var G = UF + "var g=0; if(n==" + i + "){ g=(ch&&u<0.5)?(u<0.16?0:el(u-0.16)):1; } else if(n==" + (i + 1) + "&&ch&&u<0.16){ g=1-Math.pow(u/0.16,2); } ";
+            var dv = VAL[j][i], dt = _s47Txt(x, (dv < 10 ? "0" : "") + dv, FS, "bold", "C", nm + " qiymat " + (i + 1), [ux, hy], _s47Col(x, "Text"), G + "op*(g>0.01?1:0)");
+            dt.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, -FS * 0.35]);
+            dt.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + G + "[100, 100*g]";
+        }
+        _s47Rect(x, nm + " chok", [TW, 3 * K], [ux, hy], 0, _s47Col(x, "Card"));
+        if (U[j]) _s47Txt(x, U[j].toUpperCase(), 22 * K, "semi", "C", nm + " nom", [ux, hy + TH / 2 + 33 * K], _s47Col(x, "Dim"));
+        if (j < nu - 1) _s47Txt(x, ":", 76 * K * TW / (176 * K), "semi", "C", "ikki nuqta " + (j + 1), [ux + TW / 2 + CG / 2, hy + 22 * K], _s47Col(x, "Dim"));
+    }
+    y += 4 * K + TH + 51 * K;
+    if (rl) {
+        var rc = y + 16 * K + 48 * K;
+        _s47Rect(x, "qator", [IW, 96 * K], [cx, rc], 22 * K, _s47Col(x, "Row"));
+        _s47Txt(x, rl, 32 * K, "reg", "L", "qator nom", [left + 28 * K, rc + 11 * K], _s47Col(x, "Dim"));
+        if (rv) _s47Txt(x, rv, 34 * K, "semi", "R", "qator qiymat", [right - 28 * K, rc + 12 * K], _s47Col(x, "Text"));
+        y += 112 * K;
+    }
+    if (M[2]) _s47Btn(x, M[2], cx, y + 26 * K + 52 * K, IW);
+    _s47Finish(x);
+}
+
+// ---------- 282 BRANCH SEARCH ----------
+// A word types into the search field (time since Tab key 2, caret blinks), non-matching
+// branches collapse (state 2, card stays anchored at its top), the match gets selected:
+// accent border + tint + check, button lights up (state 3), tap.
+var S48_P282 = [
+    ["Buxgalteriya kursi", "Chilonzor = Bunyodkor shoh ko'chasi, 12 = 2.4 km; Yunusobod = Amir Temur ko'chasi, 108 = 5.1 km; Mirzo Ulug'bek = Buyuk Ipak yo'li, 45 = 6.8 km; Sergeli = Yangi Sergeli ko'chasi, 7 = 11.3 km", "Yunus | Tuman yoki mo'ljal", "Filialni tanlang | Buxgalteriya kursi \u00B7 Toshkentda 4 filial | Tanlash | light | purple"],
+    ["IELTS markazi", "Chilonzor = Qatortol ko'chasi, 5 = 1.8 km; Olmazor = Qorasaroy ko'chasi, 21 = 4.1 km; Yunusobod = Bog'ishamol ko'chasi, 3 = 6.2 km; Sergeli = Yangi Sergeli ko'chasi, 19 = 9.4 km", "Serg | Tuman yoki metro", "Eng yaqin filial | IELTS markazi \u00B7 4 ta filial | Sinov darsiga yozilish | light | red"],
+    ["IT akademiya", "Yunusobod = Amir Temur ko'chasi, 107 = 3.2 km; Mirobod = Taras Shevchenko ko'chasi, 21 = 4.7 km; Yakkasaroy = Shota Rustaveli ko'chasi, 30 = 5.5 km; Chilonzor = Muqimiy ko'chasi, 44 = 7.9 km", "Mirob | Tuman qidirish", "Kampusni tanlang | IT akademiya \u00B7 Toshkent | Tanlash | dark | blue"],
+    ["Bolalar markazi", "Sergeli = Yangi Sergeli ko'chasi, 32 = 1.2 km; Yashnobod = Mahtumquli ko'chasi, 88 = 5.6 km; Bektemir = Husayn Boyqaro ko'chasi, 15 = 8.3 km", "Yashno | Uyingizga yaqin tuman", "Bog'chaga yaqin filial | Bolalar markazi \u00B7 3-7 yosh | Ekskursiyaga yozilish | light | orange"],
+    ["Matematika markazi", "Shayxontohur = Navoiy ko'chasi, 30 = 2.1 km; Olmazor = Sebzor ko'chasi, 11 = 3.3 km; Uchtepa = Lutfiy ko'chasi, 6 = 6.4 km; Yunusobod = Bog'ishamol ko'chasi, 21 = 7.0 km", "Uchte | Tuman yoki mo'ljal", "Filialni tanlang | Matematika \u00B7 DTM tayyorlov | Tanlash | light | teal"],
+    ["Ingliz tili kursi", "Registon = Registon ko'chasi, 8 = 0.9 km; Sattepo = Sattepo mavzesi, 3 = 3.4 km; Kimyogarlar = Kimyogarlar ko'chasi, 17 = 5.8 km", "Satt | Samarqand bo'yicha qidirish", "Samarqanddagi filiallar | General English \u00B7 3 ta filial | Tanlash | light | indigo"],
+    ["Arab tili markazi", "Olmazor = Qorasaroy ko'chasi, 21 = 1.5 km; Shayxontohur = Labzak ko'chasi, 12 = 3.0 km; Chilonzor = Qatortol ko'chasi, 28 = 6.1 km; Yashnobod = Mahtumquli ko'chasi, 40 = 8.8 km", "Chilon | Tuman yoki mo'ljal", "Filialni tanlang | Arab tili markazi \u00B7 ayollar guruhi bor | Yozilish | light | green"],
+    ["Shaxmat maktabi", "Yakkasaroy = Shota Rustaveli ko'chasi, 12 = 1.1 km; Mirobod = Taras Shevchenko ko'chasi, 9 = 2.6 km; Yunusobod = Amir Temur ko'chasi, 60 = 4.9 km", "Yakka | Klub qidirish", "Shaxmat klubi | Shaxmat maktabi \u00B7 3 ta zal | Tanlash | dark | orange"],
+    ["Robototexnika", "Markaz = Navoiy ko'chasi, 14 = 1.0 km; Davlatobod = Davlatobod mavzesi, 2 = 4.3 km; Chortoq yo'li = Chortoq ko'chasi, 25 = 6.7 km", "Davlat | Namangan bo'yicha", "Laboratoriyani tanlang | Robototexnika \u00B7 Namangan | Sinov darsi | dark | purple"],
+    ["SAT markazi", "Mirzo Ulug'bek = Mustaqillik shoh ko'chasi, 59 = 2.0 km; Yunusobod = Amir Temur ko'chasi, 108 = 4.4 km; Chilonzor = Bunyodkor shoh ko'chasi, 3 = 7.2 km; Sergeli = Yangi Sergeli ko'chasi, 7 = 12.5 km", "Ulug'b | Tuman yoki mo'ljal", "Filialni tanlang | SAT markazi \u00B7 1400+ natijalar | Tanlash | light | pink"]
+];
+function _s48_282Poly(x, name, pts, fill, pos, opExpr) {
+    var L = x.comp.layers.addShape(); L.name = x.tag + " " + name;
+    var tr = L.property("ADBE Transform Group"); tr.property("ADBE Anchor Point").setValue([0, 0]); _s47SetP(tr.property("ADBE Position"), x, pos);
+    var pg = L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Shape - Group");
+    var shp = new Shape(); shp.vertices = pts; shp.closed = true; pg.property("ADBE Vector Shape").setValue(shp);
+    L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").expression = _s47E(x, fill);
+    tr.property("ADBE Opacity").expression = x.PRE + (opExpr || "op");
+    x.layers.push(L); return L;
+}
+function _s48Branch() {
+    var PR = _s47Pick("Branch Search (282)", S48_P282); if (!PR) return;
+    var q1 = prompt("Filiallar (2-5), ; bilan:  Nom = manzil = masofa", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Qidiruvga yoziladigan so'z | bo'sh maydon matni", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Sarlavha | kichik yozuv | Tugma (bo'sh = yo'q) | light/dark | rang", PR[3]); if (q3 === null) return;
+    var R = [], rr = String(q1).split(";"), i, nM = 0, sel = -1;
+    for (i = 0; i < rr.length && R.length < 5; i++) { var r = _s45Trim(rr[i]); if (r) R.push(_s47Split(r, 3, "=")); }
+    if (R.length < 2) { alert("Kamida 2 ta filial kerak (; bilan)"); return; }
+    var n = R.length, Q = _s47Split(q2, 2), M = _s47Split(q3, 5), wd = Q[0], lw = wd.toLowerCase(), KP = [];
+    for (i = 0; i < n; i++) { var hit = !!lw && (R[i][0] + " " + R[i][1]).toLowerCase().indexOf(lw) >= 0; KP.push(hit ? 1 : 0); if (hit) { nM++; if (sel < 0) sel = i; } }
+    if (sel < 0) { sel = 0; KP[0] = 1; nM = 1; }
+    var x = _s47Begin("BRANCH", { states: 4, look: _s47Look(M[3], M[4]), tap: !!M[2], first: 1.1, hold: Math.max(1.0, wd.length * 0.12 + 0.5), extraEnd: M[2] ? 0.3 : 0.8, colors: { "Belgi": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, RS = 118 * K, BH = M[2] ? 130 * K : 0;
+    var HD = (M[0] ? 56 * K : 0) + (M[1] ? 44 * K : 0) + ((M[0] || M[1]) ? 14 * K : 0);
+    var H = PAD + HD + 84 * K + n * RS + BH + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD, y0 = top + PAD + HD + 84 * K;
+    var CE = '(c.effect("Tab")("Slider").value>=3?cl(s-1):0)', WE = '(c.effect("Tab")("Slider").value>=4?cl(s-2):0)';
+    var GB = "(" + (y0 + RS * nM) + "+" + (RS * (n - nM)) + "*(1-" + CE + "))";
+    _s47Card(x, CW, "(" + GB + "+" + (BH + PAD - top) + ")", "[" + cx + ", " + top + "+(" + GB + "+" + (BH + PAD - top) + ")/2]");
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 34 * K], _s47Col(x, "Text")); y += 56 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 22 * K], _s47Col(x, "Dim")); y += 44 * K; }
+    if (M[0] || M[1]) y += 14 * K;
+    // search field: magnifier, typed text (Source Text by time), placeholder, caret
+    var sy = y + 42 * K, mx = left + 37 * K, my = sy - 2 * K, tx = left + 72 * K, tn = x.tag + " yozuv";
+    _s47Rect(x, "qidiruv", [IW, 84 * K], [cx, sy], 22 * K, _s47Col(x, "Row"));
+    _s47Ellipse(x, "lupa", [22 * K, 22 * K], [mx, my], null, null, { col: _s47Col(x, "Dim"), w: 4 * K });
+    var hd = _s47Rect(x, "lupa dasta", [4 * K, 12 * K], [0, 0], 2 * K, _s47Col(x, "Dim"));
+    hd.property("ADBE Transform Group").property("ADBE Position").setValue([mx + 14 * K, my + 14 * K]); hd.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(-45);
+    var TP = 'var p=c.effect("Tab")("Slider"); var t2=p.numKeys>=2?p.key(2).time:100000; var nc=time>=t2?Math.floor((time-t2)/0.12)+1:0; ';
+    var ty = _s47Txt(x, wd || " ", 30 * K, "reg", "L", "yozuv", [tx, sy + 10.5 * K], _s47Col(x, "Text"));
+    ty.property("Source Text").expression = x.PRE + TP + 'var w="' + wd.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"; w.substr(0, Math.min(w.length, nc))';
+    if (Q[1]) _s47Txt(x, Q[1], 30 * K, "reg", "L", "bo'sh matn", [tx, sy + 10.5 * K], _s47Col(x, "Dim"), TP + "op*(nc>0?0:1)");
+    _s47Rect(x, "kursor", [3 * K, 38 * K], 'var r=thisComp.layer("' + tn + '").sourceRectAtTime(); [' + (tx + 3 * K) + '+(r.width>1?r.width:0), ' + sy + ']', 1.5 * K, _s47Col(x, "Accent"),
+        TP + "var ty=nc>0&&time<t2+" + (wd.length * 0.12 + 0.15) + "; op*((ty||Math.floor(time*2)%2==0)?1:0)");
+    // branch rows: ys[i] = centre; non-matching rows collapse (height, margin, opacity)
+    var Y = "var c2=" + CE + ", w=" + WE + "; var KP=[" + KP.join(",") + "]; var ys=[], yy=" + y0 + "; for(var i=0;i<" + n + ";i++){ var kp=KP[i]?1:1-c2; ys.push(yy+" + (66 * K) + "*kp); yy+=" + RS + "*kp; } ";
+    for (i = 0; i < n; i++) {
+        var nm = "filial " + (i + 1), S = i === sel, RY = Y + "var rc=ys[" + i + "]; ", FO = KP[i] ? "op" : "op*(1-cl(c2*1.6))";
+        var FL = S ? RY + "var a=" + _s47Col(x, "Row") + ".value, t=add(mul(" + _s47Col(x, "Card") + ".value,0.9), mul(" + _s47Col(x, "Accent") + ".value,0.1)); add(a, mul(sub(t,a), w))" : _s47Col(x, "Row");
+        var bg = _s47Rect(x, nm, RY + "var kp=KP[" + i + "]?1:1-c2; [" + IW + "-" + (4 * K) + "*" + (S ? "w" : "0") + ", " + (104 * K) + "*kp-" + (4 * K) + "*" + (S ? "w" : "0") + "]", [0, 0], 24 * K, FL,
+            KP[i] ? "op" : Y + "op*cl((1-c2)*4)", S ? { col: _s47Col(x, "Accent"), w: Y + (4 * K) + "*w" } : null);
+        bg.property("ADBE Transform Group").property("ADBE Position").expression = x.PRE + RY + "[" + cx + ", rc]";
+        if (S) bg.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + Y + "var q=100*(1-0.03*Math.sin(Math.PI*cl(w*2))); [q,q]";
+        var pts = [[0, 21.2 * K]]; for (var a = 135; a <= 405; a += 22.5) pts.push([15 * K * Math.cos(a * Math.PI / 180), 15 * K * Math.sin(a * Math.PI / 180)]);
+        _s48_282Poly(x, nm + " pin", pts, _s47Col(x, "Accent"), RY + "[" + (left + 43 * K) + ", rc-" + (3 * K) + "]", Y + FO);
+        _s47Ellipse(x, nm + " pin nuqta", [10 * K, 10 * K], RY + "[" + (left + 43 * K) + ", rc-" + (3 * K) + "]", _s47Col(x, "Belgi"), Y + FO);
+        _s47Txt(x, R[i][0], 30 * K, "semi", "L", nm + " nom", RY + "[" + (left + 80 * K) + ", rc+" + (R[i][1] ? -4 * K : 10 * K) + "]", _s47Col(x, "Text"), Y + FO);
+        if (R[i][1]) _s47Txt(x, R[i][1], 23 * K, "reg", "L", nm + " manzil", RY + "[" + (left + 80 * K) + ", rc+" + (29 * K) + "]", _s47Col(x, "Dim"), Y + FO);
+        if (R[i][2]) _s47Txt(x, R[i][2], 24 * K, "reg", "R", nm + " masofa", RY + "[" + (S ? right - 94 * K : right - 28 * K) + ", rc+" + (8 * K) + "]", _s47Col(x, "Dim"), Y + FO);
+        if (S) {
+            var POP = Y + "var g=Math.max(0, cl((w-0.4)/0.5)+0.22*Math.sin(Math.PI*cl((w-0.55)/0.45))); [100*g, 100*g]";
+            var ck = _s47Ellipse(x, nm + " belgi fon", [44 * K, 44 * K], [0, 0], _s47Col(x, "Accent"));
+            ck.property("ADBE Transform Group").property("ADBE Position").expression = x.PRE + RY + "[" + (right - 50 * K) + ", rc]";
+            ck.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + POP;
+            var cm = _s47Path(x, nm + " belgi", [[-9 * K, 1 * K], [-3 * K, 7 * K], [9 * K, -6 * K]], false, 4.5 * K, _s47Col(x, "Belgi"), RY + "[" + (right - 50 * K) + ", rc]");
+            cm.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + POP;
+        }
+    }
+    if (M[2]) {
+        var BY = GB + "+" + (78 * K), b = _s47Btn(x, M[2], cx, y0 + n * RS + 78 * K, IW), bt = x.layers[x.layers.length - 1], BO = "op*(0.35+0.65*" + WE + ")";
+        b.property("ADBE Transform Group").property("ADBE Position").expression = x.PRE + "[" + cx + ", " + BY + "]";
+        bt.property("ADBE Transform Group").property("ADBE Position").expression = x.PRE + "[" + cx + ", " + BY + "+" + (12.6 * K) + "*(1-0.05*tp)]";
+        b.property("ADBE Transform Group").property("ADBE Opacity").expression = x.PRE + BO;
+        bt.property("ADBE Transform Group").property("ADBE Opacity").expression = x.PRE + BO;
+    }
     _s47Finish(x);
 }
