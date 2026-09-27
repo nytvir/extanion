@@ -241,6 +241,8 @@ function nytvir_execute(cmd) {
         else if (cmd === "s53Stairs") { _s53Stairs(); }
         else if (cmd === "s53Listening") { _s53Listening(); }
         else if (cmd === "s53Streak") { _s53Streak(); }
+        else if (cmd === "s54Split") { _s54Split(); }
+        else if (cmd === "s54Reasons") { _s54Reasons(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -23630,6 +23632,169 @@ function _s53Streak() {
         _s47Rect(x, "qator", [IW, 92 * K], [cx, rcy], 22 * K, _s47Col(x, "Row"));
         _s47Txt(x, rl, 30 * K, "reg", "L", "qator nom", [left + 28 * K, rcy + 30 * K * 0.35], _s47Col(x, "Dim"));
         if (rv) _s47Txt(x, rv, Math.min(30 * K, (IW - 90 * K - rl.length * 16 * K) / (rv.length * 0.55)), "semi", "R", "qator qiymat", [right - 28 * K, rcy + 30 * K * 0.35], _s47Col(x, "Text"));
+    }
+    _s47Finish(x);
+}
+
+// ============================================================
+// S54 LIME KINETIK (v2.48) - REF-003 style overlays for talking-head video
+// (board 19 picks 371, 374). No card: graphics sit on the footage. White heavy
+// grotesk + lime #D8F040 accents, dark label chip with a lime bar, blur-in,
+// soft lime glow. Built on the S47 rig (CTRL Tab keys -> spring s; smooth
+// bounce in/out). Colours editable on CTRL: Accent (lime), Oq, Chip.
+// ============================================================
+function _s54Font(kind) {
+    var c = kind === "heavyItalic" ? ["InterTight-BlackItalic", "Inter-BlackItalic", "Montserrat-BlackItalic", "SFProDisplay-HeavyItalic", "SegoeUI-BlackItalic", "Arial-BoldItalicMT"]
+        : kind === "heavy" ? ["InterTight-Black", "Inter-Black", "Montserrat-Black", "SFProDisplay-Heavy", "SegoeUI-Black", "Arial-Black"]
+        : kind === "bold" ? ["Inter-Bold", "Montserrat-Bold", "SFProDisplay-Bold", "SegoeUI-Bold", "Arial-BoldMT"]
+        : ["Inter-SemiBold", "Montserrat-SemiBold", "SFProDisplay-Semibold", "SegoeUI-Semibold", "ArialMT"];
+    try { if (app.fonts && app.fonts.getFontsByPostScriptName) { for (var i = 0; i < c.length; i++) { if (app.fonts.getFontsByPostScriptName(c[i]).length > 0) return c[i]; } } } catch (e) {}
+    return c[c.length - 2];
+}
+// text layer in S54 style. just: L/C/R. pos: array or expr. col: color expr. track: tracking (AE units)
+function _s54Txt(x, str, size, kind, just, name, pos, col, opExpr, track) {
+    var L = x.comp.layers.addText(str ? str : " "); L.name = x.tag + " " + name;
+    var sp = L.property("Source Text"), td = sp.value; td.resetCharStyle();
+    td.fontSize = size; td.applyFill = true; td.fillColor = [1, 1, 1]; td.applyStroke = false;
+    try { td.font = _s54Font(kind); } catch (e) {}
+    if (track) { try { td.tracking = track; } catch (e2) {} }
+    td.justification = just === "C" ? ParagraphJustification.CENTER_JUSTIFY : just === "R" ? ParagraphJustification.RIGHT_JUSTIFY : ParagraphJustification.LEFT_JUSTIFY;
+    sp.setValue(td);
+    L.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, 0]);
+    _s47SetP(L.property("ADBE Transform Group").property("ADBE Position"), x, pos);
+    L.property("ADBE Transform Group").property("ADBE Opacity").expression = x.PRE + (opExpr || "op");
+    _s46Fill(L, _s47E(x, col));
+    x.layers.push(L); return L;
+}
+// soft lime glow = zero-distance drop shadow tinted by CTRL Accent
+function _s54Glow(x, L, soft, op255) {
+    try {
+        var d = L.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow");
+        d.property("ADBE Drop Shadow-0001").expression = _s47Col(x, "Accent");
+        d.property("ADBE Drop Shadow-0002").setValue(op255 || 150); d.property("ADBE Drop Shadow-0004").setValue(0);
+        d.property("ADBE Drop Shadow-0005").setValue(soft || 40 * x.K);
+    } catch (e) {}
+}
+// readability shadow under white text (like the reference)
+function _s54Shade(x, L) { _s46Shadow(L, 90, 6 * x.K, 30 * x.K); }
+// Gaussian blur driven by an expression (PRE added). dims: 1 both, 3 vertical
+function _s54Blur(x, L, expr, dims) {
+    try {
+        var g = L.property("ADBE Effect Parade").addProperty("ADBE Gaussian Blur 2");
+        g.property("ADBE Gaussian Blur 2-0001").expression = x.PRE + expr;
+        if (dims) g.property("ADBE Gaussian Blur 2-0002").setValue(dims);
+        g.property("ADBE Gaussian Blur 2-0003").setValue(1);
+    } catch (e) {}
+}
+// rectangular layer mask in layer space
+function _s54Mask(L, x1, y1, x2, y2) {
+    var m = L.property("ADBE Mask Parade").addProperty("ADBE Mask Atom");
+    var sh = new Shape(); sh.vertices = [[x1, y1], [x2, y1], [x2, y2], [x1, y2]]; sh.closed = true;
+    m.property("ADBE Mask Shape").setValue(sh);
+}
+// label chip: dark chip + caps text + lime bar on the left. (lx, ly) = chip left/centre-y
+function _s54Label(x, str, lx, ly, opExpr) {
+    var K = x.K, fs = 30 * K, w = (String(str).length * 0.72 * fs) + 44 * K, h = 58 * K;
+    _s47Rect(x, "label chip", [w, h], [lx + w / 2, ly], 5 * K, "var c0=" + _s47Col(x, "Chip") + ".value; [c0[0],c0[1],c0[2],1]", "(" + (opExpr || "op") + ")*0.62");
+    var b = _s47Rect(x, "label bar", [6 * K, h + 14 * K], [lx - 16 * K, ly - 4 * K], 1 * K, _s47Col(x, "Accent"), opExpr || "op");
+    _s54Glow(x, b, 14 * K, 180);
+    _s54Txt(x, String(str).toUpperCase(), fs, "bold", "L", "label", [lx + 22 * K, ly + fs * 0.36], _s47Col(x, "Oq"), opExpr, 60);
+}
+function _s54Key(n) { return 'var tb=c.effect("Tab")("Slider"); var tk=tb.numKeys>=' + n + '?tb.key(' + n + ').time:1e9; '; }
+function _s54Esc(s) { return String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"'); }
+
+// ---------- 371 SPLIT WORD REVEAL ----------
+var S54_P371 = [
+    ["Omad / Tizim", "Omad | Tizim | omad kutma, tizim qur", "ESLAB QOLING | #D8F040 | ha"],
+    ["Motivatsiya", "Motivatsiya | Intizom | motivatsiya o'tadi, intizom qoladi", "HAQIQAT | #D8F040 | ha"],
+    ["Reklama / Ishonch", "Reklama | Ishonch | brend reklama emas, ishonch sotadi", "SHAXSIY BREND | #D8F040 | ha"],
+    ["Arzon / Sifat", "Arzon | Sifat | mijoz narxni unutadi, sifatni emas", "BIZNES | #D8F040 | ha"],
+    ["Tez / To'g'ri", "Tez | To'g'ri | tez emas, to'g'ri bajaring", "MASLAHAT | #D8F040 | ha"],
+    ["Orzu / Reja", "Orzu | Reja | orzu yetmaydi, reja kerak", "MOTIVATSIYA | #D8F040 | ha"],
+    ["Ilhom / Odat", "Ilhom | Odat | ilhomni kutmang, odat qiling", "ODATLAR | #D8F040 | ha"],
+    ["Gap / Natija", "Gap | Natija | gap emas, natija gapiradi", "EKSPERT | #D8F040 | yo'q"],
+    ["Ko'p / Aniq", "Ko'p | Aniq | ko'p kontent emas, aniq kontent", "SMM | #D8F040 | ha"],
+    ["Omad / Mehnat", "Omad | Mehnat | omad mehnatning soyasi", "SPORT | #FF9F0A | ha"]
+];
+function _s54Split() {
+    var PR = _s47Pick("Split Word (371)", S54_P371); if (!PR) return;
+    var q1 = prompt("Yopiq so'z | Ochiladigan so'z (lime) | izoh (bo'sh = yo'q)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Label (bo'sh = yo'q) | rang (#hex) | kursiv: ha/yo'q", PR[2]); if (q2 === null) return;
+    var A = _s47Split(q1, 3), B = _s47Split(q2, 3);
+    var italic = String(B[2]).toLowerCase().charAt(0) !== "y";
+    var x = _s47Begin("SPLIT", { states: 2, look: _s47Look("dark", B[1] || "#D8F040"), first: 1.2, hold: 1.6, extraEnd: 1.4, colors: { "Oq": [1, 1, 1], "Chip": [0.04, 0.04, 0.04] } }); if (!x) return;
+    var K = x.K, cx = x.cx, cy = x.H * 0.56, fs = 230 * K, seamY = cy - fs * 0.36;
+    var wKind = italic ? "heavyItalic" : "heavy";
+    if (B[0]) _s54Label(x, B[0], cx - 320 * K, cy - fs - 90 * K);
+    var SPL = 'var sp2=cl(s); ';
+    var top = _s54Txt(x, A[0] || "Omad", fs, wKind, "C", "so'z tepa", "[" + cx + ", " + cy + "-" + (86 * K) + "*sm(cl(s))]", _s47Col(x, "Oq"), "op*lp(1,0.38,cl(s))");
+    _s54Mask(top, -3000, -fs * 1.2, 3000, -fs * 0.36); _s54Shade(x, top);
+    var bot = _s54Txt(x, A[0] || "Omad", fs, wKind, "C", "so'z past", "[" + cx + ", " + cy + "+" + (86 * K) + "*sm(cl(s))]", _s47Col(x, "Oq"), "op*lp(1,0.38,cl(s))");
+    _s54Mask(bot, -3000, -fs * 0.36, 3000, fs * 0.4); _s54Shade(x, bot);
+    // lime seam flashes across the cut, then fades
+    var seam = _s47Rect(x, "chok", 'var r=thisComp.layer("' + top.name + '").sourceRectAtTime(); [r.width*cl(s*3)+' + (40 * K) + ', ' + (8 * K) + ']', [cx, seamY], 2 * K,
+        _s47Col(x, "Accent"), SPL + "op*Math.sin(Math.PI*cl(s*1.6))");
+    _s54Glow(x, seam, 30 * K, 255);
+    // revealed lime word grows out of the gap
+    var rev = _s54Txt(x, A[1] || "Tizim", fs * 0.92, wKind, "C", "ochilgan so'z", "[" + cx + ", " + (seamY + fs * 0.92 * 0.36) + "]", _s47Col(x, "Accent"), "op*cl(s*1.3)");
+    rev.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + "var k=cl(s); [100, Math.max(0,k)*100]";
+    _s54Blur(x, rev, "Math.max(0,1-cl(s))*" + (24 * K), 3);
+    _s54Glow(x, rev, 36 * K, 170);
+    if (A[2]) {
+        var words = String(A[2]).split(" ");
+        var ex = _s54Key(2) + 'var W="' + _s54Esc(A[2]) + '".split(" "); var n=Math.floor(cl((time-tk-0.35)/(0.16*W.length))*W.length+0.0001); W.slice(0,n).join(" ")';
+        var cap = _s54Txt(x, A[2], 50 * K, "semi", "C", "izoh", [cx, cy + 86 * K + fs * 0.62], _s47Col(x, "Oq"));
+        cap.property("Source Text").expression = x.PRE + ex; _s54Shade(x, cap);
+    }
+    _s47Finish(x);
+}
+
+// ---------- 374 REASON COUNTDOWN ----------
+var S54_P374 = [
+    ["Nega biz? 3 sabab", "3 SABAB | #D8F040", "Natija = barqaror; Ishonch = oshadi; Sotuv = ko'payadi"],
+    ["3 xato", "3 XATO | #FF453A", "Narx = juda past; Kontent = tartibsiz; Maqsad = noaniq"],
+    ["5 qadam", "5 QADAM | #D8F040", "Maqsad = aniqlang; Reja = tuzing; Boshlang = bugun; Tahlil = har hafta; Takror = har oy"],
+    ["3 qoida", "3 QOIDA | #D8F040", "Sabr = birinchi; Intizom = har kun; Sifat = doim"],
+    ["Fitnes: 3 sir", "3 SIR | #FF9F0A", "Uyqu = 8 soat; Oqsil = har ovqatda; Qadam = 10 000"],
+    ["Kurs: 4 foyda", "4 FOYDA | #30B0C7", "Ustoz = tajribali; Guruh = kichik; Amaliyot = har dars; Sertifikat = beriladi"],
+    ["Biznes: 3 xato", "3 XATO | #FF453A", "Reklama = maqsadsiz; Mijoz = e'tiborsiz; Hisob = yo'q"],
+    ["Psixolog: 3 belgi", "3 BELGI | #AF52DE", "Uyqu = buziladi; Ishtaha = o'zgaradi; Qiziqish = so'nadi"],
+    ["Kafe: 3 sabab", "3 SABAB | #D8F040", "Kofe = yangi qovurilgan; Joy = shinam; Narx = hamyonbop"],
+    ["SMM: 5 qoida", "5 QOIDA | #D8F040", "Hook = 3 soniya; Matn = qisqa; Rang = bitta; Post = har kun; Tahlil = har hafta"]
+];
+function _s54Reasons() {
+    var PR = _s47Pick("Reason Countdown (374)", S54_P374); if (!PR) return;
+    var q1 = prompt("Label | rang (#hex)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Sabablar (2-5): Sarlavha = izoh ; ...", PR[2]); if (q2 === null) return;
+    var M = _s47Split(q1, 2), rr = String(q2).split(";"), R = [], i;
+    for (i = 0; i < rr.length && R.length < 5; i++) { var t = _s45Trim(rr[i]); if (!t) continue; var eq = t.indexOf("="); R.push([_s45Trim(eq >= 0 ? t.substring(0, eq) : t), _s45Trim(eq >= 0 ? t.substring(eq + 1) : "")]); }
+    if (R.length < 2) { alert("Kamida 2 ta sabab kerak"); return; }
+    var N = R.length;
+    var x = _s47Begin("REASON", { states: N, look: _s47Look("dark", M[1] || "#D8F040"), first: 1.4, hold: 1.5, extraEnd: 0.6, colors: { "Oq": [1, 1, 1], "Chip": [0.04, 0.04, 0.04] } }); if (!x) return;
+    var K = x.K, cx = x.cx, cy = x.H * 0.56, nfs = 360 * K, nx = cx - 150 * K, ny = cy + 120 * K, tx = cx - 60 * K;
+    if (M[0]) _s54Label(x, M[0], cx - 330 * K, cy - 230 * K);
+    // progress: N segments under the label
+    var segW = (430 * K - (N - 1) * 10 * K) / N, sx = cx - 330 * K, sy = cy - 170 * K;
+    for (i = 0; i < N; i++) {
+        _s47Rect(x, "qadam fon " + (i + 1), [segW, 8 * K], [sx + segW / 2 + i * (segW + 10 * K), sy], 4 * K, _s47Col(x, "Oq"), "op*0.22");
+        var sg = _s47Rect(x, "qadam " + (i + 1), "[" + segW + "*cl(s-(" + (i - 1) + ")), " + (8 * K) + "]", "[" + (sx + i * (segW + 10 * K)) + "+" + segW + "*cl(s-(" + (i - 1) + "))/2, " + sy + "]", 4 * K, _s47Col(x, "Accent"));
+        _s54Glow(x, sg, 12 * K, 160);
+    }
+    // huge rolling lime numbers (vertical motion blur from the spring speed)
+    for (i = 0; i < N; i++) {
+        var nL = _s54Txt(x, String(i + 1), nfs, "heavyItalic", "R", "raqam " + (i + 1), "[" + nx + ", " + ny + "+(" + i + "-s)*" + (300 * K) + "]", _s47Col(x, "Accent"), "op*cl(1-Math.abs(s-" + i + ")*1.4)");
+        _s54Blur(x, nL, "Math.min(" + (40 * K) + ", Math.abs(sp.velocity)*" + (16 * K) + ")", 3);
+        _s54Glow(x, nL, 40 * K, 140);
+    }
+    // reason title + note, cross-fade with blur and a small rise per state
+    for (i = 0; i < N; i++) {
+        var w = "cl(1-Math.abs(s-" + i + ")*1.6)";
+        var tt = _s54Txt(x, R[i][0], 118 * K, "heavy", "L", "sabab " + (i + 1), "[" + tx + ", " + (cy + 30 * K) + "+(" + i + "-s)*" + (60 * K) + "]", _s47Col(x, "Oq"), "op*" + w);
+        _s54Blur(x, tt, "(1-" + w + ")*" + (22 * K)); _s54Shade(x, tt);
+        if (R[i][1]) {
+            var nt = _s54Txt(x, R[i][1], 54 * K, "heavy", "L", "izoh " + (i + 1), "[" + tx + ", " + (cy + 104 * K) + "+(" + i + "-s)*" + (60 * K) + "]", _s47Col(x, "Accent"), "op*" + w);
+            _s54Blur(x, nt, "(1-" + w + ")*" + (22 * K)); _s54Glow(x, nt, 18 * K, 110);
+        }
     }
     _s47Finish(x);
 }

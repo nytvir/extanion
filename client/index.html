@@ -449,6 +449,8 @@ var FX = [
   {id:'s53Stairs', tab:'lib', sec:'Ingliz tili markazi', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'CEFR Stairs (330)', desc:'Avatar zinapoyada sakraydi, pog\'onalar yonadi, daraja va oylar aylanadi, maqsad yashil. 10 preset'},
   {id:'s53Listening', tab:'lib', sec:'Ingliz tili markazi', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Listening Karaoke (331)', desc:'Audio pleyer yuradi, transkript so\'zlari birma-bir yonadi, javob yozilib tasdiqlanadi. 10 preset'},
   {id:'s53Streak', tab:'lib', sec:'Ingliz tili markazi', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Daily Streak (332)', desc:'Kunlar to\'ladi, alanga o\'sadi, seriya N-1 dan N ga, XP chizig\'i to\'ladi, Rekord! chiqadi. 10 preset'},
+  {id:'s54Split', tab:'lib', sec:'Lime kinetik', icon:'🧩', bg:'linear-gradient(135deg,#1b1f10,#d8f040)', title:'Split Word (371)', desc:'So\'z ikkiga bo\'linadi, orasidan lime so\'z chiqadi, izoh so\'zma-so\'z. Video ustiga. 10 preset'},
+  {id:'s54Reasons', tab:'lib', sec:'Lime kinetik', icon:'🧩', bg:'linear-gradient(135deg,#1b1f10,#d8f040)', title:'Reason Countdown (374)', desc:'Ulkan lime raqam 1-2-3 aylanadi, yonida sabablar almashadi, progress to\'ladi. 10 preset'},
   {id:'msTimerChip', tab:'pro', sec:'✨ Micro Moments — full customize', icon:'⏳', bg:'linear-gradient(135deg,#0e1014,#0a84ff)', title:'Timer Pie Chip', desc:'Doira-pie to\'lib boradi + matn (muddat/deadline)'},
   {id:'msDropdown', tab:'pro', sec:'✨ Micro Moments — full customize', icon:'▾', bg:'linear-gradient(135deg,#0e1014,#3a3f4c)', title:'Dropdown Pick', desc:'Ro\'yxat ochiladi, variant tanlanadi, sarlavha almashadi'},
   {id:'notifyStack', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'💸', bg:'linear-gradient(135deg,#15151a,#4b46e0,#39ff5a)', title:'Money Rain', desc:'Payment alerts stack'},
@@ -873,9 +875,9 @@ function renderSearch(q) {
 
 // ======================= UI KIT (S46+) =======================
 // Soha = board range, tags = mechanic. Preview PNG: previews/<num>.png (from the concept boards).
-var SOHA_ORDER = ['uni', 'edu', 'eng', 'food', 'serv', 'blog', 'fin'];
-var SOHA_NAMES = { uni: 'Universal · shaxsiy brend', edu: 'O\'quv markaz', eng: 'Ingliz tili markazi', food: 'Ovqat va savdo', serv: 'Xizmatlar', blog: 'Bloger va kontent', fin: 'Moliya va byudjet' };
-var TAG_LIST = ['Tanlash', 'Slayder', 'Toggle', 'Raqam', 'Grafik', 'Taymer', 'Kalendar', 'Cheklist', 'Ro\'yxat', 'Karta', 'Xarita', 'Yozish', 'Muhr', 'Tasdiq'];
+var SOHA_ORDER = ['lime', 'uni', 'edu', 'eng', 'food', 'serv', 'blog', 'fin'];
+var SOHA_NAMES = { lime: 'Lime kinetik \u00b7 video ustida', uni: 'Universal · shaxsiy brend', edu: 'O\'quv markaz', eng: 'Ingliz tili markazi', food: 'Ovqat va savdo', serv: 'Xizmatlar', blog: 'Bloger va kontent', fin: 'Moliya va byudjet' };
+var TAG_LIST = ['Sarlavha', 'Tanlash', 'Slayder', 'Toggle', 'Raqam', 'Grafik', 'Taymer', 'Kalendar', 'Cheklist', 'Ro\'yxat', 'Karta', 'Xarita', 'Yozish', 'Muhr', 'Tasdiq'];
 var LIB_TAGS = {
   231:'Tanlash', 247:'Tanlash,Raqam', 248:'Tanlash,Raqam', 249:'Tanlash', 250:'Tanlash,Raqam', 251:'Slayder', 252:'Grafik,Tanlash', 253:'Tanlash',
   254:'Toggle,Raqam', 255:'Kalendar,Tanlash', 256:'Raqam', 257:'Karta,Tanlash', 258:'Ro\'yxat,Tanlash', 259:'Tanlash', 260:'Tanlash', 261:'Tanlash', 262:'Grafik',
@@ -885,11 +887,13 @@ var LIB_TAGS = {
   293:'Slayder,Grafik', 294:'Raqam', 295:'Ro\'yxat', 296:'Xarita', 297:'Xarita', 298:'Tanlash', 299:'Slayder', 300:'Raqam', 301:'Cheklist', 302:'Tasdiq',
   303:'Raqam', 304:'Grafik', 305:'Kalendar', 306:'Grafik', 307:'Ro\'yxat', 308:'Toggle,Raqam', 309:'Ro\'yxat', 310:'Tasdiq', 311:'Grafik', 312:'Grafik,Raqam',
   313:'Yozish,Grafik', 314:'Slayder,Grafik', 315:'Raqam', 316:'Grafik', 317:'Yozish,Raqam', 318:'Raqam', 319:'Cheklist', 320:'Kalendar', 321:'Grafik', 322:'Grafik',
+  371:'Sarlavha', 374:'Raqam,Sarlavha',
   323:'Karta', 324:'Grafik', 325:'Karta', 326:'Taymer,Cheklist', 327:'Tanlash', 328:'Tanlash', 329:'Yozish', 330:'Grafik', 331:'Taymer', 332:'Kalendar,Raqam'
 };
 var libState = { soha: 'all', tag: '' };
 function libNum(e) { var m = /\((\d{3})\)/.exec(e.title || ''); return m ? parseInt(m[1], 10) : 0; }
 function libSoha(n) {
+  if (n >= 353 && n <= 390) return 'lime';
   if (n >= 263 && n <= 282) return 'edu'; if (n >= 283 && n <= 292) return 'food'; if (n >= 293 && n <= 302) return 'serv';
   if (n >= 303 && n <= 312) return 'blog'; if (n >= 313 && n <= 322) return 'fin'; if (n >= 323 && n <= 332) return 'eng'; return 'uni';
 }
