@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board 18 · Lime brend — kinetik overlay (353-370)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0d;--panel:#121218;--line:#26262f;--txt:#e8e8ee;--dimb:#8a8a99;--mono:'SF Mono',ui-monospace,Menlo,monospace;--gold:#D8F040}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.5 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  .sub{color:var(--dimb);font-size:13px;max-width:800px}
+  .bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 6px}
+  .bar .lb{font:11px var(--mono);color:var(--dimb);letter-spacing:.08em;text-transform:uppercase}
+  .tg{display:inline-flex;background:#1c1c22;border-radius:10px;padding:3px;gap:2px}
+  .tg button{border:0;background:transparent;color:var(--dimb);font:600 12px -apple-system,sans-serif;padding:7px 13px;border-radius:8px;cursor:pointer}
+  .tg button.on{background:#3a3a44;color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:16px}
+  .cardx{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:zoom-in}
+  .cardx:hover{border-color:var(--gold)}
+  .meta{padding:11px 14px 14px}
+  .meta .n{font:700 11px var(--mono);color:var(--gold)}
+  .meta b{display:block;font-size:14px;margin:1px 0 1px}
+  .meta .br{font-size:11.5px;color:var(--gold);opacity:.8}
+  .meta p{font-size:12px;color:var(--dimb);margin-top:4px}
+  .meta code{display:block;margin-top:7px;font:10.5px/1.45 var(--mono);color:#b9b9c7;background:#0d0d12;border:1px solid var(--line);border-radius:7px;padding:6px 8px}
+  .stage{position:relative;overflow:hidden;background:linear-gradient(180deg,#6d7a52 0%,#2c3522 45%,#0d100a 100%)}
+  .bgl{position:absolute;inset:0;background-size:cover;background-position:50% 35%;background-repeat:no-repeat}
+  .modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+  .modal.on{display:flex}
+  .modal .stage{width:min(420px,90vw);border-radius:14px}
+
+  /* ---------- 1080-space comp, graphics in footage coords (1080x1920) ---------- */
+  .comp{position:absolute;left:0;top:0;width:1080px;height:var(--H,1920px);transform:scale(var(--u,.25));transform-origin:0 0;overflow:hidden;
+    font-family:'Inter',-apple-system,'SF Pro Display','Helvetica Neue',Arial,sans-serif;color:#fff;
+    --lime:#D8F040;--glow:#E6FF5A;--limeD:#C0D820;--chip:rgba(0,0,0,.6)}
+  .fr{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  .fr *{box-sizing:border-box}
+  .a{position:absolute}
+  .blk{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}
+  .row{display:flex;align-items:center}
+  .lbl{position:relative;display:inline-flex;align-items:center;height:60px;padding:0 22px;background:var(--chip);border-radius:5px;font-weight:700;font-size:31px;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+  .lbl .bar{position:absolute;left:-17px;top:-9px;bottom:0;width:6px;border-radius:1px;background:var(--lime);box-shadow:0 0 12px var(--lime),0 0 28px rgba(216,240,64,.55);transform-origin:50% 100%}
+  .hv{font-weight:900;letter-spacing:-.035em;line-height:.95;white-space:nowrap;text-shadow:0 6px 34px rgba(0,0,0,.28)}
+  .it{font-style:italic}
+  .cap{font-weight:600;font-size:40px;line-height:1.22;white-space:nowrap;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+  .chipL{display:inline-block;background:var(--lime);color:#11140a;font-weight:800;border-radius:6px;padding:3px 16px 5px;white-space:nowrap;box-shadow:0 0 26px rgba(216,240,64,.45);letter-spacing:-.01em}
+  .chipG{display:inline-block;background:linear-gradient(90deg,rgba(18,22,8,.78) 0%,rgba(70,100,14,.85) 55%,rgba(150,190,30,.95) 100%);color:#fff;font-weight:800;border-radius:6px;padding:4px 20px 6px;white-space:nowrap;letter-spacing:-.01em}
+  .chipD{display:inline-flex;align-items:center;background:var(--chip);color:#fff;font-weight:700;border-radius:5px;padding:6px 18px 8px;white-space:nowrap}
+  .ch,.wd{display:inline-block;white-space:pre}
+  .tp{display:inline-block;white-space:pre;overflow:hidden;vertical-align:bottom;line-height:1.25}
+  .hlw{position:relative;display:inline-block;z-index:0;white-space:pre}
+  .hlb{position:absolute;left:-10px;right:-10px;top:8%;bottom:4%;z-index:-1;border-radius:3px;background:linear-gradient(90deg,rgba(150,182,22,.92),rgba(196,226,44,.92))}
+  .caret{display:inline-block;width:3px;height:1.05em;margin-left:3px;vertical-align:-.15em;background:currentColor;animation:blk 1s steps(1) infinite}
+  @keyframes blk{50%{opacity:0}}
+  .lime{color:var(--lime)}
+  /* rolling counters */
+  .cnt{display:inline-flex;line-height:1.1em;font-variant-numeric:tabular-nums;vertical-align:bottom}
+  .cnt .col{display:inline-block;height:1.1em;overflow:hidden}
+  .cnt .stk{display:block}
+  .cnt .stk i{display:block;height:1.1em;line-height:1.1em;font-style:normal;text-align:center}
+  .cnt .sep{display:inline-block;line-height:1.1em}
+  /* icons */
+  .pi{position:relative;display:inline-block;width:1em;height:1em}
+  .pi::before{content:'';position:absolute;left:31%;top:6%;width:38%;height:38%;border-radius:50%;background:currentColor}
+  .pi::after{content:'';position:absolute;left:14%;top:52%;width:72%;height:44%;border-radius:50% 50% 12% 12%/70% 70% 12% 12%;background:currentColor}
+  .av{display:flex;align-items:center;justify-content:center;border-radius:50%;font-weight:800;color:#fff;background:linear-gradient(150deg,#6b7280,#262a31)}
+
+  /* 353 */
+  .c353 .stk8{position:absolute;width:128px;height:128px;filter:drop-shadow(0 0 18px rgba(216,240,64,.55))}
+  .c353 .stk8 b{position:absolute;inset:0;display:block}
+  .c353 .stk8 b::before,.c353 .stk8 b::after{content:'';position:absolute;inset:8px;border-radius:12px;background:linear-gradient(145deg,#e9ff7a,#b9d61c)}
+  .c353 .stk8 b::after{transform:rotate(45deg)}
+  .c353 .stk8 .pi{position:absolute;left:50%;top:50%;font-size:62px;margin:-31px 0 0 -31px;color:#2c4205}
+  .c353 .vb{display:block;width:5px;height:64px;background:var(--lime);box-shadow:0 0 12px var(--lime);transform-origin:50% 100%}
+  .c353 .lb{font-style:normal;color:var(--lime);font-weight:500}
+
+  /* 354 */
+  .c354 .bgc{position:absolute;inset:0;background-size:cover;background-position:50% 35%}
+  .c354 .blr{filter:blur(18px) brightness(.55) saturate(.9)}
+  .c354 .pp{position:absolute;left:50%;top:calc(var(--off) + var(--Hp) / 2);width:880px;transform:translate(-50%,-50%) scale(var(--ps,1))}
+  .c354 .post{background:#fff;color:#111;border-radius:6px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+  .c354 .ph{display:flex;align-items:center;gap:18px;height:112px;padding:0 30px}
+  .c354 .ph .av{width:70px;height:70px;font-size:26px;background:linear-gradient(150deg,#3b3f36,#15170f);box-shadow:0 0 0 4px #fff,0 0 0 7px var(--limeD)}
+  .c354 .ph b{display:block;font-size:29px;font-weight:700;letter-spacing:-.01em}
+  .c354 .ph small{display:block;font-size:22px;color:#6b6b73;font-weight:500;margin-top:2px}
+  .c354 .pd{margin-left:auto;display:flex;gap:7px}
+  .c354 .pd i{width:9px;height:9px;border-radius:50%;background:#111}
+  .c354 .pm{height:990px;background-size:cover;background-position:50% 35%}
+  .c354 .dots{display:flex;justify-content:center;gap:9px;margin-top:18px}
+  .c354 .dots i{width:10px;height:10px;border-radius:50%;background:#cfcfd4}
+  .c354 .dots i:first-child{background:#111}
+  .c354 .pa{display:flex;align-items:center;gap:34px;padding:6px 30px 0;font-size:30px;font-weight:600}
+  .c354 .pa>span{display:flex;align-items:center;gap:12px}
+  .c354 .pa svg{width:44px;height:44px;fill:none;stroke:#111;stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round}
+  .c354 .pa .bm{margin-left:auto}
+  .c354 .pc{padding:12px 30px 26px;font-size:26px;line-height:1.3;white-space:nowrap}
+  .c354 .pc b{font-weight:700;margin-right:10px}
+
+  /* 355 */
+  .c355 .br2{opacity:.94}
+
+  /* 356 */
+  .c356 svg.arr{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible;filter:drop-shadow(0 0 10px rgba(216,240,64,.7))}
+  .c356 svg.arr path{fill:none;stroke:var(--lime);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1}
+  .c356 .chipD{font-size:40px;position:relative}
+  .c356 .chipD .bar{position:absolute;left:-14px;top:-6px;bottom:0;width:6px;background:var(--lime);box-shadow:0 0 12px var(--lime);transform-origin:50% 100%}
+
+  /* 357 */
+  .c357 .bgc{position:absolute;inset:0;background-size:cover;background-position:50% 35%}
+  .c357 .px{position:absolute;width:90px;height:90px}
+
+  /* 358 */
+  .c358 .pill{display:inline-flex;align-items:center;gap:16px;background:#fff;color:#111;border-radius:70px;padding:12px 38px 12px 14px;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+  .c358 .mk{position:relative;width:72px;height:72px;border-radius:50%;background:#14170c}
+  .c358 .mk::before{content:'';position:absolute;left:21px;top:21px;width:30px;height:30px;border-radius:7px;background:var(--lime);transform:rotate(45deg)}
+  .c358 .pill b{display:block;font-size:44px;font-weight:900;letter-spacing:-.03em;line-height:1}
+  .c358 .pill small{display:block;font-size:19px;color:#6b6b73;font-weight:600;letter-spacing:.04em;margin-top:3px}
+  .c358 .ys{position:relative;width:460px;height:66px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
+  .c358 .ys .ac{position:absolute;left:163px;top:4px;width:134px;height:58px;border-radius:6px;background:var(--lime);box-shadow:0 0 22px rgba(216,240,64,.5)}
+  .c358 .yt{position:absolute;left:0;top:0;display:flex;height:66px}
+  .c358 .yt span{flex:none;width:150px;text-align:center;font-size:44px;font-weight:800;line-height:66px;letter-spacing:-.02em;color:#fff}
+  .c358 .fbox{position:absolute;border:2px dashed rgba(216,240,64,.75);border-radius:4px}
+  .c358 .ul{position:absolute;height:4px;background:var(--lime);box-shadow:0 0 14px var(--lime);transform-origin:0 50%}
+
+  /* 359 */
+  .c359 .gridl{position:absolute;left:0;top:0;width:1080px;height:1920px;background-image:linear-gradient(rgba(255,255,255,.2) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.2) 2px,transparent 2px);background-size:108px 108px;-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 85%);mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 85%)}
+  .c359 svg.gl{position:absolute;left:0;top:0;width:1080px;height:1920px}
+  .c359 svg.gl path{fill:none;stroke:var(--lime);stroke-width:9;stroke-linecap:round;stroke-dasharray:0 20;filter:drop-shadow(0 0 6px rgba(216,240,64,.8))}
+  .c359 .cl{position:absolute;width:0;height:0}
+  .c359 .cl>div{position:absolute;left:-70px;top:-58px;width:140px;display:flex;flex-direction:column;align-items:center}
+  .c359 .cl .av{width:116px;height:116px;font-size:38px;box-shadow:0 0 0 5px #fff,0 10px 26px rgba(0,0,0,.35)}
+  .c359 .cl .nm{margin-top:12px;background:rgba(0,0,0,.62);border-radius:20px;padding:3px 14px 5px;font-size:20px;font-weight:600;white-space:nowrap}
+  .c359 .cl .gk{position:absolute;left:92px;top:-14px;display:inline-flex;align-items:center;gap:4px;background:var(--lime);color:#15190a;border-radius:14px;padding:2px 11px 3px 8px;font-size:21px;font-weight:800;white-space:nowrap;box-shadow:0 0 16px rgba(216,240,64,.5)}
+  .c359 .cl .gk .pi{font-size:20px}
+  .comp.f11.c359 .top{display:none}
+  .comp.f45.c359 .top{transform:translateY(70px)}
+
+  /* 360 */
+  .c360 .rain{position:absolute;left:0;width:1080px;top:var(--off);height:var(--Hp);perspective:1100px}
+  .c360 .bill{position:absolute;left:0;top:0;width:310px;height:140px;border-radius:7px;background:linear-gradient(135deg,#a9d19a 0%,#6e9e62 45%,#4d7a45 100%);box-shadow:inset 0 0 0 7px rgba(255,255,255,.28),inset 0 0 0 10px rgba(40,70,35,.5),0 18px 40px rgba(0,0,0,.35)}
+  .c360 .bill::before{content:'';position:absolute;left:50%;top:50%;width:86px;height:86px;margin:-43px 0 0 -43px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.45),rgba(255,255,255,.12) 70%);box-shadow:0 0 0 5px rgba(40,70,35,.35)}
+  .c360 .bill::after{content:'100';position:absolute;left:18px;top:12px;font:900 26px/1 'Inter',sans-serif;color:rgba(30,60,28,.75)}
+  .c360 .num{font-size:172px;font-weight:900;letter-spacing:-.04em}
+
+  /* 362 */
+  .c362 .vr{position:absolute;width:7px;background:var(--lime);box-shadow:0 0 14px var(--lime),0 0 30px rgba(216,240,64,.5);transform-origin:50% 0}
+  .c362 .trk{font-size:34px;font-weight:600;letter-spacing:.34em}
+
+  /* 363 */
+  .c363 .it3{position:absolute;left:0;display:flex;align-items:center;gap:22px;transform-origin:0 50%}
+  .c363 .dot{flex:none;width:30px;height:30px;border-radius:50%;border:5px solid var(--lime);position:relative;box-shadow:0 0 12px rgba(216,240,64,.6)}
+  .c363 .dot::after{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--lime)}
+  .c363 .t3{font-size:60px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;text-shadow:0 2px 12px rgba(0,0,0,.35)}
+
+  /* 364 */
+  .c364 .bat{position:absolute;width:84px;height:262px;border-radius:16px;border:4px solid rgba(255,255,255,.85);background:rgba(255,255,255,.12);box-shadow:inset 0 0 18px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.25)}
+  .c364 .bat .fl{position:absolute;left:7px;right:7px;bottom:7px;height:calc(100% - 14px);border-radius:9px;background:linear-gradient(180deg,#eeff8a,#c9e62c 40%,#8fae14);box-shadow:0 0 22px rgba(216,240,64,.65);transform-origin:50% 100%}
+  .c364 .bat .gl2{position:absolute;left:12px;top:10px;width:10px;bottom:30px;border-radius:5px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0))}
+  .c364 .ico{position:absolute;left:50%;top:-74px;width:60px;height:56px;margin-left:-30px}
+  .c364 .hs::before,.c364 .hs::after{content:'';position:absolute;top:18px;width:42px;height:20px;border-radius:10px;border:5px solid #fff}
+  .c364 .hs::before{left:-2px;transform:rotate(28deg)}
+  .c364 .hs::after{right:-2px;transform:rotate(-28deg)}
+  .c364 .ct::before{content:'';position:absolute;left:4px;top:6px;width:52px;height:32px;background:#fff;clip-path:polygon(0 0,100% 0,86% 100%,14% 100%)}
+  .c364 .ct::after{content:'';position:absolute;left:12px;top:42px;width:36px;height:12px;background:radial-gradient(circle at 6px 6px,#fff 5px,transparent 6px),radial-gradient(circle at 30px 6px,#fff 5px,transparent 6px)}
+
+  /* 365 */
+  .c365 .ic{position:absolute;width:0;height:0}
+  .c365 .ic>div{position:absolute;left:-48px;top:-48px;width:96px;height:96px;border-radius:50%;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center}
+  .c365 .fl1{animation:fl 2.8s ease-in-out infinite alternate}
+  .c365 .fl2{animation:fl 3.3s ease-in-out -1.2s infinite alternate}
+  .c365 .fl3{animation:fl 2.5s ease-in-out -.6s infinite alternate}
+  @keyframes fl{from{transform:translateY(-9px)}to{transform:translateY(9px)}}
+  .c365 .snd{width:44px;height:44px;background:#11140a;clip-path:polygon(0 42%,100% 0,62% 100%,46% 58%)}
+  .c365 .bolt{width:40px;height:52px;background:#11140a;clip-path:polygon(58% 0,8% 58%,44% 58%,34% 100%,92% 38%,56% 38%,70% 0)}
+  .c365 .ring{position:absolute;inset:-9px;border-radius:50%;border:3px dashed rgba(255,255,255,.8)}
+  .c365 .pie{width:48px;height:48px;border-radius:50%;background:conic-gradient(#11140a 0 28%,transparent 0),#fff;box-shadow:0 0 0 5px #11140a inset}
+  .c365 .lm{background:var(--lime)!important}
+  .c365 .avp{display:inline-flex;align-items:center;background:#fff;border-radius:70px;padding:10px 12px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+  .c365 .avp .av{width:88px;height:88px;font-size:30px;box-shadow:0 0 0 5px #fff;margin-right:-20px}
+  .c365 .avp .av:last-child{margin-right:0;background:var(--lime);color:#11140a}
+  .c365 .avp .av .pi{font-size:44px}
+  .c365 svg.gr{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
+  .c365 svg.gr path{fill:none;stroke:var(--lime);stroke-width:7;stroke-linecap:round;stroke-dasharray:1 1;filter:drop-shadow(0 0 8px rgba(216,240,64,.8))}
+  .c365 .ed{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 8px rgba(216,240,64,.25),0 0 22px var(--lime)}
+
+  /* 366 */
+  .c366 .ln{position:absolute;height:6px;border-radius:3px;background:linear-gradient(90deg,rgba(216,240,64,0),var(--lime) 18%,var(--lime) 50%,#ff8a3d 82%,rgba(255,138,61,0));box-shadow:0 0 14px rgba(216,240,64,.55)}
+  .c366 .cd{position:absolute;left:-125px;top:-196px;width:250px;height:190px}
+  .c366 .cd .sc{position:absolute;inset:0;border-radius:8px;border:5px solid #fff;overflow:hidden;background:#5a5d63;box-shadow:0 14px 34px rgba(0,0,0,.4)}
+  .c366 .cd .sc::before{content:'';position:absolute;left:14px;right:14px;top:14px;height:84px;border-radius:4px;background:linear-gradient(135deg,#8b8f97,#6c7078)}
+  .c366 .cd .sc::after{content:'';position:absolute;left:14px;top:112px;width:60%;height:14px;border-radius:7px;background:#9a9ea6;box-shadow:0 26px 0 -1px #7c8088,40px 26px 0 -1px transparent}
+  .c366 .cd .tg{position:absolute;left:-8px;top:-30px;display:inline-flex;align-items:center;gap:8px;background:rgba(0,0,0,.72);border-radius:5px;padding:5px 12px 6px 8px;font-size:22px;font-weight:700;white-space:nowrap}
+  .c366 .cd .tg i{width:14px;height:14px;border-radius:3px;background:var(--lime);box-shadow:0 0 8px var(--lime)}
+  .c366 .fan{position:absolute;width:0;height:0}
+
+  /* 367 */
+  .c367 .dia{position:relative;width:128px;height:112px;filter:drop-shadow(0 0 16px rgba(216,240,64,.7))}
+  .c367 .dia b{position:absolute;inset:0;background:linear-gradient(160deg,#fbffe0 0%,#e6ff5a 40%,#a9c51a 100%);clip-path:polygon(24% 0,76% 0,100% 34%,50% 100%,0 34%)}
+  .c367 .dia i{position:absolute;inset:0;background:linear-gradient(200deg,rgba(255,255,255,.95),rgba(255,255,255,.35));clip-path:polygon(24% 0,76% 0,64% 34%,36% 34%)}
+  .c367 .dia em{position:absolute;inset:0;background:rgba(90,120,10,.45);clip-path:polygon(36% 34%,64% 34%,50% 100%)}
+  .c367 .br3{font-size:46px;font-weight:600;color:rgba(255,255,255,.85);letter-spacing:-.08em}
+  .c367 .ol{color:rgba(255,255,255,.14);-webkit-text-stroke:4px rgba(255,255,255,.95);text-shadow:0 0 30px rgba(0,0,0,.25)}
+  .c367 .big{font-size:250px}
+
+  /* 368 */
+  .c368 .sb{display:flex;align-items:center;gap:18px;width:880px;height:88px;border-radius:44px;background:#fff;color:#111;padding:0 18px 0 30px;box-shadow:0 14px 40px rgba(0,0,0,.3)}
+  .c368 .sb .pl{position:relative;flex:none;width:24px;height:24px}
+  .c368 .sb .pl::before,.c368 .sb .pl::after{content:'';position:absolute;left:10px;top:0;width:4px;height:24px;border-radius:2px;background:#8e8e93}
+  .c368 .sb .pl::after{transform:rotate(90deg)}
+  .c368 .sb .tx{flex:1;font-size:31px;font-weight:600;white-space:nowrap;overflow:hidden;letter-spacing:-.01em}
+  .c368 .sb .go{position:relative;flex:none;width:52px;height:52px;border-radius:12px;background:#111}
+  .c368 .sb .go::before{content:'';position:absolute;left:18px;top:21px;width:14px;height:14px;border-left:5px solid #fff;border-top:5px solid #fff;transform:rotate(45deg)}
+  .c368 .sb .go::after{content:'';position:absolute;left:23.5px;top:20px;width:5px;height:20px;background:#fff}
+  .c368 .chev{position:absolute;width:0;height:0}
+  .c368 .chev b{position:absolute;left:-52px;top:-70px;width:104px;height:104px;border-right:17px solid currentColor;border-bottom:17px solid currentColor;border-radius:3px;display:block}
+  .c368 .cL{color:var(--lime);filter:drop-shadow(0 0 12px rgba(216,240,64,.9))}
+  .c368 .cW{color:#fff;filter:drop-shadow(0 0 8px rgba(255,255,255,.5))}
+
+  /* 370 */
+  .c370 .cap{font-size:44px;font-weight:600}
+</style>
+</head>
+<body><div class="wrap">
+<header>
+  <div class="kicker">Board 18 · Nytvir Motion · 353-370 · REF-003 lime uslub</div>
+  <h1>Lime brend — video ustidagi kinetik grafika, 18 texnika</h1>
+  <p class="sub">Shaxsiy brend reklamasi uslubi: grafika kartaga emas, to'g'ridan-to'g'ri gapiruvchi odam kadri ustiga tushadi. Lime #D8F040 + oq, qalin grotesk, blur-in so'zlar, chip pop, highlight bar, aylanadigan hisoblagichlar. Fon — referensning toza kadrlari (faqat lokal). Grafika ko'krak sohasida, yuzni to'smaydi. Kartani bossangiz kattalashadi.</p>
+</header>
+<div class="bar">
+  <span class="lb">Format</span><div class="tg" id="fmt"><button data-v="1920" class="on">9:16 Reel</button><button data-v="1350">4:5 Feed</button><button data-v="1080">1:1</button></div>
+</div>
+<div class="grid" id="grid">
+
+<!-- 353 -->
+<div class="cardx"><div class="stage" data-bg="1"><div class="comp c353"><div class="fr">
+  <div class="blk" style="top:872px">
+    <div class="lbl" style="align-self:flex-start;margin-left:92px" data-a="wipe@0.3"><i class="bar" data-a="growy@0.12/0.22"></i>TOSHKENTLIK</div>
+    <div class="hv it" style="font-size:200px;margin-top:2px;padding:0 20px" data-split="chars" data-a="glow@0.55" data-st="0.07" data-hold="0.16">biznes</div>
+    <div class="row" style="gap:18px;margin-top:6px;align-self:flex-start;margin-left:40px">
+      <span class="cap" style="font-size:44px" data-a="in@1.45"><em class="lb">[</em> egasi <em class="lb">]</em></span>
+      <i class="vb" data-a="growy@1.6/0.25"></i>
+      <span class="chipG" style="font-size:56px" data-a="pop@1.72">murabbiy</span>
+    </div>
+    <div class="stk8" style="right:-40px;top:222px" data-a="spin@2.05"><b></b><i class="pi"></i></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">353</div><b>Glitch Title Stack</b><div class="br">REF-003 · 0:00-0:03</div><p>Lime chiziq o'sadi, qora label ochiladi, katta kursiv so'z harfma-harf lime glow bilan chaqnab oqarib boradi, ostiga [kichik so'z] + chip, yonida 8 burchakli stiker aylanib pop.</p><code>prompt: "label | katta so'z | [kichik so'z] | chip | stiker ikonka"</code></div></div>
+
+<!-- 354 -->
+<div class="cardx"><div class="stage" data-bg="2"><div class="comp c354"><div class="fr">
+  <div class="bgc blr" data-img="2" data-a="fade@0.25/0.45"></div>
+  <div class="pp"><div class="post" data-a="wrap@0.25/0.55">
+    <div class="ph"><i class="av">SB</i><div><b>sizning.brendingiz</b><small>asl audio</small></div><span class="pd"><i></i><i></i><i></i></span></div>
+    <div class="pm" data-img="2"></div>
+    <div class="dots"><i></i><i></i><i></i></div>
+    <div class="pa">
+      <span><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.2-9.3C1.7 8 3.6 4.6 7 4.6c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.4 0 5.3 3.4 4.2 6.6-1.7 4.7-9.2 9.3-9.2 9.3z"/></svg><b class="cnt" data-c0="525" data-c1="1204" data-roll="0.9/4.6" data-bl="1.2"></b></span>
+      <span><svg viewBox="0 0 24 24"><path d="M20.6 12a8.6 8.6 0 1 1-4-7.3A8.6 8.6 0 0 1 20.6 12zM20.6 20.6l-2.3-4.1"/></svg><b class="cnt" data-c0="723" data-c1="1015" data-roll="1.0/4.4" data-bl="1.2"></b></span>
+      <span><svg viewBox="0 0 24 24"><path d="M21.5 3 3 10.2l7.3 3.1L21.5 3zM10.3 13.3l3 7.3L21.5 3"/></svg><b class="cnt" data-c0="104" data-c1="472" data-roll="1.1/4.3" data-bl="1.2"></b></span>
+      <svg class="bm" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-5-6 5z"/></svg>
+    </div>
+    <div class="pc"><b>sizning.brendingiz</b><span data-split="type" data-a="tp@1.35" data-st="0.07">shaxsiy brendingizni bugundan quring</span><i class="caret"></i></div>
+  </div></div>
+</div></div></div><div class="meta"><div class="n">354</div><b>Post Frame Wrap</b><div class="br">REF-003 · 0:03-0:10</div><p>Video kichrayib oq post ramkasiga kiradi, atrofi xiralashadi; like, izoh, ulashish hisoblagichlari to'xtovsiz o'sadi, izoh matni yoziladi. Logo va platforma nomi yo'q.</p><code>prompt: "nik | avatar harflari | 3 hisoblagich: dan→gacha | izoh matni"</code></div></div>
+
+<!-- 355 -->
+<div class="cardx"><div class="stage" data-bg="3"><div class="comp c355"><div class="fr">
+  <div class="a" style="left:120px;top:858px;width:900px">
+    <div style="margin-left:300px"><span class="chipL" style="font-size:44px" data-a="pop@0.25">ko'pchilik</span></div>
+    <div class="hv it" style="font-size:172px;margin-top:4px" data-a="inl@0.55/0.36">Shaxsiy</div>
+    <div class="hv it br2" style="font-size:160px;margin:-56px 0 0 214px" data-a="inl@1.0/0.36">Brendni</div>
+    <div class="cap" style="margin:18px 0 0 150px" data-split="words" data-a="in@1.6" data-st="0.2">qurishni ertaga qoldirib yuradi</div>
+  </div>
+</div></div></div><div class="meta"><div class="n">355</div><b>Kinetic Italic Pair</b><div class="br">REF-003 · 0:04-0:08</div><p>Lime chip, keyin juda qalin kursiv so'z blur bilan kiradi, ikkinchisi pastga-o'ngga siljigan holda ustma-ust tushadi, ostida izoh so'zma-so'z yig'iladi.</p><code>prompt: "chip | 1-so'z | 2-so'z | izoh (so'zma-so'z)"</code></div></div>
+
+<!-- 356 -->
+<div class="cardx"><div class="stage" data-bg="4"><div class="comp c356"><div class="fr">
+  <div class="a" style="left:56px;top:648px"><span class="chipD" data-a="pop@0.2"><i class="bar" data-a="growy@0.3/0.2"></i>qanday qilib</span></div>
+  <div class="a" style="left:806px;top:688px"><span class="chipD" data-a="pop@0.38"><i class="bar" data-a="growy@0.48/0.2"></i>kim bilan</span></div>
+  <svg class="arr" viewBox="0 0 1080 1920">
+    <path pathLength="1" d="M306 934 C 232 934 170 904 186 860 C 202 820 258 834 246 872 C 234 910 160 884 156 830 L 156 734" data-a="draw@0.5/0.55"/>
+    <path pathLength="1" d="M134 760 L 156 728 L 180 758" data-a="draw@1.02/0.16"/>
+    <path pathLength="1" d="M790 952 C 866 950 930 918 918 878 C 906 842 854 852 864 886 C 874 920 924 902 920 850 L 916 774" data-a="draw@0.66/0.55"/>
+    <path pathLength="1" d="M894 800 L 916 768 L 938 798" data-a="draw@1.18/0.16"/>
+  </svg>
+  <div class="blk" style="top:948px">
+    <div class="hv" style="font-size:94px;font-weight:800;letter-spacing:-.03em" data-a="in@1.2">Natijaga chiqishni</div>
+    <div class="cap" style="font-size:42px;margin-top:10px" data-split="words" data-a="in@1.65" data-st="0.18">bilmayotgan bo'lsangiz <span class="hlw">bu taklif<i class="hlb" data-a="wipe@3.1"></i></span></div>
+    <div class="cap" style="font-size:42px" data-split="words" data-a="in@2.4" data-st="0.18">aynan siz uchun</div>
+  </div>
+</div></div></div><div class="meta"><div class="n">356</div><b>Callout Arrows</b><div class="br">REF-003 · 0:09-0:11</div><p>Odamning ikki yonida qora chiplar pop bo'ladi, lime qo'lda chizilgandek halqali strelkalar chiziladi, markazda sarlavha va izoh, kalit ibora ostidan lime bar supuriladi.</p><code>prompt: "chap chip | o'ng chip | sarlavha | izoh | kalit ibora"</code></div></div>
+
+<!-- 357 -->
+<div class="cardx"><div class="stage" data-bg="6"><div class="comp c357"><div class="fr">
+  <div class="bgc" data-img="3" data-a="show@2.2" data-to="6.5/0.01 opacity=0" data-out="none"></div>
+  <div class="blk" style="top:900px;align-items:flex-start">
+    <div class="lbl" data-a="wipe@0.25" data-out="1.75"><i class="bar"></i>OLDIN</div>
+    <div class="hv it" style="font-size:168px;margin-top:6px" data-a="in@0.45" data-out="1.75">Tartibsiz</div>
+  </div>
+  <div class="blk" style="top:900px;align-items:flex-start">
+    <div class="lbl" data-a="wipe@2.65" data-out="6.0"><i class="bar"></i>KEYIN</div>
+    <div class="hv it" style="font-size:168px;margin-top:6px" data-split="chars" data-a="glow@2.85" data-st="0.06" data-out="6.0">Tizimli</div>
+  </div>
+  <div class="pxs" data-glitch="1.8,6.08"></div>
+</div></div></div><div class="meta"><div class="n">357</div><b>Pixel Glitch</b><div class="br">REF-003 · 0:10</div><p>Kadr almashishida lime piksel bloklari chetlardan tarqalib-yig'iladi va bir kadrdan ikkinchisiga o'tadi; o'tishdan oldin va keyin qisqa sarlavha.</p><code>prompt: "kadr A → kadr B | blok o'lchami | zichlik | rang"</code></div></div>
+
+<!-- 358 -->
+<div class="cardx"><div class="stage" data-bg="2"><div class="comp c358"><div class="fr">
+  <div class="fbox" style="left:200px;top:990px;width:690px;height:230px" data-a="wipe@1.05/0.4"></div>
+  <div class="blk" style="top:860px">
+    <div class="pill" data-a="pop@0.3/0.32"><i class="mk"></i><div><b>brendim</b><small>MARKETING AGENTLIGI</small></div></div>
+    <div class="ul" style="position:relative;width:420px;margin-top:18px" data-a="growx@0.6/0.35"></div>
+  </div>
+  <div class="a row" style="left:236px;top:1010px;gap:20px;align-items:flex-start">
+    <div class="hv" style="font-size:168px;line-height:.9" data-a="inl@0.9">Shu</div>
+    <div style="padding-top:12px">
+      <div class="cap" style="font-size:50px;font-weight:700" data-a="in@1.2">kungacha</div>
+      <div class="ys" style="margin-top:8px" data-a="fade@1.45/0.3"><i class="ac"></i>
+        <div class="yt" data-b="transform=translateX(5px)" data-to="2.1/0.4 transform=translateX(-145px); 2.8/0.4 transform=translateX(-295px); 3.5/0.4 transform=translateX(-445px)" data-out="none">
+          <span>2022</span>
+          <span data-b="color=#11140a" data-to="2.1/0.3 color=#ffffff" data-out="none">2023</span>
+          <span data-to="2.1/0.3 color=#11140a; 2.8/0.3 color=#ffffff" data-out="none">2024</span>
+          <span data-to="2.8/0.3 color=#11140a; 3.5/0.3 color=#ffffff" data-out="none">2025</span>
+          <span data-to="3.5/0.3 color=#11140a" data-out="none">2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">358</div><b>Brand Pill + Year Strip</b><div class="br">REF-003 · 0:18-0:21</div><p>Oq pill ichida brend belgisi pop bo'ladi, "Shu kungacha" yozuvi, ostida yil lentasi suriladi va faol yil lime chip ichida almashadi.</p><code>prompt: "brend nomi | tagline | sarlavha | yillar ro'yxati | faol yil"</code></div></div>
+
+<!-- 359 -->
+<div class="cardx"><div class="stage" data-bg="5"><div class="comp c359 c359x"><div class="fr">
+  <div class="gridl" data-a="fade@0.15/0.5"></div>
+  <svg class="gl" viewBox="0 0 1080 1920" data-a="wipe@0.3/1.3"><path d="M0 1270 L90 1200 L150 1236 L260 1128 L330 1158 L450 1066 L560 1096 L680 986 L760 1016 L860 826 L920 862 L1000 566 L1080 296"/></svg>
+  <div class="cl top" style="left:290px;top:250px"><div data-a="pop@0.7"><i class="av" style="background:linear-gradient(150deg,#7a8a99,#2b3440)">KE</i><span class="nm">Kafe egasi</span><span class="gk" data-a="pop@1.0"><i class="pi"></i>+63k</span></div></div>
+  <div class="cl top" style="left:540px;top:205px"><div data-a="pop@0.85"><i class="av" style="background:linear-gradient(150deg,#9a8f7a,#3d3528)">ST</i><span class="nm">Stomatolog</span><span class="gk" data-a="pop@1.15"><i class="pi"></i>+41k</span></div></div>
+  <div class="cl top" style="left:790px;top:250px"><div data-a="pop@1.0"><i class="av" style="background:linear-gradient(150deg,#7f8c7a,#2c3629)">MB</i><span class="nm">Murabbiy</span><span class="gk" data-a="pop@1.3"><i class="pi"></i>+28k</span></div></div>
+  <div class="cl" style="left:140px;top:500px"><div data-a="pop@1.15"><i class="av" style="background:linear-gradient(150deg,#8a7f94,#352c3d)">DZ</i><span class="nm">Dizayner</span><span class="gk" data-a="pop@1.45"><i class="pi"></i>+116k</span></div></div>
+  <div class="cl" style="left:930px;top:500px"><div data-a="pop@1.3"><i class="av" style="background:linear-gradient(150deg,#7a8f93,#2a383b)">US</i><span class="nm">Usta</span><span class="gk" data-a="pop@1.6"><i class="pi"></i>+19k</span></div></div>
+  <div class="cl" style="left:150px;top:740px"><div data-a="pop@1.45"><i class="av" style="background:linear-gradient(150deg,#94877a,#3b3129)">OS</i><span class="nm">Oshpaz</span><span class="gk" data-a="pop@1.75"><i class="pi"></i>+400k</span></div></div>
+  <div class="cl" style="left:930px;top:740px"><div data-a="pop@1.6"><i class="av" style="background:linear-gradient(150deg,#7d8796,#2b3240)">SH</i><span class="nm">Shifokor</span><span class="gk" data-a="pop@1.9"><i class="pi"></i>+77k</span></div></div>
+  <div class="blk" style="top:930px">
+    <div class="lbl" style="align-self:flex-start;margin-left:14px" data-a="wipe@2.1"><i class="bar" data-a="growy@2.0/0.2"></i>MIJOZLARIMIZ</div>
+    <div class="hv" style="font-size:128px;margin-top:8px;font-weight:900"><b class="cnt" data-c0="0" data-c1="120" data-roll="2.3/1.5" data-bl="3" data-a="in@2.25"></b><span data-a="in@2.4">+ loyiha</span></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">359</div><b>Client Orbit Network</b><div class="br">REF-003 · 0:21-0:28</div><p>Fonga oq to'r va nuqtali o'sish chizig'i chiziladi, odam atrofida mijoz avatarlari (harfli doira + soha tegi) birin-ketin pop bo'ladi, har biriga lime "+63k" chip.</p><code>prompt: "avatarlar (harflar | soha | +son) x7 | label | raqam"</code></div></div>
+
+<!-- 360 -->
+<div class="cardx"><div class="stage" data-bg="4"><div class="comp c360"><div class="fr">
+  <div class="blk" style="top:890px">
+    <span class="chipD" style="font-size:40px" data-a="pop@0.3">mijozlarimiz topgan daromad</span>
+    <div class="num hv" style="margin-top:10px" data-a="in@0.5" data-to="2.55/0.12 color=#E6FF5A&textShadow=0 0 30px rgba(216,240,64,.95)~0 0 70px rgba(216,240,64,.6); 2.9/0.6 color=#ffffff&textShadow=0 6px 34px rgba(0,0,0,.28)~0 0 0px rgba(216,240,64,0)"><b class="cnt" data-c0="476,400" data-c1="500,000" data-roll="0.6/1.95" data-bl="5"></b>$</div>
+  </div>
+  <div class="rain" data-rain="1.5"></div>
+</div></div></div><div class="meta"><div class="n">360</div><b>Money Rain Counter</b><div class="br">REF-003 · 0:24-0:27</div><p>Katta raqam vertikal motion blur bilan aylanib 500,000$ da to'xtaydi va lime chaqnaydi, ustidan yashil kupyuralar 3D aylanib uchib tushadi.</p><code>prompt: "chip matni | boshlang'ich raqam | yakuniy raqam | belgi | kupyura soni"</code></div></div>
+
+<!-- 361 -->
+<div class="cardx"><div class="stage" data-bg="2"><div class="comp c361"><div class="fr">
+  <div class="blk" style="top:900px;align-items:flex-start">
+    <div class="lbl" style="margin-left:10px" data-a="wipe@0.25"><i class="bar" data-a="growy@0.12/0.2"></i>MINGDAN ORTIQ</div>
+    <div class="hv" style="font-size:122px;margin-top:10px;letter-spacing:-.02em" data-split="chars" data-a="glow@0.55" data-st="0.065" data-hold="0.12">OBUNACHILAR</div>
+    <div class="cap" style="font-size:44px;font-weight:700;margin:6px 0 0 60px" data-split="words" data-a="in@1.5" data-st="0.2">yig'ishga yordam berdik</div>
+  </div>
+</div></div></div><div class="meta"><div class="n">361</div><b>Label Bar Headline</b><div class="br">REF-003 · 0:27-0:30</div><p>Label lime chiziq bilan ochiladi, KATTA harfli so'z chapdan harfma-harf yoziladi, har yangi harf lime "dum" bo'lib yonib oqaradi, ostida izoh so'zma-so'z.</p><code>prompt: "label | KATTA SO'Z | izoh"</code></div></div>
+
+<!-- 362 -->
+<div class="cardx"><div class="stage" data-bg="3"><div class="comp c362"><div class="fr">
+  <div class="a" style="left:140px;top:850px;width:800px;height:420px">
+    <i class="vr" style="left:18px;top:30px;height:360px" data-a="growy@2.3/0.45"></i>
+    <div class="a" style="left:0;top:0;width:800px;transform-origin:50% 0" data-b="transform=translateY(0px) scale(1)" data-to="2.2/0.45 transform=translateY(-40px) scale(.64)">
+      <div class="a cap" style="left:150px;top:0;font-size:40px" data-a="in@0.2">agar</div>
+      <div class="a cap" style="left:590px;top:0;font-size:40px" data-a="in@0.4">siz</div>
+      <div class="hv" style="position:absolute;left:0;right:0;top:40px;text-align:center;font-size:164px;font-weight:800;letter-spacing:-.03em" data-split="chars" data-a="in@0.6" data-st="0.05">Premium</div>
+      <div class="a" style="left:430px;top:190px"><span class="chipL" style="font-size:42px" data-a="pop@1.15">mahsulot</span></div>
+    </div>
+    <div class="hv" style="position:absolute;left:0;right:0;top:150px;text-align:center;font-size:164px;font-weight:800;letter-spacing:-.03em" data-a="in@2.45">Xizmat</div>
+    <div class="trk" style="position:absolute;left:0;right:0;top:330px;text-align:center" data-split="type" data-a="tp@2.85" data-st="0.07">ko'rsatsangiz</div>
+  </div>
+</div></div></div><div class="meta"><div class="n">362</div><b>Premium Stack</b><div class="br">REF-003 · 0:31-0:36</div><p>Kichik "agar", "siz" so'zlari, markazda katta so'z + lime chip; blok yuqoriga siljib kichrayadi, ostiga ikkinchi so'z kiradi, chapda lime chiziq o'sadi, keng harfli izoh yoziladi.</p><code>prompt: "kichik so'z x2 | 1-so'z | chip | 2-so'z | keng izoh"</code></div></div>
+
+<!-- 363 -->
+<div class="cardx"><div class="stage" data-bg="4"><div class="comp c363"><div class="fr">
+  <div class="a" style="left:190px;top:880px;width:820px;height:340px">
+    <div class="hv" style="font-size:66px;font-weight:800;letter-spacing:-.02em" data-a="in@0.2">Maqsadingiz</div>
+    <div class="it3" style="top:96px" data-a="inl@0.6/0.3" data-to="2.0/0.35 transform=scale(.66)&opacity=.8"><i class="dot"></i><span class="hlw t3">sotuvni oshirish<i class="hlb" data-a="wipe@0.85" data-to="2.0/0.3 opacity=0"></i></span></div>
+    <div class="it3" style="top:160px" data-a="inl@2.15/0.3" data-to="3.4/0.35 transform=scale(.66)&opacity=.8"><i class="dot"></i><span class="hlw t3">sohangizda tanilish<i class="hlb" data-a="wipe@2.4" data-to="3.4/0.3 opacity=0"></i></span></div>
+    <div class="it3" style="top:224px" data-a="inl@3.55/0.3"><i class="dot"></i><span class="hlw t3">ishonch qozonish<i class="hlb" data-a="wipe@3.8"></i></span></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">363</div><b>Highlight Bullets</b><div class="br">REF-003 · 0:38-0:42</div><p>Sarlavha, lime nuqta + band, orqasidan lime highlight bar supuriladi; keyingi band kelganda oldingisi kichrayib xiralashadi, bar o'chadi.</p><code>prompt: "sarlavha | bandlar (2-4)"</code></div></div>
+
+<!-- 364 -->
+<div class="cardx"><div class="stage" data-bg="3"><div class="comp c364"><div class="fr">
+  <div class="a" style="left:96px;top:890px">
+    <div class="hv" style="font-size:92px;font-weight:800;letter-spacing:-.03em" data-a="in@0.3" data-out="3.2">Insonlarni</div>
+    <div class="cap" style="font-size:34px;margin-top:6px" data-split="words" data-a="in@0.75" data-st="0.15" data-out="3.2">sizga bo'lgan ishonchini</div>
+    <div class="cap" style="font-size:34px" data-split="words" data-a="in@1.25" data-st="0.15" data-out="3.2">yanada oshirib</div>
+  </div>
+  <div class="a" style="left:96px;top:890px">
+    <div class="hv" style="font-size:92px;font-weight:800;letter-spacing:-.03em" data-split="chars" data-a="in@3.4" data-st="0.05">Sotuvlar</div>
+    <div class="cap" style="font-size:34px;margin-top:6px" data-split="words" data-a="in@3.85" data-st="0.15">ko'proq bo'lishi mumkin</div>
+  </div>
+  <div class="bat" style="left:708px;top:850px" data-a="in@0.4"><i class="ico hs"></i><i class="fl" data-b="transform=scaleY(0)" data-to="0.8/1.3 transform=scaleY(.52); 3.5/0.9 transform=scaleY(.74)"></i><i class="gl2"></i></div>
+  <div class="bat" style="left:818px;top:850px" data-a="in@0.55"><i class="ico ct"></i><i class="fl" data-b="transform=scaleY(0)" data-to="0.95/1.6 transform=scaleY(.8); 3.6/0.8 transform=scaleY(1)"></i><i class="gl2"></i></div>
+</div></div></div><div class="meta"><div class="n">364</div><b>Glass Battery Bars</b><div class="br">REF-003 · 0:44-0:48</div><p>Sarlavha yonida 2 ta vertikal shisha batareya (tepasida qo'l siqish va savat ikonkasi), ichida lime suyuqlik turli balandlikka ko'tariladi; sarlavha almashganda yana to'ladi.</p><code>prompt: "sarlavha 1 | izoh 1 | sarlavha 2 | izoh 2 | bar A % | bar B %"</code></div></div>
+
+<!-- 365 -->
+<div class="cardx"><div class="stage" data-bg="4"><div class="comp c365"><div class="fr">
+  <svg class="gr" viewBox="0 0 1080 1920"><path pathLength="1" d="M236 1092 C 320 1086 350 996 420 1000 C 490 1004 510 1066 580 1030 C 650 994 700 880 812 800" data-a="draw@1.3/0.9"/></svg>
+  <i class="ed" style="left:812px;top:800px" data-a="pop@2.15"></i>
+  <div class="a" style="left:700px;top:716px"><div class="cap" style="font-size:36px;font-weight:700" data-split="words" data-a="in@2.25" data-st="0.18">baland bo'ladi</div></div>
+  <div class="ic" style="left:300px;top:872px"><div data-a="pop@0.35"><div class="fl1" style="width:96px;height:96px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><i class="snd"></i></div></div></div>
+  <div class="ic" style="left:846px;top:930px"><div data-a="pop@0.55"><div class="fl2" style="position:relative;width:96px;height:96px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><i class="ring"></i><i class="bolt"></i></div></div></div>
+  <div class="ic" style="left:250px;top:1150px"><div data-a="pop@1.0"><div class="fl3 lm" style="width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="pie"></i></div></div></div>
+  <div class="blk" style="top:990px"><div class="avp" data-a="pop@0.75/0.32"><i class="av" style="background:linear-gradient(150deg,#7a8a99,#2b3440)">AK</i><i class="av" style="background:linear-gradient(150deg,#9a8f7a,#3d3528)">DN</i><i class="av" style="background:linear-gradient(150deg,#8a7f94,#352c3d)">BS</i><i class="av"><i class="pi"></i></i></div></div>
+</div></div></div><div class="meta"><div class="n">365</div><b>Floating Icon Pills</b><div class="br">REF-003 · 0:49-0:52</div><p>Odam atrofida doira ikonkalar (yuborish, chaqmoq, diagramma) suzib kiradi, markazda avatar-stack pill, ortidan o'sish chizig'i chiziladi va "baland bo'ladi" yoziladi.</p><code>prompt: "ikonkalar x3 | avatar harflari x3 | o'sish matni"</code></div></div>
+
+<!-- 366 -->
+<div class="cardx"><div class="stage" data-bg="5"><div class="comp c366"><div class="fr">
+  <div class="fan" style="left:540px;top:1060px">
+    <div class="a" style="left:0;top:0" data-a="pop@0.95/0.3" data-to="1.45/0.5 transform=translate(-345px,6px) rotate(-8deg)"><div class="cd"><div class="sc"></div><span class="tg" data-a="pop@2.0"><i></i>strategiya</span></div></div>
+    <div class="a" style="left:0;top:0" data-a="pop@1.0/0.3" data-to="1.5/0.5 transform=translate(-115px,-8px) rotate(-3deg)"><div class="cd"><div class="sc"></div><span class="tg" data-a="pop@2.15"><i></i>kontent</span></div></div>
+    <div class="a" style="left:0;top:0" data-a="pop@1.05/0.3" data-to="1.55/0.5 transform=translate(115px,-8px) rotate(3deg)"><div class="cd"><div class="sc"></div><span class="tg" data-a="pop@2.3"><i></i>reklama</span></div></div>
+    <div class="a" style="left:0;top:0" data-a="pop@1.1/0.3" data-to="1.6/0.5 transform=translate(345px,6px) rotate(8deg)"><div class="cd"><div class="sc"></div><span class="tg" data-a="pop@2.45"><i></i>tahlil</span></div></div>
+  </div>
+  <div class="ln" style="left:70px;top:1070px;width:940px" data-a="growx@0.45/0.5"></div>
+  <div class="blk" style="top:1104px"><div class="lbl" style="font-size:30px;height:56px" data-a="wipe@0.25"><i class="bar" data-a="growy@0.12/0.2"></i>BU JARAYONDA</div></div>
+</div></div></div><div class="meta"><div class="n">366</div><b>Process Card Fan</b><div class="br">REF-003 · 0:53-0:57</div><p>"BU JARAYONDA" label va ingichka lime-to'q sariq chiziq, ustida skrinshot kartalar markazdan yelpig'ichdek ochiladi, har biriga kichik teg chip.</p><code>prompt: "label | kartalar (2-5): teg | rasm"</code></div></div>
+
+<!-- 367 -->
+<div class="cardx"><div class="stage" data-bg="1"><div class="comp c367"><div class="fr">
+  <div class="blk" style="top:790px">
+    <div class="row" style="gap:18px" data-a="pop@0.2/0.32"><span class="br3">&lt;&lt;</span><div class="dia"><b></b><i></i><em></em></div><span class="br3">&gt;&gt;</span></div>
+    <div style="position:relative;margin-top:-4px">
+      <div class="hv big" data-split="chars" data-a="glow@0.5" data-st="0.08" data-hold="0.9" data-out="1.95">Sifatni</div>
+      <div class="hv big ol" style="position:absolute;left:0;top:0" data-a="fade@1.85/0.3">Sifatni</div>
+      <div class="a" style="right:-34px;top:92px"><span class="chipL" style="font-size:52px" data-tf="rotate(-4deg)" data-a="pop@2.2/0.3">yo'qotmaslik</span></div>
+    </div>
+    <div class="cap" style="font-size:42px;font-weight:700;margin-top:8px" data-split="words" data-a="in@2.7" data-st="0.18">uchun hamma bilan</div>
+    <div class="cap" style="font-size:42px;font-weight:700" data-split="words" data-a="in@3.25" data-st="0.18">ishlamaymiz</div>
+  </div>
+</div></div></div><div class="meta"><div class="n">367</div><b>Outline Word + Chip</b><div class="br">REF-003 · 0:57-1:00</div><p>Tepada CSS olmos &lt;&lt; &gt;&gt; qavslar bilan, ulkan so'z avval harfma-harf lime glow bilan to'ladi, keyin kontur holatga o'tadi, ustiga qiyshiq lime chip pop, izoh so'zma-so'z.</p><code>prompt: "ikonka | ulkan so'z | chip | izoh"</code></div></div>
+
+<!-- 368 -->
+<div class="cardx"><div class="stage" data-bg="6"><div class="comp c368"><div class="fr">
+  <div class="blk" style="top:890px"><div class="sb" data-a="pop@0.25/0.32"><i class="pl"></i><div class="tx"><span data-split="type" data-a="tp@0.7" data-st="0.07">sohangizda haqiqiy mutaxassis bo'ling</span><i class="caret"></i></div><i class="go"></i></div></div>
+  <div class="chev cL" style="left:300px;top:1070px"><b data-tf="rotate(45deg)" data-a="pop@3.5/0.25"></b></div>
+  <div class="chev cW" style="left:300px;top:1180px"><b data-tf="rotate(45deg)" data-a="pop@3.65/0.25"></b></div>
+  <div class="chev cW" style="left:780px;top:1070px"><b data-tf="rotate(45deg)" data-a="pop@3.8/0.25"></b></div>
+  <div class="chev cL" style="left:780px;top:1180px"><b data-tf="rotate(45deg)" data-a="pop@3.95/0.25"></b></div>
+</div></div></div><div class="meta"><div class="n">368</div><b>Search Bar Typing</b><div class="br">REF-003 · 1:00-1:03</div><p>Oq yumaloq qidiruv maydoni pop bo'ladi, matn soniyasiga ~14 belgi bilan yoziladi, oxirida pastga qaragan lime va oq chevronlar kaskad bo'lib yonadi.</p><code>prompt: "qidiruv matni | chevron soni | ranglar"</code></div></div>
+
+<!-- 369 -->
+<div class="cardx"><div class="stage" data-bg="4"><div class="comp c369"><div class="fr">
+  <div class="blk" style="top:880px">
+    <div class="lbl" style="font-size:30px;height:56px" data-a="wipe@0.3"><i class="bar" data-a="growy@0.15/0.22"></i>RO'YXATDAN O'TING</div>
+    <div class="hv" style="font-size:136px;font-weight:800;letter-spacing:-.03em;margin-top:10px" data-split="chars" data-a="in@0.65" data-st="0.05">Ko'rishib</div>
+    <div class="cap" style="font-size:40px;margin-top:10px" data-split="words" data-a="in@1.35" data-st="0.18">qanday yordam berishimizni</div>
+    <div class="cap" style="font-size:40px;margin-top:4px"><span class="hlw" style="padding:0 4px"><span data-split="words" data-a="in@2.0" data-st="0.18">batafsil gaplashamiz</span><i class="hlb" data-a="wipe@2.7/0.35"></i></span></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">369</div><b>CTA Headline Build</b><div class="br">REF-003 · 1:04-1:07</div><p>Chaqiruv label, katta so'z harfma-harf blur-in, 2 qator izoh so'zma-so'z yig'iladi, oxirgi qator ostidan lime highlight bar supuriladi.</p><code>prompt: "label | sarlavha | izoh 1-qator | izoh 2-qator (highlight)"</code></div></div>
+
+<!-- 370 -->
+<div class="cardx"><div class="stage" data-bg="5"><div class="comp c370"><div class="fr">
+  <div class="blk" style="top:870px">
+    <div class="cap" data-split="words" data-a="in@0.2" data-st="0.17">mijoz olib keladigan</div>
+    <div class="cap" data-split="words" data-a="in@0.85" data-st="0.17">butun marketing tizimini</div>
+    <div style="margin-top:10px"><span class="chipL" style="font-size:50px;padding:4px 18px 6px" data-a="pop@1.75/0.3"><span data-split="words" data-a="pop@1.9" data-st="0.14">o'zimiz hal qilamiz</span></span></div>
+    <div class="lbl" style="font-size:28px;height:52px;margin-top:40px" data-a="wipe@2.6"><i class="bar" data-a="growy@2.5/0.2"></i>BU JARAYONDA</div>
+  </div>
+</div></div></div><div class="meta"><div class="n">370</div><b>Word Caption + Key Chip</b><div class="br">REF-003 · 0:55-0:57</div><p>Subtitr qatorlari so'zma-so'z to'ladi, kalit ibora lime chip ichiga so'zma-so'z sakrab kiradi, ostida label.</p><code>prompt: "subtitr qatorlari | kalit ibora | label"</code></div></div>
+
+</div></div>
+<div class="modal" id="modal"></div>
+<script>
+var H=1920, D=7, BG="ref003-bg/bg";
+var LIME="#D8F040";
+var EO="cubic-bezier(.2,.8,.2,1)", IO="cubic-bezier(.65,0,.35,1)", EXE="cubic-bezier(.4,0,.8,.4)";
+var GL="0 0 18px rgba(216,240,64,.95), 0 0 44px rgba(216,240,64,.6)", GN="0 0 0px rgba(216,240,64,0), 0 0 0px rgba(216,240,64,0)";
+
+/* ---------- DOM build (runs once on the grid) ---------- */
+function splitEl(el){
+  var mode=el.dataset.split, a=el.dataset.a.split("@"), type=a[0], sp=a[1].split("/"), t0=+sp[0], du=sp[1], st=+(el.dataset.st||0.06);
+  var out=el.dataset.out, hold=el.dataset.hold, i=0, frag=document.createDocumentFragment();
+  function mk(txt,cls){var s=document.createElement("span"); s.className=cls; s.textContent=txt; return s;}
+  function tag(s){s.dataset.a=type+"@"+(t0+i*st).toFixed(3)+(du?"/"+du:""); if(out)s.dataset.out=out; if(hold)s.dataset.hold=hold; i++; frag.appendChild(s);}
+  Array.prototype.slice.call(el.childNodes).forEach(function(n){
+    if(n.nodeType===3){
+      var t=n.textContent;
+      if(mode==="words"){ t.split(/(\s+)/).forEach(function(w){ if(!w)return; if(/^\s+$/.test(w)){frag.appendChild(document.createTextNode(w));} else tag(mk(w,"wd")); }); }
+      else { Array.from(t).forEach(function(c){ tag(mk(c, mode==="type"?"tp":"ch")); }); }
+    } else if(n.nodeType===1){ tag(n); }
+  });
+  el.innerHTML=""; el.appendChild(frag); delete el.dataset.a; delete el.dataset.split;
+}
+function buildCnt(el){
+  var from=el.dataset.c0, to=el.dataset.c1, A=+from.replace(/\D/g,""), B=+to.replace(/\D/g,"");
+  var digs=to.replace(/\D/g,"").length, pos=0, html="";
+  Array.from(to).forEach(function(c){
+    if(!/\d/.test(c)){html+='<span class="sep">'+c+'</span>';return;}
+    var p=digs-1-pos; pos++;
+    var inc=Math.floor(B/Math.pow(10,p))-Math.floor(A/Math.pow(10,p));
+    var cap=p===0?22:(p===1?16:12), L=Math.min(inc,cap)+1, e=+c, seq=[];
+    for(var k=0;k<L;k++) seq.push(((e-(L-1-k))%10+10)%10);
+    if(A<Math.pow(10,p)&&p>0&&inc>0) seq[0]=""; /* leading blank */
+    html+='<span class="col"><span class="stk" data-n="'+(L-1)+'">'+seq.map(function(x){return "<i>"+(x===""?"&nbsp;":x)+"</i>";}).join("")+"</span></span>";
+  });
+  el.innerHTML=html;
+}
+function rnd(seed){return function(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};}
+function buildGlitch(el){
+  var ts=el.dataset.glitch.split(",").map(Number), r=rnd(20260927), h="";
+  for(var y=0;y<22;y++)for(var x=0;x<12;x++){
+    var ex=Math.abs((x+.5)/12-.5)*2, ey=Math.abs((y+.5)/22-.5)*2, p=.08+.7*Math.pow(Math.max(ex,ey*.9),2.2);
+    if(r()>p||(x>=3&&x<=8&&y>=3&&y<=10))continue;
+    var q=r(), col=q<.55?"#D8F040":(q<.8?"rgba(230,255,90,.55)":"rgba(10,12,6,.55)");
+    var steps=ts.map(function(g){var a=g+r()*.42, b=a+.06+r()*.26; return a.toFixed(2)+"/"+b.toFixed(2);});
+    h+='<i class="px" style="left:'+(x*90)+'px;top:'+(y*90)+'px;background:'+col+'" data-px="'+steps.join(",")+'"></i>';
+  }
+  el.innerHTML=h;
+}
+function buildRain(el){
+  var t0=+el.dataset.rain, r=rnd(777), h="";
+  for(var i=0;i<16;i++){
+    var s=t0+i*.24+r()*.15, d=1.4+r()*.8, x=(i%2?680+r()*220:-130+r()*200), z=r();
+    h+='<i class="bill" data-f="'+[s.toFixed(2),d.toFixed(2),x.toFixed(0),(-40+r()*80).toFixed(0),(-65+r()*130).toFixed(0),(-65+r()*130).toFixed(0),(.75+z*.5).toFixed(2),(z>.8?4:z<.2?2:0)].join(",")+'"></i>';
+  }
+  el.innerHTML=h;
+}
+function build(){
+  document.querySelectorAll("[data-split]").forEach(splitEl);
+  document.querySelectorAll(".cnt").forEach(buildCnt);
+  document.querySelectorAll("[data-glitch]").forEach(buildGlitch);
+  document.querySelectorAll("[data-rain]").forEach(buildRain);
+}
+
+/* ---------- WAAPI timeline (7 s loop) ---------- */
+function T(tf,x){var s=((tf||"")+" "+(x||"")).trim(); return s||"none";}
+function camel(k){return k.trim().replace(/-([a-z])/g,function(m,c){return c.toUpperCase();});}
+function props(str){var o={}; str.split("&").forEach(function(p){var i=p.indexOf("="); if(i<0)return; o[camel(p.slice(0,i))]=p.slice(i+1).trim().replace(/~/g,",");}); return o;}
+function types(tf){return {
+  "in":{d:.32,e:EO,f:[{opacity:0,filter:"blur(12px)",transform:T(tf,"translateY(34px)")},{opacity:1,filter:"blur(0px)",transform:T(tf,"translateY(0px)")}]},
+  inl:{d:.34,e:EO,f:[{opacity:0,filter:"blur(16px)",transform:T(tf,"translateX(-60px)")},{opacity:1,filter:"blur(0px)",transform:T(tf,"translateX(0px)")}]},
+  fade:{d:.3,e:"linear",f:[{opacity:0},{opacity:1}]},
+  show:{d:.001,e:"linear",f:[{opacity:0},{opacity:1}]},
+  tp:{d:.001,e:"linear",f:[{opacity:0,maxWidth:"0em"},{opacity:1,maxWidth:"1.2em"}]},
+  pop:{d:.26,e:EO,f:[{opacity:0,transform:T(tf,"scale(.6)")},{opacity:1,transform:T(tf,"scale(1.05)"),o:.62},{opacity:1,transform:T(tf,"scale(1)")}]},
+  spin:{d:.5,e:EO,f:[{opacity:0,transform:T(tf,"scale(.3) rotate(-150deg)")},{opacity:1,transform:T(tf,"scale(1.1) rotate(12deg)"),o:.6},{opacity:1,transform:T(tf,"scale(1) rotate(0deg)")}]},
+  wrap:{d:.5,e:EO,f:[{opacity:0,transform:T(tf,"scale(1.32)")},{opacity:1,transform:T(tf,"scale(1.22)"),o:.2},{opacity:1,transform:T(tf,"scale(1)")}]},
+  wipe:{d:.3,e:IO,f:[{clipPath:"inset(-30% 100% -30% -40px)"},{clipPath:"inset(-30% 0% -30% -40px)"}]},
+  growy:{d:.35,e:EO,f:[{transform:T(tf,"scaleY(0)")},{transform:T(tf,"scaleY(1)")}]},
+  growx:{d:.4,e:IO,f:[{transform:T(tf,"scaleX(0)")},{transform:T(tf,"scaleX(1)")}]},
+  draw:{d:.6,e:IO,f:[{strokeDashoffset:1},{strokeDashoffset:0}]},
+  glow:{d:.14,e:EO,f:[{opacity:0,filter:"blur(10px)",color:LIME,textShadow:GL},{opacity:1,filter:"blur(0px)",color:LIME,textShadow:GL}],settle:{color:"#ffffff",textShadow:GN}}
+};}
+function defs(tf){return {opacity:1,filter:"blur(0px)",transform:T(tf,""),clipPath:"inset(-30% 0% -30% -40px)",color:"#ffffff",textShadow:GN,maxWidth:"1.2em",strokeDashoffset:0};}
+function run(el,frames,tf){
+  var keys={}, DF=defs(tf); frames.forEach(function(f){for(var k in f) if(k!=="offset"&&k!=="easing") keys[k]=1;});
+  var last={}; for(var k in keys){ if(DF[k]!==undefined){ last[k]=DF[k]; continue; } for(var i=0;i<frames.length;i++){ if(frames[i][k]!==undefined){ last[k]=frames[i][k]; break; } } }
+  var prev=0;
+  frames.forEach(function(f){ for(var k in keys){ if(f[k]===undefined) f[k]=last[k]; else last[k]=f[k]; } f.offset=Math.min(1,Math.max(prev,f.offset)); prev=f.offset; });
+  el.animate(frames,{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function A(o){var r={}; for(var i=0;i<arguments.length;i++){var s=arguments[i]; for(var k in s) if(k!=="o") r[k]=s[k];} return r;}
+function animEl(el,cardOut){
+  var ds=el.dataset, tf=ds.tf||"", fr=[], cur={}, TY=types(tf), hasA=!!ds.a;
+  if(hasA){
+    var a=ds.a.split("@"), ty=TY[a[0]], sp=a[1].split("/"), s=+sp[0], d=sp[1]?+sp[1]:ty.d;
+    var H0=ty.f[0], S=ty.f[ty.f.length-1];
+    fr.push(A({offset:0},H0)); fr.push(A({offset:s/D,easing:ty.e},H0));
+    ty.f.slice(1,-1).forEach(function(m){fr.push(A({offset:(s+d*m.o)/D,easing:ty.e},m));});
+    fr.push(A({offset:(s+d)/D},S)); cur=A(S);
+    if(ty.settle){var hd=+(ds.hold||.18); fr.push(A({offset:(s+d+hd)/D,easing:"ease-out"},cur)); cur=A(cur,ty.settle); fr.push(A({offset:(s+d+hd+.32)/D},cur));}
+  } else if(ds.b){ cur=props(ds.b); fr.push(A({offset:0},cur)); }
+  else { cur={}; fr.push({offset:0}); }
+  if(ds.b&&hasA){ /* base overrides for non-entry props */ }
+  if(ds.to){ ds.to.split(";").forEach(function(step){ step=step.trim(); if(!step)return; var i=step.indexOf(" "), td=step.slice(0,i).split("/"), t=+td[0], dd=+(td[1]||.35), pr=props(step.slice(i+1));
+    var base=A(cur); for(var k in pr) if(base[k]===undefined) base[k]=defs(tf)[k];
+    fr.push(A({offset:t/D,easing:IO},base)); cur=A(base,pr); fr.push(A({offset:(t+dd)/D},cur)); }); }
+  var out=ds.out||cardOut;
+  if(out!=="none"&&(hasA||ds.out)){
+    out=+out; var X=A(cur,{opacity:0,filter:"blur(8px)",transform:T(cur.transform&&cur.transform!=="none"?cur.transform:tf,"translateY(-16px) scale(.97)")});
+    fr.push(A({offset:out/D,easing:EXE},cur)); fr.push(A({offset:(out+.22)/D},X)); fr.push(A({offset:1},X));
+  } else fr.push(A({offset:1},cur));
+  /* entry-less elements with only data-to still need full prop set */
+  run(el,fr,tf);
+}
+function animCnt(stk,cnt){
+  var r=cnt.dataset.roll.split("/"), s=+r[0], d=+r[1], n=+stk.dataset.n, bl=+(cnt.dataset.bl||2), y="translateY(-"+(n*1.1).toFixed(2)+"em)";
+  stk.animate([{offset:0,transform:"translateY(0em)"},{offset:s/D,transform:"translateY(0em)",easing:"cubic-bezier(.3,.55,.15,1)"},{offset:(s+d)/D,transform:y},{offset:1,transform:y}],{duration:D*1000,iterations:Infinity,fill:"both"});
+  if(n>0) stk.parentNode.animate([{offset:0,filter:"blur(0px)"},{offset:s/D,filter:"blur(0px)"},{offset:(s+d*.12)/D,filter:"blur("+bl+"px)"},{offset:(s+d*.55)/D,filter:"blur("+(bl*.6)+"px)"},{offset:(s+d*.92)/D,filter:"blur(0px)"},{offset:1,filter:"blur(0px)"}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animPx(el){
+  var fr=[{offset:0,opacity:0}];
+  el.dataset.px.split(",").forEach(function(p){var ab=p.split("/"),a=+ab[0]/D,b=+ab[1]/D; fr.push({offset:a,opacity:0,easing:"steps(1,end)"},{offset:a+.004,opacity:1},{offset:b,opacity:1,easing:"steps(1,end)"},{offset:b+.004,opacity:0});});
+  fr.push({offset:1,opacity:0}); run(el,fr);
+}
+function animBill(el){
+  var f=el.dataset.f.split(",").map(Number), s=f[0]/D, e=(f[0]+f[1])/D, x=f[2], rz=f[3], rx=f[4], ry=f[5], sc=f[6], bl=f[7];
+  var t0="translate("+x+"px,-260px) rotateZ("+rz+"deg) rotateX(0deg) rotateY(0deg) scale("+sc+")";
+  var t1="translate("+(x+60)+"px,calc(var(--Hp) + 120px)) rotateZ("+(rz+90)+"deg) rotateX("+rx+"deg) rotateY("+ry+"deg) scale("+sc+")";
+  el.style.filter=bl?"blur("+bl+"px)":"";
+  el.animate([{offset:0,transform:t0,opacity:0},{offset:s,transform:t0,opacity:1,easing:"cubic-bezier(.35,.1,.6,1)"},{offset:Math.min(e,1),transform:t1,opacity:1},{offset:1,transform:t1,opacity:1}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animate(root){
+  root.querySelectorAll(".comp").forEach(function(c){
+    var out=c.dataset.out||"6.2";
+    c.querySelectorAll("[data-a],[data-to],[data-b]").forEach(function(el){animEl(el,out);});
+    c.querySelectorAll(".cnt").forEach(function(cn){cn.querySelectorAll(".stk").forEach(function(s){animCnt(s,cn);});});
+    c.querySelectorAll("[data-px]").forEach(animPx);
+    c.querySelectorAll(".bill").forEach(animBill);
+  });
+}
+
+/* ---------- board chrome ---------- */
+function fit(st){
+  var u=st.clientWidth/1080; st.style.height=(H*u)+"px";
+  var c=st.querySelector(".comp"), off=(1920-H)*.35;
+  c.style.setProperty("--u",u); c.style.setProperty("--H",H+"px"); c.style.setProperty("--Hp",H+"px"); c.style.setProperty("--off",off+"px");
+  c.style.setProperty("--ps",Math.min(1,(H-110)/1330));
+  c.classList.toggle("f916",H===1920); c.classList.toggle("f45",H===1350); c.classList.toggle("f11",H===1080);
+  c.querySelector(".fr").style.top=(-off)+"px";
+}
+function all(){document.querySelectorAll(".stage").forEach(fit)}
+build();
+document.querySelectorAll(".stage").forEach(function(st){
+  var l=document.createElement("div"); l.className="bgl"; l.style.backgroundImage="url('"+BG+st.dataset.bg+".jpg')"; st.insertBefore(l,st.firstChild);
+});
+document.querySelectorAll("[data-img]").forEach(function(el){el.style.backgroundImage="url('"+BG+el.dataset.img+".jpg')";});
+function wire(id,fn){document.getElementById(id).addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  this.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b)});fn(b.dataset.v);all();});}
+wire("fmt",function(v){H=+v});
+var modal=document.getElementById("modal");
+document.querySelectorAll(".cardx").forEach(function(cx){cx.addEventListener("click",function(){
+  modal.innerHTML=""; var st=cx.querySelector(".stage").cloneNode(true); modal.appendChild(st); modal.classList.add("on"); fit(st); animate(st);});});
+modal.addEventListener("click",function(){modal.classList.remove("on");modal.innerHTML=""});
+window.addEventListener("resize",all); all(); animate(document.getElementById("grid"));
+var m=location.hash.match(/t=([\d.]+)/); if(m){document.getAnimations().forEach(function(a){a.pause();a.currentTime=parseFloat(m[1])*1000;});}
+var f=location.hash.match(/f=(\d+)/); if(f){H=+f[1]; document.querySelectorAll("#fmt button").forEach(function(x){x.classList.toggle("on",x.dataset.v===f[1])}); all();}
+</script>
+</body>
+</html>
