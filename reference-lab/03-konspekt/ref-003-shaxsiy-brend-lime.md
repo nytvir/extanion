@@ -8,7 +8,7 @@
 
 | Token | Qiymat |
 |---|---|
-| Aksent | lime `#D8F040` (chip), glow yorqin qismi `#E6FF5A`, soya tomoni `#C0D820` |
+| Aksent | lime `#B0FC0A` (tekis chip, o'lchangan #AEF606), glow yorqin qismi `#E6FF5A`, soya tomoni `#C0D820` |
 | Matn | oq `#FFFFFF`, ikkinchi daraja oq 75 % |
 | Chip foni | qora 55-65 % (`rgba(0,0,0,.6)`), burchak 4-6 px (deyarli to'rtburchak) |
 | Label | kichik BOSH HARF, harflar oralig'i keng (tracking ~+60), chapida 3-4 px lime vertikal chiziq |
