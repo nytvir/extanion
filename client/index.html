@@ -56,6 +56,17 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 .fav.on { color: var(--gold); }
 .tab-chip { position: absolute; top: 6px; left: 7px; z-index: 2; font-size: 7px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; background: rgba(0,0,0,.45); color: #ccc; padding: 2px 6px; border-radius: 8px; }
 
+.lchips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 7px; }
+.lchip { font-size: 9px; font-weight: 700; padding: 4px 9px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); color: var(--muted); cursor: pointer; }
+.lchip:hover { color: var(--text); }
+.lchip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.lchip.t { font-weight: 600; padding: 3px 8px; }
+.lcount { font-size: 9px; color: var(--muted); margin: 4px 0 2px; }
+.lthumb { height: 118px; background: #2a2a2e; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.lthumb img { max-width: 92%; max-height: 108px; border-radius: 6px; }
+.lnum { position: absolute; left: 6px; bottom: 5px; font-size: 8px; font-weight: 800; color: #fff; background: rgba(0,0,0,.5); padding: 1px 5px; border-radius: 6px; z-index: 1; }
+.ltags { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 3px; }
+.ltags span { font-size: 7.5px; color: #aab; background: #2c2c32; padding: 1px 5px; border-radius: 5px; }
 /* SECTION LABEL */
 .sec-label { font-size: 9px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin: 14px 0 8px; }
 .sec-label:first-child { margin-top: 0; }
@@ -144,6 +155,7 @@ input[type=color] { width: 100%; height: 36px; border: none; background: transpa
 <div class="sidebar">
   <div class="logo">⚡</div>
   <div class="nav active" data-tab="pro"><div class="ic">💎</div><div class="lb">Pro</div></div>
+  <div class="nav" data-tab="lib"><div class="ic">🧩</div><div class="lb">UI Kit</div></div>
   <div class="nav" data-tab="video"><div class="ic">🎥</div><div class="lb">Video</div></div>
   <div class="nav" data-tab="favs"><div class="ic">⭐</div><div class="lb">Favs</div></div>
   <div class="sep"></div>
@@ -175,6 +187,7 @@ try { cs = new CSInterface(); } catch(e){}
 
 var TAB_TITLES = {
   pro: '💎 Pro — eng zo\'r UIlar',
+  lib: '🧩 UI Kit — soha va mexanika bo\'yicha',
   video: '🎥 Video — saralangan, videolarda ishlatiladiganlar',
   favs: '⭐ Sevimlilar',
   trans: 'Camera Transitions',
@@ -349,43 +362,43 @@ var FX = [
   {id:'s45IslandToggle', tab:'pro', sec:'🏝️ S45 Apple Mini — Dynamic Island', icon:'🔘', bg:'linear-gradient(135deg,#000,#8e8e93)', title:'Island Toggle (204)', desc:'Kapsula ichida iOS tugma o\'chadi (Comfort mode → Off)'},
   {id:'s45IslandCount', tab:'pro', sec:'🏝️ S45 Apple Mini — Dynamic Island', icon:'🔢', bg:'linear-gradient(135deg,#000,#ff375f)', title:'Island Counter (205)', desc:'Kapsulada raqam sanaydi: 68 → 142 BPM, 100 → 0 %'},
   {id:'s45CapClean', tab:'pro', sec:'🏝️ S45 Apple Mini — Dynamic Island', icon:'💬', bg:'linear-gradient(135deg,#0c0c0d,#f2f2f2)', title:'Clean Captions (206)', desc:'Whisper so\'z SRT dan bir qatorli ingichka subtitr + [CAP] MOVE null'},
-  {id:'s46Switch', tab:'pro', sec:'🍎 S46 Apple Switch — shaxsiy brend', icon:'🔀', bg:'linear-gradient(135deg,#f2f2f7,#0a84ff)', title:'Apple Switch (231)', desc:'Segment tablar + ochiladigan qatorlar + tugma. 12 brend preset (fitnes, kafe, rieltor, kurs...), hammasi editable, 9:16 / 4:5 / 1:1'},
-  {id:'s47Price', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'💲', bg:'linear-gradient(135deg,#f2f2f7,#af52de)', title:'Price Toggle (247)', desc:'Oylik/Yillik: katta narx aylanadi, eski narx chiziladi, chegirma badge chiqadi. 10 brend preset'},
-  {id:'s47Size', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#e9dccb,#a2845e)', title:'Size Picker (248)', desc:'O\'lcham tanlash: mahsulot o\'sadi, halqa S/M/L bo\'ylab sakraydi, hajm va narx aylanadi. 10 brend preset'},
-  {id:'s47Color', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#d8c6a5,#3a3a3c)', title:'Color Swatches (249)', desc:'Rang nuqtalari: halqa sakraydi, mahsulot rangi almashadi, rang nomi aylanadi. 10 brend preset'},
-  {id:'s47Wheel', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#ff9500)', title:'Wheel Picker (250)', desc:'iOS g\'ildiragi: ustunlar prujina bilan aylanib qiymatga tushadi, chetlari so\'nadi. 10 brend preset'},
-  {id:'s47Detent', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#34c759,#ff3b30)', title:'Detent Slider (251)', desc:'Slayder pog\'onalarga sakraydi, rang o\'zgaradi, daraja nomi aylanadi. 10 brend preset'},
-  {id:'s47Stats', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Stats Switch (252)', desc:'Kun/Hafta/Oy: ustunlar prujina bilan o\'sadi, katta raqam aylanadi. 10 brend preset'},
-  {id:'s47Chips', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f6c9d4,#ff2d55)', title:'Chip Filter (253)', desc:'Chiplar bo\'ylab pill suriladi, mos rasmlar ajralib, qolgani so\'nadi. 10 brend preset'},
-  {id:'s47Toggles', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Toggle Cascade (254)', desc:'iOS tugmalar ketma-ket yonadi, har birida jami summa aylanib o\'sadi. 10 brend preset'},
-  {id:'s47Date', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#007aff)', title:'Date + Slots (255)', desc:'Kun ramkasi suriladi, vaqt tanlanadi, yashil tasdiq chiqadi. 10 brend preset'},
-  {id:'s47Stepper', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f3d9a4,#ff9500)', title:'Stepper Cart (256)', desc:'"+" bosiladi, soni va jami narx aylanadi, tugmada jami summa. 10 brend preset'},
-  {id:'s47Carousel', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#1c1c1e,#0a84ff)', title:'Plan Carousel (257)', desc:'Tarif kartalari suriladi, markazdagisi kattalashadi, nuqtalar cho\'ziladi. 10 brend preset'},
-  {id:'s47Radio', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Radio List (258)', desc:'Belgi qatorlar bo\'ylab ko\'chadi, tanlangan qator ostida tafsilot ochiladi. 10 brend preset'},
-  {id:'s47Sheet', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#ffcc00)', title:'Bottom Sheet (259)', desc:'Pastdan sheet chiqadi, tanlov ramkasi tushadi, tugma bosiladi, sheet yopiladi. 10 brend preset'},
-  {id:'s47Before', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#b9b4ac,#d9a171)', title:'Before / After (260)', desc:'Oldin/Keyin: 2 surat (layer tanlang), keyin chapdan o\'ngga ochiladi. 10 brend preset'},
-  {id:'s47IslandSw', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#000000,#ff375f)', title:'Island Switch (261)', desc:'Tepada qora island kengayadi, ichida mini segment tablarni almashtiradi. 10 brend preset'},
-  {id:'s47Ring', tab:'pro', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#30b0c7)', title:'Level Ring (262)', desc:'Halqa daraja-daraja to\'ladi, markazda daraja va izoh aylanadi. 10 brend preset'},
-  {id:'s48Band', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Band Reveal (263)', desc:'Ko\'nikma chiziqlari ketma-ket to\'ladi, umumiy ball yangisiga aylanadi, +badge chiqadi. 10 markaz preset'},
-  {id:'s48Timetable', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Timetable Drop (264)', desc:'Haftalik jadvalga dars bloklari prujina bilan birin-ketin tushadi, har fan o\'z rangida. 10 markaz preset'},
-  {id:'s48Teacher', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Teacher Profile (265)', desc:'Avatar halqasi chiziladi, yulduzlar to\'ladi, reyting va statistika raqamlari sanaladi. 10 markaz preset'},
-  {id:'s48Seats', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Seat Countdown (266)', desc:'O\'rinlar birin-ketin band bo\'ladi, "joy qoldi" raqami kamayib qizaradi va silkinadi. 10 markaz preset'},
-  {id:'s48Knob', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Rotary Knob (267)', desc:'Burama tugma 3/6/12 oyga prujina bilan buriladi, oylik summa aylanib kamayadi. 10 markaz preset'},
-  {id:'s48Booking', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Booking Morph (268)', desc:'Tugma bosiladi, doiraga qisqaradi, spinner aylanadi, yashil galochka bilan tasdiqlanadi. 10 markaz preset'},
-  {id:'s48Rank', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Rank Climb (269)', desc:'O\'quvchi qatori reytingda yuqoriga ko\'tariladi, qolganlar suriladi, ball aylanadi. 10 markaz preset'},
-  {id:'s48Stamp', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Stamp Thud (270)', desc:'Sertifikatga muhr zarb bilan tushadi, karta silkinadi, siyoh halqasi tarqaladi. 10 markaz preset'},
-  {id:'s48Attend', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Attendance Pop (271)', desc:'Kalendarda dars kunlari birma-bir to\'ladi, qoldirilgan kun halqa, foiz o\'sadi. 10 markaz preset'},
-  {id:'s48Homework', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Homework Ring (272)', desc:'Topshiriqlar belgilanadi, halqa 100% gacha to\'ladi, oxirida "Barakalla" chiqadi. 10 markaz preset'},
-  {id:'s48MockTest', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Mock Test (273)', desc:'Taymer sanaydi, tugma bosilganda savol to\'ladi, halqa keyingi savolga sakraydi. 10 markaz preset'},
-  {id:'s48Gauge', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Level Gauge (274)', desc:'Strelka darajalar bo\'ylab tebranib to\'xtaydi, yoy to\'ladi, natija va ball aylanadi. 10 markaz preset'},
-  {id:'s48Path', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Study Path (275)', desc:'O\'quv yo\'li: chiziq o\'sadi, bosqichlar galochka bilan ochiladi, joriy nuqta puls beradi. 10 markaz preset'},
-  {id:'s48Growth', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Score Growth (276)', desc:'"Oldin" yonida yangi ustunlar o\'sadi, +ball chiqadi, umumiy ball ko\'tariladi. 10 markaz preset'},
-  {id:'s48Alerts', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Parent Alerts (277)', desc:'Ota-onaga xabarlar tepadan tushib eskisini suradi, oxirida bitta stakka yig\'iladi. 10 markaz preset'},
-  {id:'s48Unlock', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Module Unlock (278)', desc:'Modullar birin-ketin ochiladi: qulf ko\'tariladi, galochka otiladi, progress to\'ladi. 10 markaz preset'},
-  {id:'s48Referral', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Referral Slots (279)', desc:'Do\'stlar avatari bo\'sh joylarga kiradi, chegirma % o\'sadi, oylik narx kamayadi. 10 markaz preset'},
-  {id:'s48Quiz', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Quiz Feedback (280)', desc:'Noto\'g\'ri javob qizarib silkinadi, to\'g\'risi yashil bo\'lib sakraydi, +10 ball otiladi. 10 markaz preset'},
-  {id:'s48Flip', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Flip Countdown (281)', desc:'Kun:soat:daqiqa taymeri faqat oldinga sanaydi, o\'zgargan karta flip bilan varaqlanadi. 10 markaz preset'},
-  {id:'s48Branch', tab:'pro', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Branch Search (282)', desc:'Qidiruvga so\'z yoziladi, mos kelmagan filiallar yig\'iladi, topilgani galochka oladi. 10 markaz preset'},
+  {id:'s46Switch', tab:'lib', sec:'🍎 S46 Apple Switch — shaxsiy brend', icon:'🔀', bg:'linear-gradient(135deg,#f2f2f7,#0a84ff)', title:'Apple Switch (231)', desc:'Segment tablar + ochiladigan qatorlar + tugma. 12 brend preset (fitnes, kafe, rieltor, kurs...), hammasi editable, 9:16 / 4:5 / 1:1'},
+  {id:'s47Price', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'💲', bg:'linear-gradient(135deg,#f2f2f7,#af52de)', title:'Price Toggle (247)', desc:'Oylik/Yillik: katta narx aylanadi, eski narx chiziladi, chegirma badge chiqadi. 10 brend preset'},
+  {id:'s47Size', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#e9dccb,#a2845e)', title:'Size Picker (248)', desc:'O\'lcham tanlash: mahsulot o\'sadi, halqa S/M/L bo\'ylab sakraydi, hajm va narx aylanadi. 10 brend preset'},
+  {id:'s47Color', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#d8c6a5,#3a3a3c)', title:'Color Swatches (249)', desc:'Rang nuqtalari: halqa sakraydi, mahsulot rangi almashadi, rang nomi aylanadi. 10 brend preset'},
+  {id:'s47Wheel', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#ff9500)', title:'Wheel Picker (250)', desc:'iOS g\'ildiragi: ustunlar prujina bilan aylanib qiymatga tushadi, chetlari so\'nadi. 10 brend preset'},
+  {id:'s47Detent', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#34c759,#ff3b30)', title:'Detent Slider (251)', desc:'Slayder pog\'onalarga sakraydi, rang o\'zgaradi, daraja nomi aylanadi. 10 brend preset'},
+  {id:'s47Stats', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Stats Switch (252)', desc:'Kun/Hafta/Oy: ustunlar prujina bilan o\'sadi, katta raqam aylanadi. 10 brend preset'},
+  {id:'s47Chips', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f6c9d4,#ff2d55)', title:'Chip Filter (253)', desc:'Chiplar bo\'ylab pill suriladi, mos rasmlar ajralib, qolgani so\'nadi. 10 brend preset'},
+  {id:'s47Toggles', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Toggle Cascade (254)', desc:'iOS tugmalar ketma-ket yonadi, har birida jami summa aylanib o\'sadi. 10 brend preset'},
+  {id:'s47Date', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#007aff)', title:'Date + Slots (255)', desc:'Kun ramkasi suriladi, vaqt tanlanadi, yashil tasdiq chiqadi. 10 brend preset'},
+  {id:'s47Stepper', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f3d9a4,#ff9500)', title:'Stepper Cart (256)', desc:'"+" bosiladi, soni va jami narx aylanadi, tugmada jami summa. 10 brend preset'},
+  {id:'s47Carousel', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#1c1c1e,#0a84ff)', title:'Plan Carousel (257)', desc:'Tarif kartalari suriladi, markazdagisi kattalashadi, nuqtalar cho\'ziladi. 10 brend preset'},
+  {id:'s47Radio', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Radio List (258)', desc:'Belgi qatorlar bo\'ylab ko\'chadi, tanlangan qator ostida tafsilot ochiladi. 10 brend preset'},
+  {id:'s47Sheet', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#ffcc00)', title:'Bottom Sheet (259)', desc:'Pastdan sheet chiqadi, tanlov ramkasi tushadi, tugma bosiladi, sheet yopiladi. 10 brend preset'},
+  {id:'s47Before', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#b9b4ac,#d9a171)', title:'Before / After (260)', desc:'Oldin/Keyin: 2 surat (layer tanlang), keyin chapdan o\'ngga ochiladi. 10 brend preset'},
+  {id:'s47IslandSw', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#000000,#ff375f)', title:'Island Switch (261)', desc:'Tepada qora island kengayadi, ichida mini segment tablarni almashtiradi. 10 brend preset'},
+  {id:'s47Ring', tab:'lib', sec:'🍎 S47 Apple UI — board 9 (247-262)', icon:'🍎', bg:'linear-gradient(135deg,#f2f2f7,#30b0c7)', title:'Level Ring (262)', desc:'Halqa daraja-daraja to\'ladi, markazda daraja va izoh aylanadi. 10 brend preset'},
+  {id:'s48Band', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Band Reveal (263)', desc:'Ko\'nikma chiziqlari ketma-ket to\'ladi, umumiy ball yangisiga aylanadi, +badge chiqadi. 10 markaz preset'},
+  {id:'s48Timetable', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Timetable Drop (264)', desc:'Haftalik jadvalga dars bloklari prujina bilan birin-ketin tushadi, har fan o\'z rangida. 10 markaz preset'},
+  {id:'s48Teacher', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Teacher Profile (265)', desc:'Avatar halqasi chiziladi, yulduzlar to\'ladi, reyting va statistika raqamlari sanaladi. 10 markaz preset'},
+  {id:'s48Seats', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Seat Countdown (266)', desc:'O\'rinlar birin-ketin band bo\'ladi, "joy qoldi" raqami kamayib qizaradi va silkinadi. 10 markaz preset'},
+  {id:'s48Knob', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Rotary Knob (267)', desc:'Burama tugma 3/6/12 oyga prujina bilan buriladi, oylik summa aylanib kamayadi. 10 markaz preset'},
+  {id:'s48Booking', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Booking Morph (268)', desc:'Tugma bosiladi, doiraga qisqaradi, spinner aylanadi, yashil galochka bilan tasdiqlanadi. 10 markaz preset'},
+  {id:'s48Rank', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Rank Climb (269)', desc:'O\'quvchi qatori reytingda yuqoriga ko\'tariladi, qolganlar suriladi, ball aylanadi. 10 markaz preset'},
+  {id:'s48Stamp', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Stamp Thud (270)', desc:'Sertifikatga muhr zarb bilan tushadi, karta silkinadi, siyoh halqasi tarqaladi. 10 markaz preset'},
+  {id:'s48Attend', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Attendance Pop (271)', desc:'Kalendarda dars kunlari birma-bir to\'ladi, qoldirilgan kun halqa, foiz o\'sadi. 10 markaz preset'},
+  {id:'s48Homework', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Homework Ring (272)', desc:'Topshiriqlar belgilanadi, halqa 100% gacha to\'ladi, oxirida "Barakalla" chiqadi. 10 markaz preset'},
+  {id:'s48MockTest', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Mock Test (273)', desc:'Taymer sanaydi, tugma bosilganda savol to\'ladi, halqa keyingi savolga sakraydi. 10 markaz preset'},
+  {id:'s48Gauge', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Level Gauge (274)', desc:'Strelka darajalar bo\'ylab tebranib to\'xtaydi, yoy to\'ladi, natija va ball aylanadi. 10 markaz preset'},
+  {id:'s48Path', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Study Path (275)', desc:'O\'quv yo\'li: chiziq o\'sadi, bosqichlar galochka bilan ochiladi, joriy nuqta puls beradi. 10 markaz preset'},
+  {id:'s48Growth', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Score Growth (276)', desc:'"Oldin" yonida yangi ustunlar o\'sadi, +ball chiqadi, umumiy ball ko\'tariladi. 10 markaz preset'},
+  {id:'s48Alerts', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Parent Alerts (277)', desc:'Ota-onaga xabarlar tepadan tushib eskisini suradi, oxirida bitta stakka yig\'iladi. 10 markaz preset'},
+  {id:'s48Unlock', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Module Unlock (278)', desc:'Modullar birin-ketin ochiladi: qulf ko\'tariladi, galochka otiladi, progress to\'ladi. 10 markaz preset'},
+  {id:'s48Referral', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Referral Slots (279)', desc:'Do\'stlar avatari bo\'sh joylarga kiradi, chegirma % o\'sadi, oylik narx kamayadi. 10 markaz preset'},
+  {id:'s48Quiz', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Quiz Feedback (280)', desc:'Noto\'g\'ri javob qizarib silkinadi, to\'g\'risi yashil bo\'lib sakraydi, +10 ball otiladi. 10 markaz preset'},
+  {id:'s48Flip', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Flip Countdown (281)', desc:'Kun:soat:daqiqa taymeri faqat oldinga sanaydi, o\'zgargan karta flip bilan varaqlanadi. 10 markaz preset'},
+  {id:'s48Branch', tab:'lib', sec:'🎓 S48 O\'quv markazlar — board 10 (263-282)', icon:'🎓', bg:'linear-gradient(135deg,#f2f2f7,#5856d6)', title:'Branch Search (282)', desc:'Qidiruvga so\'z yoziladi, mos kelmagan filiallar yig\'iladi, topilgani galochka oladi. 10 markaz preset'},
   {id:'msTimerChip', tab:'pro', sec:'✨ Micro Moments — full customize', icon:'⏳', bg:'linear-gradient(135deg,#0e1014,#0a84ff)', title:'Timer Pie Chip', desc:'Doira-pie to\'lib boradi + matn (muddat/deadline)'},
   {id:'msDropdown', tab:'pro', sec:'✨ Micro Moments — full customize', icon:'▾', bg:'linear-gradient(135deg,#0e1014,#3a3f4c)', title:'Dropdown Pick', desc:'Ro\'yxat ochiladi, variant tanlanadi, sarlavha almashadi'},
   {id:'notifyStack', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'💸', bg:'linear-gradient(135deg,#15151a,#4b46e0,#39ff5a)', title:'Money Rain', desc:'Payment alerts stack'},
@@ -534,6 +547,7 @@ function toggleFav(id) {
 
 // ======================= RENDERING =======================
 function cardHTML(e, showTabChip) {
+  if (e.tab === 'lib') return libCardHTML(e);
   var fav = isFav(e.id);
   var html = '<div class="card" data-id="' + e.id + '">';
   if (e.curve) {
@@ -580,6 +594,11 @@ function renderTab(tab) {
 
   if (tab === 'caption') {
     renderCaptionStudio(c);
+    return;
+  }
+
+  if (tab === 'lib') {
+    renderLib(c);
     return;
   }
 
@@ -790,7 +809,7 @@ function renderSearch(q) {
   var c = document.getElementById('content');
   q = q.toLowerCase();
   var hits = FX.filter(function(e) {
-    return (e.title + ' ' + e.desc + ' ' + e.id + ' ' + (e.sec || '')).toLowerCase().indexOf(q) > -1;
+    return (e.title + ' ' + e.desc + ' ' + e.id + ' ' + (e.sec || '') + ' ' + (e.tab === 'lib' ? libTags(e).join(' ') + ' ' + SOHA_NAMES[libSoha(libNum(e))] : '')).toLowerCase().indexOf(q) > -1;
   });
   document.getElementById('topbar-title').innerText = '🔍 Qidiruv: ' + hits.length + ' ta natija';
   if (!hits.length) {
@@ -801,6 +820,60 @@ function renderSearch(q) {
   c.innerHTML = renderCards(items, true);
 }
 
+
+// ======================= UI KIT (S46+) =======================
+// Soha = board range, tags = mechanic. Preview PNG: previews/<num>.png (from the concept boards).
+var SOHA_ORDER = ['uni', 'edu', 'eng', 'food', 'serv', 'blog', 'fin'];
+var SOHA_NAMES = { uni: 'Universal · shaxsiy brend', edu: 'O\'quv markaz', eng: 'Ingliz tili markazi', food: 'Ovqat va savdo', serv: 'Xizmatlar', blog: 'Bloger va kontent', fin: 'Moliya va byudjet' };
+var TAG_LIST = ['Tanlash', 'Slayder', 'Toggle', 'Raqam', 'Grafik', 'Taymer', 'Kalendar', 'Cheklist', 'Ro\'yxat', 'Karta', 'Xarita', 'Yozish', 'Muhr', 'Tasdiq'];
+var LIB_TAGS = {
+  231:'Tanlash', 247:'Tanlash,Raqam', 248:'Tanlash,Raqam', 249:'Tanlash', 250:'Tanlash,Raqam', 251:'Slayder', 252:'Grafik,Tanlash', 253:'Tanlash',
+  254:'Toggle,Raqam', 255:'Kalendar,Tanlash', 256:'Raqam', 257:'Karta,Tanlash', 258:'Ro\'yxat,Tanlash', 259:'Tanlash', 260:'Tanlash', 261:'Tanlash', 262:'Grafik',
+  263:'Grafik,Raqam', 264:'Kalendar', 265:'Karta,Raqam', 266:'Raqam', 267:'Slayder,Raqam', 268:'Tasdiq', 269:'Ro\'yxat,Raqam', 270:'Muhr', 271:'Kalendar',
+  272:'Cheklist,Grafik', 273:'Taymer', 274:'Grafik', 275:'Ro\'yxat', 276:'Grafik', 277:'Ro\'yxat', 278:'Cheklist', 279:'Raqam', 280:'Tanlash', 281:'Taymer', 282:'Yozish,Ro\'yxat',
+  283:'Xarita', 284:'Muhr', 285:'Tanlash', 286:'Tasdiq', 287:'Tanlash,Raqam', 288:'Taymer,Raqam', 289:'Yozish,Tasdiq', 290:'Xarita,Tanlash', 291:'Grafik,Ro\'yxat', 292:'Grafik,Raqam',
+  293:'Slayder,Grafik', 294:'Raqam', 295:'Ro\'yxat', 296:'Xarita', 297:'Xarita', 298:'Tanlash', 299:'Slayder', 300:'Raqam', 301:'Cheklist', 302:'Tasdiq',
+  303:'Raqam', 304:'Grafik', 305:'Kalendar', 306:'Grafik', 307:'Ro\'yxat', 308:'Toggle,Raqam', 309:'Ro\'yxat', 310:'Tasdiq', 311:'Grafik', 312:'Grafik,Raqam',
+  313:'Yozish,Grafik', 314:'Slayder,Grafik', 315:'Raqam', 316:'Grafik', 317:'Yozish,Raqam', 318:'Raqam', 319:'Cheklist', 320:'Kalendar', 321:'Grafik', 322:'Grafik',
+  323:'Karta', 324:'Grafik', 325:'Karta', 326:'Taymer,Cheklist', 327:'Tanlash', 328:'Tanlash', 329:'Yozish', 330:'Grafik', 331:'Taymer', 332:'Kalendar,Raqam'
+};
+var libState = { soha: 'all', tag: '' };
+function libNum(e) { var m = /\((\d{3})\)/.exec(e.title || ''); return m ? parseInt(m[1], 10) : 0; }
+function libSoha(n) {
+  if (n >= 263 && n <= 282) return 'edu'; if (n >= 283 && n <= 292) return 'food'; if (n >= 293 && n <= 302) return 'serv';
+  if (n >= 303 && n <= 312) return 'blog'; if (n >= 313 && n <= 322) return 'fin'; if (n >= 323 && n <= 332) return 'eng'; return 'uni';
+}
+function libTags(e) { var t = LIB_TAGS[libNum(e)]; return t ? t.split(',') : []; }
+function libCardHTML(e) {
+  var n = libNum(e), fav = isFav(e.id);
+  var html = '<div class="card" data-id="' + e.id + '"><div class="lthumb">';
+  if (n) html += '<img src="previews/' + n + '.png" onerror="this.style.display=\'none\'"><span class="lnum">' + n + '</span>';
+  html += '<div class="play-hint"><button class="apply-btn">Apply</button></div></div>';
+  html += '<div class="fav' + (fav ? ' on' : '') + '" data-fav="' + e.id + '">' + (fav ? '★' : '☆') + '</div>';
+  html += '<div class="cinfo"><div class="ctitle">' + e.title.replace(/\s*\(\d{3}\)\s*$/, '') + '</div><div class="cdesc">' + e.desc + '</div>';
+  var tg = libTags(e); if (tg.length) html += '<div class="ltags"><span>' + tg.join('</span><span>') + '</span></div>';
+  return html + '</div></div>';
+}
+function renderLib(c) {
+  var all = FX.filter(function(e) { return e.tab === 'lib'; });
+  var items = all.filter(function(e) {
+    return (libState.soha === 'all' || libSoha(libNum(e)) === libState.soha) && (!libState.tag || libTags(e).indexOf(libState.tag) > -1);
+  });
+  var h = '<div class="lchips"><div class="lchip' + (libState.soha === 'all' ? ' on' : '') + '" data-lsoha="all">Hammasi</div>';
+  SOHA_ORDER.forEach(function(k) { h += '<div class="lchip' + (libState.soha === k ? ' on' : '') + '" data-lsoha="' + k + '">' + SOHA_NAMES[k] + '</div>'; });
+  h += '</div><div class="lchips">';
+  TAG_LIST.forEach(function(t) { h += '<div class="lchip t' + (libState.tag === t ? ' on' : '') + '" data-ltag="' + t + '">' + t + '</div>'; });
+  h += '</div><div class="lcount">' + items.length + ' / ' + all.length + ' ta UI</div>';
+  SOHA_ORDER.forEach(function(k) {
+    var g = items.filter(function(e) { return libSoha(libNum(e)) === k; }).sort(function(a, b) { return libNum(a) - libNum(b); });
+    if (!g.length) return;
+    h += '<div class="sec-label">' + SOHA_NAMES[k] + ' · ' + g.length + '</div><div class="grid">';
+    g.forEach(function(e) { h += libCardHTML(e); });
+    h += '</div>';
+  });
+  if (!items.length) h += '<div class="empty"><div class="empty-text">Bu filtrda UI yo\'q</div></div>';
+  c.innerHTML = h + '<div class="foot">NYTVIR MOTION · UI KIT</div>';
+}
 // ======================= ACTIONS =======================
 function setStatus(msg, color, dur) {
   var s = document.getElementById('status');
@@ -826,6 +899,13 @@ function execute(e) {
 
 // Delegated clicks: favorites star vs card body
 document.getElementById('content').addEventListener('click', function(ev) {
+  var chip = ev.target.closest ? ev.target.closest('[data-lsoha],[data-ltag]') : null;
+  if (chip) {
+    if (chip.hasAttribute('data-lsoha')) libState.soha = chip.getAttribute('data-lsoha');
+    else { var t = chip.getAttribute('data-ltag'); libState.tag = (libState.tag === t) ? '' : t; }
+    renderTab('lib');
+    return;
+  }
   var favEl = ev.target.closest ? ev.target.closest('[data-fav]') : null;
   if (favEl) {
     ev.stopPropagation();

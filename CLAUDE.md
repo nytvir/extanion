@@ -14,7 +14,8 @@ Avval `AGENTS.md` ni to'liq o'qing (ExtendScript minalari, egasining didi, versi
 2. Egasi raqam tanlaydi ("hammasi" ham bo'lishi mumkin). Faqat tanlanganlari quriladi.
 3. **Qurish**: S47 karkasi (`host/main.jsx` ichida "S47 APPLE UI SET"): `_s47Begin` -> helperlar (`_s47Rect/_s47Txt/_s47Seg/_s47Btn/_s47Card/_s47Path`) -> `_s47Finish`. Har tool: **kamida 10 brend preseti**, hamma matn/rang promptda tahrirlanadi, CTRL null (Tab keyfreymlari -> prujina `s`), 9:16/4:5/1:1 ga `x.K` orqali moslashadi. Apple uslubi (oq karta, #F2F2F7 qatorlar).
 4. **Tekshirish** (Mac'da AE yo'q): `node /Users/niytvir/extanion-dev/aemock.js --src host/main.jsx --fn _s47Price --preset 1 --w 1080 --h 1920 [--out f.html --times 0.6,1.8,3.2] [--lint part.jsx] [--sel 2]` -> `errors: 0`, LINT yo'q; kadrlarni PNG qilib ko'ring. Barcha presetlar x 3 format.
-5. Dispatcher (`nytvir_execute` ichida `else if (cmd === ...)`), `client/index.html` karta, `AGENTS.md` versiya, commit `vX.YZ: ...`, push.
+5. Dispatcher (`nytvir_execute` ichida `else if (cmd === ...)`), `client/index.html` karta **`tab:'lib'`** va sarlavha oxirida `(NNN)` raqam bilan, `AGENTS.md` versiya, commit `vX.YZ: ...`, push.
+6. **UI Kit tartibi** (`client/index.html`): yangi soha bo'lsa `SOHA_ORDER/SOHA_NAMES` + `libSoha()` diapazoni; har raqamga `LIB_TAGS` (mexanika teglari: Tanlash, Slayder, Toggle, Raqam, Grafik, Taymer, Kalendar, Cheklist, Ro'yxat, Karta, Xarita, Yozish, Muhr, Tasdiq). Preview: `node /Users/niytvir/extanion-dev/previews.mjs client/previews 4.8` (board'lar server'da ochiq bo'lishi kerak) -> `client/previews/NNN.png`; yangi board faylini skriptdagi `BOARDS` ro'yxatiga qo'shing.
 
 ## Joylar
 
