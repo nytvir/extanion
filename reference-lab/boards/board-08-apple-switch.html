@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board 8 · 231 Apple Switch — 12 brend</title>
+<style>
+  :root{--bg:#0a0a0d;--panel:#121218;--line:#26262f;--txt:#e8e8ee;--dim:#8a8a99;--mono:'SF Mono',ui-monospace,Menlo,monospace;--gold:#ffb454}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.5 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  .sub{color:var(--dim);font-size:13px;max-width:780px}
+  .bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 16px}
+  .bar .lb{font:11px var(--mono);color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-right:2px}
+  .seg{display:inline-flex;background:#1c1c22;border-radius:10px;padding:3px;gap:2px}
+  .seg button{border:0;background:transparent;color:var(--dim);font:600 12px -apple-system,sans-serif;padding:7px 13px;border-radius:8px;cursor:pointer}
+  .seg button.on{background:#3a3a44;color:#fff}
+  .hero{display:grid;grid-template-columns:auto 1fr;gap:22px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;align-items:start}
+  @media(max-width:760px){.hero{grid-template-columns:1fr}}
+  .hero .stage{width:340px;max-width:100%}
+  .spec h3{font-size:17px;margin-bottom:2px}
+  .spec .who{color:var(--dim);font-size:12.5px;margin-bottom:12px}
+  .spec .q{font:10.5px var(--mono);color:var(--dim);margin:10px 0 4px;letter-spacing:.05em}
+  .spec code{display:block;font:12px/1.5 var(--mono);color:#dcdce6;background:#0d0d12;border:1px solid var(--line);border-radius:8px;padding:8px 10px;white-space:pre-wrap;word-break:break-word}
+  .spec .help{font-size:12px;color:var(--dim);margin-top:12px;line-height:1.6}
+  .spec .help b{color:var(--txt)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .2s}
+  .card:hover,.card.sel{border-color:var(--gold)}
+  .card .meta{padding:10px 13px 12px}
+  .card .n{font:700 11px var(--mono);color:var(--gold)}
+  .card b{display:block;font-size:13.5px}
+  .card small{color:var(--dim);font-size:11.5px}
+  .stage{position:relative;overflow:hidden;background:#222}
+  .foot{position:absolute;inset:-20%;filter:blur(18px);animation:drift 14s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-4%,3%) scale(1.08)}}
+  .comp{position:absolute;left:0;top:0;transform-origin:0 0}
+  .grp{position:absolute;inset:0;transform-origin:540px 50%}
+  .ui{position:absolute;font-family:-apple-system,'SF Pro Display','Segoe UI',sans-serif;font-weight:600;white-space:nowrap}
+  .ctr{display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body><div class="wrap">
+<header>
+  <div class="kicker">Board 8 · Nytvir Motion · 231 Apple Switch</div>
+  <h1>Apple Switch — 12 ta shaxsiy brend misoli</h1>
+  <p class="sub">Siz tanlagan 231, endi Apple uslubida va universal. Bitta tool, 12 ta tayyor preset. AE'da preset raqamini tanlaysiz, keyin tablar, qatorlar, sarlavha, tugma va rang promptlarda oldindan yozilgan holda chiqadi, istaganingizni o'zgartirasiz. Preview AE'dagi bilan bir xil formula (prujina, vaqt, o'lcham) bilan ishlaydi.</p>
+</header>
+
+<div class="bar">
+  <span class="lb">Format</span><div class="seg" id="fmt"><button data-v="916" class="on">9:16 Reel</button><button data-v="45">4:5 Feed</button><button data-v="11">1:1</button></div>
+  <span class="lb">Tema</span><div class="seg" id="thm"><button data-v="preset" class="on">Preset</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+</div>
+
+<section class="hero">
+  <div class="stage" id="heroStage"></div>
+  <div class="spec" id="spec"></div>
+</section>
+
+<div class="grid" id="grid"></div>
+</div>
+
+<script>
+/* ---- presets: IDENTICAL strings to host/main.jsx S46_PRESETS ---- */
+var PRESETS=[
+ {who:"Fitnes murabbiy",tabs:"Boshlang'ich, O'rta, Pro",rows:"Mashq = 3 x 10 | 4 x 12 | 5 x 15; Dam olish = 90 s | 60 s | 45 s; Og'irlik = 20 kg @3",meta:"Mashq rejasi | Boshlash | light | orange",bg:["#f7a14a","#6b3a1f","#2a1a12"]},
+ {who:"Kafe / barista",tabs:"Kichik, O'rta, Katta",rows:"Hajm = 250 ml | 350 ml | 450 ml; Sut = Oddiy | Oddiy | Bodom; Narx = 18 000 | 24 000 | 29 000",meta:"Latte | Buyurtma | light | brown",bg:["#c8a07a","#5a3b28","#1f1510"]},
+ {who:"Rieltor",tabs:"Sotib olish, Ijara, Baholash",rows:"Narx = $85 000 | $450 / oy @1,2; Maydon = 72 kv.m @1,2; Muddat = 12 oy @2; Baholash = Bepul @3",meta:"Chilonzor, 3 xona | Ko'rish | light | blue",bg:["#9cc3e6","#46607a","#1a2330"]},
+ {who:"Sayohat agenti",tabs:"Bir tomon, Borib-kelish",rows:"Qayerdan = Toshkent; Qayerga = Istanbul; Qaytish = 24-oktabr @2; Narx = $210 | $360",meta:"Aviachipta | Qidirish | light | teal",bg:["#7fd3e0","#2f6f7c","#122a30"]},
+ {who:"Go'zallik saloni",tabs:"Soch, Tirnoq, Makiyaj",rows:"Usta = Dilnoza | Madina | Sevara; Vaqt = 60 daq | 45 daq | 90 daq; Narx = 150 000 | 90 000 | 250 000",meta:"Yozilish | Band qilish | light | pink",bg:["#f2b5c4","#8a4a5c","#2a1419"]},
+ {who:"O'qituvchi / kurs",tabs:"Kunlik, Haftalik, Oylik",rows:"Darslar = 1 ta | 5 ta | 20 ta; Narx = 50 000 | 200 000 | 690 000; Sertifikat = Beriladi @3",meta:"Ingliz tili | Yozilish | light | indigo",bg:["#b3b5f0","#4a4c8a","#15162a"]},
+ {who:"Biznes konsalting",tabs:"Start, O'sish, Masshtab",rows:"Narx = $99 / oy | $299 / oy | $799 / oy; Konsultatsiya = 1 ta | 4 ta | Cheksiz; Shaxsiy menejer = Bor @3",meta:"Konsalting | Tanlash | dark | purple",bg:["#6f5a8f","#2c2238","#0e0b12"]},
+ {who:"Oshpaz / retsept",tabs:"Oson, O'rta, Qiyin",rows:"Vaqt = 20 daq | 45 daq | 2 soat; Porsiya = 2 | 4 | 6; Qozon = Kerak @2,3",meta:"Palov | Boshlash | light | red",bg:["#e8a36a","#8a3f24","#2a130c"]},
+ {who:"Fotograf",tabs:"Portret, To'y, Tadbir",rows:"Vaqt = 1 soat | 8 soat | 4 soat; Rasmlar = 30 ta | 400 ta | 150 ta; Video = Bor @2",meta:"Fotosessiya | Band qilish | light | black",bg:["#cfcfcf","#5a5a5a","#161616"]},
+ {who:"Avto diler",tabs:"Benzin, Gibrid, Elektr",rows:"Yurish = 650 km | 900 km | 520 km; Narx = $24 000 | $31 000 | $36 000; Quvvatlash = 30 daq @3",meta:"Sedan 2026 | Test-drayv | dark | blue",bg:["#5d7390","#243042","#0b0f15"]},
+ {who:"Treyder (asl 231)",tabs:"Market, Limit, Stop",rows:"Trigger = 66 500 @3; Narx = 67 000 @2,3; Miqdor = 0.015 BTC",meta:" | Sotib olish | dark | green",bg:["#3d5a47","#18241c","#080c09"]},
+ {who:"Obuna / onlayn servis",tabs:"Oylik, Yillik",rows:"Narx = $12 / oy | $8 / oy; Tejash = -33% @2; To'lov = Har oy | Yiliga $96",meta:"Pro obuna | Davom etish | light | purple",bg:["#c9b3ec","#5b4583","#1a1426"]}
+];
+
+/* ---- same numbers as the AE tool (1080 base px) ---- */
+var G={CW:760,PAD:36,TFS:44,TH:66,TRH:84,TRR:24,IN:6,TBR:19,TABFS:32,ARTR:24,RH:96,RR:22,GAP:16,LFS:32,VFS:36,RPAD:28,BB:8,BH:104,BR:28,BFS:36,CR:44};
+var SPR={resp:0.42,damp:0.62};
+var TL={IN:0.5,FIRST:1.4,HOLD:1.3,TAP:1.0,OUT:1.0,OUTD:0.4};
+var ACC={blue:[0,0.478,1],green:[0.204,0.78,0.349],orange:[1,0.584,0],red:[1,0.231,0.188],pink:[1,0.176,0.333],purple:[0.686,0.322,0.871],indigo:[0.345,0.337,0.839],teal:[0.188,0.69,0.78],brown:[0.635,0.518,0.369],black:[0.11,0.11,0.118]};
+var THEME={
+ light:{card:[1,1,1],row:[0.949,0.949,0.969],track:[0.937,0.937,0.941],thumb:[1,1,1],text:[0.11,0.11,0.118],dim:[0.557,0.557,0.576]},
+ dark:{card:[0.11,0.11,0.118],row:[0.173,0.173,0.18],track:[0.2,0.2,0.212],thumb:[0.388,0.388,0.4],text:[1,1,1],dim:[0.557,0.557,0.576]}
+};
+function tr(s){return String(s||"").replace(/^\s+|\s+$/g,"")}
+function parse(p,themeOverride){
+  var tabs=p.tabs.split(",").map(tr).filter(Boolean).slice(0,5); var N=tabs.length;
+  var rows=p.rows.split(";").map(tr).filter(Boolean).slice(0,6).map(function(r){
+    var on=null, at=r.lastIndexOf("@");
+    if(at>=0){on=r.slice(at+1).split(",").map(function(x){return parseInt(x,10)-1}).filter(function(x){return x>=0&&x<N}); r=r.slice(0,at); if(!on.length)on=null;}
+    var eq=r.indexOf("="), label=eq>=0?tr(r.slice(0,eq)):tr(r), vals=eq>=0?r.slice(eq+1).split("|").map(tr):[""];
+    while(vals.length<N)vals.push(vals[vals.length-1]); return {label:label,vals:vals.slice(0,N),on:on,multi:vals.slice(0,N).some(function(v){return v!==vals[0]})};
+  });
+  var m=p.meta.split("|").map(tr); var th=(themeOverride&&themeOverride!=="preset")?themeOverride:(m[2]==="dark"?"dark":"light");
+  var acc=ACC[(m[3]||"blue").toLowerCase()]||ACC.blue; if(th==="dark"&&(m[3]||"").toLowerCase()==="black")acc=[1,1,1];
+  return {tabs:tabs,N:N,rows:rows,title:m[0]||"",btn:m[1]||"Davom etish",theme:th,acc:acc};
+}
+function keysFor(N){var k=[{t:0,v:0}];for(var i=1;i<N;i++)k.push({t:TL.FIRST+(i-1)*TL.HOLD,v:i});return k}
+function spring(keys,t){ /* same as AE CTRL "s" expression */
+  var k=0;for(var i=0;i<keys.length;i++)if(keys[i].t<=t)k=i;
+  if(k===0)return keys[0].v;
+  var a=keys[k-1].v,b=keys[k].v,dt=t-keys[k].t,w=2*Math.PI/SPR.resp,z=SPR.damp,wd=w*Math.sqrt(1-z*z),e=Math.exp(-z*w*dt);
+  return b+(a-b)*e*(Math.cos(wd*dt)+(z*w/wd)*Math.sin(wd*dt));
+}
+function cl(x){return Math.max(0,Math.min(1,x))}
+function sm(x){x=cl(x);return x*x*(3-2*x)}
+function eo(x){x=cl(x);return 1-Math.pow(1-x,3)}
+function rgb(c,a){return "rgba("+Math.round(c[0]*255)+","+Math.round(c[1]*255)+","+Math.round(c[2]*255)+","+(a==null?1:a)+")"}
+function mix(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+function rowF(r,s){if(!r.on)return 1;var f=0;for(var i=0;i<r.on.length;i++)f=Math.max(f,sm(1-Math.abs(s-r.on[i])));return f}
+function cardH(P,s){var h=G.PAD+(P.title?G.TH:0)+G.TRH+G.ARTR;for(var i=0;i<P.rows.length;i++)h+=rowF(P.rows[i],s)*(G.RH+G.GAP);return h+G.BB+G.BH+G.PAD}
+
+var FMT={"916":[1080,1920],"45":[1080,1350],"11":[1080,1080]};
+var state={fmt:"916",theme:"preset",sel:0};
+var views=[];
+
+function el(tag,cls,css,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(css)e.style.cssText=css;if(txt!=null)e.textContent=txt;return e}
+
+function build(stage,pi){
+  stage.innerHTML="";
+  var p=PRESETS[pi],P=parse(p,state.theme),T=THEME[P.theme],W=FMT[state.fmt][0],H=FMT[state.fmt][1];
+  var u=stage.clientWidth/W; stage.style.height=(H*u)+"px";
+  var foot=el("div","foot","background:radial-gradient(circle at 30% 25%,"+p.bg[0]+",transparent 55%),radial-gradient(circle at 75% 70%,"+p.bg[1]+",transparent 60%),"+p.bg[2]);
+  stage.appendChild(foot);
+  var comp=el("div","comp","width:"+W+"px;height:"+H+"px;transform:scale("+u+")"); stage.appendChild(comp);
+  var grp=el("div","grp"); comp.appendChild(grp);
+  var K=Math.min(W/1080,H/1080), cx=W/2, cy=H/2-((H/W>1.6)?H*0.03:0);
+  var H0=cardH(P,0), top=cy-H0/2, left=cx-G.CW/2, btnTxt=(P.acc[0]*0.3+P.acc[1]*0.59+P.acc[2]*0.11>0.7)?[0,0,0]:[1,1,1];
+  var shadow=P.theme==="light"?"0 24px 70px rgba(0,0,0,.18)":"0 24px 70px rgba(0,0,0,.45)";
+  var card=el("div","ui","left:"+left+"px;top:"+top+"px;width:"+G.CW+"px;border-radius:"+G.CR+"px;background:"+rgb(T.card)+";box-shadow:"+shadow);
+  grp.appendChild(card);
+  var y=G.PAD, v={};
+  if(P.title){card.appendChild(el("div","ui","left:"+G.PAD+"px;top:"+y+"px;font-size:"+G.TFS+"px;line-height:"+G.TFS+"px;font-weight:700;color:"+rgb(T.text),P.title)); y+=G.TH;}
+  var trW=G.CW-2*G.PAD, segW=(trW-2*G.IN)/P.N;
+  var track=el("div","ui","left:"+G.PAD+"px;top:"+y+"px;width:"+trW+"px;height:"+G.TRH+"px;border-radius:"+G.TRR+"px;background:"+rgb(T.track)); card.appendChild(track);
+  v.thumb=el("div","ui","top:"+G.IN+"px;height:"+(G.TRH-2*G.IN)+"px;width:"+segW+"px;border-radius:"+G.TBR+"px;background:"+rgb(T.thumb)+";box-shadow:"+(P.theme==="light"?"0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04)":"none")); track.appendChild(v.thumb);
+  v.dot=el("div","ui","top:"+(G.TRH/2-40)+"px;width:80px;height:80px;border-radius:50%;background:rgba(120,120,128,.45);opacity:0"); track.appendChild(v.dot);
+  v.tabs=P.tabs.map(function(t,i){var d=el("div","ui ctr","left:"+(G.IN+segW*i)+"px;top:0;width:"+segW+"px;height:"+G.TRH+"px;font-size:"+G.TABFS+"px",t);track.appendChild(d);return d});
+  v.trackY=y; y+=G.TRH+G.ARTR; v.rowsTop=y;
+  v.rows=P.rows.map(function(r){
+    var box=el("div","ui","left:"+G.PAD+"px;width:"+trW+"px;border-radius:"+G.RR+"px;background:"+rgb(T.row)+";overflow:hidden");
+    var lab=el("div","ui","left:"+G.RPAD+"px;top:0;height:"+G.RH+"px;display:flex;align-items:center;font-size:"+G.LFS+"px;font-weight:500;color:"+rgb(T.dim),r.label); box.appendChild(lab);
+    var vals=(r.multi?r.vals:[r.vals[0]]).map(function(x){var d=el("div","ui","right:"+G.RPAD+"px;top:0;height:"+G.RH+"px;display:flex;align-items:center;font-size:"+G.VFS+"px;color:"+rgb(T.text),x);box.appendChild(d);return d});
+    card.appendChild(box); return {box:box,lab:lab,vals:vals,r:r};
+  });
+  v.btn=el("div","ui ctr","left:"+G.PAD+"px;width:"+trW+"px;height:"+G.BH+"px;border-radius:"+G.BR+"px;background:"+rgb(P.acc)+";color:"+rgb(btnTxt)+";font-size:"+G.BFS+"px",P.btn); card.appendChild(v.btn);
+  var keys=keysFor(P.N), last=keys[keys.length-1].t, tapT=last+TL.TAP, outS=tapT+TL.OUT, total=outS+TL.OUTD+0.6;
+  return {update:function(tt){
+    var t=tt%total, s=spring(keys,t);
+    var vin=eo(t/TL.IN)*(1-sm((t-outS)/TL.OUTD));
+    grp.style.opacity=Math.min(1,vin*1.4); grp.style.transform="translateY("+((1-vin)*30*K)+"px) scale("+(0.94+0.06*vin)+")";
+    var vel=(spring(keys,t+0.01)-s)/0.01, sq=1+0.1*cl(Math.abs(vel)/6);
+    v.thumb.style.left=(G.IN+segW*s-(segW*(sq-1))/2)+"px"; v.thumb.style.width=(segW*sq)+"px";
+    v.tabs.forEach(function(d,i){d.style.color=rgb(mix(T.dim,T.text,cl(1-Math.abs(s-i))))});
+    var dotO=0,dotX=0; for(var k=1;k<keys.length;k++){var u=(t-(keys[k].t-0.25))/0.55; if(u>=0&&u<=1){dotO=Math.sin(Math.PI*u);dotX=keys[k].v}}
+    v.dot.style.opacity=dotO*0.9; v.dot.style.left=(G.IN+segW*(dotX+0.5)-40)+"px"; v.dot.style.transform="scale("+(0.8+0.2*dotO)+")";
+    var y=v.rowsTop;
+    v.rows.forEach(function(R){var f=rowF(R.r,s); R.box.style.top=y+"px"; R.box.style.height=(G.RH*f)+"px"; R.box.style.opacity=f>0.001?1:0;
+      var co=Math.pow(f,3); R.lab.style.opacity=co;
+      if(R.vals.length===1)R.vals[0].style.opacity=co;
+      else R.vals.forEach(function(d,i){var w=sm(1-Math.abs(s-i)); d.style.opacity=co*w; d.style.transform="translateY("+((i-s)*26)+"px)"});
+      y+=f*(G.RH+G.GAP)});
+    y+=G.BB; v.btn.style.top=y+"px";
+    var tap=cl((t-tapT)/0.1)*(1-cl((t-tapT-0.1)/0.22)); v.btn.style.transform="scale("+(1-0.05*tap)+")"; v.btn.style.filter="brightness("+(1-0.12*tap)+")";
+    card.style.height=(y+G.BH+G.PAD)+"px";
+  }};
+}
+
+function specHTML(pi){
+  var p=PRESETS[pi];
+  return "<h3>231 · "+(pi+1)+" — "+p.who+"</h3><div class='who'>AE'da: preset raqami <b>"+(pi+1)+"</b>, keyin 3 ta prompt shu matn bilan oldindan to'ldirilgan chiqadi</div>"+
+   "<div class='q'>1 · TABLAR (vergul bilan, 2-5 ta)</div><code>"+esc(p.tabs)+"</code>"+
+   "<div class='q'>2 · QATORLAR (Nom = qiymat | har tab uchun ; @ = qaysi tablarda)</div><code>"+esc(p.rows)+"</code>"+
+   "<div class='q'>3 · SARLAVHA | TUGMA | light/dark | RANG</div><code>"+esc(p.meta)+"</code>"+
+   "<div class='help'><b>Qurilgandan keyin:</b> <b>CTRL</b> null'da Tab keyframe'lari (qachon, qaysi tabga o'tish), ranglar (Accent, Card, Row, Text, Dim, Track, Thumb), Barmoq checkbox. <b>MOVE</b> null — surish va kattalashtirish. Hamma yozuvlar oddiy text layer, to'g'ridan-to'g'ri tahrirlanadi. Ranglar: blue, green, orange, red, pink, purple, indigo, teal, brown, black.</div>";
+}
+function esc(s){return s.replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}
+
+function render(){
+  views=[];
+  var hs=document.getElementById("heroStage"); hs.style.width=(state.fmt==="916"?340:state.fmt==="45"?400:420)+"px";
+  views.push(build(hs,state.sel));
+  document.getElementById("spec").innerHTML=specHTML(state.sel);
+  var g=document.getElementById("grid"); g.innerHTML="";
+  PRESETS.forEach(function(p,i){
+    var c=el("div","card"+(i===state.sel?" sel":"")), st=el("div","stage"); c.appendChild(st);
+    var m=el("div","meta"); m.innerHTML="<div class='n'>231 · "+(i+1)+"</div><b>"+p.who+"</b><small>"+esc(p.tabs)+"</small>"; c.appendChild(m);
+    c.onclick=function(){state.sel=i;render();window.scrollTo({top:0,behavior:"smooth"})};
+    g.appendChild(c); views.push(build(st,i));
+  });
+}
+function wire(id,key){document.getElementById(id).addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  this.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b)}); state[key]=b.dataset.v; render();});}
+wire("fmt","fmt"); wire("thm","theme");
+var T0=performance.now(), FREEZE=(location.hash.match(/t=([\d.]+)/)||[])[1];
+function loop(now){var t=FREEZE!=null?parseFloat(FREEZE):(now-T0)/1000; views.forEach(function(v){v.update(t)}); if(FREEZE==null)requestAnimationFrame(loop)}
+render(); if(FREEZE!=null)loop(0); else requestAnimationFrame(loop);
+window.addEventListener("resize",function(){clearTimeout(window._rz);window._rz=setTimeout(render,150)});
+</script>
+</body>
+</html>
