@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board 28 · Lime countdown oilasi (461-470)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0d;--panel:#121218;--line:#26262f;--txt:#e8e8ee;--dimb:#8a8a99;--mono:'SF Mono',ui-monospace,Menlo,monospace;--gold:#B0FC0A;
+    --sp:cubic-bezier(.34,1.56,.64,1);--sf:cubic-bezier(.75,0,.25,1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.5 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  .sub{color:var(--dimb);font-size:13px;max-width:800px}
+  .bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 6px}
+  .bar .lb{font:11px var(--mono);color:var(--dimb);letter-spacing:.08em;text-transform:uppercase}
+  .tg{display:inline-flex;background:#1c1c22;border-radius:10px;padding:3px;gap:2px}
+  .tg button{border:0;background:transparent;color:var(--dimb);font:600 12px -apple-system,sans-serif;padding:7px 13px;border-radius:8px;cursor:pointer}
+  .tg button.on{background:#3a3a44;color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:16px}
+  .cardx{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:zoom-in}
+  .cardx:hover{border-color:var(--gold)}
+  .meta{padding:11px 14px 14px}
+  .meta .n{font:700 11px var(--mono);color:var(--gold)}
+  .meta b{display:block;font-size:14px;margin:1px 0 1px}
+  .meta .br{font-size:11.5px;color:var(--gold);opacity:.8}
+  .meta p{font-size:12px;color:var(--dimb);margin-top:4px}
+  .meta code{display:block;margin-top:7px;font:10.5px/1.45 var(--mono);color:#b9b9c7;background:#0d0d12;border:1px solid var(--line);border-radius:7px;padding:6px 8px}
+  .stage{position:relative;overflow:hidden;background:#222}
+  .foot{position:absolute;inset:-20%;filter:blur(18px);animation:drift 14s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-4%,3%) scale(1.08)}}
+  .modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+  .modal.on{display:flex}
+  .modal .stage{width:min(420px,90vw);border-radius:14px}
+
+  /* ---------- 1080-space comp ---------- */
+  .comp{position:absolute;left:0;top:0;width:1080px;height:var(--H,1920px);transform:scale(var(--u,.25));transform-origin:0 0;display:flex;align-items:center;justify-content:center;
+    --card:#fff;--row:#f2f2f7;--track:#e3e3e8;--thumb:#fff;--text:#1c1c1e;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.2);--tsh:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);
+    font:600 30px/1.2 -apple-system,'SF Pro Display','Inter','Segoe UI',sans-serif;color:var(--text)}
+  .comp.dark{--card:#1c1c1e;--row:#2c2c2e;--track:#3a3a3c;--thumb:#636366;--text:#fff;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.5);--tsh:none}
+  .card{position:relative;width:760px;background:var(--card);border-radius:44px;padding:36px;box-shadow:var(--sh);scale:var(--ps,1)}
+  .ttl{font-size:40px;font-weight:700;margin-bottom:26px;letter-spacing:-.5px}
+  .sb{font-size:26px;color:var(--dim);font-weight:500;margin:-18px 0 28px}
+  .dim{color:var(--dim)}
+  .btn{height:100px;border-radius:28px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;gap:14px;font-size:32px;margin-top:26px}
+  .row{background:var(--row);border-radius:22px;height:92px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;margin-top:16px}
+  .row .l{color:var(--dim);font-weight:500}
+
+  /* ---------- board 21 shared ---------- */
+  .ic{width:1em;height:1em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  .av{flex:none;width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:29px;font-weight:700;font-style:normal;letter-spacing:.5px;background:linear-gradient(145deg,var(--g1,#64d2ff),var(--g2,#007aff))}
+  .chip{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:15px;font-size:21px;font-weight:650;background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc);white-space:nowrap}
+  .dr{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 2}
+  .tp{white-space:pre}
+  .wd{display:inline-block;white-space:pre}
+  .cnt{display:inline-flex;line-height:1.1em;font-variant-numeric:tabular-nums;vertical-align:bottom}
+  .cnt .col{display:inline-block;height:1.1em;overflow:hidden}
+  .cnt .stk{display:block}
+  .cnt .stk i{display:block;height:1.1em;line-height:1.1em;font-style:normal;text-align:center}
+  .cnt .sep{display:inline-block;line-height:1.1em;white-space:pre}
+  .ckc circle{fill:#34c759} .ckc path{stroke:#fff;stroke-width:4.5}
+
+  /* ---------- board 27 lime overlay (L) ---------- */
+  .bgl{position:absolute;inset:-3%;background-size:cover;background-position:50% 35%;background-repeat:no-repeat;animation:drift 16s ease-in-out infinite alternate}
+  .comp.lm{padding-top:calc(var(--H,1920px)*.2);font-family:'Inter',-apple-system,'Helvetica Neue',Arial,sans-serif;color:#fff;--lime:#B0FC0A;--chipbg:rgba(0,0,0,.6)}
+  .comp.lm .card{width:auto;background:none;box-shadow:none;padding:0;border-radius:0}
+  .lbl{position:relative;display:inline-flex;align-items:center;height:58px;margin-left:17px;padding:0 22px;background:var(--chipbg);border-radius:5px;font-weight:700;font-size:29px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .lbl .bar{position:absolute;left:-17px;top:-9px;bottom:0;width:6px;border-radius:1px;background:var(--lime);box-shadow:0 0 12px var(--lime),0 0 28px rgba(176,252,10,.55);transform-origin:50% 100%}
+  .hv{font-weight:700;letter-spacing:-.03em;line-height:1.02;white-space:nowrap;text-shadow:0 6px 30px rgba(0,0,0,.35)}
+  .it{font-style:italic}
+  .lime{color:var(--lime)}
+  .gl{text-shadow:0 0 22px rgba(176,252,10,.6),0 0 60px rgba(176,252,10,.3)}
+  .cap{font-weight:600;font-size:34px;line-height:1.25;color:rgba(255,255,255,.88);text-shadow:0 2px 14px rgba(0,0,0,.6);white-space:nowrap}
+  .bloom{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(176,252,10,.5),rgba(176,252,10,.14) 55%,rgba(176,252,10,0));pointer-events:none}
+  .nc{display:block;height:1.1em;overflow:hidden}
+  .ns{display:block}
+  .ns i{display:block;height:1.1em;line-height:1.1em;font-style:inherit;text-align:center}
+
+  /* ---------- board 28 lime countdown shared ---------- */
+  .ic{width:1em;height:1em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  .rg,.rb,.cf{position:absolute;width:0;height:0;pointer-events:none}
+  .rg i{position:absolute;border-radius:50%;background:rgba(176,252,10,.11)}
+  .rb i{position:absolute;border-radius:50%;border:3px solid rgba(176,252,10,.85)}
+  .comp.lm .bd{display:flex;align-items:center;gap:30px;margin-top:64px}
+  .comp.lm .nw{position:relative;flex:none;width:250px;height:396px}
+  .comp.lm .bn{position:absolute;inset:0;font-size:360px;font-weight:700;font-style:italic;letter-spacing:-.04em;line-height:1;color:var(--lime)}
+  .comp.lm .bn .nc{padding:0 40px;margin:0 -40px}
+  .comp.lm .ns i,.pn{text-shadow:0 0 30px rgba(176,252,10,.55),0 0 80px rgba(176,252,10,.28)}
+  .crw{position:absolute;left:50%;top:-52px;width:104px;height:104px;margin-left:-46px;color:var(--lime);filter:drop-shadow(0 0 14px rgba(176,252,10,.8))}
+  .crw svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .comp.lm .tw{position:relative;width:620px;height:300px}
+  .comp.lm .tt{position:absolute;left:0;top:30px}
+  .comp.lm .tt .hv{font-size:78px}
+  .comp.lm .tt .cap{margin-top:18px}
+  .pn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:360px;font-weight:700;font-style:italic;letter-spacing:-.04em;line-height:1;color:var(--lime)}
+
+  /* 461 RING BURST */
+  .comp.c461 .pn{padding-right:14px}
+
+  /* 462 MEDAL RANK */
+  .comp.c462 .nw{width:300px;height:400px}
+  .comp.c462 .tw{width:600px}
+  .comp.c462 .md{position:absolute;inset:0;--m1:#e4ff9e;--m2:#B0FC0A}
+  .comp.c462 .md.br{--m1:#e9a56a;--m2:#B0FC0A}
+  .comp.c462 .md.sv{--m1:#ffffff;--m2:#9fb0a0}
+  .comp.c462 .md.gd{--m1:#ffe27a;--m2:#ffb300}
+  .comp.c462 .rbn{position:absolute;left:50px;top:215px;width:200px;height:170px;fill:var(--m2);filter:drop-shadow(0 8px 18px rgba(0,0,0,.4))}
+  .comp.c462 .rbn path:first-child{fill:var(--m1)}
+  .comp.c462 .co{position:absolute;left:5px;top:10px;width:290px;height:290px;border-radius:50%;border:12px solid transparent;
+    background:radial-gradient(circle at 34% 28%,rgba(60,70,40,.9),rgba(8,10,4,.92) 70%) padding-box,linear-gradient(140deg,var(--m1),var(--m2) 55%,#B0FC0A) border-box;
+    box-shadow:0 0 0 3px rgba(0,0,0,.35),0 0 50px rgba(176,252,10,.35),0 20px 40px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}
+  .comp.c462 .co::after{content:"";position:absolute;inset:14px;border-radius:50%;border:2px dashed color-mix(in srgb,var(--m1) 55%,transparent)}
+  .comp.c462 .co span{font-size:190px;font-weight:700;font-style:italic;letter-spacing:-.04em;line-height:1;color:var(--lime);margin:0 14px 6px 0;text-shadow:0 0 30px rgba(176,252,10,.55)}
+  .comp.c462 .crw{top:-100px}
+  .comp.c462 .bd{margin-top:104px}
+
+  /* 463 STACKED HISTORY */
+  .comp.c463 .hs{position:relative;height:238px;margin-top:34px}
+  .comp.c463 .hr{position:absolute;left:17px;top:0;display:flex;align-items:center;gap:16px;height:52px;padding:0 24px 0 18px;background:rgba(0,0,0,.52);border-radius:6px;font-size:31px;font-weight:600;white-space:nowrap;transform-origin:0 50%}
+  .comp.c463 .hr b{font-size:36px;font-style:italic;color:var(--lime);width:26px;text-align:center}
+  .comp.c463 .bd{margin-top:18px}
+
+  /* 464 PROGRESS COUNTDOWN */
+  .comp.c464 .pg{display:flex;align-items:center;gap:34px;width:900px;margin-top:34px}
+  .comp.c464 .pt{position:relative;flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.22)}
+  .comp.c464 .pt b{position:absolute;inset:0;border-radius:4px;background:var(--lime);box-shadow:0 0 14px var(--lime);transform-origin:0 50%}
+  .comp.c464 .pt i{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%}
+  .comp.c464 .pc{display:flex;align-items:baseline;font-size:60px;font-weight:700;font-style:italic;color:var(--lime);text-shadow:0 0 24px rgba(176,252,10,.5)}
+  .comp.c464 .pc .nc{width:.66em}
+  .comp.c464 .pc em{color:#fff;opacity:.8;font-size:44px;margin-left:4px;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+
+  /* 465 SIDE SWAP */
+  .comp.c465 .sw{position:relative;width:1000px;height:430px;margin-top:40px}
+  .comp.c465 .nw{position:absolute;top:12px;width:250px;height:396px}
+  .comp.c465 .nw.l{left:20px} .comp.c465 .nw.r{right:20px}
+  .comp.c465 .tt.tl{left:320px}
+  .comp.c465 .tt.tr{left:auto;right:320px;text-align:right}
+
+  /* 466 FLIP DIGIT */
+  .comp.c466 .cube{position:absolute;left:0;top:33px;width:250px;height:330px}
+  .comp.c466 .fc{position:absolute;inset:0;border-radius:30px;border:3px solid rgba(176,252,10,.9);background:linear-gradient(180deg,rgba(28,34,12,.82),rgba(0,0,0,.72));
+    box-shadow:0 0 40px rgba(176,252,10,.28),inset 0 1px 0 rgba(255,255,255,.12);transform-origin:50% 50% -165px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center}
+  .comp.c466 .fc span{font-size:260px;font-weight:700;font-style:italic;letter-spacing:-.04em;line-height:1;color:var(--lime);margin-right:14px;text-shadow:0 0 30px rgba(176,252,10,.55)}
+  .comp.c466 .crw{top:-78px}
+  .comp.c466 .bd{margin-top:92px}
+
+  /* 467 WINNER FINALE */
+  .comp.c467 .cf i{position:absolute;left:-9px;top:-9px;width:18px;height:18px}
+  .comp.c467 .cf i.ci{border-radius:50%;width:16px;height:16px}
+  .comp.c467 .cf i.sq{border-radius:3px}
+  .comp.c467 .wn{position:absolute;left:0;top:-70px;display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 20px;border-radius:6px;background:var(--lime);color:#0c1300;font-size:27px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 0 30px rgba(176,252,10,.5)}
+  .comp.c467 .wn .ic{font-size:30px;stroke-width:2.4}
+
+  /* 468 ICON COUNTDOWN */
+  .comp.c468 .bd{gap:78px}
+  .comp.c468 .ib{position:absolute;left:176px;top:246px;width:132px;height:132px;border-radius:50%;background:var(--lime);color:#0c1300;display:flex;align-items:center;justify-content:center;font-size:64px;box-shadow:0 0 0 8px rgba(0,0,0,.38),0 0 44px rgba(176,252,10,.55)}
+  .comp.c468 .tw{width:600px}
+
+  /* 469 KEYWORD MARKER */
+  .comp.c469 .nw{width:170px;height:260px}
+  .comp.c469 .bn{font-size:220px}
+  .comp.c469 .bd{gap:44px}
+  .comp.c469 .tw{width:700px;height:330px}
+  .comp.c469 .tt{top:20px}
+  .comp.c469 .tt .hv{font-size:86px}
+  .comp.c469 .mk{position:relative;display:inline-block;margin:8px 0 0 -14px;padding:2px 34px 10px 16px;font-style:italic}
+  .comp.c469 .mb{position:absolute;inset:0;border-radius:8px;background:var(--lime);box-shadow:0 0 36px rgba(176,252,10,.45);transform-origin:0 50%}
+  .comp.c469 .kw{position:relative}
+
+  /* 470 INTRO + OUTRO */
+  .comp.c470 .st{position:relative;width:940px;height:520px;margin-top:40px}
+  .comp.c470 .ix{position:absolute;left:0;right:0;top:40px;text-align:center}
+  .comp.c470 .big{font-size:300px;font-weight:700;font-style:italic;letter-spacing:-.04em;line-height:1;color:var(--lime);text-shadow:0 0 40px rgba(176,252,10,.55),0 0 90px rgba(176,252,10,.3)}
+  .comp.c470 .isub{font-size:64px;margin-top:18px}
+  .comp.c470 .bd{position:absolute;left:0;top:32px;margin:0}
+  .comp.c470 .ou{position:absolute;left:0;right:0;top:130px;display:flex;flex-direction:column;align-items:center}
+  .comp.c470 .sv{display:flex;align-items:center;gap:20px;height:124px;padding:0 54px;border-radius:62px;background:var(--lime);color:#0c1300;font-size:52px;font-weight:800;letter-spacing:-.01em;box-shadow:0 0 0 8px rgba(0,0,0,.3),0 0 60px rgba(176,252,10,.5)}
+  .comp.c470 .sv .ic{font-size:56px;stroke-width:2.2;fill:currentColor}
+  .comp.c470 .ou .cap{margin-top:30px;font-size:38px}
+
+</style>
+</head>
+<body><div class="wrap">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></symbol>
+  <symbol id="i-bookopen" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M16 14v4M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 2v7.5a2 2 0 0 1-.2.9L4.7 20.5a1 1 0 0 0 .9 1.5h12.8a1 1 0 0 0 .9-1.5l-5.1-10.1a2 2 0 0 1-.2-.9V2"/><path d="M8.5 2h7M7 16h10"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-head" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3l14 9-14 9z"/></symbol>
+  <symbol id="i-term" viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14"/></symbol>
+  <symbol id="i-land" viewBox="0 0 24 24"><path d="M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 2l8 5H4z"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol>
+  <symbol id="i-mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+</defs></svg>
+<header>
+  <div class="kicker">Board 28 · Nytvir Motion · 461-470 · Lime countdown oilasi</div>
+  <h1>Lime countdown — 451 tilida 10 xil mexanika</h1>
+  <p class="sub">Siz yoqtirgan 451 "Countdown Numbers" uslubi: ulkan lime Bold Italic raqam, orqasida tiniq lime halqalar, o'ngda oq sarlavha + lime kalit so'z + izoh, tepada lime chiziqli qora label. Har karta boshqa mexanika. Gapiruvchi odam kadri ustida, yuzdan pastda. Namuna "Top 5", taxminan 0.9 s qadam; band soni 3-10 ta, har band = AE'da bitta Tab kalit, kalitlarni so'zlaringizga surasiz. Kartani bossangiz kattalashadi.</p>
+</header>
+<div class="bar">
+  <span class="lb">Format</span><div class="tg" id="fmt"><button data-v="1920" class="on">9:16 Reel</button><button data-v="1350">4:5 Feed</button><button data-v="1080">1:1</button></div>
+  <span class="lb">Tema</span><div class="tg" id="thm"><button data-v="preset" class="on">Preset</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+</div>
+<div class="grid" id="grid">
+
+<!-- 461 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c461 cd"><div class="card">
+<div class="lbl" data-a="wipe@0.35"><i class="bar" data-a="growy@0.25/.25"></i>Top 5 · Instagram o'sishi</div>
+  <div class="bd">
+    <div class="nw">
+      <div class="rg" style="left:125px;top:200px" data-b="opacity=0&transform=scale(.4)" data-to="0.75/.3/b opacity=1&transform=scale(1.1); 1.05/.5/e opacity=0.6&transform=scale(1); 1.65/.02/l opacity=.25&transform=scale(.72); 1.67/.28/e opacity=1&transform=scale(1.1); 1.95/.5/e opacity=0.6&transform=scale(1); 2.55/.02/l opacity=.25&transform=scale(.72); 2.57/.28/e opacity=1&transform=scale(1.1); 2.85/.5/e opacity=0.6&transform=scale(1); 3.45/.02/l opacity=.25&transform=scale(.72); 3.47/.28/e opacity=1&transform=scale(1.1); 3.75/.5/e opacity=0.6&transform=scale(1); 4.35/.02/l opacity=.25&transform=scale(.72); 4.37/.28/e opacity=1&transform=scale(1.22); 4.65/.5/e opacity=0.6&transform=scale(1)"><i style="left:-310px;top:-350px;width:620px;height:700px"></i><i style="left:-229px;top:-259px;width:458px;height:518px"></i><i style="left:-155px;top:-175px;width:310px;height:350px"></i><i style="left:-93px;top:-105px;width:186px;height:210px"></i></div>
+      <div class="rb" style="left:125px;top:200px"><i style="left:-126px;top:-141px;width:252px;height:283px" data-b="opacity=0&transform=scale(.2)" data-to="0.85/.02/l opacity=.95&transform=scale(.2); 0.87/.8/e opacity=0&transform=scale(1); 1.75/.02/l opacity=.95&transform=scale(.2); 1.77/.8/e opacity=0&transform=scale(1); 2.65/.02/l opacity=.95&transform=scale(.2); 2.67/.8/e opacity=0&transform=scale(1); 3.55/.02/l opacity=.95&transform=scale(.2); 3.57/.8/e opacity=0&transform=scale(1); 4.45/.02/l opacity=.95&transform=scale(.2); 4.47/.8/e opacity=0&transform=scale(1)"></i><i style="left:-196px;top:-220px;width:392px;height:441px" data-b="opacity=0&transform=scale(.2)" data-to="0.91/.02/l opacity=.95&transform=scale(.2); 0.93/.8/e opacity=0&transform=scale(1); 1.81/.02/l opacity=.95&transform=scale(.2); 1.83/.8/e opacity=0&transform=scale(1); 2.71/.02/l opacity=.95&transform=scale(.2); 2.73/.8/e opacity=0&transform=scale(1); 3.61/.02/l opacity=.95&transform=scale(.2); 3.63/.8/e opacity=0&transform=scale(1); 4.51/.02/l opacity=.95&transform=scale(.2); 4.53/.8/e opacity=0&transform=scale(1)"></i><i style="left:-280px;top:-315px;width:560px;height:630px" data-b="opacity=0&transform=scale(.2)" data-to="0.97/.02/l opacity=.95&transform=scale(.2); 0.99/.8/e opacity=0&transform=scale(1); 1.87/.02/l opacity=.95&transform=scale(.2); 1.89/.8/e opacity=0&transform=scale(1); 2.77/.02/l opacity=.95&transform=scale(.2); 2.79/.8/e opacity=0&transform=scale(1); 3.67/.02/l opacity=.95&transform=scale(.2); 3.69/.8/e opacity=0&transform=scale(1); 4.57/.02/l opacity=.95&transform=scale(.2); 4.59/.8/e opacity=0&transform=scale(1)"></i><i style="left:-364px;top:-409px;width:728px;height:819px" data-b="opacity=0&transform=scale(.2)" data-to="1.03/.02/l opacity=.95&transform=scale(.2); 1.05/.8/e opacity=0&transform=scale(1); 1.93/.02/l opacity=.95&transform=scale(.2); 1.95/.8/e opacity=0&transform=scale(1); 2.83/.02/l opacity=.95&transform=scale(.2); 2.85/.8/e opacity=0&transform=scale(1); 3.73/.02/l opacity=.95&transform=scale(.2); 3.75/.8/e opacity=0&transform=scale(1); 4.63/.02/l opacity=.95&transform=scale(.2); 4.65/.8/e opacity=0&transform=scale(1)"></i></div>
+      <div class="bn"><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=scale(1.8)" data-to="0.75/.16/n opacity=1&filter=blur(0px)&transform=scale(.9); 0.91/.4/b transform=scale(1); 1.65/.18/e opacity=0&filter=blur(8px)&transform=scale(.55)">5</span><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=scale(1.8)" data-to="1.65/.16/n opacity=1&filter=blur(0px)&transform=scale(.9); 1.81/.4/b transform=scale(1); 2.55/.18/e opacity=0&filter=blur(8px)&transform=scale(.55)">4</span><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=scale(1.8)" data-to="2.55/.16/n opacity=1&filter=blur(0px)&transform=scale(.9); 2.71/.4/b transform=scale(1); 3.45/.18/e opacity=0&filter=blur(8px)&transform=scale(.55)">3</span><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=scale(1.8)" data-to="3.45/.16/n opacity=1&filter=blur(0px)&transform=scale(.9); 3.61/.4/b transform=scale(1); 4.35/.18/e opacity=0&filter=blur(8px)&transform=scale(.55)">2</span><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=scale(1.8)" data-to="4.35/.16/n opacity=1&filter=blur(0px)&transform=scale(.9); 4.51/.4/b transform=scale(1)">1</span></div>
+      <div class="crw" data-a="pop@4.55/.5" data-tf="rotate(-10deg)"><svg viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14"/></svg></div>
+    </div>
+    <div class="tw">
+<div class="tt" data-a="in@0.83/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Birinchi<br><span class="it lime gl">3 soniya</span></div><div class="cap">hook — tomoshabinni ushlasin</div></div>
+<div class="tt" data-a="in@1.73/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Bitta post<br><span class="it lime gl">bitta fikr</span></div><div class="cap">ko'p gap — kam ta'sir</div></div>
+<div class="tt" data-a="in@2.63/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Yuzingizni<br><span class="it lime gl">ko'rsating</span></div><div class="cap">odam odamga ishonadi</div></div>
+<div class="tt" data-a="in@3.53/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Izohlarga<br><span class="it lime gl">javob bering</span></div><div class="cap">birinchi soat ichida</div></div>
+<div class="tt" data-a="in@4.43/.42"><div class="hv">Haftada<br><span class="it lime gl">3 marta</span></div><div class="cap">sabr tagi — sariq oltin</div></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">461</div><b>Ring Burst</b><div class="br">Shaxsiy brend · SMM maslahat</div><p>Har yangi raqamda markazdan 4 ta ingichka lime halqa ketma-ket portlab tarqaladi va so'nadi, orqadagi tiniq halqalar zarb bilan pulsatsiya qiladi. Raqam kattadan urilib tushadi (zarb), eskisi kichrayib yo'qoladi. #1 da toj. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): sarlavha=lime so'z=izoh | yo'nalish 5→1 / 1→5 | portlash halqalari soni | #1 toj on/off"</code></div></div>
+
+<!-- 462 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c462"><div class="card">
+<div class="lbl" data-a="wipe@0.35"><i class="bar" data-a="growy@0.25/.25"></i>Top 5 · Oy o'quvchilari</div>
+  <div class="bd">
+    <div class="nw">
+      <div class="rg" style="left:150px;top:160px" data-b="opacity=0&transform=scale(.4)" data-to="0.75/.3/b opacity=1&transform=scale(1.1); 1.05/.5/e opacity=0.6&transform=scale(1); 1.65/.02/l opacity=.25&transform=scale(.72); 1.67/.28/e opacity=1&transform=scale(1.1); 1.95/.5/e opacity=0.6&transform=scale(1); 2.55/.02/l opacity=.25&transform=scale(.72); 2.57/.28/e opacity=1&transform=scale(1.1); 2.85/.5/e opacity=0.6&transform=scale(1); 3.45/.02/l opacity=.25&transform=scale(.72); 3.47/.28/e opacity=1&transform=scale(1.1); 3.75/.5/e opacity=0.6&transform=scale(1); 4.35/.02/l opacity=.25&transform=scale(.72); 4.37/.28/e opacity=1&transform=scale(1.22); 4.65/.5/e opacity=0.6&transform=scale(1)"><i style="left:-310px;top:-350px;width:620px;height:700px"></i><i style="left:-229px;top:-259px;width:458px;height:518px"></i><i style="left:-155px;top:-175px;width:310px;height:350px"></i><i style="left:-93px;top:-105px;width:186px;height:210px"></i></div>
+      <div class="md lm5" data-b="opacity=0&transform=perspective(1200px) rotateY(-100deg) scale(.8)" data-to="0.75/.6/b opacity=1&transform=perspective(1200px) rotateY(0deg) scale(1); 1.65/.22/n opacity=0&transform=perspective(1200px) rotateY(90deg) scale(.85)"><svg class="rbn" viewBox="0 0 200 170"><path d="M55 0h50L75 165l-23-20-27 15z"/><path d="M145 0H95l30 165 23-20 27 15z"/></svg><div class="co"><span>5</span></div></div><div class="md lm5" data-b="opacity=0&transform=perspective(1200px) rotateY(-100deg) scale(.8)" data-to="1.65/.6/b opacity=1&transform=perspective(1200px) rotateY(0deg) scale(1); 2.55/.22/n opacity=0&transform=perspective(1200px) rotateY(90deg) scale(.85)"><svg class="rbn" viewBox="0 0 200 170"><path d="M55 0h50L75 165l-23-20-27 15z"/><path d="M145 0H95l30 165 23-20 27 15z"/></svg><div class="co"><span>4</span></div></div><div class="md br" data-b="opacity=0&transform=perspective(1200px) rotateY(-100deg) scale(.8)" data-to="2.55/.6/b opacity=1&transform=perspective(1200px) rotateY(0deg) scale(1); 3.45/.22/n opacity=0&transform=perspective(1200px) rotateY(90deg) scale(.85)"><svg class="rbn" viewBox="0 0 200 170"><path d="M55 0h50L75 165l-23-20-27 15z"/><path d="M145 0H95l30 165 23-20 27 15z"/></svg><div class="co"><span>3</span></div></div><div class="md sv" data-b="opacity=0&transform=perspective(1200px) rotateY(-100deg) scale(.8)" data-to="3.45/.6/b opacity=1&transform=perspective(1200px) rotateY(0deg) scale(1); 4.35/.22/n opacity=0&transform=perspective(1200px) rotateY(90deg) scale(.85)"><svg class="rbn" viewBox="0 0 200 170"><path d="M55 0h50L75 165l-23-20-27 15z"/><path d="M145 0H95l30 165 23-20 27 15z"/></svg><div class="co"><span>2</span></div></div><div class="md gd" data-b="opacity=0&transform=perspective(1200px) rotateY(-100deg) scale(.8)" data-to="4.35/.6/b opacity=1&transform=perspective(1200px) rotateY(0deg) scale(1)"><svg class="rbn" viewBox="0 0 200 170"><path d="M55 0h50L75 165l-23-20-27 15z"/><path d="M145 0H95l30 165 23-20 27 15z"/></svg><div class="co"><span>1</span></div></div>
+      <div class="crw" data-a="stamp@4.7/.5" data-tf="rotate(-10deg)"><svg viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14"/></svg></div>
+    </div>
+    <div class="tw">
+<div class="tt" data-a="in@0.83/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Kamola<br><span class="it lime gl">Yusupova</span></div><div class="cap">DTM 158.6 / 189</div></div>
+<div class="tt" data-a="in@1.73/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Jasur<br><span class="it lime gl">To'rayev</span></div><div class="cap">DTM 164.2 / 189</div></div>
+<div class="tt" data-a="in@2.63/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Aziza<br><span class="it lime gl">Nazarova</span></div><div class="cap">DTM 171.9 / 189 · bronza</div></div>
+<div class="tt" data-a="in@3.53/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Sardor<br><span class="it lime gl">Toshmatov</span></div><div class="cap">DTM 179.4 / 189 · kumush</div></div>
+<div class="tt" data-a="in@4.43/.42"><div class="hv">Madina<br><span class="it lime gl">Rasulova</span></div><div class="cap">DTM 186.2 / 189 · oltin</div></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">462</div><b>Medal Rank</b><div class="br">Abituriyent markazi · oy reytingi</div><p>Raqam lime medal ichida: doira, qalin gardish va ikki lenta. Har band medal Y o'qida aylanib almashadi. #5-#4 toza lime, #3 bronza-lime, #2 kumush-lime, #1 oltin-lime gardish va ustiga toj zarb bilan tushadi. Yonida ism, familiya lime, DTM bali. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): ism=familiya=natija | medal: 3-2-1 bronza/kumush/oltin on/off | #1 toj"</code></div></div>
+
+<!-- 463 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c463"><div class="card">
+<div class="lbl" data-a="wipe@0.35"><i class="bar" data-a="growy@0.25/.25"></i>5 ta xato · Kichik biznes</div>
+  <div class="hs"><div class="hr" data-b="opacity=0&transform=translateY(300px) scale(1.25)" data-to="1.70/.5/s opacity=1&transform=translateY(186px) scale(1); 2.60/.45/s opacity=0.72&transform=translateY(124px) scale(1); 3.50/.45/s opacity=0.5&transform=translateY(62px) scale(1); 4.40/.45/s opacity=0.36&transform=translateY(0px) scale(1)"><b>5</b>Narxni arzon qo'yish</div><div class="hr" data-b="opacity=0&transform=translateY(300px) scale(1.25)" data-to="2.60/.5/s opacity=1&transform=translateY(186px) scale(1); 3.50/.45/s opacity=0.72&transform=translateY(124px) scale(1); 4.40/.45/s opacity=0.5&transform=translateY(62px) scale(1)"><b>4</b>Hisobni yozmaslik</div><div class="hr" data-b="opacity=0&transform=translateY(300px) scale(1.25)" data-to="3.50/.5/s opacity=1&transform=translateY(186px) scale(1); 4.40/.45/s opacity=0.72&transform=translateY(124px) scale(1)"><b>3</b>Hammasini o'zi qilish</div><div class="hr" data-b="opacity=0&transform=translateY(300px) scale(1.25)" data-to="4.40/.5/s opacity=1&transform=translateY(186px) scale(1)"><b>2</b>Mijozni unutish</div></div>
+  <div class="bd">
+    <div class="nw">
+      <div class="rg" style="left:125px;top:200px" data-b="opacity=0&transform=scale(.4)" data-to="0.75/.3/b opacity=1&transform=scale(1.1); 1.05/.5/e opacity=0.6&transform=scale(1); 1.65/.02/l opacity=.25&transform=scale(.72); 1.67/.28/e opacity=1&transform=scale(1.1); 1.95/.5/e opacity=0.6&transform=scale(1); 2.55/.02/l opacity=.25&transform=scale(.72); 2.57/.28/e opacity=1&transform=scale(1.1); 2.85/.5/e opacity=0.6&transform=scale(1); 3.45/.02/l opacity=.25&transform=scale(.72); 3.47/.28/e opacity=1&transform=scale(1.1); 3.75/.5/e opacity=0.6&transform=scale(1); 4.35/.02/l opacity=.25&transform=scale(.72); 4.37/.28/e opacity=1&transform=scale(1.1); 4.65/.5/e opacity=0.6&transform=scale(1)"><i style="left:-310px;top:-350px;width:620px;height:700px"></i><i style="left:-229px;top:-259px;width:458px;height:518px"></i><i style="left:-155px;top:-175px;width:310px;height:350px"></i><i style="left:-93px;top:-105px;width:186px;height:210px"></i></div>
+      <div class="bn" data-a="in@.5/.4"><span class="nc" data-to="1.65/.12/e filter=blur(8px); 1.77/.24/e filter=blur(0px); 2.55/.12/e filter=blur(8px); 2.67/.24/e filter=blur(0px); 3.45/.12/e filter=blur(8px); 3.57/.24/e filter=blur(0px); 4.35/.12/e filter=blur(8px); 4.47/.24/e filter=blur(0px)"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.38/b transform=translateY(-1.1em); 2.55/0.38/b transform=translateY(-2.2em); 3.45/0.38/b transform=translateY(-3.3em); 4.35/0.38/b transform=translateY(-4.4em)"><i>5</i><i>4</i><i>3</i><i>2</i><i>1</i></span></span></div>
+    </div>
+    <div class="tw">
+<div class="tt" data-a="in@0.83/.42" data-to="1.65/.24/n opacity=0&filter=blur(8px)&transform=translateY(-150px) scale(.45)"><div class="hv">Narxni<br><span class="it lime gl">arzon qo'yish</span></div><div class="cap">arzon — qadrsiz ko'rinadi</div></div>
+<div class="tt" data-a="in@1.73/.42" data-to="2.55/.24/n opacity=0&filter=blur(8px)&transform=translateY(-150px) scale(.45)"><div class="hv">Hisobni<br><span class="it lime gl">yozmaslik</span></div><div class="cap">foyda qayerga ketdi?</div></div>
+<div class="tt" data-a="in@2.63/.42" data-to="3.45/.24/n opacity=0&filter=blur(8px)&transform=translateY(-150px) scale(.45)"><div class="hv">Hammasini<br><span class="it lime gl">o'zi qilish</span></div><div class="cap">vazifani bo'lishing</div></div>
+<div class="tt" data-a="in@3.53/.42" data-to="4.35/.24/n opacity=0&filter=blur(8px)&transform=translateY(-150px) scale(.45)"><div class="hv">Mijozni<br><span class="it lime gl">unutish</span></div><div class="cap">qaytgan mijoz — arzon mijoz</div></div>
+<div class="tt" data-a="in@4.43/.42"><div class="hv">Reklamasiz<br><span class="it lime gl">kutish</span></div><div class="cap">yaxshi mol ham ko'rinishi kerak</div></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">463</div><b>Stacked History</b><div class="br">Biznes murabbiy · 5 ta xato</div><p>Joriy band katta lime raqam va halqalar bilan turadi. Keyingisi kelganda eski sarlavha kichrayib yuqoriga uchadi va tepada ixcham qator bo'lib qoladi (5, 4, 3 ...), eski qatorlar yuqoriga surilib xiralashadi. Tomoshabin nechanchi bandda ekanini doim ko'radi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): sarlavha=lime so'z=izoh | tarix qatorlari soni (2-5) | xira darajasi"</code></div></div>
+
+<!-- 464 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c464"><div class="card">
+<div class="lbl" data-a="wipe@0.35"><i class="bar" data-a="growy@0.25/.25"></i>Top 5 · Dasturlash xatolari</div>
+  <div class="bd">
+    <div class="nw">
+      <div class="rg" style="left:125px;top:200px" data-b="opacity=0&transform=scale(.4)" data-to="0.75/.3/b opacity=1&transform=scale(1.1); 1.05/.5/e opacity=0.6&transform=scale(1); 1.65/.02/l opacity=.25&transform=scale(.72); 1.67/.28/e opacity=1&transform=scale(1.1); 1.95/.5/e opacity=0.6&transform=scale(1); 2.55/.02/l opacity=.25&transform=scale(.72); 2.57/.28/e opacity=1&transform=scale(1.1); 2.85/.5/e opacity=0.6&transform=scale(1); 3.45/.02/l opacity=.25&transform=scale(.72); 3.47/.28/e opacity=1&transform=scale(1.1); 3.75/.5/e opacity=0.6&transform=scale(1); 4.35/.02/l opacity=.25&transform=scale(.72); 4.37/.28/e opacity=1&transform=scale(1.1); 4.65/.5/e opacity=0.6&transform=scale(1)"><i style="left:-310px;top:-350px;width:620px;height:700px"></i><i style="left:-229px;top:-259px;width:458px;height:518px"></i><i style="left:-155px;top:-175px;width:310px;height:350px"></i><i style="left:-93px;top:-105px;width:186px;height:210px"></i></div>
+      <div class="bn" data-a="in@.5/.4"><span class="nc" data-to="1.65/.12/e filter=blur(8px); 1.77/.24/e filter=blur(0px); 2.55/.12/e filter=blur(8px); 2.67/.24/e filter=blur(0px); 3.45/.12/e filter=blur(8px); 3.57/.24/e filter=blur(0px); 4.35/.12/e filter=blur(8px); 4.47/.24/e filter=blur(0px)"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.38/b transform=translateY(-1.1em); 2.55/0.38/b transform=translateY(-2.2em); 3.45/0.38/b transform=translateY(-3.3em); 4.35/0.38/b transform=translateY(-4.4em)"><i>5</i><i>4</i><i>3</i><i>2</i><i>1</i></span></span></div>
+    </div>
+    <div class="tw">
+<div class="tt" data-a="in@0.83/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Faqat<br><span class="it lime gl">video ko'rish</span></div><div class="cap">yozmasdan o'rganib bo'lmaydi</div></div>
+<div class="tt" data-a="in@1.73/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Ingliz tili<br><span class="it lime gl">keyinga</span></div><div class="cap">hujjatlar inglizcha yoziladi</div></div>
+<div class="tt" data-a="in@2.63/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Xatodan<br><span class="it lime gl">qo'rqish</span></div><div class="cap">xato — eng yaxshi ustoz</div></div>
+<div class="tt" data-a="in@3.53/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Portfolio<br><span class="it lime gl">yo'qligi</span></div><div class="cap">3 ta loyiha — rezyumedan kuchli</div></div>
+<div class="tt" data-a="in@4.43/.42"><div class="hv">Yolg'iz<br><span class="it lime gl">o'qish</span></div><div class="cap">jamoa bilan tezroq o'sasiz</div></div>
+    </div>
+  </div>
+  <div class="pg" data-a="fade@.6">
+    <div class="pt"><b data-b="transform=scaleX(0)" data-to="0.85/.55/b transform=scaleX(0.20); 1.75/.55/b transform=scaleX(0.40); 2.65/.55/b transform=scaleX(0.60); 3.55/.55/b transform=scaleX(0.80); 4.45/.55/b transform=scaleX(1.00)"></b><i style="left:20%" data-b="background-color=rgba(255~255~255~.35)&transform=scale(1)" data-to="1.25/.1/e background-color=#B0FC0A&transform=scale(1.6); 1.35/.35/b transform=scale(1)"></i><i style="left:40%" data-b="background-color=rgba(255~255~255~.35)&transform=scale(1)" data-to="2.15/.1/e background-color=#B0FC0A&transform=scale(1.6); 2.25/.35/b transform=scale(1)"></i><i style="left:60%" data-b="background-color=rgba(255~255~255~.35)&transform=scale(1)" data-to="3.05/.1/e background-color=#B0FC0A&transform=scale(1.6); 3.15/.35/b transform=scale(1)"></i><i style="left:80%" data-b="background-color=rgba(255~255~255~.35)&transform=scale(1)" data-to="3.95/.1/e background-color=#B0FC0A&transform=scale(1.6); 4.05/.35/b transform=scale(1)"></i><i style="left:100%" data-b="background-color=rgba(255~255~255~.35)&transform=scale(1)" data-to="4.85/.1/e background-color=#B0FC0A&transform=scale(1.6); 4.95/.35/b transform=scale(1)"></i></div>
+    <div class="pc"><span class="nc" data-to="1.65/.12/e filter=blur(8px); 1.77/.24/e filter=blur(0px); 2.55/.12/e filter=blur(8px); 2.67/.24/e filter=blur(0px); 3.45/.12/e filter=blur(8px); 3.57/.24/e filter=blur(0px); 4.35/.12/e filter=blur(8px); 4.47/.24/e filter=blur(0px)"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.38/b transform=translateY(-1.1em); 2.55/0.38/b transform=translateY(-2.2em); 3.45/0.38/b transform=translateY(-3.3em); 4.35/0.38/b transform=translateY(-4.4em)"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></span></span><em>/5</em></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">464</div><b>Progress Countdown</b><div class="br">IT akademiya · yangi boshlovchi xatolari</div><p>451 dagi katta lime raqam 5 → 1 aylanadi, ostida ingichka lime chiziq har bandda prujina bilan bir bo'lak to'ladi, bo'lak nuqtasi lime bo'lib urib chiqadi. O'ngda "3/5" hisob aylanadi: ko'ruvchi qancha qolganini biladi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): sarlavha=lime so'z=izoh | hisob ko'rinishi 3/5 yoki 3-bosqich | chiziq qalinligi"</code></div></div>
+
+<!-- 465 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c465"><div class="card">
+<div class="lbl" data-a="wipe@0.35"><i class="bar" data-a="growy@0.25/.25"></i>Top 5 · Tish parvarishi</div>
+  <div class="sw">
+    <div class="rg" style="left:145px;top:210px" data-b="opacity=0&transform=scale(.4)" data-to="0.75/.35/b opacity=1&transform=scale(1.1); 1.10/.5/e opacity=.6&transform=scale(1); 1.65/.25/n opacity=0&transform=scale(.5); 2.55/.02/l opacity=.2&transform=scale(.6); 2.57/.3/b opacity=1&transform=scale(1.1); 2.87/.5/e opacity=.6&transform=scale(1); 3.45/.25/n opacity=0&transform=scale(.5); 4.35/.02/l opacity=.2&transform=scale(.6); 4.37/.3/b opacity=1&transform=scale(1.22); 4.67/.5/e opacity=.6&transform=scale(1)"><i style="left:-280px;top:-320px;width:560px;height:640px"></i><i style="left:-207px;top:-236px;width:414px;height:473px"></i><i style="left:-140px;top:-160px;width:280px;height:320px"></i><i style="left:-84px;top:-96px;width:168px;height:192px"></i></div>
+    <div class="rg" style="left:855px;top:210px" data-b="opacity=0&transform=scale(.4)" data-to="1.65/.35/b opacity=1&transform=scale(1.1); 2.00/.5/e opacity=.6&transform=scale(1); 2.55/.25/n opacity=0&transform=scale(.5); 3.45/.02/l opacity=.2&transform=scale(.6); 3.47/.3/b opacity=1&transform=scale(1.1); 3.77/.5/e opacity=.6&transform=scale(1); 4.35/.25/n opacity=0&transform=scale(.5)"><i style="left:-280px;top:-320px;width:560px;height:640px"></i><i style="left:-207px;top:-236px;width:414px;height:473px"></i><i style="left:-140px;top:-160px;width:280px;height:320px"></i><i style="left:-84px;top:-96px;width:168px;height:192px"></i></div>
+    <div class="nw l"><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=translateX(-150px) scale(.8)" data-to="0.75/.55/b opacity=1&filter=blur(0px)&transform=translateX(0px) scale(1); 1.65/.24/n opacity=0&filter=blur(10px)&transform=translateX(-150px) scale(.8)">5</span><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=translateX(-150px) scale(.8)" data-to="2.55/.55/b opacity=1&filter=blur(0px)&transform=translateX(0px) scale(1); 3.45/.24/n opacity=0&filter=blur(10px)&transform=translateX(-150px) scale(.8)">3</span><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=translateX(-150px) scale(.8)" data-to="4.35/.55/b opacity=1&filter=blur(0px)&transform=translateX(0px) scale(1)">1</span><div class="crw" data-a="pop@4.55/.5" data-tf="rotate(-10deg)"><svg viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14"/></svg></div></div>
+    <div class="nw r"><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=translateX(150px) scale(.8)" data-to="1.65/.55/b opacity=1&filter=blur(0px)&transform=translateX(0px) scale(1); 2.55/.24/n opacity=0&filter=blur(10px)&transform=translateX(150px) scale(.8)">4</span><span class="pn" data-b="opacity=0&filter=blur(10px)&transform=translateX(150px) scale(.8)" data-to="3.45/.55/b opacity=1&filter=blur(0px)&transform=translateX(0px) scale(1); 4.35/.24/n opacity=0&filter=blur(10px)&transform=translateX(150px) scale(.8)">2</span></div>
+<div class="tt tl" data-a="rt@0.83/.5" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateX(150px)"><div class="hv">Kuniga<br><span class="it lime gl">2 marta</span></div><div class="cap">ertalab va uxlashdan oldin</div></div>
+<div class="tt tr" data-a="lt@1.73/.5" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateX(-150px)"><div class="hv">Tish ipi<br><span class="it lime gl">har kuni</span></div><div class="cap">cho'tka yetmagan joyga</div></div>
+<div class="tt tl" data-a="rt@2.63/.5" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateX(150px)"><div class="hv">Shirinlikdan<br><span class="it lime gl">keyin suv</span></div><div class="cap">og'izni chayish kifoya</div></div>
+<div class="tt tr" data-a="lt@3.53/.5" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateX(-150px)"><div class="hv">Cho'tkani<br><span class="it lime gl">3 oyda</span></div><div class="cap">yangisiga almashtiring</div></div>
+<div class="tt tl" data-a="rt@4.43/.5"><div class="hv">Yiliga<br><span class="it lime gl">2 marta</span></div><div class="cap">shifokor ko'rigidan o'ting</div></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">465</div><b>Side Swap</b><div class="br">Stomatologiya klinikasi · tish parvarishi</div><p>Raqam har bandda chap va o'ng chetga navbatma-navbat sirg'alib o'tadi, halqalar u bilan birga ko'chadi, sarlavha doim qarama-qarshi tomondan kiradi. Markaz bo'sh qoladi: yuz va qo'l harakati to'silmaydi. #1 chapda toj bilan. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): sarlavha=lime so'z=izoh | birinchi tomon chap/o'ng | #1 toj on/off"</code></div></div>
+
+<!-- 466 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c466"><div class="card">
+<div class="lbl" data-a="wipe@0.35"><i class="bar" data-a="growy@0.25/.25"></i>Top 5 · Pul odatlari</div>
+  <div class="bd">
+    <div class="nw">
+      <div class="rg" style="left:125px;top:200px" data-b="opacity=0&transform=scale(.4)" data-to="0.75/.3/b opacity=1&transform=scale(1.1); 1.05/.5/e opacity=0.6&transform=scale(1); 1.65/.02/l opacity=.25&transform=scale(.72); 1.67/.28/e opacity=1&transform=scale(1.1); 1.95/.5/e opacity=0.6&transform=scale(1); 2.55/.02/l opacity=.25&transform=scale(.72); 2.57/.28/e opacity=1&transform=scale(1.1); 2.85/.5/e opacity=0.6&transform=scale(1); 3.45/.02/l opacity=.25&transform=scale(.72); 3.47/.28/e opacity=1&transform=scale(1.1); 3.75/.5/e opacity=0.6&transform=scale(1); 4.35/.02/l opacity=.25&transform=scale(.72); 4.37/.28/e opacity=1&transform=scale(1.22); 4.65/.5/e opacity=0.6&transform=scale(1)"><i style="left:-310px;top:-350px;width:620px;height:700px"></i><i style="left:-229px;top:-259px;width:458px;height:518px"></i><i style="left:-155px;top:-175px;width:310px;height:350px"></i><i style="left:-93px;top:-105px;width:186px;height:210px"></i></div>
+      <div class="cube"><div class="fc" data-b="opacity=0&transform=perspective(1400px) rotateX(-92deg)" data-to="0.75/.12/l opacity=1; 0.87/.55/b transform=perspective(1400px) rotateX(0deg); 1.65/.38/i transform=perspective(1400px) rotateX(92deg); 2.03/.02/l opacity=0"><span>5</span></div><div class="fc" data-b="opacity=0&transform=perspective(1400px) rotateX(-92deg)" data-to="1.65/.08/l opacity=1; 1.73/.55/b transform=perspective(1400px) rotateX(0deg); 2.55/.38/i transform=perspective(1400px) rotateX(92deg); 2.93/.02/l opacity=0"><span>4</span></div><div class="fc" data-b="opacity=0&transform=perspective(1400px) rotateX(-92deg)" data-to="2.55/.08/l opacity=1; 2.63/.55/b transform=perspective(1400px) rotateX(0deg); 3.45/.38/i transform=perspective(1400px) rotateX(92deg); 3.83/.02/l opacity=0"><span>3</span></div><div class="fc" data-b="opacity=0&transform=perspective(1400px) rotateX(-92deg)" data-to="3.45/.08/l opacity=1; 3.53/.55/b transform=perspective(1400px) rotateX(0deg); 4.35/.38/i transform=perspective(1400px) rotateX(92deg); 4.73/.02/l opacity=0"><span>2</span></div><div class="fc" data-b="opacity=0&transform=perspective(1400px) rotateX(-92deg)" data-to="4.35/.08/l opacity=1; 4.43/.55/b transform=perspective(1400px) rotateX(0deg)"><span>1</span></div></div>
+      <div class="crw" data-a="pop@4.8/.5" data-tf="rotate(-10deg)"><svg viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14"/></svg></div>
+    </div>
+    <div class="tw">
+<div class="tt" data-a="in@0.93/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Daromaddan<br><span class="it lime gl">10 foiz</span></div><div class="cap">avval o'zingizga to'lang</div></div>
+<div class="tt" data-a="in@1.83/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Har so'mni<br><span class="it lime gl">yozib boring</span></div><div class="cap">pul qayoqqa ketganini biling</div></div>
+<div class="tt" data-a="in@2.73/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Zaxira<br><span class="it lime gl">3 oylik</span></div><div class="cap">kutilmagan kunga</div></div>
+<div class="tt" data-a="in@3.63/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Qarzni<br><span class="it lime gl">tez yoping</span></div><div class="cap">foiz — eng qimmat pul</div></div>
+<div class="tt" data-a="in@4.53/.42"><div class="hv">Bilimga<br><span class="it lime gl">sarmoya</span></div><div class="cap">hunar boylik otasi</div></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">466</div><b>Flip Digit</b><div class="br">Moliyaviy savodxonlik · shaxsiy brend</div><p>Raqam qora shisha kub yuzida: har bandda kub X o'qida pastdan yuqoriga ag'dariladi, yangi yuz prujina bilan joyiga tushadi. Orqada tiniq lime halqalar har ag'darilishda pulsatsiya qiladi. #1 da toj. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): sarlavha=lime so'z=izoh | ag'darish yo'nalishi yuqoriga/yon | kub rangi"</code></div></div>
+
+<!-- 467 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c467"><div class="card">
+<div class="lbl" data-a="wipe@0.35"><i class="bar" data-a="growy@0.25/.25"></i>Top 5 · Oy sotuvchilari</div>
+  <div class="bd">
+    <div class="nw">
+      <div class="rg" style="left:125px;top:200px" data-b="opacity=0&transform=scale(.4)" data-to="0.75/.3/b opacity=1&transform=scale(1.1); 1.05/.5/e opacity=0.6&transform=scale(1); 1.65/.02/l opacity=.25&transform=scale(.72); 1.67/.28/e opacity=1&transform=scale(1.1); 1.95/.5/e opacity=0.6&transform=scale(1); 2.55/.02/l opacity=.25&transform=scale(.72); 2.57/.28/e opacity=1&transform=scale(1.1); 2.85/.5/e opacity=0.6&transform=scale(1); 3.45/.02/l opacity=.25&transform=scale(.72); 3.47/.28/e opacity=1&transform=scale(1.1); 3.75/.5/e opacity=0.6&transform=scale(1); 4.35/.02/l opacity=.25&transform=scale(.72); 4.37/.28/e opacity=1&transform=scale(1.22); 4.65/.5/e opacity=0.6&transform=scale(1)"><i style="left:-310px;top:-350px;width:620px;height:700px"></i><i style="left:-229px;top:-259px;width:458px;height:518px"></i><i style="left:-155px;top:-175px;width:310px;height:350px"></i><i style="left:-93px;top:-105px;width:186px;height:210px"></i></div>
+      <div class="bn" data-a="in@.5/.4" data-to="4.35/.14/e transform=scale(1.12); 4.49/.45/b transform=scale(1)"><span class="nc" data-to="1.65/.12/e filter=blur(8px); 1.77/.24/e filter=blur(0px); 2.55/.12/e filter=blur(8px); 2.67/.24/e filter=blur(0px); 3.45/.12/e filter=blur(8px); 3.57/.24/e filter=blur(0px); 4.35/.12/e filter=blur(8px); 4.47/.24/e filter=blur(0px)"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.38/b transform=translateY(-1.1em); 2.55/0.38/b transform=translateY(-2.2em); 3.45/0.38/b transform=translateY(-3.3em); 4.35/0.38/b transform=translateY(-4.4em)"><i>5</i><i>4</i><i>3</i><i>2</i><i>1</i></span></span></div>
+      <div class="cf" style="left:125px;top:190px"><i class="ci" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.57/.02/l opacity=1; 4.59/.5/e transform=translate(-281px~-165px) rotate(-188deg) scale(1); 5.09/.75/n opacity=0&transform=translate(-337px~194px) rotate(-16deg) scale(.8)"></i><i class="sq" style="background:#ffffff" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.57/.02/l opacity=1; 4.59/.5/e transform=translate(61px~-198px) rotate(-65deg) scale(1); 5.09/.75/n opacity=0&transform=translate(73px~161px) rotate(97deg) scale(.8)"></i><i class="ci" style="background:#7fd400" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.51/.02/l opacity=1; 4.53/.5/e transform=translate(320px~-80px) rotate(-113deg) scale(1); 5.03/.75/n opacity=0&transform=translate(385px~279px) rotate(-62deg) scale(.8)"></i><i class="sq" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.58/.02/l opacity=1; 4.60/.5/e transform=translate(-106px~-200px) rotate(24deg) scale(1); 5.10/.75/n opacity=0&transform=translate(-127px~159px) rotate(-184deg) scale(.8)"></i><i class="ci" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.57/.02/l opacity=1; 4.59/.5/e transform=translate(457px~-39px) rotate(-191deg) scale(1); 5.09/.75/n opacity=0&transform=translate(549px~320px) rotate(-423deg) scale(.8)"></i><i class="sq" style="background:#ffffff" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.52/.02/l opacity=1; 4.54/.5/e transform=translate(464px~-156px) rotate(157deg) scale(1); 5.04/.75/n opacity=0&transform=translate(557px~203px) rotate(363deg) scale(.8)"></i><i class="ci" style="background:#7fd400" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.52/.02/l opacity=1; 4.54/.5/e transform=translate(366px~-128px) rotate(80deg) scale(1); 5.04/.75/n opacity=0&transform=translate(439px~231px) rotate(-123deg) scale(.8)"></i><i class="sq" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.52/.02/l opacity=1; 4.54/.5/e transform=translate(163px~-261px) rotate(-113deg) scale(1); 5.04/.75/n opacity=0&transform=translate(196px~98px) rotate(-118deg) scale(.8)"></i><i class="ci" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.53/.02/l opacity=1; 4.55/.5/e transform=translate(223px~-261px) rotate(-190deg) scale(1); 5.05/.75/n opacity=0&transform=translate(267px~98px) rotate(-131deg) scale(.8)"></i><i class="sq" style="background:#ffffff" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.51/.02/l opacity=1; 4.53/.5/e transform=translate(455px~-81px) rotate(-116deg) scale(1); 5.03/.75/n opacity=0&transform=translate(546px~278px) rotate(-246deg) scale(.8)"></i><i class="ci" style="background:#7fd400" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.51/.02/l opacity=1; 4.53/.5/e transform=translate(299px~-60px) rotate(-70deg) scale(1); 5.03/.75/n opacity=0&transform=translate(359px~299px) rotate(-25deg) scale(.8)"></i><i class="sq" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.51/.02/l opacity=1; 4.53/.5/e transform=translate(392px~-213px) rotate(-70deg) scale(1); 5.03/.75/n opacity=0&transform=translate(471px~146px) rotate(-260deg) scale(.8)"></i><i class="ci" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.54/.02/l opacity=1; 4.56/.5/e transform=translate(109px~-156px) rotate(174deg) scale(1); 5.06/.75/n opacity=0&transform=translate(131px~203px) rotate(85deg) scale(.8)"></i><i class="sq" style="background:#ffffff" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.51/.02/l opacity=1; 4.53/.5/e transform=translate(108px~-151px) rotate(-170deg) scale(1); 5.03/.75/n opacity=0&transform=translate(130px~208px) rotate(49deg) scale(.8)"></i><i class="ci" style="background:#7fd400" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.53/.02/l opacity=1; 4.55/.5/e transform=translate(-484px~-50px) rotate(-44deg) scale(1); 5.05/.75/n opacity=0&transform=translate(-581px~309px) rotate(-117deg) scale(.8)"></i><i class="sq" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.50/.02/l opacity=1; 4.52/.5/e transform=translate(309px~-155px) rotate(-69deg) scale(1); 5.02/.75/n opacity=0&transform=translate(371px~204px) rotate(-138deg) scale(.8)"></i><i class="ci" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.54/.02/l opacity=1; 4.56/.5/e transform=translate(114px~-223px) rotate(-131deg) scale(1); 5.06/.75/n opacity=0&transform=translate(137px~136px) rotate(-159deg) scale(.8)"></i><i class="sq" style="background:#ffffff" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.52/.02/l opacity=1; 4.54/.5/e transform=translate(-37px~-201px) rotate(-9deg) scale(1); 5.04/.75/n opacity=0&transform=translate(-44px~158px) rotate(-238deg) scale(.8)"></i><i class="ci" style="background:#7fd400" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.56/.02/l opacity=1; 4.58/.5/e transform=translate(221px~-219px) rotate(-148deg) scale(1); 5.08/.75/n opacity=0&transform=translate(266px~140px) rotate(-366deg) scale(.8)"></i><i class="sq" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.58/.02/l opacity=1; 4.60/.5/e transform=translate(-307px~-164px) rotate(-142deg) scale(1); 5.10/.75/n opacity=0&transform=translate(-369px~195px) rotate(-180deg) scale(.8)"></i><i class="ci" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.54/.02/l opacity=1; 4.56/.5/e transform=translate(-398px~-46px) rotate(139deg) scale(1); 5.06/.75/n opacity=0&transform=translate(-477px~313px) rotate(229deg) scale(.8)"></i><i class="sq" style="background:#ffffff" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.58/.02/l opacity=1; 4.60/.5/e transform=translate(44px~-204px) rotate(125deg) scale(1); 5.10/.75/n opacity=0&transform=translate(53px~155px) rotate(178deg) scale(.8)"></i><i class="ci" style="background:#7fd400" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.54/.02/l opacity=1; 4.56/.5/e transform=translate(430px~-183px) rotate(-149deg) scale(1); 5.06/.75/n opacity=0&transform=translate(516px~176px) rotate(85deg) scale(.8)"></i><i class="sq" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.51/.02/l opacity=1; 4.53/.5/e transform=translate(-174px~-218px) rotate(-187deg) scale(1); 5.03/.75/n opacity=0&transform=translate(-209px~141px) rotate(-294deg) scale(.8)"></i><i class="ci" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.52/.02/l opacity=1; 4.54/.5/e transform=translate(409px~-130px) rotate(71deg) scale(1); 5.04/.75/n opacity=0&transform=translate(491px~229px) rotate(-40deg) scale(.8)"></i><i class="sq" style="background:#ffffff" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.51/.02/l opacity=1; 4.53/.5/e transform=translate(-218px~-149px) rotate(72deg) scale(1); 5.03/.75/n opacity=0&transform=translate(-261px~210px) rotate(-15deg) scale(.8)"></i><i class="ci" style="background:#7fd400" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.55/.02/l opacity=1; 4.57/.5/e transform=translate(515px~-125px) rotate(40deg) scale(1); 5.07/.75/n opacity=0&transform=translate(618px~234px) rotate(-155deg) scale(.8)"></i><i class="sq" style="background:#B0FC0A" data-b="opacity=0&transform=translate(0px~0px) rotate(0deg) scale(.4)" data-to="4.55/.02/l opacity=1; 4.57/.5/e transform=translate(-476px~-81px) rotate(-158deg) scale(1); 5.07/.75/n opacity=0&transform=translate(-571px~278px) rotate(-16deg) scale(.8)"></i></div>
+      <div class="crw" data-b="opacity=0&transform=translateY(-320px) rotate(-10deg)" data-to="4.45/.6/b opacity=1&transform=translateY(0px) rotate(-10deg)"><svg viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14"/></svg></div>
+    </div>
+    <div class="tw">
+<div class="tt" data-a="in@0.83/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Bekzod<br><span class="it lime gl">64 mln so'm</span></div><div class="cap">32 ta shartnoma</div></div>
+<div class="tt" data-a="in@1.73/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Dilnoza<br><span class="it lime gl">78 mln so'm</span></div><div class="cap">41 ta shartnoma</div></div>
+<div class="tt" data-a="in@2.63/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Otabek<br><span class="it lime gl">91 mln so'm</span></div><div class="cap">48 ta shartnoma</div></div>
+<div class="tt" data-a="in@3.53/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Nigora<br><span class="it lime gl">118 mln so'm</span></div><div class="cap">59 ta shartnoma</div></div>
+<div class="tt" data-a="in@4.43/.42"><div class="wn" data-a="pop@4.85/.5"><svg class="ic"><use href="#i-crown"/></svg>G'olib</div><div class="hv">Shahzod<br><span class="it lime gl">142 mln so'm</span></div><div class="cap">67 ta shartnoma · oy g'olibi</div></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">467</div><b>Winner Finale</b><div class="br">Savdo jamoasi · oy yakuni</div><p>5 → 2 odatiy sanoq: raqam aylanadi, ism va lime summa almashadi. #1 da final: toj yuqoridan tushib sakraydi, raqamdan lime va oq kvadrat/doira konfetti sochilib pastga to'kiladi, halqalar katta portlaydi, sarlavha ustida "G'OLIB" chipi chiqadi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): ism=summa=izoh | g'olib chip matni | konfetti soni va rangi | toj on/off"</code></div></div>
+
+<!-- 468 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c468"><div class="card">
+<div class="lbl" data-a="wipe@0.35"><i class="bar" data-a="growy@0.25/.25"></i>Top 5 · Kafe ochishdan oldin</div>
+  <div class="bd">
+    <div class="nw">
+      <div class="rg" style="left:125px;top:200px" data-b="opacity=0&transform=scale(.4)" data-to="0.75/.3/b opacity=1&transform=scale(1.1); 1.05/.5/e opacity=0.6&transform=scale(1); 1.65/.02/l opacity=.25&transform=scale(.72); 1.67/.28/e opacity=1&transform=scale(1.1); 1.95/.5/e opacity=0.6&transform=scale(1); 2.55/.02/l opacity=.25&transform=scale(.72); 2.57/.28/e opacity=1&transform=scale(1.1); 2.85/.5/e opacity=0.6&transform=scale(1); 3.45/.02/l opacity=.25&transform=scale(.72); 3.47/.28/e opacity=1&transform=scale(1.1); 3.75/.5/e opacity=0.6&transform=scale(1); 4.35/.02/l opacity=.25&transform=scale(.72); 4.37/.28/e opacity=1&transform=scale(1.1); 4.65/.5/e opacity=0.6&transform=scale(1)"><i style="left:-310px;top:-350px;width:620px;height:700px"></i><i style="left:-229px;top:-259px;width:458px;height:518px"></i><i style="left:-155px;top:-175px;width:310px;height:350px"></i><i style="left:-93px;top:-105px;width:186px;height:210px"></i></div>
+      <div class="bn" data-a="in@.5/.4"><span class="nc" data-to="1.65/.12/e filter=blur(8px); 1.77/.24/e filter=blur(0px); 2.55/.12/e filter=blur(8px); 2.67/.24/e filter=blur(0px); 3.45/.12/e filter=blur(8px); 3.57/.24/e filter=blur(0px); 4.35/.12/e filter=blur(8px); 4.47/.24/e filter=blur(0px)"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.38/b transform=translateY(-1.1em); 2.55/0.38/b transform=translateY(-2.2em); 3.45/0.38/b transform=translateY(-3.3em); 4.35/0.38/b transform=translateY(-4.4em)"><i>5</i><i>4</i><i>3</i><i>2</i><i>1</i></span></span></div>
+      <div class="ib" data-b="opacity=0&transform=scale(.3) rotate(-120deg)" data-to="0.87/.55/b opacity=1&transform=scale(1) rotate(0deg); 1.65/.2/n opacity=0&transform=scale(.4) rotate(50deg)"><svg class="ic"><use href="#i-pin"/></svg></div><div class="ib" data-b="opacity=0&transform=scale(.3) rotate(-120deg)" data-to="1.77/.55/b opacity=1&transform=scale(1) rotate(0deg); 2.55/.2/n opacity=0&transform=scale(.4) rotate(50deg)"><svg class="ic"><use href="#i-utensils"/></svg></div><div class="ib" data-b="opacity=0&transform=scale(.3) rotate(-120deg)" data-to="2.67/.55/b opacity=1&transform=scale(1) rotate(0deg); 3.45/.2/n opacity=0&transform=scale(.4) rotate(50deg)"><svg class="ic"><use href="#i-users"/></svg></div><div class="ib" data-b="opacity=0&transform=scale(.3) rotate(-120deg)" data-to="3.57/.55/b opacity=1&transform=scale(1) rotate(0deg); 4.35/.2/n opacity=0&transform=scale(.4) rotate(50deg)"><svg class="ic"><use href="#i-calc"/></svg></div><div class="ib" data-b="opacity=0&transform=scale(.3) rotate(-120deg)" data-to="4.47/.55/b opacity=1&transform=scale(1) rotate(0deg)"><svg class="ic"><use href="#i-mega"/></svg></div>
+    </div>
+    <div class="tw">
+<div class="tt" data-a="in@0.83/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Joyni<br><span class="it lime gl">to'g'ri tanlash</span></div><div class="cap">o'tkinchi odam soni hal qiladi</div></div>
+<div class="tt" data-a="in@1.73/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Menyu<br><span class="it lime gl">qisqa bo'lsin</span></div><div class="cap">10 ta taom — 50 tadan yaxshi</div></div>
+<div class="tt" data-a="in@2.63/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Xodimni<br><span class="it lime gl">o'rgating</span></div><div class="cap">oshpaz ketsa, retsept qolsin</div></div>
+<div class="tt" data-a="in@3.53/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Tannarx<br><span class="it lime gl">hisobi</span></div><div class="cap">har porsiya so'migacha</div></div>
+<div class="tt" data-a="in@4.43/.42"><div class="hv">Reklama<br><span class="it lime gl">oldindan</span></div><div class="cap">ochilishdan 1 oy oldin boshlang</div></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">468</div><b>Icon Countdown</b><div class="br">Restoran biznesi · kafe ochish</div><p>Katta lime raqam yonida, pastki burchagida lime doira ichida qora chiziqli Lucide ikon. Har bandda ikon aylanib pop bilan almashadi, raqam 5 → 1 aylanadi, o'ngda sarlavha va lime kalit so'z. Ikon bandni ovozsiz ham tushuntiradi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): ikon=sarlavha=lime so'z=izoh | ikon doira rangi | yo'nalish 5→1 / 1→5"</code></div></div>
+
+<!-- 469 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c469"><div class="card">
+<div class="lbl" data-a="wipe@0.35"><i class="bar" data-a="growy@0.25/.25"></i>Top 5 · Bola tarbiyasi</div>
+  <div class="bd">
+    <div class="nw">
+      <div class="rg" style="left:85px;top:130px" data-b="opacity=0&transform=scale(.4)" data-to="0.75/.3/b opacity=1&transform=scale(1.1); 1.05/.5/e opacity=0.6&transform=scale(1); 1.65/.02/l opacity=.25&transform=scale(.72); 1.67/.28/e opacity=1&transform=scale(1.1); 1.95/.5/e opacity=0.6&transform=scale(1); 2.55/.02/l opacity=.25&transform=scale(.72); 2.57/.28/e opacity=1&transform=scale(1.1); 2.85/.5/e opacity=0.6&transform=scale(1); 3.45/.02/l opacity=.25&transform=scale(.72); 3.47/.28/e opacity=1&transform=scale(1.1); 3.75/.5/e opacity=0.6&transform=scale(1); 4.35/.02/l opacity=.25&transform=scale(.72); 4.37/.28/e opacity=1&transform=scale(1.1); 4.65/.5/e opacity=0.6&transform=scale(1)"><i style="left:-200px;top:-225px;width:400px;height:450px"></i><i style="left:-148px;top:-166px;width:296px;height:333px"></i><i style="left:-100px;top:-112px;width:200px;height:225px"></i><i style="left:-60px;top:-67px;width:120px;height:135px"></i></div>
+      <div class="bn" data-a="in@.5/.4"><span class="nc" data-to="1.65/.12/e filter=blur(8px); 1.77/.24/e filter=blur(0px); 2.55/.12/e filter=blur(8px); 2.67/.24/e filter=blur(0px); 3.45/.12/e filter=blur(8px); 3.57/.24/e filter=blur(0px); 4.35/.12/e filter=blur(8px); 4.47/.24/e filter=blur(0px)"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.38/b transform=translateY(-1.1em); 2.55/0.38/b transform=translateY(-2.2em); 3.45/0.38/b transform=translateY(-3.3em); 4.35/0.38/b transform=translateY(-4.4em)"><i>5</i><i>4</i><i>3</i><i>2</i><i>1</i></span></span></div>
+    </div>
+    <div class="tw">
+<div class="tt" data-a="in@0.83/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Telefonni</div><div class="hv mk"><i class="mb" data-a="growx@1.09/.42"></i><span class="kw" data-b="color=#ffffff&text-shadow=0 6px 30px rgba(0~0~0~.35)" data-to="1.19/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0)">cheklang</span></div><div class="cap">kuniga 1 soatdan ko'p emas</div></div>
+<div class="tt" data-a="in@1.73/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Harakatni</div><div class="hv mk"><i class="mb" data-a="growx@1.99/.42"></i><span class="kw" data-b="color=#ffffff&text-shadow=0 6px 30px rgba(0~0~0~.35)" data-to="2.09/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0)">maqtang</span></div><div class="cap">natijani emas, urinishni</div></div>
+<div class="tt" data-a="in@2.63/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Birga</div><div class="hv mk"><i class="mb" data-a="growx@2.89/.42"></i><span class="kw" data-b="color=#ffffff&text-shadow=0 6px 30px rgba(0~0~0~.35)" data-to="2.99/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0)">ovqatlaning</span></div><div class="cap">dasturxon — oila maktabi</div></div>
+<div class="tt" data-a="in@3.53/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Tinglang</div><div class="hv mk"><i class="mb" data-a="growx@3.79/.42"></i><span class="kw" data-b="color=#ffffff&text-shadow=0 6px 30px rgba(0~0~0~.35)" data-to="3.89/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0)">oxirigacha</span></div><div class="cap">gapini bo'lmang</div></div>
+<div class="tt" data-a="in@4.43/.42"><div class="hv">Avval</div><div class="hv mk"><i class="mb" data-a="growx@4.69/.42"></i><span class="kw" data-b="color=#ffffff&text-shadow=0 6px 30px rgba(0~0~0~.35)" data-to="4.79/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0)">o'zingiz</span></div><div class="cap">bola gapni emas, ishni ko'radi</div></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">469</div><b>Keyword Marker</b><div class="br">Oilaviy psixolog · ota-onalarga</div><p>Raqam kichikroq, asosiy urg'u so'zda: sarlavha chiqqach kalit so'z orqasidan chapdan o'ngga lime marker supuriladi, so'z qorayib markerda qoladi. Kichik halqalar raqam bilan pulsatsiya qiladi. Gap ichidagi bitta muhim so'zni ta'kidlash uchun. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): sarlavha=marker so'z=izoh | marker rangi | raqam o'lchami"</code></div></div>
+
+<!-- 470 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c470"><div class="card">
+<div class="lbl" data-a="wipe@0.20"><i class="bar" data-a="growy@0.10/.25"></i>Kasb-hunar kurslari</div>
+  <div class="st">
+    <div class="rg" style="left:125px;top:230px" data-b="opacity=0&transform=scale(.4)" data-to="0.25/.35/b opacity=1&transform=scale(1.3); 0.60/.4/e opacity=.6&transform=scale(1); 1.25/.02/l opacity=.25&transform=scale(.72); 1.27/.28/e opacity=1&transform=scale(1.1); 1.55/.5/e opacity=.6&transform=scale(1); 1.95/.02/l opacity=.25&transform=scale(.72); 1.97/.28/e opacity=1&transform=scale(1.1); 2.25/.5/e opacity=.6&transform=scale(1); 2.65/.02/l opacity=.25&transform=scale(.72); 2.67/.28/e opacity=1&transform=scale(1.1); 2.95/.5/e opacity=.6&transform=scale(1); 3.35/.02/l opacity=.25&transform=scale(.72); 3.37/.28/e opacity=1&transform=scale(1.1); 3.65/.5/e opacity=.6&transform=scale(1); 4.05/.02/l opacity=.25&transform=scale(.72); 4.07/.28/e opacity=1&transform=scale(1.22); 4.35/.5/e opacity=.6&transform=scale(1); 4.80/.3/n opacity=0&transform=scale(.5)"><i style="left:-310px;top:-350px;width:620px;height:700px"></i><i style="left:-229px;top:-259px;width:458px;height:518px"></i><i style="left:-155px;top:-175px;width:310px;height:350px"></i><i style="left:-93px;top:-105px;width:186px;height:210px"></i></div>
+    <div class="rb" style="left:125px;top:230px"><i style="left:-150px;top:-170px;width:300px;height:340px" data-b="opacity=0&transform=scale(.2)" data-to="0.25/.02/l opacity=.95&transform=scale(.2); 0.27/.85/e opacity=0&transform=scale(1)"></i><i style="left:-260px;top:-295px;width:520px;height:590px" data-b="opacity=0&transform=scale(.2)" data-to="0.32/.02/l opacity=.95&transform=scale(.2); 0.34/.85/e opacity=0&transform=scale(1)"></i><i style="left:-380px;top:-430px;width:760px;height:860px" data-b="opacity=0&transform=scale(.2)" data-to="0.39/.02/l opacity=.95&transform=scale(.2); 0.41/.85/e opacity=0&transform=scale(1)"></i></div>
+    <div class="ix" data-b="opacity=0&filter=blur(14px)&transform=scale(.3)" data-to="0.25/.6/b opacity=1&filter=blur(0px)&transform=scale(1); 1.10/.25/n opacity=0&filter=blur(12px)&transform=scale(1.35)">
+      <div class="big">TOP 5</div><div class="hv isub">uyda boshlasa <span class="it lime gl">bo'ladigan hunar</span></div>
+    </div>
+    <div class="bd" data-b="opacity=0" data-to="1.15/.15/e opacity=1; 4.80/.3/n opacity=0&filter=blur(10px)&transform=translateY(-40px)">
+      <div class="nw">
+        <div class="bn" data-b="transform=scale(.7)" data-to="1.20/.45/b transform=scale(1)"><span class="nc" data-to="1.95/.12/e filter=blur(8px); 2.07/.24/e filter=blur(0px); 2.65/.12/e filter=blur(8px); 2.77/.24/e filter=blur(0px); 3.35/.12/e filter=blur(8px); 3.47/.24/e filter=blur(0px); 4.05/.12/e filter=blur(8px); 4.17/.24/e filter=blur(0px)"><span class="ns" data-b="transform=translateY(0em)" data-to="1.95/0.34/b transform=translateY(-1.1em); 2.65/0.34/b transform=translateY(-2.2em); 3.35/0.34/b transform=translateY(-3.3em); 4.05/0.34/b transform=translateY(-4.4em)"><i>5</i><i>4</i><i>3</i><i>2</i><i>1</i></span></span></div>
+        <div class="crw" data-a="pop@4.20/.5" data-tf="rotate(-10deg)"><svg viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14"/></svg></div>
+      </div>
+      <div class="tw">
+<div class="tt" data-a="in@1.33/.42" data-to="1.95/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Tikuvchilik<br><span class="it lime gl">buyurtmaga</span></div><div class="cap">bitta mashina bilan boshlanadi</div></div>
+<div class="tt" data-a="in@2.03/.42" data-to="2.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Qandolat<br><span class="it lime gl">tort, pishiriq</span></div><div class="cap">oshxonangiz — sexingiz</div></div>
+<div class="tt" data-a="in@2.73/.42" data-to="3.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Mobilograf<br><span class="it lime gl">telefonda</span></div><div class="cap">kafe va do'konlarga video</div></div>
+<div class="tt" data-a="in@3.43/.42" data-to="4.05/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Dizayn<br><span class="it lime gl">Canva'da</span></div><div class="cap">menyu, banner, vizitka</div></div>
+<div class="tt" data-a="in@4.13/.42"><div class="hv">Kopirayting<br><span class="it lime gl">matn yozish</span></div><div class="cap">kompaniyalarga post va reklama</div></div>
+      </div>
+    </div>
+    <div class="ou">
+      <div class="sv" data-b="opacity=0&transform=scale(.4)" data-to="4.95/.55/b opacity=1&transform=scale(1); 5.35/.1/e transform=scale(.93); 5.45/.4/b transform=scale(1)"><svg class="ic" data-b="fill-opacity=0" data-to="5.37/.25/e fill-opacity=1"><use href="#i-bookmark"/></svg>Saqlab qo'ying</div>
+      <div class="cap" data-a="in@5.15/.4">hunar — boylik otasi</div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">470</div><b>Intro + Outro</b><div class="br">Kasb-hunar kurslari · top 5 hunar</div><p>Boshida "TOP 5" ulkan lime sarlavha halqalar portlashi bilan urilib kiradi va blur bilan ketadi. Keyin 451 uslubidagi sanoq: raqam 5 → 1, sarlavha almashadi, #1 da toj. Oxirida bandlar yo'qolib, lime "Saqlab qo'ying" tugmasi pop bilan chiqadi va bosiladi, belgisi to'ladi. Band soni 3-10 ta, har band = bitta Tab kalit; intro va outro alohida kalit.</p><code>prompt: "intro sarlavha=lime so'z | bandlar (3-10): sarlavha=lime so'z=izoh | outro tugma matni=izoh | intro/outro on/off"</code></div></div>
+
+</div></div>
+<div class="modal" id="modal"></div>
+<script>
+var H=1920, theme="preset", D=6.5;
+var OB="cubic-bezier(.34,1.56,.64,1)", SB="cubic-bezier(.3,1.3,.6,1)", IO="cubic-bezier(.65,0,.35,1)", EO="cubic-bezier(.2,.8,.2,1)", EI="cubic-bezier(.55,0,1,.45)", BI="cubic-bezier(.5,-0.4,.75,.25)";
+var EZ={l:"linear",b:OB,s:SB,i:IO,e:EO,n:EI,k:BI};
+
+/* ---------- DOM build ---------- */
+/* data-split="type@t0/step" (chars) or "words@t0/step"; children with data-ns are skipped */
+function splitEl(el){
+  var a=el.dataset.split.split("@"), mode=a[0], sp=a[1].split("/"), t0=+sp[0], st=+(sp[1]||.05), i=0, ty=mode==="words"?"wd":"tp";
+  (function walk(node){
+    Array.prototype.slice.call(node.childNodes).forEach(function(n){
+      if(n.nodeType===3){
+        var t=n.textContent; if(/^\s*$/.test(t)&&/\n/.test(t)){n.parentNode.removeChild(n);return;}
+        var frag=document.createDocumentFragment(), parts=mode==="words"?t.split(/(\s+)/):Array.from(t);
+        parts.forEach(function(w){ if(!w)return;
+          if(mode==="words"&&/^\s+$/.test(w)){frag.appendChild(document.createTextNode(w));return;}
+          var s=document.createElement("span"); s.className=ty; s.textContent=w; s.dataset.a=ty+"@"+(t0+i*st).toFixed(3); i++; frag.appendChild(s); });
+        n.parentNode.replaceChild(frag,n);
+      } else if(n.nodeType===1&&!n.hasAttribute("data-ns")) walk(n);
+    });
+  })(el);
+  delete el.dataset.split;
+}
+/* odometer counter: .cnt data-c0 data-c1 data-roll="t/dur" */
+function buildCnt(el){
+  var from=el.dataset.c0, to=el.dataset.c1, A=+from.replace(/\D/g,""), B=+to.replace(/\D/g,""), fd=from.replace(/\D/g,"").length, digs=to.replace(/\D/g,"").length, pos=0, html="";
+  Array.from(to).forEach(function(c){
+    if(!/\d/.test(c)){html+='<span class="sep">'+c+'</span>';return;}
+    var p=digs-1-pos; pos++; var P=Math.pow(10,p), a0=Math.floor(A/P), b0=Math.floor(B/P), inc=b0-a0, cap=p===0?20:(p===1?14:10), seq=[], k;
+    if(inc<=cap){for(k=0;k<=inc;k++)seq.push((a0+k)%10);}
+    else {seq.push(a0%10); for(k=cap-1;k>=0;k--)seq.push((((b0-k)%10)+10)%10);}
+    if(p>=fd&&a0===0) seq[0]="";
+    html+='<span class="col"><span class="stk" data-n="'+(seq.length-1)+'">'+seq.map(function(x){return "<i>"+(x===""?"&nbsp;":x)+"</i>";}).join("")+"</span></span>";
+  });
+  el.innerHTML=html;
+}
+function build(){
+  document.querySelectorAll("[data-split]").forEach(splitEl);
+  document.querySelectorAll(".cnt").forEach(buildCnt);
+}
+
+/* ---------- WAAPI timeline (6.5 s loop) ---------- */
+function T(tf,x){var s=((tf||"")+" "+(x||"")).trim(); return s||"none";}
+function camel(k){return k.trim().replace(/-([a-z])/g,function(m,c){return c.toUpperCase();});}
+function props(str){var o={}; str.split("&").forEach(function(p){var i=p.indexOf("="); if(i<0)return; o[camel(p.slice(0,i))]=p.slice(i+1).trim().replace(/~/g,",");}); return o;}
+function types(tf){return {
+  pop:{d:.5,e:OB,f:[{opacity:0,transform:T(tf,"scale(.4)")},{opacity:1,transform:T(tf,"scale(1)")}]},
+  up:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateY(48px)")},{opacity:1,transform:T(tf,"translateY(0px)")}]},
+  dn:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateY(-48px)")},{opacity:1,transform:T(tf,"translateY(0px)")}]},
+  lt:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateX(-64px)")},{opacity:1,transform:T(tf,"translateX(0px)")}]},
+  rt:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateX(64px)")},{opacity:1,transform:T(tf,"translateX(0px)")}]},
+  fade:{d:.35,e:"linear",f:[{opacity:0},{opacity:1}]},
+  tp:{d:.001,e:"linear",f:[{opacity:0},{opacity:1}]},
+  wd:{d:.4,e:EO,f:[{opacity:0,filter:"blur(6px)",transform:"translateY(12px)"},{opacity:1,filter:"blur(0px)",transform:"translateY(0px)"}]},
+  "in":{d:.4,e:EO,f:[{opacity:0,filter:"blur(12px)",transform:T(tf,"translateY(34px)")},{opacity:1,filter:"blur(0px)",transform:T(tf,"translateY(0px)")}]},
+  inl:{d:.45,e:SB,f:[{opacity:0,filter:"blur(12px)",transform:T(tf,"translateX(-60px)")},{opacity:1,filter:"blur(0px)",transform:T(tf,"translateX(0px)")}]},
+  wipe:{d:.35,e:IO,f:[{clipPath:"inset(-50% 100% -50% -50%)"},{clipPath:"inset(-50% -50% -50% -50%)"}]},
+  growy:{d:.5,e:SB,f:[{transform:T(tf,"scaleY(0)")},{transform:T(tf,"scaleY(1)")}]},
+  stamp:{d:.55,e:EI,f:[{opacity:0,transform:T(tf,"scale(2.6)")},{opacity:1,transform:T(tf,"scale(.88)"),o:.42,ez:OB},{opacity:1,transform:T(tf,"scale(1)")}]},
+  growx:{d:.6,e:IO,f:[{transform:T(tf,"scaleX(0)")},{transform:T(tf,"scaleX(1)")}]},
+  draw:{d:.6,e:IO,f:[{strokeDashoffset:1.05,opacity:0},{strokeDashoffset:.99,opacity:1,o:.05},{strokeDashoffset:0,opacity:1}]},
+  unfold:{d:.8,e:SB,f:[{opacity:0,transform:"perspective(1600px) rotateX(-75deg) scale(.92)"},{opacity:1,transform:"perspective(1600px) rotateX(0deg) scale(1)"}]},
+  echo:{d:.7,e:EO,f:[{opacity:0,transform:"scale(.92)"},{opacity:.9,transform:"scale(1)",o:.08},{opacity:0,transform:"scale(1.45)"}]}
+};}
+function DF(tf){return {opacity:1,filter:"blur(0px)",transform:T(tf,""),strokeDashoffset:0,clipPath:"inset(-50% -50% -50% -50%)",color:"#ffffff"};}
+function A(){var r={}; for(var i=0;i<arguments.length;i++){var s=arguments[i]; for(var k in s) if(k!=="o"&&k!=="ez") r[k]=s[k];} return r;}
+function run(el,frames,tf){
+  var keys={}, df=DF(tf); frames.forEach(function(f){for(var k in f) if(k!=="offset"&&k!=="easing") keys[k]=1;});
+  var last={}; for(var k in keys){ for(var i=0;i<frames.length;i++){ if(frames[i][k]!==undefined){ last[k]=frames[i][k]; break; } } if(last[k]===undefined) last[k]=df[k]; }
+  var prev=0;
+  frames.forEach(function(f){ for(var k in keys){ if(f[k]===undefined) f[k]=last[k]; else last[k]=f[k]; } f.offset=Math.min(1,Math.max(prev,f.offset)); prev=f.offset; });
+  el.animate(frames,{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animEl(el){
+  var ds=el.dataset, tf=ds.tf||"", fr=[], cur={}, B=ds.b?props(ds.b):null;
+  if(ds.a){
+    var a=ds.a.split("@"), ty=types(tf)[a[0]], sp=a[1].split("/"), s=+sp[0], d=sp[1]?+sp[1]:ty.d, H0=ty.f[0], S=ty.f[ty.f.length-1];
+    fr.push(A({offset:0},B||{},H0)); fr.push(A({offset:s/D,easing:ty.e0||ty.e},B||{},H0));
+    ty.f.slice(1,-1).forEach(function(m){fr.push(A({offset:(s+d*m.o)/D,easing:m.ez||ty.e},B||{},m));});
+    cur=A(B||{},S); fr.push(A({offset:(s+d)/D},cur));
+  } else if(B){ cur=B; fr.push(A({offset:0},cur)); }
+  else { fr.push({offset:0}); }
+  if(ds.to){ ds.to.split(";").forEach(function(step){ step=step.trim(); if(!step)return;
+    var i=step.indexOf(" "), td=step.slice(0,i).split("/"), t=+td[0], dd=+(td[1]||.4), ez=EZ[td[2]]||SB, pr=props(step.slice(i+1));
+    var base=A(cur); for(var k in pr) if(base[k]===undefined) base[k]=DF(tf)[k];
+    fr.push(A({offset:t/D,easing:ez},base)); cur=A(base,pr); fr.push(A({offset:(t+dd)/D},cur)); }); }
+  fr.push(A({offset:1},cur));
+  run(el,fr,tf);
+}
+function animCnt(stk,cnt){
+  var r=cnt.dataset.roll.split("/"), s=+r[0], d=+r[1], n=+stk.dataset.n, y="translateY(-"+(n*1.1).toFixed(2)+"em)";
+  stk.animate([{offset:0,transform:"translateY(0em)"},{offset:s/D,transform:"translateY(0em)",easing:"cubic-bezier(.3,.55,.15,1)"},{offset:(s+d)/D,transform:y},{offset:1,transform:y}],{duration:D*1000,iterations:Infinity,fill:"both"});
+  if(n>0) stk.parentNode.animate([{offset:0,filter:"blur(0px)"},{offset:s/D,filter:"blur(0px)"},{offset:(s+d*.12)/D,filter:"blur(2px)"},{offset:(s+d*.55)/D,filter:"blur(1.2px)"},{offset:(s+d*.92)/D,filter:"blur(0px)"},{offset:1,filter:"blur(0px)"}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+/* card: smooth bounce in, hold, anticipation + bounce out */
+function animCard(c){
+  var o="translateY(110px) scale(.9)", x="translateY(90px) scale(.9)", z="translateY(0px) scale(1)";
+  c.animate([{offset:0,opacity:0,transform:o,easing:SB},{offset:.62/D,opacity:1,transform:z},{offset:5.8/D,opacity:1,transform:z,easing:BI},{offset:6.3/D,opacity:0,transform:x},{offset:1,opacity:0,transform:x}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animate(root){
+  root.querySelectorAll(".comp").forEach(function(c){
+    c.querySelectorAll(".card").forEach(animCard);
+    c.querySelectorAll("[data-a],[data-to],[data-b]").forEach(animEl);
+    c.querySelectorAll(".cnt").forEach(function(cn){cn.querySelectorAll(".stk").forEach(function(s){animCnt(s,cn);});});
+  });
+}
+
+/* ---------- board chrome ---------- */
+function fit(st){
+  var u=st.clientWidth/1080; st.style.height=(H*u)+"px";
+  var c=st.querySelector(".comp"); c.style.setProperty("--u",u); c.style.setProperty("--H",H+"px");
+  var dark=theme==="dark"||(theme==="preset"&&c.dataset.theme==="dark"); c.classList.toggle("dark",dark);
+  var ch=c.querySelector(".card:not(.tb)").offsetHeight, av=c.classList.contains("lm")?(H-parseFloat(getComputedStyle(c).paddingTop)-60):(H-150); c.style.setProperty("--ps",Math.min(1,av/ch).toFixed(3));
+}
+function all(){document.querySelectorAll(".stage").forEach(fit)}
+build();
+document.querySelectorAll(".stage").forEach(function(st){
+  if(st.dataset.img){var l=document.createElement("div"); l.className="bgl"; l.style.backgroundImage="linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.28)),url('"+st.dataset.img+"')"; st.insertBefore(l,st.firstChild); return;}
+  var b=st.dataset.bg.split(","); var f=document.createElement("div"); f.className="foot";
+  f.style.background="radial-gradient(circle at 30% 25%,"+b[0]+",transparent 55%),radial-gradient(circle at 75% 70%,"+b[1]+",transparent 60%),"+b[2];
+  st.insertBefore(f,st.firstChild);
+});
+function wire(id,fn){document.getElementById(id).addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  this.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b)});fn(b.dataset.v);all();});}
+wire("fmt",function(v){H=+v}); wire("thm",function(v){theme=v});
+var modal=document.getElementById("modal");
+document.querySelectorAll(".cardx").forEach(function(cx){cx.addEventListener("click",function(){
+  modal.innerHTML=""; var st=cx.querySelector(".stage").cloneNode(true); modal.appendChild(st); modal.classList.add("on"); fit(st); animate(st);});});
+modal.addEventListener("click",function(){modal.classList.remove("on");modal.innerHTML=""});
+window.addEventListener("resize",all); all(); animate(document.getElementById("grid"));
+var m=location.hash.match(/t=([\d.]+)/); if(m){document.getAnimations().forEach(function(a){a.pause();a.currentTime=parseFloat(m[1])*1000;});}
+var f=location.hash.match(/f=(\d+)/); if(f){H=+f[1]; document.querySelectorAll("#fmt button").forEach(function(x){x.classList.toggle("on",x.dataset.v===f[1])}); all();}
+var th=location.hash.match(/th=(\w+)/); if(th){theme=th[1]; document.querySelectorAll("#thm button").forEach(function(x){x.classList.toggle("on",x.dataset.v===th[1])}); all();}
+</script>
+</body>
+</html>

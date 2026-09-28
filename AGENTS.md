@@ -6,7 +6,7 @@ CEP extension for Adobe After Effects 2025. Owner: nytvir (Uzbek-speaking TikTok
 
 - `host/main.jsx` (~12k lines, ExtendScript) — the engine. One big command dispatcher near the top (`else if (cmd === "...") { _fn(); }`) + one function per tool appended below, grouped by kit with a version comment (e.g. `// PAPER SEARCH (v2.30)`).
 - `client/index.html` — the panel UI. Tools are entries in one JS array of cards: `{id:'cmdName', tab:'pro', sec:'<section>', icon:'emoji', bg:'gradient', title:'...', desc:'uzbek description'}`. The `id` must equal the dispatcher `cmd`.
-- Current version: v2.55. Each new tool/kit bumps the minor version.
+- Current version: v2.56. Each new tool/kit bumps the minor version.
 
 ## How to add a tool (exact ritual)
 
