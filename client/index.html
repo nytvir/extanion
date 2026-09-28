@@ -507,6 +507,16 @@ var FX = [
   {id:'s57PortfolioFlip', tab:'lib', sec:'Universal shaxsiy brend', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#007aff)', title:'Portfolio Flip (350)', desc:'Loyiha plitkalari birin-ketin aylanib ochiladi, kategoriya, hisob va +24 chip, 10 preset'},
   {id:'s57Contact', tab:'lib', sec:'Universal shaxsiy brend', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#007aff)', title:'Open / Closed Contact (351)', desc:'Yopiq-Ochiq holat, bugungi ish vaqti, masofa va qo\'ng\'iroq tugmasi, 10 preset'},
   {id:'s57Tiers', tab:'lib', sec:'Universal shaxsiy brend', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#007aff)', title:'Early Bird Tiers (352)', desc:'Oqim narxlari: SOTILDI muhri, faol oqim, kamayuvchi joylar, yangi narx, 10 preset'},
+  {id:'s58Dtm', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'DTM Score Card (391)', desc:'DTM natija: fan bloklari ball va chiziq bilan to\'ladi, jami ball aylanadi, GRANT muhri, 10 preset'},
+  {id:'s58Ielts', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'IELTS Result Card (392)', desc:'IELTS natija: L/R/W/S plitkalari otilib ball aylanadi, Overall band chaqnaydi, 10 preset'},
+  {id:'s58Wall', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Results Wall (393)', desc:'Natijalar devori: 2 qator karta qarama-qarshi suriladi, bittasi kattalashib ball aylanadi, 10 preset'},
+  {id:'s58Teachers', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Teacher Team Grid (394)', desc:'Ustozlar jamoasi: 2x3 kartalar otiladi, birinchisi aylanib sertifikatlari chiqadi, 10 preset'},
+  {id:'s58TariffPicker', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Tariff Picker (395)', desc:'Tarif kartalari: tanlov yashil ramka bilan o\'tadi, narx aylanadi, afzalliklar, 10 preset'},
+  {id:'s58CertReveal', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Certificate Reveal (396)', desc:'Sertifikat ochiladi, ism yoziladi, imzo chiziladi, ko\'k muhr bosiladi, 10 preset'},
+  {id:'s58SolveSteps', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Solve Steps (397)', desc:'Misol yoziladi, yechim qadamlari tushadi, javob qizil ruchka bilan o\'raladi, 10 preset'},
+  {id:'s58CodeRun', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Code Run (398)', desc:'Kod harfma-harf rangli yoziladi, Run bosiladi, konsolda natija qatorlari chiqadi, 10 preset'},
+  {id:'s58ParentReport', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Parent Report Card (399)', desc:'Ota-onaga oylik hisobot: 3 halqa to\'lib foiz sanaydi, ustoz izohi so\'zma-so\'z, 10 preset'},
+  {id:'s58EnrollForm', tab:'lib', sec:'O\'quv markaz', icon:'🧩', bg:'linear-gradient(135deg,#f2f2f7,#34c759)', title:'Enroll Form (400)', desc:'Ariza: ism va telefon yoziladi, ro\'yxatdan kurs tanlanadi, yashil tasdiq ekrani, 10 preset'},
   {id:'msTimerChip', tab:'pro', sec:'✨ Micro Moments — full customize', icon:'⏳', bg:'linear-gradient(135deg,#0e1014,#0a84ff)', title:'Timer Pie Chip', desc:'Doira-pie to\'lib boradi + matn (muddat/deadline)'},
   {id:'msDropdown', tab:'pro', sec:'✨ Micro Moments — full customize', icon:'▾', bg:'linear-gradient(135deg,#0e1014,#3a3f4c)', title:'Dropdown Pick', desc:'Ro\'yxat ochiladi, variant tanlanadi, sarlavha almashadi'},
   {id:'notifyStack', tab:'pro', sec:'💎 Pro Picks — eng zo\'r', icon:'💸', bg:'linear-gradient(135deg,#15151a,#4b46e0,#39ff5a)', title:'Money Rain', desc:'Payment alerts stack'},
@@ -945,6 +955,7 @@ var LIB_TAGS = {
   313:'Yozish,Grafik', 314:'Slayder,Grafik', 315:'Raqam', 316:'Grafik', 317:'Yozish,Raqam', 318:'Raqam', 319:'Cheklist', 320:'Kalendar', 321:'Grafik', 322:'Grafik',
   353:'Sarlavha', 354:'Raqam', 355:'Sarlavha', 356:'Sarlavha', 357:'Tasdiq', 358:'Tanlash', 359:'Grafik', 360:'Raqam', 361:'Sarlavha', 362:'Sarlavha', 363:'Ro\'yxat', 364:'Grafik', 365:'Grafik', 366:'Karta', 367:'Sarlavha', 368:'Yozish', 369:'Sarlavha', 370:'Yozish',
   333:'Muhr,Karta', 334:'Karta,Raqam,Ro\'yxat', 335:'Cheklist,Ro\'yxat', 336:'Ro\'yxat,Raqam', 337:'Raqam,Grafik', 338:'Yozish,Karta', 339:'Raqam,Cheklist', 340:'Yozish,Raqam', 341:'Cheklist,Tasdiq', 342:'Ro\'yxat,Tasdiq', 343:'Cheklist,Raqam', 344:'Yozish,Raqam,Tasdiq', 345:'Ro\'yxat,Raqam', 346:'Ro\'yxat,Raqam', 347:'Toggle,Kalendar,Tasdiq', 348:'Muhr,Raqam,Tasdiq', 349:'Muhr,Raqam,Tasdiq', 350:'Karta,Raqam,Ro\'yxat', 351:'Karta,Toggle,Xarita', 352:'Muhr,Raqam,Ro\'yxat',
+  391:'Raqam,Grafik,Muhr', 392:'Raqam,Karta,Tasdiq', 393:'Karta,Ro\'yxat,Raqam', 394:'Karta,Ro\'yxat,Raqam', 395:'Tanlash,Raqam,Cheklist', 396:'Yozish,Muhr,Tasdiq', 397:'Yozish,Ro\'yxat', 398:'Yozish,Tasdiq', 399:'Grafik,Raqam,Yozish', 400:'Yozish,Tanlash,Tasdiq',
   371:'Sarlavha', 374:'Raqam,Sarlavha', 372:'Yozish,Sarlavha', 373:'Raqam,Ro\'yxat', 375:'Karta,Sarlavha', 376:'Raqam,Sarlavha', 377:'Kalendar,Grafik', 378:'Cheklist,Ro\'yxat', 379:'Toggle,Sarlavha', 380:'Grafik,Karta', 381:'Xarita,Karta', 382:'Sarlavha', 383:'Grafik,Taymer', 384:'Sarlavha,Karta', 385:'Grafik,Raqam,Tasdiq', 386:'Yozish,Karta,Sarlavha', 387:'Sarlavha,Yozish', 388:'Raqam,Grafik', 389:'Yozish,Tasdiq', 390:'Karta,Sarlavha',
   323:'Karta', 324:'Grafik', 325:'Karta', 326:'Taymer,Cheklist', 327:'Tanlash', 328:'Tanlash', 329:'Yozish', 330:'Grafik', 331:'Taymer', 332:'Kalendar,Raqam'
 };
@@ -952,7 +963,7 @@ var libState = { soha: 'all', tag: '' };
 function libNum(e) { var m = /\((\d{3})\)/.exec(e.title || ''); return m ? parseInt(m[1], 10) : 0; }
 function libSoha(n) {
   if (n >= 353 && n <= 390) return 'lime';
-  if (n >= 263 && n <= 282) return 'edu'; if (n >= 283 && n <= 292) return 'food'; if (n >= 293 && n <= 302) return 'serv';
+  if ((n >= 263 && n <= 282) || (n >= 391 && n <= 420)) return 'edu'; if (n >= 283 && n <= 292) return 'food'; if (n >= 293 && n <= 302) return 'serv';
   if (n >= 303 && n <= 312) return 'blog'; if (n >= 313 && n <= 322) return 'fin'; if (n >= 323 && n <= 332) return 'eng'; return 'uni';
 }
 function libTags(e) { var t = LIB_TAGS[libNum(e)]; return t ? t.split(',') : []; }
