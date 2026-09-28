@@ -24353,48 +24353,54 @@ function _s55Callout() {
 // (edge blocks live longer), flickering at 15 fps. Face area mostly clear.
 // Tab 2 = the glitch hit (move the key to retime). Colours on CTRL.
 var S55_P357 = [
-    ["Lime (namuna)", "#B0FC0A | #D4FF5C | #5E8C0A", "200 | 0.8 | ha"],
-    ["Fitnes olov", "#FF6A1F | #FFB070 | #8A2E0A", "160 | 0.8 | ha"],
-    ["Go'zallik pushti", "#FF6FA8 | #FFB3D1 | #8A2350", "140 | 0.9 | ha"],
-    ["IT / texno", "#38D6FF | #A8EEFF | #0A5A7A", "180 | 0.7 | ha"],
-    ["Kafe karamel", "#FFB547 | #FFE0A3 | #7A4A10", "140 | 0.9 | ha"],
-    ["Premium oltin", "#E8C66A | #FFF0B8 | #6A5320", "120 | 1.0 | ha"],
-    ["Tibbiyot yalpiz", "#4FE3B0 | #B5FFE6 | #11664C", "150 | 0.8 | ha"],
-    ["Ta'lim ko'k", "#5B8CFF | #B8CCFF | #1F3A8A", "160 | 0.8 | ha"],
-    ["Moda oq", "#FFFFFF | #FFFFFF | #7A7A7A", "170 | 0.7 | ha"],
-    ["Sport qizil", "#FF3B30 | #FF9A93 | #7A140F", "200 | 0.6 | yo'q"]
+    ["Lime (namuna)", "#B0FC0A | #D4FF5C | #5E8C0A", "300 | 0.8 | ha"],
+    ["Fitnes olov", "#FF6A1F | #FFB070 | #8A2E0A", "220 | 0.8 | ha"],
+    ["Go'zallik pushti", "#FF6FA8 | #FFB3D1 | #8A2350", "200 | 0.9 | ha"],
+    ["IT / texno", "#38D6FF | #A8EEFF | #0A5A7A", "250 | 0.7 | ha"],
+    ["Kafe karamel", "#FFB547 | #FFE0A3 | #7A4A10", "200 | 0.9 | ha"],
+    ["Premium oltin", "#E8C66A | #FFF0B8 | #6A5320", "170 | 1.0 | ha"],
+    ["Tibbiyot yalpiz", "#4FE3B0 | #B5FFE6 | #11664C", "210 | 0.8 | ha"],
+    ["Ta'lim ko'k", "#5B8CFF | #B8CCFF | #1F3A8A", "220 | 0.8 | ha"],
+    ["Moda oq", "#FFFFFF | #FFFFFF | #7A7A7A", "240 | 0.7 | ha"],
+    ["Sport qizil", "#FF3B30 | #FF9A93 | #7A140F", "280 | 0.6 | yo'q"]
 ];
 function _s55Glitch() {
     var PR = _s47Pick("Pixel Glitch (357)", S55_P357); if (!PR) return;
     var q1 = prompt("Ranglar: asosiy | yorug' | to'q  (#hex)", PR[1]); if (q1 === null) return;
-    var q2 = prompt("Bloklar soni (40-220) | davomiylik (s) | yuz bo'sh qolsin: ha/yo'q", PR[2]); if (q2 === null) return;
-    var C = _s47Split(q1, 3), M = _s47Split(q2, 3), i;
-    var N = Math.max(40, Math.min(220, parseInt(M[0], 10) || 160)), DS = Math.max(0.3, Math.min(3, parseFloat(M[1]) || 0.8)) / 0.8;
+    var q2 = prompt("Bloklar soni (40-400) | davomiylik (s) | yuz bo'sh qolsin: ha/yo'q", PR[2]); if (q2 === null) return;
+    var C = _s47Split(q1, 3), M = _s47Split(q2, 3);
+    var N = Math.max(40, Math.min(400, parseInt(M[0], 10) || 280)), DS = Math.max(0.3, Math.min(3, parseFloat(M[1]) || 0.8)) / 0.8;
     var face = String(M[2]).toLowerCase().charAt(0) !== "y";
-    var x = _s47Begin("GLITCH", { states: 2, look: _s47Look("dark", C[0] || "#B0FC0A"), first: 0.3, hold: 1, extraEnd: Math.max(0, 0.9 * DS - 1), noRise: true, noScale: true,
+    var x = _s47Begin("GLITCH", { states: 2, look: _s47Look("dark", C[0] || "#B0FC0A"), first: 0.3, hold: 1, extraEnd: Math.max(0, 1.2 * DS - 1), noRise: true, noScale: true,
         colors: { "Yorug'": _s47Hex(C[1] || "#D4FF5C"), "To'q": _s47Hex(C[2] || "#5E8C0A") } }); if (!x) return;
-    var K = x.K, W = x.W, H = x.H, cell = 40 * K, cols = Math.ceil(W / cell), rows = Math.ceil(H / cell);
-    var ox = (W - cols * cell) / 2, oy = (H - rows * cell) / 2, wx = x.cx, wy = H * 0.5;
-    var md = Math.max(Math.sqrt(wx * wx + wy * wy), Math.sqrt(wx * wx + (H - wy) * (H - wy)));
-    var fx = W * 0.15, fy = H * 0.085, fcy = H * 0.3, seed = 90731, used = {}, n = 0, tries = 0;
+    var K = x.K, W = x.W, H = x.H, cell = 46 * K, cols = Math.ceil(W / cell), rows = Math.ceil(H / cell);
+    var ox = (W - cols * cell) / 2, oy = (H - rows * cell) / 2, wx = x.cx, wy = H * 0.48;
+    var fx = W * 0.13, fy = H * 0.07, fcy = H * 0.3, seed = 90731, used = {}, n = 0, tries = 0;
     function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
     var COL = [_s47Col(x, "Accent"), _s47Col(x, "Yorug'"), _s47Col(x, "To'q")];
-    while (n < N && tries < N * 30) {
+    // ref 0:05.9-0:06.9: blocks burst at the centre, then a rectangular wave carries them out to the frame edges,
+    // where they linger and flicker before dying out
+    while (n < N && tries < N * 40) {
         tries++;
         var gc = Math.floor(rnd() * cols), gr = Math.floor(rnd() * rows), r0 = rnd(), bw = 1, bh = 1;
-        if (r0 > 0.95) { bw = 3; bh = 3; } else if (r0 > 0.85) bw = 2; else if (r0 > 0.55) { bw = 2; bh = 2; }
+        if (r0 > 0.95) { bw = 3; bh = 3; } else if (r0 > 0.82) { bw = 2; bh = 2; } else if (r0 > 0.74) bw = 2;
         gc = Math.min(gc, cols - bw); gr = Math.min(gr, rows - bh);
         var key = gc + "_" + gr; if (used[key]) continue;
         var bx = ox + (gc + bw / 2) * cell, by = oy + (gr + bh / 2) * cell;
         var ex = (bx - wx) / fx, ey = (by - fcy) / fy;
-        if (face && ex * ex + ey * ey < 1 && rnd() < 0.88) continue;
+        if (face && ex * ex + ey * ey < 1 && rnd() < 0.7) continue;
+        var nx = Math.abs(bx - wx) / (W / 2), ny = Math.abs(by - wy) / (H / 2);
+        var dd = Math.min(1, 0.65 * Math.max(nx, ny) + 0.35 * Math.sqrt(nx * nx + ny * ny) / 1.414);
+        // the wave passes each ring once: keep the centre sparse so the burst reads as a ring, not a carpet
+        if (dd < 0.2 && rnd() < 0.25) continue;
         for (var uu = 0; uu < bw; uu++) { for (var vv = 0; vv < bh; vv++) used[(gc + uu) + "_" + (gr + vv)] = 1; }
-        var dd = Math.min(1, Math.sqrt((bx - wx) * (bx - wx) + (by - wy) * (by - wy)) / md);
-        var st = DS * (0.35 * Math.max(0, dd - 0.3) / 0.7 + rnd() * 0.04), lf = DS * (0.12 + 0.42 * dd * dd + rnd() * 0.08 + ((by > H * 0.78 || bx < W * 0.08 || bx > W * 0.92) ? 0.22 : 0));
-        var pk = 0.5 + rnd() * 0.4, cr = rnd(), ci = cr < 0.55 ? 0 : cr < 0.8 ? 1 : 2, hs = Math.floor(rnd() * 900) + 11;
-        _s47Rect(x, "blok " + (n + 1), [bw * cell, bh * cell], [bx, by], 0, COL[ci],
+        var edge = dd > 0.8 || bx < W * 0.1 || bx > W * 0.9 || by < H * 0.08 || by > H * 0.9;
+        var st = DS * (0.45 * Math.pow(dd, 1.3) + rnd() * 0.05), lf = DS * (0.18 + rnd() * 0.1 + (edge ? 0.15 + rnd() * 0.2 : 0));
+        var pk = 0.45 + rnd() * 0.5, cr = rnd(), ci = cr < 0.55 ? 0 : cr < 0.8 ? 1 : 2, hs = Math.floor(rnd() * 900) + 11;
+        var L = _s47Rect(x, "blok " + (n + 1), [bw * cell, bh * cell], [bx, by], 0, COL[ci],
             _s54Key(2) + 'var a=time-tk-' + st + ', L=' + lf + '; var f=Math.floor(time*15); var h=Math.sin(' + hs + '*12.9898+f*78.233)*43758.5453; h=h-Math.floor(h); ' +
-            'var u=a/L; (a<0||a>L)?0:op*' + pk + '*(h>0.25?1:0.35)*(1-u*u*u)');
+            'var u=a/L; (a<0||a>L)?0:op*' + pk + '*(h>0.22?1:0.35)*Math.min(1,u/0.12)*(1-u*u*u)');
+        _s54Glow(x, L, 24 * K, 170);
         n++;
     }
     _s47Finish(x);
