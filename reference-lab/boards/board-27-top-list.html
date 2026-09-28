@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board 27 · Top N ro'yxatlar — nutq bilan sinxron (451-460)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0d;--panel:#121218;--line:#26262f;--txt:#e8e8ee;--dimb:#8a8a99;--mono:'SF Mono',ui-monospace,Menlo,monospace;--gold:#B0FC0A;
+    --sp:cubic-bezier(.34,1.56,.64,1);--sf:cubic-bezier(.75,0,.25,1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.5 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  .sub{color:var(--dimb);font-size:13px;max-width:800px}
+  .bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 6px}
+  .bar .lb{font:11px var(--mono);color:var(--dimb);letter-spacing:.08em;text-transform:uppercase}
+  .tg{display:inline-flex;background:#1c1c22;border-radius:10px;padding:3px;gap:2px}
+  .tg button{border:0;background:transparent;color:var(--dimb);font:600 12px -apple-system,sans-serif;padding:7px 13px;border-radius:8px;cursor:pointer}
+  .tg button.on{background:#3a3a44;color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:16px}
+  .cardx{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:zoom-in}
+  .cardx:hover{border-color:var(--gold)}
+  .meta{padding:11px 14px 14px}
+  .meta .n{font:700 11px var(--mono);color:var(--gold)}
+  .meta b{display:block;font-size:14px;margin:1px 0 1px}
+  .meta .br{font-size:11.5px;color:var(--gold);opacity:.8}
+  .meta p{font-size:12px;color:var(--dimb);margin-top:4px}
+  .meta code{display:block;margin-top:7px;font:10.5px/1.45 var(--mono);color:#b9b9c7;background:#0d0d12;border:1px solid var(--line);border-radius:7px;padding:6px 8px}
+  .stage{position:relative;overflow:hidden;background:#222}
+  .foot{position:absolute;inset:-20%;filter:blur(18px);animation:drift 14s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-4%,3%) scale(1.08)}}
+  .modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+  .modal.on{display:flex}
+  .modal .stage{width:min(420px,90vw);border-radius:14px}
+
+  /* ---------- 1080-space comp ---------- */
+  .comp{position:absolute;left:0;top:0;width:1080px;height:var(--H,1920px);transform:scale(var(--u,.25));transform-origin:0 0;display:flex;align-items:center;justify-content:center;
+    --card:#fff;--row:#f2f2f7;--track:#e3e3e8;--thumb:#fff;--text:#1c1c1e;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.2);--tsh:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);
+    font:600 30px/1.2 -apple-system,'SF Pro Display','Inter','Segoe UI',sans-serif;color:var(--text)}
+  .comp.dark{--card:#1c1c1e;--row:#2c2c2e;--track:#3a3a3c;--thumb:#636366;--text:#fff;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.5);--tsh:none}
+  .card{position:relative;width:760px;background:var(--card);border-radius:44px;padding:36px;box-shadow:var(--sh);scale:var(--ps,1)}
+  .ttl{font-size:40px;font-weight:700;margin-bottom:26px;letter-spacing:-.5px}
+  .sb{font-size:26px;color:var(--dim);font-weight:500;margin:-18px 0 28px}
+  .dim{color:var(--dim)}
+  .btn{height:100px;border-radius:28px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;gap:14px;font-size:32px;margin-top:26px}
+  .row{background:var(--row);border-radius:22px;height:92px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;margin-top:16px}
+  .row .l{color:var(--dim);font-weight:500}
+
+  /* ---------- board 21 shared ---------- */
+  .ic{width:1em;height:1em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  .av{flex:none;width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:29px;font-weight:700;font-style:normal;letter-spacing:.5px;background:linear-gradient(145deg,var(--g1,#64d2ff),var(--g2,#007aff))}
+  .chip{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:15px;font-size:21px;font-weight:650;background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc);white-space:nowrap}
+  .dr{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 2}
+  .tp{white-space:pre}
+  .wd{display:inline-block;white-space:pre}
+  .cnt{display:inline-flex;line-height:1.1em;font-variant-numeric:tabular-nums;vertical-align:bottom}
+  .cnt .col{display:inline-block;height:1.1em;overflow:hidden}
+  .cnt .stk{display:block}
+  .cnt .stk i{display:block;height:1.1em;line-height:1.1em;font-style:normal;text-align:center}
+  .cnt .sep{display:inline-block;line-height:1.1em;white-space:pre}
+  .ckc circle{fill:#34c759} .ckc path{stroke:#fff;stroke-width:4.5}
+
+  /* ---------- board 27 lime overlay (L) ---------- */
+  .bgl{position:absolute;inset:-3%;background-size:cover;background-position:50% 35%;background-repeat:no-repeat;animation:drift 16s ease-in-out infinite alternate}
+  .comp.lm{padding-top:calc(var(--H,1920px)*.2);font-family:'Inter',-apple-system,'Helvetica Neue',Arial,sans-serif;color:#fff;--lime:#B0FC0A;--chipbg:rgba(0,0,0,.6)}
+  .comp.lm .card{width:auto;background:none;box-shadow:none;padding:0;border-radius:0}
+  .lbl{position:relative;display:inline-flex;align-items:center;height:58px;margin-left:17px;padding:0 22px;background:var(--chipbg);border-radius:5px;font-weight:700;font-size:29px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .lbl .bar{position:absolute;left:-17px;top:-9px;bottom:0;width:6px;border-radius:1px;background:var(--lime);box-shadow:0 0 12px var(--lime),0 0 28px rgba(176,252,10,.55);transform-origin:50% 100%}
+  .hv{font-weight:700;letter-spacing:-.03em;line-height:1.02;white-space:nowrap;text-shadow:0 6px 30px rgba(0,0,0,.35)}
+  .it{font-style:italic}
+  .lime{color:var(--lime)}
+  .gl{text-shadow:0 0 22px rgba(176,252,10,.6),0 0 60px rgba(176,252,10,.3)}
+  .cap{font-weight:600;font-size:34px;line-height:1.25;color:rgba(255,255,255,.88);text-shadow:0 2px 14px rgba(0,0,0,.6);white-space:nowrap}
+  .bloom{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(176,252,10,.5),rgba(176,252,10,.14) 55%,rgba(176,252,10,0));pointer-events:none}
+  .nc{display:block;height:1.1em;overflow:hidden}
+  .ns{display:block}
+  .ns i{display:block;height:1.1em;line-height:1.1em;font-style:inherit;text-align:center}
+
+  /* 451 COUNTDOWN NUMBERS */
+  .c451 .bd{display:flex;align-items:center;gap:30px;margin-top:64px}
+  .c451 .nw{position:relative;flex:none;width:250px;height:396px}
+  .c451 .bn{position:absolute;inset:0;font-size:360px;font-weight:700;font-style:italic;letter-spacing:-.04em;line-height:1;color:var(--lime)}
+  .c451 .nc{padding:0 40px;margin:0 -40px}
+  .c451 .ns i{text-shadow:0 0 30px rgba(176,252,10,.55),0 0 80px rgba(176,252,10,.28)}
+  .c451 .bloom{left:-260px;top:-230px;width:770px;height:860px}
+  .c451 .crw{position:absolute;left:50%;top:-52px;width:104px;height:104px;margin-left:-46px;color:var(--lime);filter:drop-shadow(0 0 14px rgba(176,252,10,.8))}
+  .c451 .crw svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .c451 .tw{position:relative;width:600px;height:300px}
+  .c451 .tt{position:absolute;left:0;top:30px}
+  .c451 .tt .hv{font-size:78px}
+  .c451 .tt .cap{margin-top:18px}
+
+  /* 452 LIST BUILD */
+  .c452 .hd{font-size:72px;margin:26px 0 24px}
+  .c452 .ls{width:780px}
+  .c452 .li{position:relative;display:flex;align-items:center;gap:22px;height:100px;margin-top:10px;padding:0 30px 0 24px;font-size:54px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;transform-origin:0 50%}
+  .c452 .li b{position:relative;width:62px;font-size:40px;font-style:italic;font-weight:700;opacity:.8}
+  .c452 .li span{position:relative}
+  .c452 .hl{position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:6px;background:var(--lime);box-shadow:0 0 34px rgba(176,252,10,.45);transform-origin:0 50%}
+
+  /* 455 SIDE RAIL INDEX */
+  .c455 .card{width:1000px}
+  .c455 .rl{position:relative;height:680px;margin-top:34px}
+  .c455 .trk{position:absolute;left:58px;top:40px;width:5px;height:560px;border-radius:3px;background:rgba(255,255,255,.22)}
+  .c455 .trk i{position:absolute;inset:0;border-radius:3px;background:var(--lime);box-shadow:0 0 12px var(--lime);transform-origin:50% 0}
+  .c455 .rn{position:absolute;left:20px;width:82px;height:82px;margin-top:-41px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:700;font-style:italic}
+  .c455 .hh{position:absolute;left:150px;margin-top:-46px}
+  .c455 .chp{position:relative;display:inline-flex;align-items:center;height:92px;margin-left:17px;padding:0 28px 4px;background:var(--chipbg);border-radius:6px;font-size:60px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}
+  .c455 .chp .bar{position:absolute;left:-17px;top:-10px;bottom:0;width:7px;border-radius:1px;background:var(--lime);box-shadow:0 0 12px var(--lime),0 0 28px rgba(176,252,10,.55)}
+  .c455 .chp em{font-style:italic;color:var(--lime);margin-left:14px}
+  .c455 .hh .cap{margin:14px 0 0 20px}
+
+  /* 457 BIG NUMBER HERO */
+  .c457 .card{width:840px}
+  .c457 .nb{position:relative;height:380px;margin-top:18px;font-size:340px;font-weight:700;font-style:italic;letter-spacing:-.04em;line-height:1.1}
+  .c457 .ly{position:absolute;left:0;top:0;display:flex}
+  .c457 .ly>span{display:block;height:1.1em;line-height:1.1em}
+  .c457 .ol{color:transparent;-webkit-text-stroke:5px var(--lime);filter:drop-shadow(0 0 12px rgba(176,252,10,.55))}
+  .c457 .fl{color:var(--lime);text-shadow:0 0 40px rgba(176,252,10,.45)}
+  .c457 .nc{padding:0 .14em;margin:0 -.14em}
+  .c457 .hs{margin-right:.06em}
+  .c457 .bloom{left:-160px;top:-120px;width:760px;height:620px}
+  .c457 .tw{position:relative;height:290px;margin-top:6px}
+  .c457 .tt{position:absolute;left:0;top:0}
+  .c457 .tt .hv{font-size:78px}
+  .c457 .tt .cap{margin-top:16px}
+
+  /* 458 STORY SEGMENTS */
+  .comp.c458{padding-top:calc(var(--H,1920px)*.36)}
+  .c458 .card.tb{position:absolute;left:36px;right:36px;top:44px}
+  .c458 .sg{display:flex;gap:10px}
+  .c458 .sg i{flex:1;height:9px;border-radius:5px;background:rgba(255,255,255,.35);overflow:hidden}
+  .c458 .sg b{display:block;height:100%;background:var(--lime);box-shadow:0 0 10px var(--lime);transform-origin:0 50%}
+  .c458 .who{display:flex;align-items:center;gap:16px;margin-top:22px;font-size:31px;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+  .c458 .who .av{width:66px;height:66px;font-size:24px;font-weight:800;background:var(--lime);color:#0c1300;box-shadow:0 0 0 4px rgba(0,0,0,.35)}
+  .c458 .who em{font-style:normal;font-weight:500;color:rgba(255,255,255,.72)}
+  .c458 .mn{position:relative;width:860px;height:420px}
+  .c458 .ti{position:absolute;left:0;top:0}
+  .c458 .ti .hv{font-size:78px;margin-top:26px}
+  .c458 .ti .cap{margin-top:18px}
+
+  /* ---------- board 27 apple cards (A) ---------- */
+  /* 453 PODIUM */
+  .c453 .pd{display:flex;align-items:flex-end;gap:10px;height:650px}
+  .c453 .pc{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center}
+  .c453 .tp3{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:14px}
+  .c453 .tp3 .av{width:82px;height:82px;font-size:27px}
+  .c453 .tp3 b{font-size:23px;margin-top:10px;white-space:nowrap}
+  .c453 .tp3 small{font-size:19px;color:var(--dim);font-weight:650;white-space:nowrap;margin-top:1px}
+  .c453 .pl{width:100%;border-radius:22px 22px 12px 12px;background:linear-gradient(180deg,var(--pc),color-mix(in srgb,var(--pc) 72%,#000));transform-origin:50% 100%;display:flex;flex-direction:column;align-items:center;padding-top:16px;color:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,.25)}
+  .c453 .pl em{font-style:normal;font-size:62px;font-weight:800;line-height:1.05}
+  .c453 .pl .ic{font-size:34px;margin-top:8px;opacity:.9}
+  .c453 .crn{position:absolute;left:50%;top:-66px;width:66px;height:66px;margin-left:-33px;color:#ffcc00;filter:drop-shadow(0 4px 10px rgba(255,159,10,.5))}
+  .c453 .crn .ic{width:100%;height:100%;stroke-width:2.2;fill:rgba(255,204,0,.25)}
+  .c453 .ring{position:absolute;left:50%;top:0;width:104px;height:104px;margin:-11px 0 0 -52px;border-radius:50%;border:4px solid #ffcc00}
+
+  /* 454 CARD DECK */
+  .c454 .dk{position:relative;height:590px}
+  .c454 .dc{position:absolute;left:0;right:0;bottom:0;height:510px;border-radius:34px;background:var(--card);padding:36px 38px;transform-origin:50% 0;box-shadow:0 18px 44px rgba(0,0,0,.16),inset 0 0 0 2px var(--row);display:flex;flex-direction:column}
+  .c454 .dh{display:flex;align-items:center;justify-content:space-between}
+  .c454 .nb{font-size:88px;font-weight:800;letter-spacing:-3px;line-height:1;color:var(--dc)}
+  .c454 .ib{width:96px;height:96px;border-radius:28px;background:color-mix(in srgb,var(--dc) 15%,transparent);color:var(--dc);display:flex;align-items:center;justify-content:center;font-size:48px}
+  .c454 .dt{font-size:46px;font-weight:750;letter-spacing:-.6px;margin-top:36px;line-height:1.15}
+  .c454 .dc p{font-size:28px;line-height:1.38;color:var(--dim);font-weight:500;margin-top:14px}
+  .c454 .df{display:flex;align-items:center;gap:14px;margin-top:auto}
+  .c454 .df .chip{--acc:var(--dc)}
+  .c454 .df span.dim{font-size:22px;font-weight:600}
+  .c454 .pg{display:flex;align-items:center;justify-content:space-between;margin-top:30px;padding:0 6px}
+  .c454 .dots{display:flex;gap:10px}
+  .c454 .dots i{display:block;height:14px;border-radius:7px;background:var(--acc)}
+  .c454 .pn{display:flex;align-items:center;font-size:30px;font-weight:700;font-variant-numeric:tabular-nums}
+  .c454 .pn .nc{width:.62em}
+  .c454 .pn em{font-style:normal;color:var(--dim);margin-left:8px}
+
+  /* 456 MISTAKES CHECKLIST */
+  .c456 .hd{display:flex;align-items:center;justify-content:space-between}
+  .c456 .hd .chip{font-size:22px;padding:9px 16px}
+  .c456 .mr{display:flex;align-items:center;gap:22px;height:92px;margin-top:12px;padding:0 26px 0 22px;border-radius:24px;background:var(--row);font-size:31px}
+  .c456 .xo{flex:none;width:50px;height:50px;border-radius:50%;background:#ff3b30;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px}
+  .c456 .xo .ic{stroke-width:3.2}
+  .c456 .tx{position:relative;white-space:nowrap}
+  .c456 .tx .sl{position:absolute;left:-8px;right:-8px;top:54%;height:4px;margin-top:-2px;border-radius:2px;background:#ff3b30;transform-origin:0 50%}
+  .c456 .mr em{margin-left:auto;font-style:normal;font-size:22px;color:var(--dim);font-weight:650}
+  .c456 .ok{position:relative;display:flex;align-items:center;gap:22px;margin-top:20px;padding:24px 26px 24px 22px;border-radius:28px;background:color-mix(in srgb,#34c759 13%,var(--card));box-shadow:inset 0 0 0 3px #34c759}
+  .c456 .ok svg.ckc{flex:none;width:62px;height:62px}
+  .c456 .ok small{display:block;font-size:21px;font-weight:750;color:#34c759;letter-spacing:.1em;text-transform:uppercase}
+  .c456 .ok b{display:block;font-size:31px;margin-top:3px}
+
+  /* 459 RANKING BARS */
+  .c459 .rk{position:relative;height:548px}
+  .c459 .rkn{position:absolute;left:0;width:40px;height:100px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:var(--dim)}
+  .c459 .rr{position:absolute;left:52px;right:0;height:100px;border-radius:24px;background:var(--row);display:flex;align-items:center;gap:18px;padding:0 24px 0 16px}
+  .c459 .rr .av{width:66px;height:66px;font-size:23px}
+  .c459 .md{flex:1;min-width:0}
+  .c459 .md b{display:block;font-size:26px;white-space:nowrap}
+  .c459 .tr{height:14px;border-radius:7px;background:var(--track);margin-top:12px;overflow:hidden}
+  .c459 .tr i{display:block;height:100%;border-radius:7px}
+  .c459 .sc{flex:none;width:112px;text-align:right;font-size:38px;font-weight:800;letter-spacing:-.5px}
+  .c459 .w1{position:absolute;right:150px;top:-18px;display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:13px;background:#ff9f0a;color:#fff;font-size:19px;font-weight:750;box-shadow:0 6px 14px rgba(255,159,10,.35)}
+  .c459 .w1 .ic{font-size:22px;stroke-width:2.4}
+  .c459 .row .ic{font-size:30px;color:var(--acc);margin-right:12px}
+  .c459 .row .l{display:flex;align-items:center}
+
+  /* 460 RECAP CARD */
+  .c460 .ar{position:relative;height:560px}
+  .c460 .fbg{position:absolute;inset:0;border-radius:32px;background:var(--row)}
+  .c460 .fp{position:absolute;left:0;right:0;top:0;height:470px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 40px}
+  .c460 .fp small{font-size:22px;font-weight:700;color:var(--acc);letter-spacing:.12em;text-transform:uppercase}
+  .c460 .fp .ib{width:132px;height:132px;border-radius:38px;margin-top:22px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:64px;box-shadow:0 14px 30px color-mix(in srgb,var(--acc) 35%,transparent)}
+  .c460 .fp b{font-size:48px;font-weight:750;letter-spacing:-.6px;margin-top:30px;white-space:nowrap}
+  .c460 .fp p{font-size:28px;color:var(--dim);font-weight:500;margin-top:12px;line-height:1.35}
+  .c460 .pr{position:absolute;left:40px;right:40px;bottom:40px;display:flex;gap:10px}
+  .c460 .pr i{flex:1;height:10px;border-radius:5px;background:var(--track);overflow:hidden}
+  .c460 .pr b{display:block;height:100%;background:var(--acc);transform-origin:0 50%}
+  .c460 .rc{position:absolute;inset:0}
+  .c460 .rh{display:flex;align-items:center;gap:10px;height:40px;font-size:22px;font-weight:700;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;padding-left:6px}
+  .c460 .rh .ic{font-size:28px;color:var(--acc)}
+  .c460 .ri{display:flex;align-items:center;gap:18px;height:88px;margin-top:12px;padding:0 24px 0 18px;border-radius:24px;background:var(--row);font-size:29px;white-space:nowrap}
+  .c460 .ri>i{flex:none;width:48px;height:48px;border-radius:50%;background:var(--acc);color:#fff;font-style:normal;font-size:24px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .c460 .ri .ic{margin-left:auto;font-size:32px;color:#34c759;stroke-width:2.6}
+  .c460 .btn .ic{font-size:34px}
+  .c460 .btn .bm{fill:currentColor}
+
+</style>
+</head>
+<body><div class="wrap">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></symbol>
+  <symbol id="i-bookopen" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M16 14v4M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 2v7.5a2 2 0 0 1-.2.9L4.7 20.5a1 1 0 0 0 .9 1.5h12.8a1 1 0 0 0 .9-1.5l-5.1-10.1a2 2 0 0 1-.2-.9V2"/><path d="M8.5 2h7M7 16h10"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-head" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3l14 9-14 9z"/></symbol>
+  <symbol id="i-term" viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14"/></symbol>
+  <symbol id="i-land" viewBox="0 0 24 24"><path d="M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 2l8 5H4z"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+</defs></svg>
+<header>
+  <div class="kicker">Board 27 · Nytvir Motion · 451-460 · Top N ro'yxatlar</div>
+  <h1>Top 5 ro'yxat — gapingiz bilan birga sanaladi</h1>
+  <p class="sub">"Top 3...", "5 ta xato", "5 ta qadam" deganingizda ekranda bandlar birin-ketin chiqadi. Har band = AE'da bitta Tab kalit, kalitlarni so'zlaringizga surib sinxron qilasiz. Band soni 3-10 ta. Ikki uslub: lime kinetik overlay (gapiruvchi odam kadri ustida, yuzni to'smaydi) va Apple karta. Namuna "Top 5", taxminan 0.9 s qadam. Kartani bossangiz kattalashadi.</p>
+</header>
+<div class="bar">
+  <span class="lb">Format</span><div class="tg" id="fmt"><button data-v="1920" class="on">9:16 Reel</button><button data-v="1350">4:5 Feed</button><button data-v="1080">1:1</button></div>
+  <span class="lb">Tema</span><div class="tg" id="thm"><button data-v="preset" class="on">Preset</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+</div>
+<div class="grid" id="grid">
+
+<!-- 451 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c451"><div class="card">
+  <div class="lbl" data-a="wipe@.4"><i class="bar" data-a="growy@.3/.25"></i>Top 5 · Ingliz tili</div>
+  <div class="bd">
+    <div class="nw">
+      <i class="bloom" data-b="opacity=0&transform=scale(.4)" data-to="4.35/.18/e opacity=1&transform=scale(1.15); 4.55/.7/e opacity=.55&transform=scale(1)"></i>
+      <div class="bn" data-a="in@.5/.4" data-to="4.35/.14/e transform=scale(1.12); 4.49/.45/b transform=scale(1)"><span class="nc" data-to="1.65/.12/e filter=blur(8px); 1.77/.24/e filter=blur(0px); 2.55/.12/e filter=blur(8px); 2.67/.24/e filter=blur(0px); 3.45/.12/e filter=blur(8px); 3.57/.24/e filter=blur(0px); 4.35/.12/e filter=blur(8px); 4.47/.24/e filter=blur(0px)"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.38/b transform=translateY(-1.1em); 2.55/0.38/b transform=translateY(-2.2em); 3.45/0.38/b transform=translateY(-3.3em); 4.35/0.38/b transform=translateY(-4.4em)"><i>5</i><i>4</i><i>3</i><i>2</i><i>1</i></span></span></div>
+      <div class="crw" data-a="pop@4.5/.5" data-tf="rotate(-10deg)"><svg viewBox="0 0 24 24"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zM5 20h14"/></svg></div>
+    </div>
+    <div class="tw">
+    <div class="tt" data-a="in@0.83/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Har kuni<br><span class="it lime gl">20 daqiqa</span></div><div class="cap">qisqa, lekin tanaffussiz</div></div>
+    <div class="tt" data-a="in@1.73/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Serial<br><span class="it lime gl">subtitr bilan</span></div><div class="cap">inglizcha subtitr, o'zbekcha emas</div></div>
+    <div class="tt" data-a="in@2.63/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Speaking<br><span class="it lime gl">club</span></div><div class="cap">haftada kamida bir marta</div></div>
+    <div class="tt" data-a="in@3.53/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Xatolar<br><span class="it lime gl">daftari</span></div><div class="cap">har xato — bitta yangi qoida</div></div>
+    <div class="tt" data-a="in@4.43/.42"><div class="hv">Oylik<br><span class="it lime gl">mock test</span></div><div class="cap">darajangizni raqamda ko'ring</div></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">451</div><b>Countdown Numbers</b><div class="br">Ingliz tili markazi · top 5 maslahat</div><p>Ulkan lime raqam 5 → 1 vertikal aylanib almashadi, har aylanishda motion blur. Yonida band sarlavhasi blur bilan chiqadi, eskisi yuqoriga xiralashib ketadi. #1 da lime chaqnash, raqam zarb bilan kattalashadi, ustiga toj tushadi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): sarlavha=lime so'z=izoh | yo'nalish 5→1 / 1→5 | #1 toj va chaqnash on/off"</code></div></div>
+
+<!-- 452 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c452"><div class="card">
+  <div class="lbl" data-a="wipe@.35"><i class="bar" data-a="growy@.25/.25"></i>DTM · matematika</div>
+  <div class="hv hd" data-a="in@.45/.4">Eng ko'p <span class="it lime gl">tushadigan</span></div>
+  <div class="ls">
+    <div class="li" data-a="inl@0.75" data-b="color=#ffffff&text-shadow=0 3px 18px rgba(0~0~0~.5)" data-to="0.89/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0); 1.65/.4/e color=#ffffff&text-shadow=0 3px 18px rgba(0~0~0~.5)&opacity=.45&transform=scale(.86)"><i class="hl" data-a="growx@0.81/.34" data-to="1.65/.25/e opacity=0"></i><b>01</b><span>Tenglamalar</span></div>
+    <div class="li" data-a="inl@1.65" data-b="color=#ffffff&text-shadow=0 3px 18px rgba(0~0~0~.5)" data-to="1.79/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0); 2.55/.4/e color=#ffffff&text-shadow=0 3px 18px rgba(0~0~0~.5)&opacity=.45&transform=scale(.86)"><i class="hl" data-a="growx@1.71/.34" data-to="2.55/.25/e opacity=0"></i><b>02</b><span>Funksiya va grafik</span></div>
+    <div class="li" data-a="inl@2.55" data-b="color=#ffffff&text-shadow=0 3px 18px rgba(0~0~0~.5)" data-to="2.69/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0); 3.45/.4/e color=#ffffff&text-shadow=0 3px 18px rgba(0~0~0~.5)&opacity=.45&transform=scale(.86)"><i class="hl" data-a="growx@2.61/.34" data-to="3.45/.25/e opacity=0"></i><b>03</b><span>Progressiya</span></div>
+    <div class="li" data-a="inl@3.45" data-b="color=#ffffff&text-shadow=0 3px 18px rgba(0~0~0~.5)" data-to="3.59/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0); 4.35/.4/e color=#ffffff&text-shadow=0 3px 18px rgba(0~0~0~.5)&opacity=.45&transform=scale(.86)"><i class="hl" data-a="growx@3.51/.34" data-to="4.35/.25/e opacity=0"></i><b>04</b><span>Trigonometriya</span></div>
+    <div class="li" data-a="inl@4.35" data-b="color=#ffffff&text-shadow=0 3px 18px rgba(0~0~0~.5)" data-to="4.49/.2/e color=#0c1300&text-shadow=0 0 0 rgba(0~0~0~0)"><i class="hl" data-a="growx@4.41/.34"></i><b>05</b><span>Ehtimollik</span></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">452</div><b>List Build</b><div class="br">Matematika markazi · DTM mavzulari</div><p>Ro'yxat qatorlari birin-ketin chapdan blur bilan qo'shiladi. Joriy qator orqasida lime highlight bar tortiladi, matn qorayadi. Keyingi band kelganda oldingisi xiralashib kichrayadi, ro'yxat pastga o'sib boradi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | sarlavha (lime so'z) | bandlar (3-10): raqam=matn | highlight rangi | xira qator shaffofligi"</code></div></div>
+
+<!-- 453 -->
+<div class="cardx"><div class="stage" data-bg="#ffd29a,#8a4a10,#1f0f02"><div class="comp c453" data-theme="dark" style="--acc:#ff9f0a"><div class="card">
+  <div class="ttl" data-a="up@.35">Oy yulduzlari</div>
+  <div class="sb" data-a="up@.45">Ilm Ziyo · sentabr 2026 · Top 5</div>
+  <div class="pd">
+    <div class="pc" style="--pc:#5856d6">
+      <div class="tp3" data-a="pop@1.95"><i class="av" style="--g1:#8ee6a0;--g2:#34c759">JT</i><b>Jasur T.</b><small>SAT 1480</small></div>
+      <div class="pl" style="height:200px" data-a="growy@1.65/.6"><em>4</em><svg class="ic"><use href="#i-trend"/></svg></div></div>
+    <div class="pc" style="--pc:#98989f">
+      <div class="tp3" data-a="pop@3.75"><i class="av" style="--g1:#64d2ff;--g2:#007aff">ST</i><b>Sardor T.</b><small>DTM 182.4</small></div>
+      <div class="pl" style="height:330px" data-a="growy@3.45/.6"><em>2</em><svg class="ic"><use href="#i-calc"/></svg></div></div>
+    <div class="pc" style="--pc:#ff9f0a">
+      <div class="tp3" data-a="pop@4.65"><i class="ring" data-a="echo@5.05/.7"></i><span class="crn" data-a="stamp@4.85/.5" data-tf="rotate(-8deg)"><svg class="ic"><use href="#i-crown"/></svg></span><i class="av" style="--g1:#ff6482;--g2:#ff2d55">MR</i><b>Madina R.</b><small>IELTS 8.0</small></div>
+      <div class="pl" style="height:410px" data-a="growy@4.35/.6"><em>1</em><svg class="ic"><use href="#i-globe"/></svg></div></div>
+    <div class="pc" style="--pc:#c8773a">
+      <div class="tp3" data-a="pop@2.85"><i class="av" style="--g1:#ffd60a;--g2:#ff9500">AN</i><b>Aziza N.</b><small>IELTS 7.5</small></div>
+      <div class="pl" style="height:262px" data-a="growy@2.55/.6"><em>3</em><svg class="ic"><use href="#i-globe"/></svg></div></div>
+    <div class="pc" style="--pc:#30b0c7">
+      <div class="tp3" data-a="pop@1.05"><i class="av" style="--g1:#d8b4fe;--g2:#af52de">KY</i><b>Kamola Y.</b><small>CEFR C1</small></div>
+      <div class="pl" style="height:150px" data-a="growy@0.75/.6"><em>5</em><svg class="ic"><use href="#i-bookopen"/></svg></div></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">453</div><b>Podium Top 3</b><div class="br">O'quv markaz · oyning eng yaxshi o'quvchilari</div><p>Podium ustunlari 5 → 1 tartibda pastdan prujina bilan ko'tariladi, har ustunda o'rin raqami va fan ikoni. Ustun ustida avatar, ism va natija chiqadi. Oxirida markazdagi 1-o'ringa oltin toj zarb bilan tushadi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz. 3 dan ko'p bo'lsa, 3-2-1 baland markazda, qolganlari chetda pastroq.</p><code>prompt: "sarlavha | markaz, oy | bandlar (3-10): ism=natija=ikon | toj on/off | ustun ranglari"</code></div></div>
+
+<!-- 454 -->
+<div class="cardx"><div class="stage" data-bg="#d4ccff,#3a2f8a,#0d0a26"><div class="comp c454" style="--acc:#5856d6"><div class="card">
+  <div class="ttl" data-a="up@.35">IELTS Writing · Top 5</div>
+  <div class="sb" data-a="up@.45">Band 7+ uchun oltin qoidalar</div>
+  <div class="dk" data-a="up@.55/.7">
+    <div class="dc" style="--dc:#5856d6;z-index:10" data-b="opacity=1&transform=translateY(0px) scale(1.00)" data-to="1.65/.55/e opacity=0&transform=translateX(-1100px) rotate(-16deg)">
+      <div class="dh"><span class="nb">01</span><span class="ib"><svg class="ic"><use href="#i-bookopen"/></svg></span></div>
+      <b class="dt">Savolni 2 marta o'qing</b><p>Mavzudan chetga chiqish ballni eng tez tushiradi.</p>
+      <div class="df"><span class="chip">Task 2</span><span class="dim">1 daqiqa</span></div></div>
+    <div class="dc" style="--dc:#007aff;z-index:9" data-b="opacity=1&transform=translateY(-36px) scale(0.94)" data-to="1.71/.5/b opacity=1&transform=translateY(0px) scale(1.00); 2.55/.55/e opacity=0&transform=translateX(-1100px) rotate(-16deg)">
+      <div class="dh"><span class="nb">02</span><span class="ib"><svg class="ic"><use href="#i-file"/></svg></span></div>
+      <b class="dt">3 daqiqa — reja</b><p>Kirish, 2 ta asosiy fikr, xulosa. Keyin yozing.</p>
+      <div class="df"><span class="chip">Tuzilma</span><span class="dim">3 daqiqa</span></div></div>
+    <div class="dc" style="--dc:#34c759;z-index:8" data-b="opacity=1&transform=translateY(-72px) scale(0.88)" data-to="1.71/.5/b opacity=1&transform=translateY(-36px) scale(0.94); 2.61/.5/b opacity=1&transform=translateY(0px) scale(1.00); 3.45/.55/e opacity=0&transform=translateX(-1100px) rotate(-16deg)">
+      <div class="dh"><span class="nb">03</span><span class="ib"><svg class="ic"><use href="#i-pen"/></svg></span></div>
+      <b class="dt">1 paragraf = 1 fikr</b><p>Har paragrafda bitta g'oya va bitta aniq misol.</p>
+      <div class="df"><span class="chip">Coherence</span><span class="dim">har paragraf</span></div></div>
+    <div class="dc" style="--dc:#ff9f0a;z-index:7" data-b="opacity=0&transform=translateY(-108px) scale(0.82)" data-to="1.71/.5/b opacity=1&transform=translateY(-72px) scale(0.88); 2.61/.5/b opacity=1&transform=translateY(-36px) scale(0.94); 3.51/.5/b opacity=1&transform=translateY(0px) scale(1.00); 4.35/.55/e opacity=0&transform=translateX(-1100px) rotate(-16deg)">
+      <div class="dh"><span class="nb">04</span><span class="ib"><svg class="ic"><use href="#i-link"/></svg></span></div>
+      <b class="dt">Bog'lovchi — o'rnida</b><p>However, moreover — har gapda emas, kerak joyda.</p>
+      <div class="df"><span class="chip">Linking</span><span class="dim">me'yorida</span></div></div>
+    <div class="dc" style="--dc:#ff2d55;z-index:6" data-b="opacity=0&transform=translateY(-144px) scale(0.76)" data-to="1.71/.5/b opacity=0&transform=translateY(-108px) scale(0.82); 2.61/.5/b opacity=1&transform=translateY(-72px) scale(0.88); 3.51/.5/b opacity=1&transform=translateY(-36px) scale(0.94); 4.41/.5/b opacity=1&transform=translateY(0px) scale(1.00)">
+      <div class="dh"><span class="nb">05</span><span class="ib"><svg class="ic"><use href="#i-check"/></svg></span></div>
+      <b class="dt">Oxirgi 3 daqiqa — tekshiruv</b><p>Artikl, ko'plik -s va zamonlarni qayta ko'ring.</p>
+      <div class="df"><span class="chip">Grammatika</span><span class="dim">3 daqiqa</span></div></div>
+  </div>
+  <div class="pg" data-a="fade@.8"><div class="dots"><i data-b="width=46px&opacity=1" data-to="1.65/.4/b width=14px&opacity=.28"></i><i data-b="width=14px&opacity=.28" data-to="1.65/.4/b width=46px&opacity=1; 2.55/.4/b width=14px&opacity=.28"></i><i data-b="width=14px&opacity=.28" data-to="2.55/.4/b width=46px&opacity=1; 3.45/.4/b width=14px&opacity=.28"></i><i data-b="width=14px&opacity=.28" data-to="3.45/.4/b width=46px&opacity=1; 4.35/.4/b width=14px&opacity=.28"></i><i data-b="width=14px&opacity=.28" data-to="4.35/.4/b width=46px&opacity=1"></i></div><div class="pn"><span class="nc"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.4/b transform=translateY(-1.1em); 2.55/0.4/b transform=translateY(-2.2em); 3.45/0.4/b transform=translateY(-3.3em); 4.35/0.4/b transform=translateY(-4.4em)"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></span></span><em>/ 5</em></div></div>
+</div></div></div><div class="meta"><div class="n">454</div><b>Card Deck</b><div class="br">IELTS markazi · Writing maslahatlari</div><p>Har band alohida karta, orqadagilari dasta bo'lib ko'rinib turadi. Keyingi bandda joriy karta chapga burilib uchib ketadi, ortidagi karta prujina bilan oldinga chiqadi. Pastda nuqtalar cho'ziladi va 2 / 5 hisoblagichi aylanadi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "sarlavha | izoh | bandlar (3-10): raqam=ikon=sarlavha=izoh=teg | karta ranglari | uchish yo'nalishi"</code></div></div>
+
+<!-- 455 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c455"><div class="card">
+  <div class="lbl" data-a="wipe@.3"><i class="bar" data-a="growy@.2/.25"></i>Dasturchi · 5 qadam</div>
+  <div class="rl">
+    <div class="trk"><i data-b="transform=scaleY(0)" data-to="1.65/.5/e transform=scaleY(0.25); 2.55/.5/e transform=scaleY(0.50); 3.45/.5/e transform=scaleY(0.75); 4.35/.5/e transform=scaleY(1.00)"></i></div>
+    <div class="rn" style="top:40px" data-b="color=rgba(255~255~255~.5)&background-color=rgba(0~0~0~.55)" data-to="0.75/.45/b color=#B0FC0A&transform=scale(1.45)&background-color=rgba(0~0~0~.75); 1.65/.35/e color=rgba(255~255~255~.5)&transform=scale(1)&background-color=rgba(0~0~0~.55)"><span data-a="pop@0.40/.4">1</span></div>
+    <div class="rn" style="top:180px" data-b="color=rgba(255~255~255~.5)&background-color=rgba(0~0~0~.55)" data-to="1.65/.45/b color=#B0FC0A&transform=scale(1.45)&background-color=rgba(0~0~0~.75); 2.55/.35/e color=rgba(255~255~255~.5)&transform=scale(1)&background-color=rgba(0~0~0~.55)"><span data-a="pop@0.47/.4">2</span></div>
+    <div class="rn" style="top:320px" data-b="color=rgba(255~255~255~.5)&background-color=rgba(0~0~0~.55)" data-to="2.55/.45/b color=#B0FC0A&transform=scale(1.45)&background-color=rgba(0~0~0~.75); 3.45/.35/e color=rgba(255~255~255~.5)&transform=scale(1)&background-color=rgba(0~0~0~.55)"><span data-a="pop@0.54/.4">3</span></div>
+    <div class="rn" style="top:460px" data-b="color=rgba(255~255~255~.5)&background-color=rgba(0~0~0~.55)" data-to="3.45/.45/b color=#B0FC0A&transform=scale(1.45)&background-color=rgba(0~0~0~.75); 4.35/.35/e color=rgba(255~255~255~.5)&transform=scale(1)&background-color=rgba(0~0~0~.55)"><span data-a="pop@0.61/.4">4</span></div>
+    <div class="rn" style="top:600px" data-b="color=rgba(255~255~255~.5)&background-color=rgba(0~0~0~.55)" data-to="4.35/.45/b color=#B0FC0A&transform=scale(1.45)&background-color=rgba(0~0~0~.75)"><span data-a="pop@0.68/.4">5</span></div>
+    <div class="hh" style="top:40px" data-a="inl@0.85/.45" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-20px)"><div class="chp"><i class="bar"></i>HTML<em>va CSS</em></div><div class="cap">sayt skeleti · 3 hafta</div></div>
+    <div class="hh" style="top:180px" data-a="inl@1.75/.45" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-20px)"><div class="chp"><i class="bar"></i>JavaScript</div><div class="cap">mantiq va interaktivlik · 6 hafta</div></div>
+    <div class="hh" style="top:320px" data-a="inl@2.65/.45" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-20px)"><div class="chp"><i class="bar"></i>Git<em>va GitHub</em></div><div class="cap">kodni saqlash va jamoa · 1 hafta</div></div>
+    <div class="hh" style="top:460px" data-a="inl@3.55/.45" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-20px)"><div class="chp"><i class="bar"></i>React</div><div class="cap">zamonaviy interfeys · 6 hafta</div></div>
+    <div class="hh" style="top:600px" data-a="inl@4.45/.45"><div class="chp"><i class="bar"></i>Portfolio</div><div class="cap">3 ta tayyor loyiha bilan ishga</div></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">455</div><b>Side Rail Index</b><div class="br">IT akademiya · yo'l xaritasi</div><p>Ekran chetida vertikal 1..5 raqamlar va ingichka chiziq. Joriy raqam kattalashib lime bo'ladi, chiziq unga qadar to'ladi, yonida qora chip ichida sarlavha va ostida izoh chiqadi. Rail chetda turadi, yuzni to'smaydi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): sarlavha=lime so'z=izoh | tomon: chap / o'ng | raqamlar oralig'i"</code></div></div>
+
+<!-- 456 -->
+<div class="cardx"><div class="stage" data-bg="#ffc4c0,#8a2a25,#26090a"><div class="comp c456" style="--acc:#ff3b30"><div class="card">
+  <div class="hd"><div class="ttl" data-a="up@.35" style="margin:0">5 ta xato</div><span class="chip" data-a="pop@.55"><svg class="ic"><use href="#i-alert"/></svg>IELTS</span></div>
+  <div class="sb" data-a="up@.45" style="margin:8px 0 18px">IELTS'ga tayyorlanishda ko'p uchraydi</div>
+  <div class="mr" data-a="lt@0.75"><span class="xo" data-a="pop@0.95/.45"><svg class="ic"><use href="#i-x"/></svg></span><span class="tx"><span data-b="opacity=1" data-to="1.13/.3/e opacity=.45">Faqat test yechib o'tirish</span><i class="sl" data-a="growx@1.13/.32"></i></span><em>01</em></div>
+  <div class="mr" data-a="lt@1.65"><span class="xo" data-a="pop@1.85/.45"><svg class="ic"><use href="#i-x"/></svg></span><span class="tx"><span data-b="opacity=1" data-to="2.03/.3/e opacity=.45">Speaking'ni oxirga qoldirish</span><i class="sl" data-a="growx@2.03/.32"></i></span><em>02</em></div>
+  <div class="mr" data-a="lt@2.55"><span class="xo" data-a="pop@2.75/.45"><svg class="ic"><use href="#i-x"/></svg></span><span class="tx"><span data-b="opacity=1" data-to="2.93/.3/e opacity=.45">So'zni kontekstsiz yodlash</span><i class="sl" data-a="growx@2.93/.32"></i></span><em>03</em></div>
+  <div class="mr" data-a="lt@3.45"><span class="xo" data-a="pop@3.65/.45"><svg class="ic"><use href="#i-x"/></svg></span><span class="tx"><span data-b="opacity=1" data-to="3.83/.3/e opacity=.45">Mock testsiz imtihonga kirish</span><i class="sl" data-a="growx@3.83/.32"></i></span><em>04</em></div>
+  <div class="mr" data-a="lt@4.35"><span class="xo" data-a="pop@4.55/.45"><svg class="ic"><use href="#i-x"/></svg></span><span class="tx"><span data-b="opacity=1" data-to="4.73/.3/e opacity=.45">Writing'ni tekshirtirmaslik</span><i class="sl" data-a="growx@4.73/.32"></i></span><em>05</em></div>
+  <div class="ok" data-a="up@4.95/.6"><svg class="ckc" viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" data-a="pop@5.05"/><path class="dr" pathLength="1" data-a="draw@5.15/.35" d="M13 23 L19 29 L31 16"/></svg><div><small>To'g'risi</small><b>Har hafta mock test + ustoz tahlili</b></div></div>
+</div></div></div><div class="meta"><div class="n">456</div><b>Mistakes Checklist</b><div class="br">IELTS markazi · 5 ta xato</div><p>"5 ta xato" ro'yxati: har band chapdan kirib, qizil X doirasi otiladi va matn qizil chiziq bilan o'chiriladi. Oxirida yashil ramkali "To'g'risi" bandi ko'tariladi, galochka chizilib chiqadi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "sarlavha | izoh | teg | xatolar (3-10) | 'To'g'risi' matni | X va galochka ranglari"</code></div></div>
+
+<!-- 457 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c457"><div class="card">
+  <div class="lbl" data-a="wipe@.3"><i class="bar" data-a="growy@.2/.25"></i>Ota-onaga · Top 5</div>
+  <div class="nb" data-a="in@.45/.45">
+    <i class="bloom" data-b="opacity=0" data-to="1.30/.25/e opacity=.9; 1.55/.5/e opacity=0; 2.20/.25/e opacity=.9; 2.45/.5/e opacity=0; 3.10/.25/e opacity=.9; 3.35/.5/e opacity=0; 4.00/.25/e opacity=.9; 4.25/.5/e opacity=0; 4.90/.25/e opacity=.9; 5.15/.5/e opacity=0"></i>
+    <div class="ly ol"><span class="hs">#</span><span class="nc"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.4/b transform=translateY(-1.1em); 2.55/0.4/b transform=translateY(-2.2em); 3.45/0.4/b transform=translateY(-3.3em); 4.35/0.4/b transform=translateY(-4.4em)"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></span></span></div>
+    <div class="ly fl" data-b="clip-path=inset(100% -10% -10% -10%)" data-to="1.05/.5/e clip-path=inset(-10% -10% -10% -10%); 1.65/.14/l clip-path=inset(100% -10% -10% -10%); 1.97/.5/e clip-path=inset(-10% -10% -10% -10%); 2.55/.14/l clip-path=inset(100% -10% -10% -10%); 2.87/.5/e clip-path=inset(-10% -10% -10% -10%); 3.45/.14/l clip-path=inset(100% -10% -10% -10%); 3.77/.5/e clip-path=inset(-10% -10% -10% -10%); 4.35/.14/l clip-path=inset(100% -10% -10% -10%); 4.67/.5/e clip-path=inset(-10% -10% -10% -10%)"><span class="hs">#</span><span class="nc"><span class="ns" data-b="transform=translateY(0em)" data-to="1.65/0.4/b transform=translateY(-1.1em); 2.55/0.4/b transform=translateY(-2.2em); 3.45/0.4/b transform=translateY(-3.3em); 4.35/0.4/b transform=translateY(-4.4em)"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></span></span></div>
+  </div>
+  <div class="tw">
+    <div class="tt" data-a="in@1.05/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Kuniga<br><span class="it lime gl">15 daqiqa</span></div><div class="cap">uzoq emas, lekin har kuni</div></div>
+    <div class="tt" data-a="in@1.95/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Hayotiy<br><span class="it lime gl">misollar</span></div><div class="cap">do'konda, oshxonada, yo'lda</div></div>
+    <div class="tt" data-a="in@2.85/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Xato uchun<br><span class="it lime gl">urishmang</span></div><div class="cap">xato — o'rganishning bir qadami</div></div>
+    <div class="tt" data-a="in@3.75/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="hv">Mantiqiy<br><span class="it lime gl">o'yinlar</span></div><div class="cap">shaxmat, sudoku, rubik kubi</div></div>
+    <div class="tt" data-a="in@4.65/.42"><div class="hv">Harakatni<br><span class="it lime gl">maqtang</span></div><div class="cap">natijani emas, urinishni</div></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">457</div><b>Big Number Hero</b><div class="br">Bolalar matematika markazi · ota-onaga maslahat</div><p>Ulkan kontur "#1" raqami chiqadi va pastdan yuqoriga lime bilan to'ladi, orqasida yengil chaqnash. Ostida sarlavha blur bilan yig'iladi. Keyingi bandda raqam odometr kabi aylanadi, kontur bo'shab yana to'ladi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "label | bandlar (3-10): sarlavha=lime so'z=izoh | belgi (# / №) | kontur qalinligi | to'lish tezligi"</code></div></div>
+
+<!-- 458 -->
+<div class="cardx"><div class="stage" data-img="neutral_bg.jpg"><div class="comp lm c458"><div class="card">
+  <div class="mn">
+    <div class="ti" data-a="in@0.81/.42" data-to="1.65/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="lbl"><i class="bar"></i>Odat 1 / 5</div><div class="hv">Har kuni <span class="it lime gl">30 ta test</span></div><div class="cap">fan bo'yicha, vaqt o'lchab</div></div>
+    <div class="ti" data-a="in@1.71/.42" data-to="2.55/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="lbl"><i class="bar"></i>Odat 2 / 5</div><div class="hv">Xatolar <span class="it lime gl">daftari</span></div><div class="cap">har xato misolni qayta yeching</div></div>
+    <div class="ti" data-a="in@2.61/.42" data-to="3.45/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="lbl"><i class="bar"></i>Odat 3 / 5</div><div class="hv">Haftalik <span class="it lime gl">DTM sinovi</span></div><div class="cap">to'liq format, 189 ball tizimida</div></div>
+    <div class="ti" data-a="in@3.51/.42" data-to="4.35/.24/n opacity=0&filter=blur(10px)&transform=translateY(-28px)"><div class="lbl"><i class="bar"></i>Odat 4 / 5</div><div class="hv">Telefon <span class="it lime gl">boshqa xonada</span></div><div class="cap">diqqat — eng qimmat resurs</div></div>
+    <div class="ti" data-a="in@4.41/.42"><div class="lbl"><i class="bar"></i>Odat 5 / 5</div><div class="hv">8 soat <span class="it lime gl">uyqu</span></div><div class="cap">o'qiganingiz uyquda mustahkamlanadi</div></div>
+  </div>
+</div>
+<div class="card tb"><div class="sg"><i><b data-b="transform=scaleX(0)" data-to="0.75/0.90/l transform=scaleX(1)"></b></i><i><b data-b="transform=scaleX(0)" data-to="1.65/0.90/l transform=scaleX(1)"></b></i><i><b data-b="transform=scaleX(0)" data-to="2.55/0.90/l transform=scaleX(1)"></b></i><i><b data-b="transform=scaleX(0)" data-to="3.45/0.90/l transform=scaleX(1)"></b></i><i><b data-b="transform=scaleX(0)" data-to="4.35/0.90/l transform=scaleX(1)"></b></i></div><div class="who" data-a="fade@.3"><i class="av">IZ</i><b>ilmziyo</b><em>· grant olganlar odati</em></div></div>
+</div></div><div class="meta"><div class="n">458</div><b>Story Segments</b><div class="br">Abituriyent markazi · grant odatlari</div><p>Tepada Instagram stories uslubidagi 5 bo'lakli progress: har band o'z bo'lagini chiziqli to'ldiradi, ostida akkaunt nomi. Pastda, ko'krak sohasida, "Odat 2 / 5" chipi, sarlavha va izoh almashadi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz. Bo'laklar soni bandlarga teng.</p><code>prompt: "akkaunt nomi | izoh | bandlar (3-10): sarlavha=lime so'z=izoh | segment rangi | chip matni"</code></div></div>
+
+<!-- 459 -->
+<div class="cardx"><div class="stage" data-bg="#c0e4ff,#245a8a,#081626"><div class="comp c459" style="--acc:#007aff"><div class="card">
+  <div class="ttl" data-a="up@.35">Mock test reytingi</div>
+  <div class="sb" data-a="up@.45">11-B guruh · DTM · 189 ball</div>
+  <div class="rk">
+    <div class="rkn" style="top:0px;color:#ff9f0a" data-a="pop@5.05/.4">1</div>
+    <div class="rkn" style="top:112px" data-a="pop@5.11/.4">2</div>
+    <div class="rkn" style="top:224px" data-a="pop@5.17/.4">3</div>
+    <div class="rkn" style="top:336px" data-a="pop@5.23/.4">4</div>
+    <div class="rkn" style="top:448px" data-a="pop@5.29/.4">5</div>
+    <div class="rr" style="top:0px" data-a="lt@0.70" data-to="4.75/.7/b transform=translateY(336px)"><i class="av" style="--g1:#8ee6a0;--g2:#34c759">JT</i><div class="md"><b>Jasur To'rayev</b><div class="tr"><i data-b="width=0%&background-color=#007aff" data-to="0.82/.75/e width=86.9%"></i></div></div><b class="sc"><span class="cnt" data-c0="0.0" data-c1="164.2" data-roll="0.82/.75"></span></b></div>
+    <div class="rr" style="top:112px" data-a="lt@1.50" data-to="4.75/.7/b transform=translateY(-112px)"><i class="av" style="--g1:#ff6482;--g2:#ff2d55">MR</i><div class="md"><b>Madina Rasulova</b><div class="tr"><i data-b="width=0%&background-color=#007aff" data-to="1.62/.75/e width=96.0%; 5.05/.4/e background-color=#ff9f0a"></i></div></div><b class="sc"><span class="cnt" data-c0="0.0" data-c1="181.5" data-roll="1.62/.75"></span></b><span class="w1" data-a="pop@5.30"><svg class="ic"><use href="#i-crown"/></svg>1-o'rin</span></div>
+    <div class="rr" style="top:224px" data-a="lt@2.30" data-to="4.75/.7/b transform=translateY(224px)"><i class="av" style="--g1:#64d2ff;--g2:#007aff">BK</i><div class="md"><b>Bobur Karimov</b><div class="tr"><i data-b="width=0%&background-color=#007aff" data-to="2.42/.75/e width=80.8%"></i></div></div><b class="sc"><span class="cnt" data-c0="0.0" data-c1="152.8" data-roll="2.42/.75"></span></b></div>
+    <div class="rr" style="top:336px" data-a="lt@3.10" data-to="4.75/.7/b transform=translateY(-224px)"><i class="av" style="--g1:#d8b4fe;--g2:#af52de">SA</i><div class="md"><b>Sevara Aliyeva</b><div class="tr"><i data-b="width=0%&background-color=#007aff" data-to="3.22/.75/e width=93.3%"></i></div></div><b class="sc"><span class="cnt" data-c0="0.0" data-c1="176.3" data-roll="3.22/.75"></span></b></div>
+    <div class="rr" style="top:448px" data-a="lt@3.90" data-to="4.75/.7/b transform=translateY(-224px)"><i class="av" style="--g1:#ffd60a;--g2:#ff9500">TS</i><div class="md"><b>Temur Saidov</b><div class="tr"><i data-b="width=0%&background-color=#007aff" data-to="4.02/.75/e width=89.4%"></i></div></div><b class="sc"><span class="cnt" data-c0="0.0" data-c1="169.0" data-roll="4.02/.75"></span></b></div>
+  </div>
+  <div class="row" data-a="up@.55"><span class="l"><svg class="ic"><use href="#i-users"/></svg>Guruh o'rtachasi</span><b>168.8 <span class="dim" style="font-size:24px">/ 189</span></b></div>
+</div></div></div><div class="meta"><div class="n">459</div><b>Ranking Bars</b><div class="br">Abituriyent markazi · guruh reytingi</div><p>Har band avatar, ism va ball bilan chapdan kiradi, gorizontal bar o'sadi, ball aylanib to'xtaydi. Hamma band chiqqach qatorlar ball bo'yicha prujina bilan qayta saralanadi, chapda 1-5 o'rinlar chiqadi, birinchisi oltin bar va toj oladi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "sarlavha | guruh, maksimal ball | bandlar (3-10): ism=ball | saralash on/off | 1-o'rin belgisi"</code></div></div>
+
+<!-- 460 -->
+<div class="cardx"><div class="stage" data-bg="#d0e8c8,#2f6a3a,#0a1f0e"><div class="comp c460" style="--acc:#34c759"><div class="card">
+  <div class="ttl" data-a="up@.35">IELTS 7+ · 5 qadam</div>
+  <div class="sb" data-a="up@.45">Ilm Ziyo IELTS markazi</div>
+  <div class="ar">
+    <div class="fbg" data-a="up@.5" data-to="4.60/.35/n opacity=0&transform=scale(.96)">
+      <div class="pr"><i><b data-b="transform=scaleX(0)" data-to="0.80/.45/e transform=scaleX(1)"></b></i><i><b data-b="transform=scaleX(0)" data-to="1.60/.45/e transform=scaleX(1)"></b></i><i><b data-b="transform=scaleX(0)" data-to="2.40/.45/e transform=scaleX(1)"></b></i><i><b data-b="transform=scaleX(0)" data-to="3.20/.45/e transform=scaleX(1)"></b></i><i><b data-b="transform=scaleX(0)" data-to="4.00/.45/e transform=scaleX(1)"></b></i></div></div>
+    <div class="fp" data-a="up@0.70/.55" data-to="1.46/.2/n opacity=0&transform=translateY(-40px) scale(.96)"><small>Qadam 1 / 5</small><span class="ib"><svg class="ic"><use href="#i-target"/></svg></span><b>Darajangizni aniqlang</b><p>Bepul placement test — qayerdan boshlashni biling.</p></div>
+    <div class="fp" data-a="up@1.64/.55" data-to="2.26/.2/n opacity=0&transform=translateY(-40px) scale(.96)"><small>Qadam 2 / 5</small><span class="ib"><svg class="ic"><use href="#i-book"/></svg></span><b>Kuniga 15 ta so'z</b><p>Kontekst bilan, gap ichida yodlang.</p></div>
+    <div class="fp" data-a="up@2.44/.55" data-to="3.06/.2/n opacity=0&transform=translateY(-40px) scale(.96)"><small>Qadam 3 / 5</small><span class="ib"><svg class="ic"><use href="#i-cal"/></svg></span><b>Haftada 1 mock test</b><p>To'liq format, vaqt o'lchab.</p></div>
+    <div class="fp" data-a="up@3.24/.55" data-to="3.86/.2/n opacity=0&transform=translateY(-40px) scale(.96)"><small>Qadam 4 / 5</small><span class="ib"><svg class="ic"><use href="#i-mic"/></svg></span><b>Speaking'ni yozib oling</b><p>O'z ovozingizni tinglab, xatoni toping.</p></div>
+    <div class="fp" data-a="up@4.04/.55" data-to="4.56/.2/n opacity=0&transform=translateY(-40px) scale(.96)"><small>Qadam 5 / 5</small><span class="ib"><svg class="ic"><use href="#i-pen"/></svg></span><b>Writing'ni tekshirting</b><p>Har hafta 2 ta essay, ustoz izohi bilan.</p></div>
+    <div class="rc">
+      <div class="rh" data-a="fade@4.65"><svg class="ic"><use href="#i-list"/></svg>Hammasi bir joyda</div>
+      <div class="ri" data-a="dn@4.72/.5"><i>1</i>Darajangizni aniqlang<svg class="ic"><use href="#i-check"/></svg></div>
+      <div class="ri" data-a="dn@4.80/.5"><i>2</i>Kuniga 15 ta so'z<svg class="ic"><use href="#i-check"/></svg></div>
+      <div class="ri" data-a="dn@4.88/.5"><i>3</i>Haftada 1 mock test<svg class="ic"><use href="#i-check"/></svg></div>
+      <div class="ri" data-a="dn@4.96/.5"><i>4</i>Speaking'ni yozib oling<svg class="ic"><use href="#i-check"/></svg></div>
+      <div class="ri" data-a="dn@5.04/.5"><i>5</i>Writing'ni tekshirting<svg class="ic"><use href="#i-check"/></svg></div>
+    </div>
+  </div>
+  <div class="btn" data-a="up@.6" data-to="5.3/.12/e transform=scale(.94); 5.42/.4/b transform=scale(1)"><svg class="ic bm" data-b="fill-opacity=0" data-to="5.32/.25/e fill-opacity=1"><use href="#i-bookmark"/></svg>Saqlab qo'ying</div>
+</div></div></div><div class="meta"><div class="n">460</div><b>Recap Card</b><div class="br">IELTS markazi · xulosa kartasi</div><p>Bandlar navbat bilan katta ikon, sarlavha va izoh bilan ko'rsatiladi, pastda qadam progressi to'ladi. Oxirida hammasi bitta xulosa kartasiga yig'iladi: raqam, sarlavha va yashil galochka qatorlari tushadi, "Saqlab qo'ying" bosilib belgisi to'ladi. Band soni 3-10 ta, har band = bitta Tab kalit: kalitni so'zingizga surasiz.</p><code>prompt: "sarlavha | markaz | bandlar (3-10): ikon=sarlavha=izoh | xulosa sarlavhasi | tugma matni"</code></div></div>
+
+</div></div>
+<div class="modal" id="modal"></div>
+<script>
+var H=1920, theme="preset", D=6.5;
+var OB="cubic-bezier(.34,1.56,.64,1)", SB="cubic-bezier(.3,1.3,.6,1)", IO="cubic-bezier(.65,0,.35,1)", EO="cubic-bezier(.2,.8,.2,1)", EI="cubic-bezier(.55,0,1,.45)", BI="cubic-bezier(.5,-0.4,.75,.25)";
+var EZ={l:"linear",b:OB,s:SB,i:IO,e:EO,n:EI,k:BI};
+
+/* ---------- DOM build ---------- */
+/* data-split="type@t0/step" (chars) or "words@t0/step"; children with data-ns are skipped */
+function splitEl(el){
+  var a=el.dataset.split.split("@"), mode=a[0], sp=a[1].split("/"), t0=+sp[0], st=+(sp[1]||.05), i=0, ty=mode==="words"?"wd":"tp";
+  (function walk(node){
+    Array.prototype.slice.call(node.childNodes).forEach(function(n){
+      if(n.nodeType===3){
+        var t=n.textContent; if(/^\s*$/.test(t)&&/\n/.test(t)){n.parentNode.removeChild(n);return;}
+        var frag=document.createDocumentFragment(), parts=mode==="words"?t.split(/(\s+)/):Array.from(t);
+        parts.forEach(function(w){ if(!w)return;
+          if(mode==="words"&&/^\s+$/.test(w)){frag.appendChild(document.createTextNode(w));return;}
+          var s=document.createElement("span"); s.className=ty; s.textContent=w; s.dataset.a=ty+"@"+(t0+i*st).toFixed(3); i++; frag.appendChild(s); });
+        n.parentNode.replaceChild(frag,n);
+      } else if(n.nodeType===1&&!n.hasAttribute("data-ns")) walk(n);
+    });
+  })(el);
+  delete el.dataset.split;
+}
+/* odometer counter: .cnt data-c0 data-c1 data-roll="t/dur" */
+function buildCnt(el){
+  var from=el.dataset.c0, to=el.dataset.c1, A=+from.replace(/\D/g,""), B=+to.replace(/\D/g,""), fd=from.replace(/\D/g,"").length, digs=to.replace(/\D/g,"").length, pos=0, html="";
+  Array.from(to).forEach(function(c){
+    if(!/\d/.test(c)){html+='<span class="sep">'+c+'</span>';return;}
+    var p=digs-1-pos; pos++; var P=Math.pow(10,p), a0=Math.floor(A/P), b0=Math.floor(B/P), inc=b0-a0, cap=p===0?20:(p===1?14:10), seq=[], k;
+    if(inc<=cap){for(k=0;k<=inc;k++)seq.push((a0+k)%10);}
+    else {seq.push(a0%10); for(k=cap-1;k>=0;k--)seq.push((((b0-k)%10)+10)%10);}
+    if(p>=fd&&a0===0) seq[0]="";
+    html+='<span class="col"><span class="stk" data-n="'+(seq.length-1)+'">'+seq.map(function(x){return "<i>"+(x===""?"&nbsp;":x)+"</i>";}).join("")+"</span></span>";
+  });
+  el.innerHTML=html;
+}
+function build(){
+  document.querySelectorAll("[data-split]").forEach(splitEl);
+  document.querySelectorAll(".cnt").forEach(buildCnt);
+}
+
+/* ---------- WAAPI timeline (6.5 s loop) ---------- */
+function T(tf,x){var s=((tf||"")+" "+(x||"")).trim(); return s||"none";}
+function camel(k){return k.trim().replace(/-([a-z])/g,function(m,c){return c.toUpperCase();});}
+function props(str){var o={}; str.split("&").forEach(function(p){var i=p.indexOf("="); if(i<0)return; o[camel(p.slice(0,i))]=p.slice(i+1).trim().replace(/~/g,",");}); return o;}
+function types(tf){return {
+  pop:{d:.5,e:OB,f:[{opacity:0,transform:T(tf,"scale(.4)")},{opacity:1,transform:T(tf,"scale(1)")}]},
+  up:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateY(48px)")},{opacity:1,transform:T(tf,"translateY(0px)")}]},
+  dn:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateY(-48px)")},{opacity:1,transform:T(tf,"translateY(0px)")}]},
+  lt:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateX(-64px)")},{opacity:1,transform:T(tf,"translateX(0px)")}]},
+  rt:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateX(64px)")},{opacity:1,transform:T(tf,"translateX(0px)")}]},
+  fade:{d:.35,e:"linear",f:[{opacity:0},{opacity:1}]},
+  tp:{d:.001,e:"linear",f:[{opacity:0},{opacity:1}]},
+  wd:{d:.4,e:EO,f:[{opacity:0,filter:"blur(6px)",transform:"translateY(12px)"},{opacity:1,filter:"blur(0px)",transform:"translateY(0px)"}]},
+  "in":{d:.4,e:EO,f:[{opacity:0,filter:"blur(12px)",transform:T(tf,"translateY(34px)")},{opacity:1,filter:"blur(0px)",transform:T(tf,"translateY(0px)")}]},
+  inl:{d:.45,e:SB,f:[{opacity:0,filter:"blur(12px)",transform:T(tf,"translateX(-60px)")},{opacity:1,filter:"blur(0px)",transform:T(tf,"translateX(0px)")}]},
+  wipe:{d:.35,e:IO,f:[{clipPath:"inset(-50% 100% -50% -50%)"},{clipPath:"inset(-50% -50% -50% -50%)"}]},
+  growy:{d:.5,e:SB,f:[{transform:T(tf,"scaleY(0)")},{transform:T(tf,"scaleY(1)")}]},
+  stamp:{d:.55,e:EI,f:[{opacity:0,transform:T(tf,"scale(2.6)")},{opacity:1,transform:T(tf,"scale(.88)"),o:.42,ez:OB},{opacity:1,transform:T(tf,"scale(1)")}]},
+  growx:{d:.6,e:IO,f:[{transform:T(tf,"scaleX(0)")},{transform:T(tf,"scaleX(1)")}]},
+  draw:{d:.6,e:IO,f:[{strokeDashoffset:1.05,opacity:0},{strokeDashoffset:.99,opacity:1,o:.05},{strokeDashoffset:0,opacity:1}]},
+  unfold:{d:.8,e:SB,f:[{opacity:0,transform:"perspective(1600px) rotateX(-75deg) scale(.92)"},{opacity:1,transform:"perspective(1600px) rotateX(0deg) scale(1)"}]},
+  echo:{d:.7,e:EO,f:[{opacity:0,transform:"scale(.92)"},{opacity:.9,transform:"scale(1)",o:.08},{opacity:0,transform:"scale(1.45)"}]}
+};}
+function DF(tf){return {opacity:1,filter:"blur(0px)",transform:T(tf,""),strokeDashoffset:0,clipPath:"inset(-50% -50% -50% -50%)",color:"#ffffff"};}
+function A(){var r={}; for(var i=0;i<arguments.length;i++){var s=arguments[i]; for(var k in s) if(k!=="o"&&k!=="ez") r[k]=s[k];} return r;}
+function run(el,frames,tf){
+  var keys={}, df=DF(tf); frames.forEach(function(f){for(var k in f) if(k!=="offset"&&k!=="easing") keys[k]=1;});
+  var last={}; for(var k in keys){ for(var i=0;i<frames.length;i++){ if(frames[i][k]!==undefined){ last[k]=frames[i][k]; break; } } if(last[k]===undefined) last[k]=df[k]; }
+  var prev=0;
+  frames.forEach(function(f){ for(var k in keys){ if(f[k]===undefined) f[k]=last[k]; else last[k]=f[k]; } f.offset=Math.min(1,Math.max(prev,f.offset)); prev=f.offset; });
+  el.animate(frames,{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animEl(el){
+  var ds=el.dataset, tf=ds.tf||"", fr=[], cur={}, B=ds.b?props(ds.b):null;
+  if(ds.a){
+    var a=ds.a.split("@"), ty=types(tf)[a[0]], sp=a[1].split("/"), s=+sp[0], d=sp[1]?+sp[1]:ty.d, H0=ty.f[0], S=ty.f[ty.f.length-1];
+    fr.push(A({offset:0},B||{},H0)); fr.push(A({offset:s/D,easing:ty.e0||ty.e},B||{},H0));
+    ty.f.slice(1,-1).forEach(function(m){fr.push(A({offset:(s+d*m.o)/D,easing:m.ez||ty.e},B||{},m));});
+    cur=A(B||{},S); fr.push(A({offset:(s+d)/D},cur));
+  } else if(B){ cur=B; fr.push(A({offset:0},cur)); }
+  else { fr.push({offset:0}); }
+  if(ds.to){ ds.to.split(";").forEach(function(step){ step=step.trim(); if(!step)return;
+    var i=step.indexOf(" "), td=step.slice(0,i).split("/"), t=+td[0], dd=+(td[1]||.4), ez=EZ[td[2]]||SB, pr=props(step.slice(i+1));
+    var base=A(cur); for(var k in pr) if(base[k]===undefined) base[k]=DF(tf)[k];
+    fr.push(A({offset:t/D,easing:ez},base)); cur=A(base,pr); fr.push(A({offset:(t+dd)/D},cur)); }); }
+  fr.push(A({offset:1},cur));
+  run(el,fr,tf);
+}
+function animCnt(stk,cnt){
+  var r=cnt.dataset.roll.split("/"), s=+r[0], d=+r[1], n=+stk.dataset.n, y="translateY(-"+(n*1.1).toFixed(2)+"em)";
+  stk.animate([{offset:0,transform:"translateY(0em)"},{offset:s/D,transform:"translateY(0em)",easing:"cubic-bezier(.3,.55,.15,1)"},{offset:(s+d)/D,transform:y},{offset:1,transform:y}],{duration:D*1000,iterations:Infinity,fill:"both"});
+  if(n>0) stk.parentNode.animate([{offset:0,filter:"blur(0px)"},{offset:s/D,filter:"blur(0px)"},{offset:(s+d*.12)/D,filter:"blur(2px)"},{offset:(s+d*.55)/D,filter:"blur(1.2px)"},{offset:(s+d*.92)/D,filter:"blur(0px)"},{offset:1,filter:"blur(0px)"}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+/* card: smooth bounce in, hold, anticipation + bounce out */
+function animCard(c){
+  var o="translateY(110px) scale(.9)", x="translateY(90px) scale(.9)", z="translateY(0px) scale(1)";
+  c.animate([{offset:0,opacity:0,transform:o,easing:SB},{offset:.62/D,opacity:1,transform:z},{offset:5.8/D,opacity:1,transform:z,easing:BI},{offset:6.3/D,opacity:0,transform:x},{offset:1,opacity:0,transform:x}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animate(root){
+  root.querySelectorAll(".comp").forEach(function(c){
+    c.querySelectorAll(".card").forEach(animCard);
+    c.querySelectorAll("[data-a],[data-to],[data-b]").forEach(animEl);
+    c.querySelectorAll(".cnt").forEach(function(cn){cn.querySelectorAll(".stk").forEach(function(s){animCnt(s,cn);});});
+  });
+}
+
+/* ---------- board chrome ---------- */
+function fit(st){
+  var u=st.clientWidth/1080; st.style.height=(H*u)+"px";
+  var c=st.querySelector(".comp"); c.style.setProperty("--u",u); c.style.setProperty("--H",H+"px");
+  var dark=theme==="dark"||(theme==="preset"&&c.dataset.theme==="dark"); c.classList.toggle("dark",dark);
+  var ch=c.querySelector(".card:not(.tb)").offsetHeight, av=c.classList.contains("lm")?(H-parseFloat(getComputedStyle(c).paddingTop)-60):(H-150); c.style.setProperty("--ps",Math.min(1,av/ch).toFixed(3));
+}
+function all(){document.querySelectorAll(".stage").forEach(fit)}
+build();
+document.querySelectorAll(".stage").forEach(function(st){
+  if(st.dataset.img){var l=document.createElement("div"); l.className="bgl"; l.style.backgroundImage="linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.28)),url('"+st.dataset.img+"')"; st.insertBefore(l,st.firstChild); return;}
+  var b=st.dataset.bg.split(","); var f=document.createElement("div"); f.className="foot";
+  f.style.background="radial-gradient(circle at 30% 25%,"+b[0]+",transparent 55%),radial-gradient(circle at 75% 70%,"+b[1]+",transparent 60%),"+b[2];
+  st.insertBefore(f,st.firstChild);
+});
+function wire(id,fn){document.getElementById(id).addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  this.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b)});fn(b.dataset.v);all();});}
+wire("fmt",function(v){H=+v}); wire("thm",function(v){theme=v});
+var modal=document.getElementById("modal");
+document.querySelectorAll(".cardx").forEach(function(cx){cx.addEventListener("click",function(){
+  modal.innerHTML=""; var st=cx.querySelector(".stage").cloneNode(true); modal.appendChild(st); modal.classList.add("on"); fit(st); animate(st);});});
+modal.addEventListener("click",function(){modal.classList.remove("on");modal.innerHTML=""});
+window.addEventListener("resize",all); all(); animate(document.getElementById("grid"));
+var m=location.hash.match(/t=([\d.]+)/); if(m){document.getAnimations().forEach(function(a){a.pause();a.currentTime=parseFloat(m[1])*1000;});}
+var f=location.hash.match(/f=(\d+)/); if(f){H=+f[1]; document.querySelectorAll("#fmt button").forEach(function(x){x.classList.toggle("on",x.dataset.v===f[1])}); all();}
+var th=location.hash.match(/th=(\w+)/); if(th){theme=th[1]; document.querySelectorAll("#thm button").forEach(function(x){x.classList.toggle("on",x.dataset.v===th[1])}); all();}
+</script>
+</body>
+</html>
