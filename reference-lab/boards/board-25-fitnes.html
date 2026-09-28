@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board 25 · Fitnes — 10 xil mexanika (431-440)</title>
+<style>
+  :root{--bg:#0a0a0d;--panel:#121218;--line:#26262f;--txt:#e8e8ee;--dimb:#8a8a99;--mono:'SF Mono',ui-monospace,Menlo,monospace;--gold:#ffb454;
+    --sp:cubic-bezier(.34,1.56,.64,1);--sf:cubic-bezier(.75,0,.25,1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.5 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  .sub{color:var(--dimb);font-size:13px;max-width:800px}
+  .bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 6px}
+  .bar .lb{font:11px var(--mono);color:var(--dimb);letter-spacing:.08em;text-transform:uppercase}
+  .tg{display:inline-flex;background:#1c1c22;border-radius:10px;padding:3px;gap:2px}
+  .tg button{border:0;background:transparent;color:var(--dimb);font:600 12px -apple-system,sans-serif;padding:7px 13px;border-radius:8px;cursor:pointer}
+  .tg button.on{background:#3a3a44;color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:16px}
+  .cardx{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:zoom-in}
+  .cardx:hover{border-color:var(--gold)}
+  .meta{padding:11px 14px 14px}
+  .meta .n{font:700 11px var(--mono);color:var(--gold)}
+  .meta b{display:block;font-size:14px;margin:1px 0 1px}
+  .meta .br{font-size:11.5px;color:var(--gold);opacity:.8}
+  .meta p{font-size:12px;color:var(--dimb);margin-top:4px}
+  .meta code{display:block;margin-top:7px;font:10.5px/1.45 var(--mono);color:#b9b9c7;background:#0d0d12;border:1px solid var(--line);border-radius:7px;padding:6px 8px;overflow-wrap:anywhere}
+  .stage{position:relative;overflow:hidden;background:#222}
+  .foot{position:absolute;inset:-20%;filter:blur(18px);animation:drift 14s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-4%,3%) scale(1.08)}}
+  .modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+  .modal.on{display:flex}
+  .modal .stage{width:min(420px,90vw);border-radius:14px}
+
+  /* ---------- 1080-space comp ---------- */
+  .comp{position:absolute;left:0;top:0;width:1080px;height:var(--H,1920px);transform:scale(var(--u,.25));transform-origin:0 0;display:flex;align-items:center;justify-content:center;
+    --card:#fff;--row:#f2f2f7;--track:#e3e3e8;--thumb:#fff;--text:#1c1c1e;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.2);--tsh:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);
+    font:600 30px/1.2 -apple-system,'SF Pro Display','Inter','Segoe UI',sans-serif;color:var(--text)}
+  .comp.dark{--card:#1c1c1e;--row:#2c2c2e;--track:#3a3a3c;--thumb:#636366;--text:#fff;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.5);--tsh:none}
+  .card{position:relative;width:760px;background:var(--card);border-radius:44px;padding:36px;box-shadow:var(--sh);scale:var(--ps,1)}
+  .ttl{font-size:40px;font-weight:700;margin-bottom:26px;letter-spacing:-.5px}
+  .sb{font-size:26px;color:var(--dim);font-weight:500;margin:-18px 0 28px}
+  .dim{color:var(--dim)}
+  .btn{height:100px;border-radius:28px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;gap:14px;font-size:32px;margin-top:26px}
+  .row{background:var(--row);border-radius:22px;height:92px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;margin-top:16px}
+  .row .l{color:var(--dim);font-weight:500}
+
+  /* ---------- board 21 shared ---------- */
+  .ic{width:1em;height:1em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  .av{flex:none;width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:29px;font-weight:700;font-style:normal;letter-spacing:.5px;background:linear-gradient(145deg,var(--g1,#64d2ff),var(--g2,#007aff))}
+  .chip{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:15px;font-size:21px;font-weight:650;background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc);white-space:nowrap}
+  .dr{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 2}
+  .tp{white-space:pre}
+  .wd{display:inline-block;white-space:pre}
+  .cnt{display:inline-flex;line-height:1.1em;font-variant-numeric:tabular-nums;vertical-align:bottom}
+  .cnt .col{display:inline-block;height:1.1em;overflow:hidden}
+  .cnt .stk{display:block}
+  .cnt .stk i{display:block;height:1.1em;line-height:1.1em;font-style:normal;text-align:center}
+  .cnt .sep{display:inline-block;line-height:1.1em;white-space:pre}
+  .ckc circle{fill:#34c759} .ckc path{stroke:#fff;stroke-width:4.5}
+
+  /* ---------- board 25 shared ---------- */
+  .hdr{display:flex;align-items:center;gap:22px;margin-bottom:30px}
+  .hdr .bx{flex:none;width:84px;height:84px;border-radius:24px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:44px}
+  .hdr b{display:block;font-size:36px;letter-spacing:-.4px}
+  .hdr small{display:block;font-size:24px;color:var(--dim);font-weight:500;margin-top:2px}
+  .hdr .chip{margin-left:auto;font-size:23px;padding:9px 18px}
+  .row .l{display:flex;align-items:center}
+  .row .l .ic{font-size:30px;color:var(--acc);margin-right:14px}
+  .row b{font-weight:700}
+
+  /* 431 INTERVAL TIMER */
+  .c431 .rng{position:relative;width:500px;height:500px;margin:0 auto}
+  .c431 .halo{position:absolute;inset:70px;border-radius:50%;filter:blur(70px);opacity:.42}
+  .c431 .rng svg{position:relative;display:block;width:100%;height:100%;transform:rotate(-90deg)}
+  .c431 .rng circle{fill:none;stroke-width:34;stroke-linecap:round;stroke-dasharray:100 200}
+  .c431 .rng .bg{stroke:var(--track);stroke-dasharray:none}
+  .c431 .rng .wk{stroke:#ff3b30}
+  .c431 .rng .rs{stroke:#34c759}
+  .c431 .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .c431 .ph{position:relative;width:300px;height:46px;font-size:34px;font-weight:800;letter-spacing:.24em}
+  .c431 .ph span{position:absolute;inset:0;text-align:center;padding-left:.24em}
+  .c431 .ph .w{color:#ff3b30}
+  .c431 .ph .r{color:#34c759}
+  .c431 .tm{position:relative;width:360px;height:1.1em;font-size:150px;font-weight:800;letter-spacing:-3px;line-height:1.1}
+  .c431 .tm>span{position:absolute;left:0;right:0;top:0;display:flex;justify-content:center}
+  .c431 .exn{position:relative;width:380px;height:40px;font-size:28px;color:var(--dim);font-weight:600}
+  .c431 .exn span{position:absolute;inset:0;text-align:center}
+  .c431 .rd{display:flex;gap:10px;margin-top:28px}
+  .c431 .rd i{flex:1;height:16px;border-radius:8px;background:var(--track);overflow:hidden}
+  .c431 .rd i.dn{background:#ff3b30;opacity:.55}
+  .c431 .rd i b{display:block;height:100%;border-radius:8px;background:#ff3b30}
+  .c431 .rl{display:flex;justify-content:space-between;margin-top:14px;font-size:22px;color:var(--dim);font-weight:600}
+
+  /* 432 REP COUNTER */
+  .c432 .ex{display:flex;align-items:center;gap:20px;padding:22px 26px;border-radius:26px;background:var(--row)}
+  .c432 .ei{flex:none;width:70px;height:70px;border-radius:20px;background:color-mix(in srgb,var(--acc) 15%,transparent);color:var(--acc);display:flex;align-items:center;justify-content:center;font-size:38px}
+  .c432 .ex b{display:block;font-size:30px}
+  .c432 .ex small{display:block;font-size:22px;color:var(--dim);font-weight:500;margin-top:2px}
+  .c432 .big{display:flex;flex-direction:column;align-items:center;margin-top:18px}
+  .c432 .num{width:380px;height:1.1em;overflow:hidden;font-size:250px;font-weight:800;letter-spacing:-8px;line-height:1.1;font-variant-numeric:tabular-nums}
+  .c432 .num .stk i{display:block;height:1.1em;font-style:normal;text-align:center}
+  .c432 .of{font-size:28px;color:var(--dim);font-weight:600;margin-top:-8px}
+  .c432 .seg{display:flex;gap:8px;margin-top:30px}
+  .c432 .seg i{flex:1;height:22px;border-radius:7px;background:var(--track)}
+  .c432 .seg b{display:block;height:100%;border-radius:7px;background:var(--acc)}
+  .c432 .sets{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+  .c432 .st{display:flex;align-items:center;justify-content:center;gap:10px;height:76px;border-radius:22px;background:var(--row);font-size:25px;font-weight:650;color:var(--dim)}
+  .c432 .st .ic{font-size:26px;stroke-width:3}
+  .c432 .st.dn{background:var(--acc);color:#fff}
+  .c432 .st.cu{box-shadow:inset 0 0 0 3px var(--acc);color:var(--acc)}
+  .c432 .fin{display:flex;align-items:center;gap:20px;margin-top:22px;padding:22px 26px;border-radius:26px;background:color-mix(in srgb,#34c759 14%,var(--card))}
+  .c432 .fin svg.ckc{flex:none;width:64px;height:64px}
+  .c432 .fin b{display:block;font-size:32px}
+  .c432 .fin small{display:block;font-size:22px;color:var(--dim);font-weight:500;margin-top:2px}
+  .c432 .fin .chip{margin-left:auto;--acc:#34c759;font-size:24px;padding:9px 18px}
+
+  /* 433 WEIGHT PROGRESS */
+  .c433 .nw{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+  .c433 .nw small{display:block;font-size:22px;color:var(--dim);font-weight:650;text-transform:uppercase;letter-spacing:.08em}
+  .c433 .nw b{display:flex;align-items:baseline;gap:10px;font-size:110px;font-weight:800;letter-spacing:-3px;line-height:1.1}
+  .c433 .nw b em{font-style:normal;font-size:36px;color:var(--dim);letter-spacing:0;font-weight:600}
+  .c433 .dl{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:22px;background:#34c759;color:#fff;font-size:36px;font-weight:800;margin-bottom:24px;box-shadow:0 10px 26px rgba(52,199,89,.35)}
+  .c433 .dl .ic{font-size:36px;stroke-width:2.6}
+  .c433 .ch{border-radius:28px;background:var(--row);padding:18px 14px 8px}
+  .c433 .ch svg{display:block;width:100%;height:auto;overflow:visible}
+  .c433 .gl{stroke:var(--track);stroke-width:2}
+  .c433 .gt{font:600 19px -apple-system,'Inter',sans-serif;fill:var(--dim)}
+  .c433 .goal{stroke:#34c759;stroke-width:3;stroke-dasharray:10 9}
+  .c433 .gtx{font:700 20px -apple-system,'Inter',sans-serif;fill:#34c759}
+  .c433 .ln{stroke:var(--acc);stroke-width:7}
+  .c433 .pt{fill:var(--card);stroke:var(--acc);stroke-width:6}
+  .c433 .pe{fill:var(--acc)}
+  .c433 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .c433 .tl{border-radius:24px;background:var(--row);padding:20px 22px}
+  .c433 .tl small{display:flex;align-items:center;gap:8px;font-size:21px;color:var(--dim);font-weight:600}
+  .c433 .tl small .ic{font-size:24px;color:var(--acc)}
+  .c433 .tl b{display:flex;align-items:baseline;font-size:44px;font-weight:800;letter-spacing:-1px;margin-top:6px}
+  .c433 .tl b em{font-style:normal;font-size:22px;color:var(--dim);font-weight:600;margin-left:6px;letter-spacing:0}
+
+  /* 434 CALORIE BURN */
+  .c434 .tp{display:flex;align-items:center;gap:24px;padding:26px;border-radius:30px;background:var(--row)}
+  .c434 .fl{flex:none;width:118px;height:118px;border-radius:50%;background:radial-gradient(circle at 50% 65%,#ffd60a,#ff6a00 72%);color:#fff;display:flex;align-items:center;justify-content:center;font-size:64px;box-shadow:0 10px 40px rgba(255,120,0,.5)}
+  .c434 .fl .ic{stroke-width:2.2;transform-origin:50% 90%}
+  .c434 .kc b{display:flex;align-items:baseline;gap:8px;font-size:92px;font-weight:800;letter-spacing:-3px;line-height:1.1}
+  .c434 .kc b em{font-style:normal;font-size:30px;color:var(--dim);letter-spacing:0;font-weight:600}
+  .c434 .kc small{display:block;font-size:23px;color:var(--dim);font-weight:500}
+  .c434 .gr{position:relative;flex:none;width:168px;height:168px;margin-left:auto}
+  .c434 .gr svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+  .c434 .gr circle{fill:none;stroke-width:16;stroke-linecap:round}
+  .c434 .gr .bg{stroke:var(--track)}
+  .c434 .gr .fg{stroke:var(--acc);stroke-dasharray:100 200}
+  .c434 .gr .v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:40px;font-weight:800;line-height:1.1}
+  .c434 .gr .v small{font-size:17px;color:var(--dim);font-weight:600;margin-top:2px}
+  .c434 .ac{margin-top:14px;padding:22px 26px 24px;border-radius:26px;background:var(--row)}
+  .c434 .at{display:flex;align-items:center;gap:18px}
+  .c434 .ai{flex:none;width:64px;height:64px;border-radius:18px;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c);display:flex;align-items:center;justify-content:center;font-size:34px}
+  .c434 .an{flex:1;font-size:28px}
+  .c434 .an small{display:block;font-size:21px;color:var(--dim);font-weight:500;margin-top:2px}
+  .c434 .kv{display:flex;align-items:baseline;gap:6px;font-size:36px;font-weight:800}
+  .c434 .kv em{font-style:normal;font-size:21px;color:var(--dim);font-weight:600}
+  .c434 .tr{height:14px;border-radius:7px;background:var(--track);margin-top:16px;overflow:hidden}
+  .c434 .tr i{display:block;height:100%;border-radius:7px;background:var(--c)}
+  .c434 .row .l .ic{color:#ff375f;transform-origin:50% 50%}
+
+  /* 435 MEMBERSHIP CARD */
+  .c435 .mc{position:relative;height:430px;border-radius:34px;padding:32px 36px;overflow:hidden;color:#fff;background:linear-gradient(135deg,#3c3c40 0%,#18181a 55%,#0b0b0c 100%);box-shadow:0 26px 60px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,214,120,.28)}
+  .c435 .sh{position:absolute;top:-40%;bottom:-40%;left:0;width:170px;background:linear-gradient(90deg,transparent,rgba(255,236,190,.26),transparent)}
+  .c435 .lg{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:800;letter-spacing:.16em}
+  .c435 .lg .ic{font-size:40px;color:#ffc46b}
+  .c435 .tier{position:absolute;right:34px;top:30px;padding:8px 20px 8px 24px;border-radius:14px;background:linear-gradient(135deg,#ffe29a,#c8922e);color:#3a2708;font-size:24px;font-weight:900;letter-spacing:.22em}
+  .c435 .nm{position:absolute;left:36px;top:146px;font-size:44px;font-weight:700;letter-spacing:-.4px}
+  .c435 .id{position:absolute;left:36px;top:206px;font:500 24px var(--mono);color:rgba(255,255,255,.6);letter-spacing:.12em}
+  .c435 .vd{position:absolute;left:36px;bottom:32px}
+  .c435 .vd small{display:block;font-size:18px;color:rgba(255,255,255,.55);font-weight:650;text-transform:uppercase;letter-spacing:.12em}
+  .c435 .vd b{display:block;font-size:30px;margin-top:4px}
+  .c435 .qr{position:absolute;right:32px;bottom:32px;width:178px;height:178px;border-radius:22px;background:#fff;padding:15px;overflow:hidden}
+  .c435 .qr svg{display:block;width:100%;height:100%;shape-rendering:crispEdges}
+  .c435 .scan{position:absolute;left:8px;right:8px;top:14px;height:5px;border-radius:3px;background:#34c759;box-shadow:0 0 18px 5px rgba(52,199,89,.55)}
+  .c435 .st{display:flex;align-items:center;gap:28px;margin-top:20px;padding:26px 28px;border-radius:30px;background:var(--row)}
+  .c435 .dy{position:relative;flex:none;width:200px;height:200px}
+  .c435 .dy svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+  .c435 .dy circle{fill:none;stroke-width:17;stroke-linecap:round}
+  .c435 .dy .bg{stroke:var(--track)}
+  .c435 .dy .fg{stroke:var(--acc);stroke-dasharray:100 200}
+  .c435 .dy .v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:54px;font-weight:800;letter-spacing:-1px;line-height:1.1}
+  .c435 .dy .v small{font-size:19px;color:var(--dim);font-weight:600;letter-spacing:0}
+  .c435 .ok{position:relative;display:inline-flex;align-items:center;gap:10px;padding:8px 18px 8px 14px;border-radius:16px;background:rgba(52,199,89,.16);color:#30d158;font-size:24px;font-weight:700}
+  .c435 .ok i{position:relative;width:14px;height:14px;border-radius:50%;background:#30d158}
+  .c435 .ok i u{position:absolute;inset:-7px;border-radius:50%;border:3px solid #30d158}
+  .c435 .inf b{display:block;font-size:32px;margin-top:14px}
+  .c435 .inf small{display:block;font-size:22px;color:var(--dim);font-weight:500;margin-top:4px}
+
+  /* 436 TRAINER MATCH */
+  .c436 .vp{position:relative;margin:0 -36px;padding:22px 0 26px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .c436 .rw{display:flex;gap:24px;width:max-content;padding:0 140px}
+  .c436 .tc{position:relative;flex:none;width:480px;border-radius:34px;background:var(--row);padding:34px 32px 30px;text-align:center}
+  .c436 .tc .av{width:150px;height:150px;font-size:52px;margin:0 auto}
+  .c436 .tc h3{font-size:36px;margin-top:20px;letter-spacing:-.4px}
+  .c436 .tc .rl{font-size:24px;color:var(--dim);font-weight:500;margin-top:4px}
+  .c436 .cps{display:flex;justify-content:center;gap:10px;margin-top:20px}
+  .c436 .sts{display:grid;grid-template-columns:repeat(3,1fr);margin-top:26px;padding-top:22px;border-top:2px solid var(--track)}
+  .c436 .sts b{display:flex;align-items:center;justify-content:center;gap:6px;font-size:32px;font-weight:800}
+  .c436 .sts b .ic{font-size:26px;color:#ffcc00;fill:#ffcc00}
+  .c436 .sts small{display:block;font-size:20px;color:var(--dim);font-weight:500;margin-top:2px}
+  .c436 .pr{margin-top:22px;font-size:24px;color:var(--dim);font-weight:500}
+  .c436 .pr b{color:var(--text);font-size:32px;font-weight:800;margin-right:6px}
+  .c436 .sel{position:absolute;right:22px;top:22px;display:flex;align-items:center;gap:8px;padding:8px 18px 8px 12px;border-radius:16px;background:#34c759;color:#fff;font-size:22px;font-weight:700}
+  .c436 .sel .ic{font-size:26px;stroke-width:3}
+  .c436 .dots{display:flex;justify-content:center;gap:10px}
+  .c436 .dots i{width:14px;height:14px;border-radius:7px;background:var(--track)}
+  .c436 .btn{position:relative;overflow:hidden}
+  .c436 .btn span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px}
+  .c436 .btn .ic{font-size:34px;stroke-width:2.6}
+
+  /* 437 MACRO DONUT */
+  .c437 .dn{position:relative;width:440px;height:440px;margin:0 auto 8px}
+  .c437 .dn svg{display:block;width:100%;height:100%}
+  .c437 .dn circle{fill:none;stroke-width:58}
+  .c437 .dn .bg{stroke:var(--track)}
+  .c437 .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .c437 .ctr b{font-size:84px;font-weight:800;letter-spacing:-3px;line-height:1.1}
+  .c437 .ctr small{font-size:24px;color:var(--dim);font-weight:600}
+  .c437 .mr{display:flex;align-items:center;gap:18px;height:100px;padding:0 26px;margin-top:14px;border-radius:24px;background:var(--row)}
+  .c437 .mi{flex:none;width:62px;height:62px;border-radius:18px;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c);display:flex;align-items:center;justify-content:center;font-size:32px}
+  .c437 .mr .nm{flex:1;font-size:29px}
+  .c437 .mr .nm small{display:block;font-size:21px;color:var(--dim);font-weight:500;margin-top:1px}
+  .c437 .mr .g{display:flex;align-items:baseline;gap:4px;font-size:38px;font-weight:800}
+  .c437 .mr .g em{font-style:normal;font-size:22px;color:var(--dim);font-weight:600}
+  .c437 .mr .pc{width:92px;text-align:right;font-size:26px;color:var(--c);font-weight:800}
+  .c437 .tip{display:flex;align-items:center;gap:12px;margin-top:20px;padding:0 8px;font-size:23px;color:var(--dim);font-weight:500}
+  .c437 .tip .ic{font-size:28px;color:var(--acc)}
+
+  /* 438 STEPS GOAL */
+  .c438 .rg{position:relative;width:460px;height:460px;margin:0 auto}
+  .c438 .rg>svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+  .c438 .rg circle{fill:none;stroke-width:40;stroke-linecap:round}
+  .c438 .rg .bg{stroke:var(--track)}
+  .c438 .rg .fg{stroke:#34c759;stroke-dasharray:100 200}
+  .c438 .rg .ech{position:absolute;inset:-6px;border-radius:50%;border:8px solid #34c759}
+  .c438 .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .c438 .ctr>.ic{font-size:54px;color:#34c759}
+  .c438 .ctr b{font-size:100px;font-weight:800;letter-spacing:-3px;line-height:1.1;margin-top:6px}
+  .c438 .ctr small{font-size:24px;color:var(--dim);font-weight:600}
+  .c438 .gd{display:flex;justify-content:center;margin-top:-6px}
+  .c438 .gd .chip{--acc:#30d158;font-size:25px;padding:11px 22px}
+  .c438 .gd .chip .ic{font-size:28px;stroke-width:2.8}
+  .c438 .t3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+  .c438 .t3>div{border-radius:24px;background:var(--row);padding:18px 20px}
+  .c438 .t3 small{display:flex;align-items:center;gap:8px;font-size:21px;color:var(--dim);font-weight:600}
+  .c438 .t3 small .ic{font-size:24px;color:var(--c)}
+  .c438 .t3 b{display:flex;align-items:baseline;font-size:42px;font-weight:800;letter-spacing:-1px;margin-top:6px}
+  .c438 .t3 b em{font-style:normal;font-size:21px;color:var(--dim);font-weight:600;margin-left:6px;letter-spacing:0}
+  .c438 .wk{margin-top:14px;border-radius:26px;background:var(--row);padding:22px 26px 18px}
+  .c438 .wk .h{display:flex;justify-content:space-between;font-size:21px;color:var(--dim);font-weight:650;text-transform:uppercase;letter-spacing:.08em}
+  .c438 .bars{position:relative;display:flex;justify-content:space-between;align-items:flex-end;height:170px;margin-top:14px}
+  .c438 .bars i{width:58px;border-radius:12px;background:rgba(48,209,88,.32);transform-origin:50% 100%}
+  .c438 .bars i.ok{background:#30d158}
+  .c438 .bars .gl{position:absolute;left:0;right:0;bottom:141px;border-top:3px dashed color-mix(in srgb,var(--dim) 45%,transparent)}
+  .c438 .lb{display:flex;justify-content:space-between;margin-top:10px}
+  .c438 .lb span{width:58px;text-align:center;font-size:21px;color:var(--dim);font-weight:600}
+  .c438 .lb span.td{color:var(--text);font-weight:800}
+
+  /* 439 PERSONAL RECORD */
+  .c439 .bb{margin:0 -10px}
+  .c439 .bb svg{display:block;width:100%;height:auto;overflow:visible}
+  .c439 .bb rect{transform-box:fill-box;transform-origin:50% 50%}
+  .c439 .wt{position:relative;display:flex;align-items:center;margin-top:10px;padding-left:8px}
+  .c439 .wt small{position:absolute;left:12px;top:-4px;font-size:22px;color:var(--dim);font-weight:650;text-transform:uppercase;letter-spacing:.08em}
+  .c439 .wt b{display:flex;align-items:baseline;gap:12px;font-size:170px;font-weight:800;letter-spacing:-6px;line-height:1.1;padding-top:18px}
+  .c439 .wt b em{font-style:normal;font-size:50px;color:var(--dim);letter-spacing:0;font-weight:700}
+  .c439 .stp{position:absolute;right:4px;top:44px;padding:12px 22px;border:6px solid var(--acc);border-radius:22px;color:var(--acc);font-size:30px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;text-align:center;line-height:1.15}
+  .c439 .stp .ic{display:block;margin:0 auto 4px;font-size:40px;stroke-width:2.4}
+  .c439 .hh{font-size:22px;color:var(--dim);font-weight:650;text-transform:uppercase;letter-spacing:.08em;margin:18px 0 0 6px}
+  .c439 .pr{display:flex;align-items:center;gap:18px;height:92px;margin-top:12px;padding:0 26px;border-radius:24px;background:var(--row)}
+  .c439 .pr .ic{font-size:32px;color:var(--dim)}
+  .c439 .pr b{font-size:32px;font-weight:800}
+  .c439 .pr small{margin-left:auto;font-size:23px;color:var(--dim);font-weight:500}
+  .c439 .pr em{font-style:normal;font-size:21px;font-weight:700;color:#34c759;padding:4px 12px;border-radius:12px;background:rgba(52,199,89,.14)}
+  .c439 .pr.nw{background:color-mix(in srgb,var(--acc) 13%,var(--card));box-shadow:inset 0 0 0 3px var(--acc)}
+  .c439 .pr.nw .ic{color:var(--acc)}
+
+  /* 440 30-DAY CHALLENGE */
+  .c440 .sm{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
+  .c440 .sm small{display:block;font-size:22px;color:var(--dim);font-weight:650;text-transform:uppercase;letter-spacing:.08em}
+  .c440 .sm b{display:flex;align-items:baseline;gap:10px;font-size:110px;font-weight:800;letter-spacing:-3px;line-height:1.1}
+  .c440 .sm b em{font-style:normal;font-size:40px;color:var(--dim);letter-spacing:0;font-weight:700}
+  .c440 .fire{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding:14px 22px 14px 16px;border-radius:24px;background:linear-gradient(135deg,#ffb340,#ff5e1a);color:#fff;font-size:28px;font-weight:800;box-shadow:0 12px 28px rgba(255,110,30,.35)}
+  .c440 .fire .ic{font-size:44px;stroke-width:2.2;transform-origin:50% 90%}
+  .c440 .fire small{display:block;font-size:18px;font-weight:600;opacity:.85;text-transform:none;letter-spacing:0;color:#fff}
+  .c440 .gd{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  .c440 .dc{position:relative;height:100px;border-radius:24px;background:var(--row);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;color:var(--dim)}
+  .c440 .dc .f{position:absolute;inset:0;border-radius:24px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:46px}
+  .c440 .dc .f .ic{stroke-width:3}
+  .c440 .dc.td{box-shadow:inset 0 0 0 4px var(--acc);color:var(--acc)}
+  .c440 .dc .rg{position:absolute;inset:0;border-radius:24px;border:4px solid var(--acc)}
+  .c440 .pb{height:18px;border-radius:9px;background:var(--track);margin-top:26px;overflow:hidden}
+  .c440 .pb i{display:block;height:100%;border-radius:9px;background:var(--acc)}
+  .c440 .pl{display:flex;justify-content:space-between;margin-top:10px;font-size:21px;color:var(--dim);font-weight:600}
+</style>
+</head>
+<body><div class="wrap">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><path d="M10 2h4M12 14l3-3"/><circle cx="12" cy="14" r="8"/></symbol>
+  <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M14.4 14.4 9.6 9.6"/><path d="M18.66 21.49a2 2 0 1 1-2.83-2.83l-1.77 1.77a2 2 0 1 1-2.83-2.83l6.37-6.37a2 2 0 1 1 2.83 2.83l-1.77 1.77a2 2 0 1 1 2.83 2.83z"/><path d="m21.5 21.5-1.4-1.4M3.9 3.9 2.5 2.5"/><path d="M6.4 12.77a2 2 0 1 1-2.83-2.83l1.77-1.77a2 2 0 1 1-2.83-2.83l2.83-2.83a2 2 0 1 1 2.83 2.83l1.77-1.77a2 2 0 1 1 2.83 2.83z"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-foot" viewBox="0 0 24 24"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4M4 13h4"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M22 17 13.5 8.5l-5 5L2 7"/><path d="M16 17h6v-6"/></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2M9.6 4.6A2 2 0 1 1 11 8H2M12.6 19.4A2 2 0 1 0 14 16H2"/></symbol>
+  <symbol id="i-egg" viewBox="0 0 24 24"><path d="M12 22c6.23-.05 7.87-5.57 7.5-10-.36-4.34-3.95-9.96-7.5-10-3.55.04-7.14 5.66-7.5 10-.37 4.43 1.27 9.95 7.5 10z"/></symbol>
+  <symbol id="i-wheat" viewBox="0 0 24 24"><path d="M2 22 16 8"/><path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"/><path d="M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z"/><path d="M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"/><path d="M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"/><path d="M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
+  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/></symbol>
+  <symbol id="i-pct" viewBox="0 0 24 24"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+</defs></svg>
+<header>
+  <div class="kicker">Board 25 · Nytvir Motion · 431-440 · Fitnes</div>
+  <h1>Fitnes — taymer, takror, vazn, abonement, rekord</h1>
+  <p class="sub">Sport zallari, shaxsiy murabbiylar va fitnes studiyalar uchun Apple uslubidagi jonli UI: HIIT taymer, takror hisoblagich, vazn grafigi, kaloriya, abonement kartasi, murabbiy tanlash, makro donut, qadamlar, shaxsiy rekord va 30 kunlik chellenj. Matnlar namuna, o'zingiznikiga almashtirasiz. Reels uchun IG formatlariga moslashadi. Kartani bossangiz kattalashadi.</p>
+</header>
+<div class="bar">
+  <span class="lb">Format</span><div class="tg" id="fmt"><button data-v="1920" class="on">9:16 Reel</button><button data-v="1350">4:5 Feed</button><button data-v="1080">1:1</button></div>
+  <span class="lb">Tema</span><div class="tg" id="thm"><button data-v="preset" class="on">Preset</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+</div>
+<div class="grid" id="grid">
+
+<!-- 431 -->
+<div class="cardx"><div class="stage" data-bg="#ffb0a8,#8a1f18,#1a0604"><div class="comp c431" data-theme="dark" style="--acc:#ff3b30"><div class="card">
+  <div class="hdr"><span class="bx" data-a="pop@.45"><svg class="ic"><use href="#i-timer"/></svg></span>
+    <div data-a="lt@.55"><b>HIIT · Tabata</b><small>PowerHouse · 20 daqiqa</small></div>
+    <span class="chip" data-a="pop@.75">Raund 3/8</span></div>
+  <div class="rng" data-a="pop@.6/.7">
+    <div class="halo" data-b="background-color=#ff3b30" data-to="3.3/.6/i background-color=#34c759"></div>
+    <svg viewBox="0 0 500 500"><circle class="bg" cx="250" cy="250" r="215"/>
+      <circle class="wk" cx="250" cy="250" r="215" pathLength="100" data-b="stroke-dashoffset=100" data-to="0.75/.55/e stroke-dashoffset=0; 1.3/1.9/e stroke-dashoffset=100"/>
+      <circle class="rs" cx="250" cy="250" r="215" pathLength="100" data-b="stroke-dashoffset=100" data-to="3.35/.5/e stroke-dashoffset=0; 3.9/1.7/e stroke-dashoffset=60"/></svg>
+    <div class="ctr">
+      <div class="ph"><span class="w" data-b="opacity=1&transform=translateY(0px)" data-to="3.25/.3/n opacity=0&transform=translateY(-28px)">ISH</span><span class="r" data-b="opacity=0&transform=translateY(28px)" data-to="3.4/.5/b opacity=1&transform=translateY(0px)">DAM</span></div>
+      <div class="tm"><span data-b="opacity=1&transform=scale(1)" data-to="3.25/.3/n opacity=0&transform=scale(.8)"><span class="cnt" data-c0="0:30" data-c1="0:00" data-roll="1.3/1.9"></span></span><span data-b="opacity=0&transform=scale(.8)" data-to="3.4/.5/b opacity=1&transform=scale(1)"><span class="cnt" data-c0="0:15" data-c1="0:06" data-roll="3.9/1.7"></span></span></div>
+      <div class="exn"><span data-b="opacity=1" data-to="3.25/.3/l opacity=0">Burpee</span><span data-b="opacity=0" data-to="3.45/.4/l opacity=1">Nafas rostlang</span></div>
+    </div>
+  </div>
+  <div data-a="up@.9"><div class="rd"><i class="dn"></i><i class="dn"></i><i><b data-b="width=0%" data-to="1.3/1.9/e width=100%"></b></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="rl"><span>Ish 0:30 · Dam 0:15</span><span>3 / 8 raund</span></div></div>
+  <div class="row" data-a="up@1.05"><span class="l"><svg class="ic"><use href="#i-next"/></svg>Keyingi mashq</span><b>Jump squat</b></div>
+</div></div></div><div class="meta"><div class="n">431</div><b>Interval Timer</b><div class="br">Fitnes studiya · HIIT taymer</div><p>Katta halqa qizil rangda to'lib, ish vaqti 0:30 dan nolgacha sanaladi, raund chizig'i to'ladi. Ish tugashi bilan "ISH" yozuvi "DAM" ga almashadi, halqa va nur yashilga o'tib, dam taymeri boshlanadi. Pastda raund 3/8 va keyingi mashq.</p><code>prompt: "mashg'ulot nomi | zal | raund / jami | ish vaqti | dam vaqti | mashq nomi | dam matni | keyingi mashq | ish/dam ranglari"</code></div></div>
+
+<!-- 432 -->
+<div class="cardx"><div class="stage" data-bg="#d4ccff,#3a2f8a,#0d0a26"><div class="comp c432" style="--acc:#5856d6"><div class="card">
+  <div class="hdr"><span class="bx" data-a="pop@.45"><svg class="ic"><use href="#i-dumbbell"/></svg></span>
+    <div data-a="lt@.55"><b>Oyoq kuni</b><small>Kuch mashqi · 2-mashq</small></div>
+    <span class="chip" data-a="pop@.75">60 kg</span></div>
+  <div class="ex" data-a="up@.65"><span class="ei"><svg class="ic"><use href="#i-dumbbell"/></svg></span><div><b>Shtanga bilan o'tirib-turish</b><small>Back squat · 4 set × 12 takror</small></div></div>
+  <div class="big" data-a="pop@.8/.6"><div class="num"><div class="stk" data-b="transform=translateY(0em)" data-to="1.10/.2/b transform=translateY(-1.1em); 1.34/.2/b transform=translateY(-2.2em); 1.58/.2/b transform=translateY(-3.3em); 1.82/.2/b transform=translateY(-4.4em); 2.06/.2/b transform=translateY(-5.5em); 2.30/.2/b transform=translateY(-6.6em); 2.54/.2/b transform=translateY(-7.7em); 2.78/.2/b transform=translateY(-8.8em); 3.02/.2/b transform=translateY(-9.9em); 3.26/.2/b transform=translateY(-11.0em); 3.50/.2/b transform=translateY(-12.1em); 3.74/.2/b transform=translateY(-13.2em)"><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i></div></div>
+    <div class="of">/ 12 takror</div></div>
+  <div class="seg" data-a="fade@.9"><i><b data-a="pop@1.10/.35"></b></i><i><b data-a="pop@1.34/.35"></b></i><i><b data-a="pop@1.58/.35"></b></i><i><b data-a="pop@1.82/.35"></b></i><i><b data-a="pop@2.06/.35"></b></i><i><b data-a="pop@2.30/.35"></b></i><i><b data-a="pop@2.54/.35"></b></i><i><b data-a="pop@2.78/.35"></b></i><i><b data-a="pop@3.02/.35"></b></i><i><b data-a="pop@3.26/.35"></b></i><i><b data-a="pop@3.50/.35"></b></i><i><b data-a="pop@3.74/.35"></b></i></div>
+  <div class="sets">
+    <div class="st dn" data-a="up@1.0"><svg class="ic"><use href="#i-check"/></svg>1-set</div>
+    <div class="st dn" data-a="up@1.08"><svg class="ic"><use href="#i-check"/></svg>2-set</div>
+    <div class="st cu" data-a="up@1.16" data-b="background-color=rgba(88,86,214,0)&color=#5856d6" data-to="3.95/.35/e background-color=#5856d6&color=#ffffff"><svg class="ic" data-a="pop@4.05/.4"><use href="#i-check"/></svg>3-set</div>
+    <div class="st" data-a="up@1.24"><svg class="ic"><use href="#i-circle"/></svg>4-set</div>
+  </div>
+  <div class="fin" data-a="up@4.1"><svg class="ckc" viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" data-a="pop@4.2"/><path class="dr" pathLength="1" data-a="draw@4.35/.35" d="M13 23 L19 29 L31 16"/></svg>
+    <div><b>Set tugadi</b><small>12 takror · 60 kg · zo'r!</small></div><span class="chip" data-a="pop@4.5"><svg class="ic"><use href="#i-clock"/></svg>Dam 1:30</span></div>
+</div></div></div><div class="meta"><div class="n">432</div><b>Rep Counter</b><div class="br">Sport zal · takror hisoblagich</div><p>Mashq nomi va og'irlik chiqadi, katta raqam 1 dan 12 gacha har takrorda sakrab o'sadi, ostidagi 12 bo'lak birin-ketin to'ladi. 12 ga yetganda 3-set belgisi to'lib galochka oladi, yashil "Set tugadi" bloki dam vaqti bilan chiqadi.</p><code>prompt: "kun nomi | mashq nomi | inglizcha nomi | og'irlik | takrorlar soni | setlar (bajarilgan / jami) | tugash matni | dam vaqti"</code></div></div>
+
+<!-- 433 -->
+<div class="cardx"><div class="stage" data-bg="#a8e8f0,#1f6a78,#081e22"><div class="comp c433" style="--acc:#30b0c7"><div class="card">
+  <div class="hdr"><i class="av" data-a="pop@.45" style="--g1:#7ee0ef;--g2:#30b0c7">AR</i>
+    <div data-a="lt@.55"><b>Aziz Rahimov</b><small>12 haftalik ozish dasturi</small></div>
+    <span class="chip" data-a="pop@.75">Murabbiy: Malika</span></div>
+  <div class="nw"><div data-a="up@.7"><small>Hozirgi vazn</small><b><span class="cnt" data-c0="84.0" data-c1="76.0" data-roll="1.2/2.2"></span><em>kg</em></b></div>
+    <span class="dl" data-a="stamp@3.45" data-tf="rotate(-4deg)"><svg class="ic"><use href="#i-down"/></svg>−8 kg</span></div>
+  <div class="ch" data-a="up@.85"><svg viewBox="0 0 688 360">
+    <defs><linearGradient id="g433" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#30b0c7" stop-opacity=".32"/><stop offset="1" stop-color="#30b0c7" stop-opacity="0"/></linearGradient></defs>
+    <line class="gl" x1="70" x2="672" y1="72" y2="72"/><line class="gl" x1="70" x2="672" y1="172" y2="172"/><line class="gl" x1="70" x2="672" y1="272" y2="272"/>
+    <text class="gt" x="10" y="79">84</text><text class="gt" x="10" y="179">80</text><text class="gt" x="10" y="279">76</text>
+    <line class="goal" x1="70" x2="672" y1="297" y2="297" data-a="fade@1.0/.5"/>
+    <text class="gtx" x="84" y="286" data-a="fade@1.1/.5">Maqsad · 75 kg</text>
+    <path d="M84.0 72.0 C92.7 74.9 118.7 84.9 136.0 89.5 C153.3 94.1 170.7 94.1 188.0 99.5 C205.3 104.9 222.7 116.6 240.0 122.0 C257.3 127.4 274.7 126.6 292.0 132.0 C309.3 137.4 326.7 148.2 344.0 154.5 C361.3 160.7 378.7 164.1 396.0 169.5 C413.3 174.9 430.7 180.7 448.0 187.0 C465.3 193.2 482.7 201.2 500.0 207.0 C517.3 212.8 534.7 215.8 552.0 222.0 C569.3 228.2 586.7 236.2 604.0 244.5 C621.3 252.8 647.3 267.4 656.0 272.0 L656.0 320 L84.0 320 Z" fill="url(#g433)" data-a="fade@2.9/.7"/>
+    <path class="dr ln" pathLength="1" data-a="draw@1.2/2.2" d="M84.0 72.0 C92.7 74.9 118.7 84.9 136.0 89.5 C153.3 94.1 170.7 94.1 188.0 99.5 C205.3 104.9 222.7 116.6 240.0 122.0 C257.3 127.4 274.7 126.6 292.0 132.0 C309.3 137.4 326.7 148.2 344.0 154.5 C361.3 160.7 378.7 164.1 396.0 169.5 C413.3 174.9 430.7 180.7 448.0 187.0 C465.3 193.2 482.7 201.2 500.0 207.0 C517.3 212.8 534.7 215.8 552.0 222.0 C569.3 228.2 586.7 236.2 604.0 244.5 C621.3 252.8 647.3 267.4 656.0 272.0"/>
+    <circle class="pt" cx="84" cy="72" r="11" data-a="pop@1.15/.4"/>
+    <circle class="pe" cx="656" cy="272" r="26" opacity=".25" data-a="echo@3.4/.8"/>
+    <circle class="pt" cx="656" cy="272" r="13" data-a="pop@3.35/.45"/>
+    <text class="gt" x="84" y="350">1-hafta</text><text class="gt" x="344" y="350" text-anchor="middle">6-hafta</text><text class="gt" x="662" y="350" text-anchor="end">12-hafta</text>
+  </svg></div>
+  <div class="tiles">
+    <div class="tl" data-a="up@1.3"><small><svg class="ic"><use href="#i-pct"/></svg>Yog' foizi</small><b><span class="cnt" data-c0="26" data-c1="19" data-roll="1.5/2.0"></span><em>%</em></b></div>
+    <div class="tl" data-a="up@1.42"><small><svg class="ic"><use href="#i-ruler"/></svg>Bel</small><b><span class="cnt" data-c0="98" data-c1="89" data-roll="1.6/2.0"></span><em>sm</em></b></div>
+    <div class="tl" data-a="up@1.54"><small><svg class="ic"><use href="#i-cal"/></svg>Mashg'ulot</small><b><span class="cnt" data-c0="0" data-c1="36" data-roll="1.7/2.0"></span><em>ta</em></b></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">433</div><b>Weight Progress</b><div class="br">Shaxsiy murabbiy · ozish natijasi</div><p>12 haftalik vazn chizig'i 84 kg dan 76 kg gacha silliq chiziladi, maqsad chizig'i 75 kg da turadi. Hozirgi vazn raqami pastga aylanadi, oxirgi nuqta to'lqin beradi va "−8 kg" belgisi zarb bilan tushadi. Pastda yog' foizi, bel va mashg'ulotlar soni.</p><code>prompt: "ism | dastur nomi | murabbiy | 12 haftalik vazn qiymatlari | maqsad vazn | natija belgisi | 3 ko'rsatkich: nom=oldin=hozir"</code></div></div>
+
+<!-- 434 -->
+<div class="cardx"><div class="stage" data-bg="#ffc080,#8a3a08,#1f0a02"><div class="comp c434" data-theme="dark" style="--acc:#ff9500"><div class="card">
+  <div class="ttl" data-a="up@.35">Bugungi faollik</div>
+  <div class="sb" data-a="up@.45">Dushanba · 28 sentabr</div>
+  <div class="tp" data-a="up@.55">
+    <span class="fl" data-a="pop@.7"><svg class="ic" data-b="transform=scale(1) rotate(0deg)" data-to="1.00/.3/i transform=scale(1.1) rotate(-5deg); 1.30/.3/i transform=scale(.94) rotate(4deg); 1.60/.3/i transform=scale(1.06) rotate(-2deg); 1.90/.3/i transform=scale(.97) rotate(3deg); 2.20/.3/i transform=scale(1.1) rotate(-5deg); 2.50/.3/i transform=scale(.94) rotate(4deg); 2.80/.3/i transform=scale(1.06) rotate(-2deg); 3.10/.3/i transform=scale(.97) rotate(3deg); 3.40/.3/i transform=scale(1.1) rotate(-5deg); 3.70/.3/i transform=scale(.94) rotate(4deg); 4.00/.3/i transform=scale(1.06) rotate(-2deg); 4.30/.3/i transform=scale(.97) rotate(3deg); 4.60/.3/i transform=scale(1.1) rotate(-5deg); 4.90/.3/i transform=scale(.94) rotate(4deg); 5.20/.3/i transform=scale(1.06) rotate(-2deg); 5.50/.3/i transform=scale(1) rotate(0deg)"><use href="#i-flame"/></svg></span>
+    <div class="kc"><b><span class="cnt" data-c0="0" data-c1="642" data-roll="1.0/2.4"></span><em>kcal</em></b><small>yoqildi</small></div>
+    <div class="gr"><svg viewBox="0 0 168 168"><circle class="bg" cx="84" cy="84" r="70"/><circle class="fg" cx="84" cy="84" r="70" pathLength="100" data-b="stroke-dashoffset=100" data-to="1.0/2.4/e stroke-dashoffset=20"/></svg>
+      <div class="v"><span><span class="cnt" data-c0="0" data-c1="80" data-roll="1.0/2.4"></span>%</span><small>800 dan</small></div></div>
+  </div>
+  <div class="ac" data-a="up@.8" style="--c:#ff9500"><div class="at"><span class="ai"><svg class="ic"><use href="#i-foot"/></svg></span><span class="an">Yugurish<small>Yo'lka · 35 daqiqa</small></span><b class="kv"><span class="cnt" data-c0="0" data-c1="312" data-roll="1.2/1.6"></span><em>kcal</em></b></div>
+    <div class="tr"><i data-b="width=0%" data-to="1.2/1.6/e width=89%"></i></div></div>
+  <div class="ac" data-a="up@.92" style="--c:#ffd60a"><div class="at"><span class="ai"><svg class="ic"><use href="#i-bike"/></svg></span><span class="an">Velotrenajyor<small>Interval · 30 daqiqa</small></span><b class="kv"><span class="cnt" data-c0="0" data-c1="198" data-roll="1.6/1.6"></span><em>kcal</em></b></div>
+    <div class="tr"><i data-b="width=0%" data-to="1.6/1.6/e width=57%"></i></div></div>
+  <div class="ac" data-a="up@1.04" style="--c:#ff453a"><div class="at"><span class="ai"><svg class="ic"><use href="#i-dumbbell"/></svg></span><span class="an">Kuch mashqi<small>Yuqori tana · 45 daqiqa</small></span><b class="kv"><span class="cnt" data-c0="0" data-c1="132" data-roll="2.0/1.6"></span><em>kcal</em></b></div>
+    <div class="tr"><i data-b="width=0%" data-to="2.0/1.6/e width=38%"></i></div></div>
+  <div class="row" data-a="up@1.2"><span class="l"><svg class="ic" data-b="transform=scale(1)" data-to="2.60/.12/e transform=scale(1.28); 2.72/.3/i transform=scale(1); 3.15/.12/e transform=scale(1.28); 3.27/.3/i transform=scale(1); 3.70/.12/e transform=scale(1.28); 3.82/.3/i transform=scale(1); 4.25/.12/e transform=scale(1.28); 4.37/.3/i transform=scale(1); 4.80/.12/e transform=scale(1.28); 4.92/.3/i transform=scale(1); 5.35/.12/e transform=scale(1.28); 5.47/.3/i transform=scale(1)"><use href="#i-heart"/></svg>O'rtacha puls</span><b><span class="cnt" data-c0="0" data-c1="142" data-roll="1.4/1.8"></span> bpm</b></div>
+</div></div></div><div class="meta"><div class="n">434</div><b>Calorie Burn</b><div class="br">Fitnes klub · kunlik kaloriya</div><p>Olov ikonasi lipillab turadi, yoqilgan kaloriya 0 dan 642 kcal gacha o'sadi, yonidagi kun maqsadi halqasi 80% gacha to'ladi. Yugurish, velotrenajyor va kuch mashqi qatorlarida barlar cho'ziladi, kcal aylanadi. Pastda yurak belgisi urib, o'rtacha puls chiqadi.</p><code>prompt: "sarlavha | sana | jami kcal | kun maqsadi | 3 faoliyat: nom=turi=daqiqa=kcal | o'rtacha puls"</code></div></div>
+
+<!-- 435 -->
+<div class="cardx"><div class="stage" data-bg="#f0dca0,#7a5a18,#1f1606"><div class="comp c435" data-theme="dark" style="--acc:#ff9f0a"><div class="card">
+  <div class="ttl" data-a="up@.35">Abonementim</div>
+  <div class="sb" data-a="up@.45">PowerHouse Gym · Chilonzor filiali</div>
+  <div class="mc" data-a="unfold@.5">
+    <div class="lg"><svg class="ic"><use href="#i-dumbbell"/></svg>POWERHOUSE</div>
+    <span class="tier" data-a="pop@1.0">GOLD</span>
+    <div class="nm" data-split="type@1.05/.05">Dilshod Karimov</div>
+    <div class="id" data-a="fade@1.8">A'ZO № 0042 18</div>
+    <div class="vd" data-a="up@1.9"><small>Amal qiladi</small><b>02.06.2027</b></div>
+    <div class="qr" data-a="pop@1.5"><svg viewBox="0 0 25 25"><path fill="#111" d="M0 0h7v1h-7zM8 0h5v1h-5zM14 0h2v1h-2zM18 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h3v1h-3zM12 1h2v1h-2zM15 1h2v1h-2zM18 1h1v1h-1zM24 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM11 2h1v1h-1zM15 2h1v1h-1zM18 2h1v1h-1zM20 2h3v1h-3zM24 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM9 3h3v1h-3zM13 3h2v1h-2zM18 3h1v1h-1zM20 3h3v1h-3zM24 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h1v1h-1zM15 4h1v1h-1zM18 4h1v1h-1zM20 4h3v1h-3zM24 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h2v1h-2zM12 5h5v1h-5zM18 5h1v1h-1zM24 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h7v1h-7zM10 7h1v1h-1zM14 7h3v1h-3zM0 8h1v1h-1zM5 8h2v1h-2zM8 8h1v1h-1zM11 8h2v1h-2zM15 8h3v1h-3zM20 8h1v1h-1zM24 8h1v1h-1zM1 9h2v1h-2zM7 9h1v1h-1zM10 9h4v1h-4zM15 9h3v1h-3zM19 9h2v1h-2zM23 9h1v1h-1zM3 10h4v1h-4zM8 10h2v1h-2zM12 10h1v1h-1zM16 10h1v1h-1zM18 10h2v1h-2zM0 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM12 11h1v1h-1zM16 11h6v1h-6zM0 12h1v1h-1zM3 12h1v1h-1zM6 12h1v1h-1zM8 12h2v1h-2zM12 12h2v1h-2zM15 12h3v1h-3zM19 12h1v1h-1zM21 12h3v1h-3zM1 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM9 13h3v1h-3zM14 13h2v1h-2zM19 13h2v1h-2zM22 13h2v1h-2zM2 14h1v1h-1zM4 14h1v1h-1zM6 14h2v1h-2zM10 14h2v1h-2zM13 14h7v1h-7zM21 14h1v1h-1zM23 14h2v1h-2zM0 15h3v1h-3zM5 15h1v1h-1zM8 15h1v1h-1zM10 15h2v1h-2zM13 15h1v1h-1zM17 15h1v1h-1zM21 15h4v1h-4zM0 16h1v1h-1zM2 16h3v1h-3zM6 16h1v1h-1zM8 16h7v1h-7zM18 16h1v1h-1zM20 16h5v1h-5zM8 17h3v1h-3zM17 17h2v1h-2zM20 17h1v1h-1zM23 17h1v1h-1zM0 18h7v1h-7zM14 18h5v1h-5zM24 18h1v1h-1zM0 19h1v1h-1zM6 19h1v1h-1zM8 19h3v1h-3zM12 19h1v1h-1zM15 19h3v1h-3zM22 19h3v1h-3zM0 20h1v1h-1zM2 20h3v1h-3zM6 20h1v1h-1zM9 20h1v1h-1zM11 20h3v1h-3zM15 20h1v1h-1zM18 20h2v1h-2zM22 20h3v1h-3zM0 21h1v1h-1zM2 21h3v1h-3zM6 21h1v1h-1zM11 21h1v1h-1zM13 21h9v1h-9zM23 21h1v1h-1zM0 22h1v1h-1zM2 22h3v1h-3zM6 22h1v1h-1zM10 22h5v1h-5zM16 22h1v1h-1zM18 22h2v1h-2zM21 22h2v1h-2zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h1v1h-1zM11 23h2v1h-2zM14 23h4v1h-4zM20 23h1v1h-1zM22 23h1v1h-1zM24 23h1v1h-1zM0 24h7v1h-7zM8 24h8v1h-8zM19 24h2v1h-2zM22 24h3v1h-3z"/></svg>
+      <i class="scan" data-b="opacity=0&transform=translateY(0px)" data-to="2.0/.12/l opacity=1; 2.05/.9/i transform=translateY(142px); 2.95/.2/l opacity=0"></i></div>
+    <i class="sh" data-b="transform=translateX(-320px) rotate(18deg)" data-to="1.3/1.1/i transform=translateX(960px) rotate(18deg)"></i>
+  </div>
+  <div class="st" data-a="up@1.2">
+    <div class="dy"><svg viewBox="0 0 200 200"><circle class="bg" cx="100" cy="100" r="82"/><circle class="fg" cx="100" cy="100" r="82" pathLength="100" data-b="stroke-dashoffset=100" data-to="1.6/1.6/e stroke-dashoffset=32.3"/></svg>
+      <div class="v"><span class="cnt" data-c0="0" data-c1="247" data-roll="1.6/1.6"></span><small>kun qoldi</small></div></div>
+    <div class="inf"><span class="ok" data-a="pop@3.2"><i><u data-a="echo@3.45/.8"></u></i>Faol</span><b>Gold · 12 oylik</b><small>365 kundan 247 kun qoldi</small></div>
+  </div>
+  <div class="row" data-a="up@1.35"><span class="l"><svg class="ic"><use href="#i-cal"/></svg>Tashriflar</span><b><span class="cnt" data-c0="0" data-c1="118" data-roll="1.8/1.5"></span> marta</b></div>
+</div></div></div><div class="meta"><div class="n">435</div><b>Membership Card</b><div class="br">Sport zal · a'zolik abonementi</div><p>Qora-oltin abonement kartasi ochilib chiqadi, ustidan yaltiroq nur o'tadi. A'zo ismi harfma-harf yoziladi, "GOLD" tarifi va QR kod chiqadi, QR ustidan skaner chizig'i yuradi. Pastda qolgan kunlar halqasi to'lib, 247 raqami aylanadi va yashil "Faol" belgisi yonadi.</p><code>prompt: "zal nomi | filial | tarif | a'zo ismi | a'zo raqami | amal muddati | qolgan kun / jami | tashriflar soni | holat matni"</code></div></div>
+
+<!-- 436 -->
+<div class="cardx"><div class="stage" data-bg="#c4d8ff,#2a4a9a,#080f26"><div class="comp c436" style="--acc:#007aff"><div class="card">
+  <div class="ttl" data-a="up@.35">Murabbiy tanlang</div>
+  <div class="sb" data-a="up@.45">PowerHouse · shaxsiy mashg'ulot</div>
+  <div class="vp" data-a="fade@.5/.4">
+    <div class="rw" data-b="transform=translateX(0px)" data-to="1.7/.7/s transform=translateX(-504px); 2.7/.7/s transform=translateX(-1008px)">
+      <div class="tc" data-b="transform=scale(1)&opacity=1" data-to="1.7/.7/s transform=scale(.9)&opacity=.5">
+        <i class="av" style="--g1:#ffd60a;--g2:#ff9500">JA</i><h3>Jasur Aliyev</h3><div class="rl">Kuch va massa</div>
+        <div class="cps"><span class="chip">Bodybuilding</span><span class="chip">Pauerlifting</span></div>
+        <div class="sts"><div><b><svg class="ic"><use href="#i-star"/></svg>4.8</b><small>reyting</small></div><div><b>9 yil</b><small>tajriba</small></div><div><b>140+</b><small>mijoz</small></div></div>
+        <div class="pr"><b>400 000</b>so'm / oy</div></div>
+      <div class="tc" data-b="transform=scale(.9)&opacity=.5" data-to="1.7/.7/s transform=scale(1)&opacity=1; 2.7/.7/s transform=scale(.9)&opacity=.5">
+        <i class="av" style="--g1:#ff6482;--g2:#ff2d55">MY</i><h3>Malika Yusupova</h3><div class="rl">Ozish va fitnes</div>
+        <div class="cps"><span class="chip">Kardio</span><span class="chip">Ovqatlanish</span></div>
+        <div class="sts"><div><b><svg class="ic"><use href="#i-star"/></svg>4.9</b><small>reyting</small></div><div><b>6 yil</b><small>tajriba</small></div><div><b>210+</b><small>mijoz</small></div></div>
+        <div class="pr"><b>350 000</b>so'm / oy</div></div>
+      <div class="tc" data-b="transform=scale(.9)&opacity=.5&box-shadow=inset 0 0 0 0px rgba(52,199,89,0)~0 0 0 0 rgba(52,199,89,0)" data-to="2.7/.7/s transform=scale(1)&opacity=1; 3.6/.5/b transform=scale(1.04)&box-shadow=inset 0 0 0 5px #34c759~0 20px 44px rgba(52,199,89,.28)">
+        <i class="av" style="--g1:#64d2ff;--g2:#007aff">SN</i><h3>Sardor Nazarov</h3><div class="rl">Funksional mashg'ulot</div>
+        <div class="cps"><span class="chip">CrossFit</span><span class="chip">Mobillik</span></div>
+        <div class="sts"><div><b><svg class="ic"><use href="#i-star"/></svg>5.0</b><small>reyting</small></div><div><b>7 yil</b><small>tajriba</small></div><div><b>95+</b><small>mijoz</small></div></div>
+        <div class="pr"><b>380 000</b>so'm / oy</div>
+        <span class="sel" data-a="pop@3.75"><svg class="ic"><use href="#i-check"/></svg>Tanlandi</span></div>
+    </div>
+  </div>
+  <div class="dots" data-a="fade@.7"><i data-b="width=14px&background-color=#007aff" data-to="1.7/.5/s width=14px&background-color=rgba(142,142,147,.35)"></i><i data-b="width=14px&background-color=rgba(142,142,147,.35)" data-to="1.7/.5/s width=44px&background-color=#007aff; 2.7/.5/s width=14px&background-color=rgba(142,142,147,.35)"></i><i data-b="width=14px&background-color=rgba(142,142,147,.35)" data-to="2.7/.5/s width=44px&background-color=#007aff"></i></div>
+  <div class="btn" data-a="up@.8" data-b="background-color=#007aff" data-to="3.45/.12/e transform=scale(.95); 3.57/.45/b transform=scale(1)&background-color=#34c759">
+    <span data-b="opacity=1&transform=translateY(0px)" data-to="3.55/.25/n opacity=0&transform=translateY(-30px)">Murabbiyni tanlash</span>
+    <span data-b="opacity=0&transform=translateY(30px)" data-to="3.65/.45/b opacity=1&transform=translateY(0px)"><svg class="ic"><use href="#i-check"/></svg>Sardor bilan boshlash</span></div>
+</div></div></div><div class="meta"><div class="n">436</div><b>Trainer Match</b><div class="br">Fitnes klub · shaxsiy murabbiy tanlash</div><p>Uchta murabbiy kartasi (avatar, yo'nalish, 2 chip, reyting, tajriba, mijozlar, narx) yonga suriladi, markazdagisi kattalashib, qolganlari xiralashadi. Uchinchi karta yashil ramka bilan ko'tarilib "Tanlandi" belgisini oladi, tugma yashilga o'tib matni almashadi.</p><code>prompt: "sarlavha | zal | 3 murabbiy: ism=yo'nalish=chip1=chip2, reyting=tajriba=mijozlar=narx | tanlanadigan murabbiy | tugma matni | tanlangandan keyingi matn"</code></div></div>
+
+<!-- 437 -->
+<div class="cardx"><div class="stage" data-bg="#ffc4d4,#8a1f3a,#26060e"><div class="comp c437" style="--acc:#ff2d55"><div class="card">
+  <div class="ttl" data-a="up@.35">Kunlik ratsion</div>
+  <div class="sb" data-a="up@.45">Massa to'plash · 75 kg sportchi</div>
+  <div class="dn" data-a="pop@.55/.7"><svg viewBox="0 0 440 440"><g transform="rotate(-90 220 220)">
+    <circle class="bg" cx="220" cy="220" r="180"/>
+    <circle cx="220" cy="220" r="180" pathLength="100" stroke="#ff2d55" stroke-dasharray="28.8 200" transform="rotate(2.16 220 220)" data-b="stroke-dashoffset=28.8" data-to="0.95/.7/e stroke-dashoffset=0"/>
+    <circle cx="220" cy="220" r="180" pathLength="100" stroke="#ff9f0a" stroke-dasharray="41.8 200" transform="rotate(110.16 220 220)" data-b="stroke-dashoffset=41.8" data-to="1.55/.8/e stroke-dashoffset=0"/>
+    <circle cx="220" cy="220" r="180" pathLength="100" stroke="#30b0c7" stroke-dasharray="25.8 200" transform="rotate(264.96 220 220)" data-b="stroke-dashoffset=25.8" data-to="2.25/.65/e stroke-dashoffset=0"/></g></svg>
+    <div class="ctr"><b><span class="cnt" data-c0="0" data-c1="2 000" data-roll="0.95/2.0"></span></b><small>kcal · kunlik</small></div></div>
+  <div class="mr" data-a="up@.95" style="--c:#ff2d55"><span class="mi"><svg class="ic"><use href="#i-egg"/></svg></span><span class="nm">Oqsil<small>600 kcal</small></span><b class="g"><span class="cnt" data-c0="0" data-c1="150" data-roll="0.95/.8"></span><em>g</em></b><span class="pc">30%</span></div>
+  <div class="mr" data-a="up@1.55" style="--c:#ff9f0a"><span class="mi"><svg class="ic"><use href="#i-wheat"/></svg></span><span class="nm">Uglevod<small>860 kcal</small></span><b class="g"><span class="cnt" data-c0="0" data-c1="215" data-roll="1.55/.9"></span><em>g</em></b><span class="pc">43%</span></div>
+  <div class="mr" data-a="up@2.25" style="--c:#30b0c7"><span class="mi"><svg class="ic"><use href="#i-drop"/></svg></span><span class="nm">Yog'<small>540 kcal</small></span><b class="g"><span class="cnt" data-c0="0" data-c1="60" data-roll="2.25/.75"></span><em>g</em></b><span class="pc">27%</span></div>
+  <div class="tip" data-a="fade@3.0"><svg class="ic"><use href="#i-info"/></svg>Har kg vaznga 2 g oqsil · 5 mahal ovqat</div>
+</div></div></div><div class="meta"><div class="n">437</div><b>Macro Donut</b><div class="br">Sport ovqatlanish · kunlik makrolar</div><p>Donut halqasi uch bo'lakka bo'linib navbat bilan chiziladi: oqsil, uglevod, yog'. Har bo'lak chizilganda uning qatori chiqadi va grammi aylanib to'xtaydi. Markazda jami 2 000 kcal sanaladi, oxirida maslahat qatori.</p><code>prompt: "sarlavha | maqsad | jami kcal | 3 makro: nom=gramm=kcal=% | 3 rang | maslahat matni"</code></div></div>
+
+<!-- 438 -->
+<div class="cardx"><div class="stage" data-bg="#b0f0c0,#1f6a35,#06180c"><div class="comp c438" data-theme="dark" style="--acc:#34c759"><div class="card">
+  <div class="hdr"><span class="bx" data-a="pop@.45"><svg class="ic"><use href="#i-foot"/></svg></span>
+    <div data-a="lt@.55"><b>Qadamlar</b><small>Bugun · 28 sentabr</small></div>
+    <span class="chip" data-a="pop@.75">Maqsad 10 000</span></div>
+  <div class="rg" data-a="pop@.6/.7"><svg viewBox="0 0 460 460"><circle class="bg" cx="230" cy="230" r="200"/><circle class="fg" cx="230" cy="230" r="200" pathLength="100" data-b="stroke-dashoffset=100" data-to="1.0/2.6/e stroke-dashoffset=0"/></svg>
+    <i class="ech" data-a="echo@3.6/.9"></i>
+    <div class="ctr"><svg class="ic"><use href="#i-foot"/></svg><b><span class="cnt" data-c0="0" data-c1="10 000" data-roll="1.0/2.6"></span></b><small>qadam</small></div></div>
+  <div class="gd"><span class="chip" data-a="pop@3.65/.55"><svg class="ic"><use href="#i-check"/></svg>Kunlik maqsad bajarildi</span></div>
+  <div class="t3">
+    <div data-a="up@1.0" style="--c:#64d2ff"><small><svg class="ic"><use href="#i-pin"/></svg>Masofa</small><b><span class="cnt" data-c0="0.0" data-c1="7.4" data-roll="1.0/2.6"></span><em>km</em></b></div>
+    <div data-a="up@1.1" style="--c:#ff9f0a"><small><svg class="ic"><use href="#i-flame"/></svg>Kaloriya</small><b><span class="cnt" data-c0="0" data-c1="412" data-roll="1.0/2.6"></span><em>kcal</em></b></div>
+    <div data-a="up@1.2" style="--c:#30d158"><small><svg class="ic"><use href="#i-clock"/></svg>Faol vaqt</small><b><span class="cnt" data-c0="0" data-c1="96" data-roll="1.0/2.6"></span><em>daq</em></b></div>
+  </div>
+  <div class="wk" data-a="up@1.3"><div class="h"><span>So'nggi 7 kun</span><span>O'rtacha 8 750</span></div>
+    <div class="bars"><i class="gl"></i>
+      <i data-b="transform=scaleY(0)" data-to="1.4/.6/b transform=scaleY(1)" style="height:117px"></i>
+      <i class="ok" data-b="transform=scaleY(0)" data-to="1.5/.6/b transform=scaleY(1)" style="height:148px"></i>
+      <i data-b="transform=scaleY(0)" data-to="1.6/.6/b transform=scaleY(1)" style="height:98px"></i>
+      <i class="ok" data-b="transform=scaleY(0)" data-to="1.7/.6/b transform=scaleY(1)" style="height:159px"></i>
+      <i data-b="transform=scaleY(0)" data-to="1.8/.6/b transform=scaleY(1)" style="height:129px"></i>
+      <i data-b="transform=scaleY(0)" data-to="1.9/.6/b transform=scaleY(1)" style="height:77px"></i>
+      <i class="ok" data-b="transform=scaleY(0)" data-to="1.0/2.6/e transform=scaleY(1)" style="height:142px"></i></div>
+    <div class="lb"><span>Se</span><span>Ch</span><span>Pa</span><span>Ju</span><span>Sh</span><span>Ya</span><span class="td">Du</span></div></div>
+</div></div></div><div class="meta"><div class="n">438</div><b>Steps Goal</b><div class="br">Fitnes ilova · kunlik qadamlar</div><p>Katta yashil halqa 10 000 qadamgacha to'ladi, markazdagi raqam birga aylanadi. Masofa, kaloriya va faol vaqt plitkalari sanaladi, haftalik ustunlar o'sadi, bugungi ustun halqa bilan birga to'ladi. Maqsadga yetganda halqa to'lqin beradi va "maqsad bajarildi" belgisi chiqadi.</p><code>prompt: "sana | qadamlar | maqsad | km | kcal | faol daqiqa | 7 kun: kun=qadam | o'rtacha | tugash matni"</code></div></div>
+
+<!-- 439 -->
+<div class="cardx"><div class="stage" data-bg="#e8c8ff,#5a2a8a,#140626"><div class="comp c439" style="--acc:#af52de"><div class="card">
+  <div class="hdr"><span class="bx" data-a="pop@.45"><svg class="ic"><use href="#i-trophy"/></svg></span>
+    <div data-a="lt@.55"><b>Shaxsiy rekord</b><small>Jim yotib · Bench press</small></div>
+    <span class="chip" data-a="pop@3.55">+10 kg</span></div>
+  <div class="bb" data-a="up@.6" data-to="2.95/.35/e transform=translateY(-36px); 3.3/.55/b transform=translateY(0px)"><svg viewBox="0 0 708 230">
+    <rect x="20" y="106" width="668" height="18" rx="9" fill="#8e8e93"/>
+    <rect x="262" y="106" width="184" height="18" fill="#a9a9ae"/>
+    <rect x="200" y="86" width="14" height="58" rx="4" fill="#636366"/><rect x="494" y="86" width="14" height="58" rx="4" fill="#636366"/>
+    <rect x="168" y="15" width="28" height="200" rx="7" fill="#ff3b30" data-a="pop@.85/.45"/><rect x="512" y="15" width="28" height="200" rx="7" fill="#ff3b30" data-a="pop@.9/.45"/>
+    <rect x="138" y="35" width="26" height="160" rx="7" fill="#ffcc00" data-a="pop@1.0/.45"/><rect x="544" y="35" width="26" height="160" rx="7" fill="#ffcc00" data-a="pop@1.05/.45"/>
+    <rect x="110" y="50" width="24" height="130" rx="6" fill="#34c759" data-a="lt@1.5/.55"/><rect x="574" y="50" width="24" height="130" rx="6" fill="#34c759" data-a="rt@1.6/.55"/>
+  </svg></div>
+  <div class="wt" data-a="up@.75"><small>Yangi natija</small><b><span class="cnt" data-c0="100" data-c1="120" data-roll="1.5/1.4"></span><em>kg</em></b>
+    <div class="stp" data-a="stamp@3.35" data-tf="rotate(-10deg)"><svg class="ic"><use href="#i-trophy"/></svg>Yangi<br>rekord</div></div>
+  <div class="hh" data-a="fade@1.0">Rekordlar tarixi</div>
+  <div class="pr nw" data-a="pop@3.95/.55"><svg class="ic"><use href="#i-award"/></svg><b>120 kg</b><em>+10</em><small>Bugun</small></div>
+  <div data-a="up@1.1" data-tf="translateY(-104px)" data-to="3.8/.55/s transform=translateY(0px) translateY(0px)">
+    <div class="pr"><svg class="ic"><use href="#i-award"/></svg><b>110 kg</b><em>+10</em><small>02.08.2026</small></div>
+    <div class="pr"><svg class="ic"><use href="#i-award"/></svg><b>100 kg</b><em>+5</em><small>14.06.2026</small></div>
+    <div class="pr"><svg class="ic"><use href="#i-award"/></svg><b>95 kg</b><small>20.04.2026</small></div>
+  </div>
+</div></div></div><div class="meta"><div class="n">439</div><b>Personal Record</b><div class="br">Pauerlifting zal · shaxsiy rekord</div><p>Shtanga disklar bilan yig'iladi, yashil 10 kg disklar ikki tomondan kiydiriladi va og'irlik 100 dan 120 kg gacha aylanadi. Shtanga ko'tarilib tushadi, "Yangi rekord" muhri zarb bilan bosiladi. Rekordlar tarixi pastga suriladi, yangi 120 kg qatori tepaga qo'shiladi.</p><code>prompt: "mashq nomi | eski og'irlik | yangi og'irlik | disk ranglari | muhr matni | farq | 3 oldingi rekord: kg=farq=sana"</code></div></div>
+
+<!-- 440 -->
+<div class="cardx"><div class="stage" data-bg="#ffe0a8,#9a5a10,#241202"><div class="comp c440" style="--acc:#ff9500"><div class="card">
+  <div class="hdr"><span class="bx" data-a="pop@.45"><svg class="ic"><use href="#i-target"/></svg></span>
+    <div data-a="lt@.55"><b>30 kunlik chellenj</b><small>Har kuni 100 ta o'tirib-turish</small></div></div>
+  <div class="sm"><div data-a="up@.65"><small>Bajarildi</small><b><span class="cnt" data-c0="0" data-c1="24" data-roll=".95/2.3"></span><em>/ 30 kun</em></b></div>
+    <div class="fire" data-a="pop@.8"><svg class="ic" data-b="transform=scale(1) rotate(0deg)" data-to="1.10/.3/i transform=scale(1.1) rotate(-5deg); 1.40/.3/i transform=scale(.94) rotate(4deg); 1.70/.3/i transform=scale(1.06) rotate(-2deg); 2.00/.3/i transform=scale(.97) rotate(3deg); 2.30/.3/i transform=scale(1.1) rotate(-5deg); 2.60/.3/i transform=scale(.94) rotate(4deg); 2.90/.3/i transform=scale(1.06) rotate(-2deg); 3.20/.3/i transform=scale(.97) rotate(3deg); 3.50/.3/i transform=scale(1.1) rotate(-5deg); 3.80/.3/i transform=scale(.94) rotate(4deg); 4.10/.3/i transform=scale(1.06) rotate(-2deg); 4.40/.3/i transform=scale(.97) rotate(3deg); 4.70/.3/i transform=scale(1.1) rotate(-5deg); 5.00/.3/i transform=scale(.94) rotate(4deg); 5.30/.3/i transform=scale(1.06) rotate(-2deg); 5.60/.3/i transform=scale(1) rotate(0deg)"><use href="#i-flame"/></svg><div><span class="cnt" data-c0="0" data-c1="24" data-roll=".95/2.3"></span> kun<small>ketma-ket</small></div></div></div>
+  <div class="gd" data-a="up@.75"><div class="dc"><span>1</span><i class="f" data-a="pop@0.95/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>2</span><i class="f" data-a="pop@1.04/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>3</span><i class="f" data-a="pop@1.14/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>4</span><i class="f" data-a="pop@1.23/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>5</span><i class="f" data-a="pop@1.33/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>6</span><i class="f" data-a="pop@1.42/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>7</span><i class="f" data-a="pop@1.52/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>8</span><i class="f" data-a="pop@1.61/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>9</span><i class="f" data-a="pop@1.71/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>10</span><i class="f" data-a="pop@1.80/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>11</span><i class="f" data-a="pop@1.90/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>12</span><i class="f" data-a="pop@1.99/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>13</span><i class="f" data-a="pop@2.09/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>14</span><i class="f" data-a="pop@2.19/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>15</span><i class="f" data-a="pop@2.28/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>16</span><i class="f" data-a="pop@2.38/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>17</span><i class="f" data-a="pop@2.47/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>18</span><i class="f" data-a="pop@2.56/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>19</span><i class="f" data-a="pop@2.66/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>20</span><i class="f" data-a="pop@2.75/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>21</span><i class="f" data-a="pop@2.85/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>22</span><i class="f" data-a="pop@2.95/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>23</span><i class="f" data-a="pop@3.04/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc"><span>24</span><i class="f" data-a="pop@3.13/.4"><svg class="ic"><use href="#i-check"/></svg></i></div><div class="dc td"><span>25</span><i class="rg" data-a="echo@3.5/.8"></i></div><div class="dc"><span>26</span></div><div class="dc"><span>27</span></div><div class="dc"><span>28</span></div><div class="dc"><span>29</span></div><div class="dc"><span>30</span></div></div>
+  <div class="pb" data-a="fade@.9"><i data-b="width=0%" data-to=".95/2.3/e width=80%"></i></div>
+  <div class="pl" data-a="fade@1.0"><span>Boshlandi · 04.09</span><span><span class="cnt" data-c0="0" data-c1="80" data-roll=".95/2.3"></span>%</span></div>
+  <div class="row" data-a="up@1.1"><span class="l"><svg class="ic"><use href="#i-gift"/></svg>Mukofot</span><b>1 oy bepul abonement</b></div>
+</div></div></div><div class="meta"><div class="n">440</div><b>30-Day Challenge</b><div class="br">Fitnes klub · 30 kunlik chellenj</div><p>30 kunlik setka kunma-kun to'q sariq kataklar bilan to'ladi, har birida galochka otilib chiqadi. Yuqorida 24/30 hisobi va olovli seriya belgisi sanaladi, progress chizig'i 80% gacha cho'ziladi. Bugungi 25-kun ramkasi to'lqin berib kutib turadi.</p><code>prompt: "chellenj nomi | kunlik vazifa | jami kun | bajarilgan kunlar | seriya | boshlanish sanasi | mukofot matni"</code></div></div>
+
+</div></div>
+<div class="modal" id="modal"></div>
+<script>
+var H=1920, theme="preset", D=6.5;
+var OB="cubic-bezier(.34,1.56,.64,1)", SB="cubic-bezier(.3,1.3,.6,1)", IO="cubic-bezier(.65,0,.35,1)", EO="cubic-bezier(.2,.8,.2,1)", EI="cubic-bezier(.55,0,1,.45)", BI="cubic-bezier(.5,-0.4,.75,.25)";
+var EZ={l:"linear",b:OB,s:SB,i:IO,e:EO,n:EI,k:BI};
+
+/* ---------- DOM build ---------- */
+/* data-split="type@t0/step" (chars) or "words@t0/step"; children with data-ns are skipped */
+function splitEl(el){
+  var a=el.dataset.split.split("@"), mode=a[0], sp=a[1].split("/"), t0=+sp[0], st=+(sp[1]||.05), i=0, ty=mode==="words"?"wd":"tp";
+  (function walk(node){
+    Array.prototype.slice.call(node.childNodes).forEach(function(n){
+      if(n.nodeType===3){
+        var t=n.textContent; if(/^\s*$/.test(t)&&/\n/.test(t)){n.parentNode.removeChild(n);return;}
+        var frag=document.createDocumentFragment(), parts=mode==="words"?t.split(/(\s+)/):Array.from(t);
+        parts.forEach(function(w){ if(!w)return;
+          if(mode==="words"&&/^\s+$/.test(w)){frag.appendChild(document.createTextNode(w));return;}
+          var s=document.createElement("span"); s.className=ty; s.textContent=w; s.dataset.a=ty+"@"+(t0+i*st).toFixed(3); i++; frag.appendChild(s); });
+        n.parentNode.replaceChild(frag,n);
+      } else if(n.nodeType===1&&!n.hasAttribute("data-ns")) walk(n);
+    });
+  })(el);
+  delete el.dataset.split;
+}
+/* odometer counter: .cnt data-c0 data-c1 data-roll="t/dur" (c1 < c0 counts down) */
+function buildCnt(el){
+  var from=el.dataset.c0, to=el.dataset.c1, A=+from.replace(/\D/g,""), B=+to.replace(/\D/g,""), fd=from.replace(/\D/g,"").length, digs=to.replace(/\D/g,"").length, pos=0, html="";
+  Array.from(to).forEach(function(c){
+    if(!/\d/.test(c)){html+='<span class="sep">'+c+'</span>';return;}
+    var p=digs-1-pos; pos++; var P=Math.pow(10,p), a0=Math.floor(A/P), b0=Math.floor(B/P), dn=B<A; if(dn){var q=a0;a0=b0;b0=q;} var inc=b0-a0, cap=p===0?20:(p===1?14:10), seq=[], k;
+    if(inc<=cap){for(k=0;k<=inc;k++)seq.push((a0+k)%10);}
+    else {seq.push(a0%10); for(k=cap-1;k>=0;k--)seq.push((((b0-k)%10)+10)%10);}
+    if(!dn&&p>=fd&&a0===0) seq[0]=""; if(dn) seq.reverse();
+    html+='<span class="col"><span class="stk" data-n="'+(seq.length-1)+'">'+seq.map(function(x){return "<i>"+(x===""?"&nbsp;":x)+"</i>";}).join("")+"</span></span>";
+  });
+  el.innerHTML=html;
+}
+function build(){
+  document.querySelectorAll("[data-split]").forEach(splitEl);
+  document.querySelectorAll(".cnt").forEach(buildCnt);
+}
+
+/* ---------- WAAPI timeline (6.5 s loop) ---------- */
+function T(tf,x){var s=((tf||"")+" "+(x||"")).trim(); return s||"none";}
+function camel(k){return k.trim().replace(/-([a-z])/g,function(m,c){return c.toUpperCase();});}
+function props(str){var o={}; str.split("&").forEach(function(p){var i=p.indexOf("="); if(i<0)return; o[camel(p.slice(0,i))]=p.slice(i+1).trim().replace(/~/g,",");}); return o;}
+function types(tf){return {
+  pop:{d:.5,e:OB,f:[{opacity:0,transform:T(tf,"scale(.4)")},{opacity:1,transform:T(tf,"scale(1)")}]},
+  up:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateY(48px)")},{opacity:1,transform:T(tf,"translateY(0px)")}]},
+  dn:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateY(-48px)")},{opacity:1,transform:T(tf,"translateY(0px)")}]},
+  lt:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateX(-64px)")},{opacity:1,transform:T(tf,"translateX(0px)")}]},
+  rt:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateX(64px)")},{opacity:1,transform:T(tf,"translateX(0px)")}]},
+  fade:{d:.35,e:"linear",f:[{opacity:0},{opacity:1}]},
+  tp:{d:.001,e:"linear",f:[{opacity:0},{opacity:1}]},
+  wd:{d:.4,e:EO,f:[{opacity:0,filter:"blur(6px)",transform:"translateY(12px)"},{opacity:1,filter:"blur(0px)",transform:"translateY(0px)"}]},
+  stamp:{d:.55,e:EI,f:[{opacity:0,transform:T(tf,"scale(2.6)")},{opacity:1,transform:T(tf,"scale(.88)"),o:.42,ez:OB},{opacity:1,transform:T(tf,"scale(1)")}]},
+  growx:{d:.6,e:IO,f:[{transform:T(tf,"scaleX(0)")},{transform:T(tf,"scaleX(1)")}]},
+  draw:{d:.6,e:IO,f:[{strokeDashoffset:1.05,opacity:0},{strokeDashoffset:.99,opacity:1,o:.05},{strokeDashoffset:0,opacity:1}]},
+  unfold:{d:.8,e:SB,f:[{opacity:0,transform:"perspective(1600px) rotateX(-75deg) scale(.92)"},{opacity:1,transform:"perspective(1600px) rotateX(0deg) scale(1)"}]},
+  echo:{d:.7,e:EO,f:[{opacity:0,transform:"scale(.92)"},{opacity:.9,transform:"scale(1)",o:.08},{opacity:0,transform:"scale(1.45)"}]}
+};}
+function DF(tf){return {opacity:1,filter:"blur(0px)",transform:T(tf,""),strokeDashoffset:0};}
+function A(){var r={}; for(var i=0;i<arguments.length;i++){var s=arguments[i]; for(var k in s) if(k!=="o"&&k!=="ez") r[k]=s[k];} return r;}
+function run(el,frames,tf){
+  var keys={}, df=DF(tf); frames.forEach(function(f){for(var k in f) if(k!=="offset"&&k!=="easing") keys[k]=1;});
+  var last={}; for(var k in keys){ for(var i=0;i<frames.length;i++){ if(frames[i][k]!==undefined){ last[k]=frames[i][k]; break; } } if(last[k]===undefined) last[k]=df[k]; }
+  var prev=0;
+  frames.forEach(function(f){ for(var k in keys){ if(f[k]===undefined) f[k]=last[k]; else last[k]=f[k]; } f.offset=Math.min(1,Math.max(prev,f.offset)); prev=f.offset; });
+  el.animate(frames,{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animEl(el){
+  var ds=el.dataset, tf=ds.tf||"", fr=[], cur={}, B=ds.b?props(ds.b):null;
+  if(ds.a){
+    var a=ds.a.split("@"), ty=types(tf)[a[0]], sp=a[1].split("/"), s=+sp[0], d=sp[1]?+sp[1]:ty.d, H0=ty.f[0], S=ty.f[ty.f.length-1];
+    fr.push(A({offset:0},B||{},H0)); fr.push(A({offset:s/D,easing:ty.e0||ty.e},B||{},H0));
+    ty.f.slice(1,-1).forEach(function(m){fr.push(A({offset:(s+d*m.o)/D,easing:m.ez||ty.e},B||{},m));});
+    cur=A(B||{},S); fr.push(A({offset:(s+d)/D},cur));
+  } else if(B){ cur=B; fr.push(A({offset:0},cur)); }
+  else { fr.push({offset:0}); }
+  if(ds.to){ ds.to.split(";").forEach(function(step){ step=step.trim(); if(!step)return;
+    var i=step.indexOf(" "), td=step.slice(0,i).split("/"), t=+td[0], dd=+(td[1]||.4), ez=EZ[td[2]]||SB, pr=props(step.slice(i+1));
+    var base=A(cur); for(var k in pr) if(base[k]===undefined) base[k]=DF(tf)[k];
+    fr.push(A({offset:t/D,easing:ez},base)); cur=A(base,pr); fr.push(A({offset:(t+dd)/D},cur)); }); }
+  fr.push(A({offset:1},cur));
+  run(el,fr,tf);
+}
+function animCnt(stk,cnt){
+  var r=cnt.dataset.roll.split("/"), s=+r[0], d=+r[1], n=+stk.dataset.n, y="translateY(-"+(n*1.1).toFixed(2)+"em)";
+  stk.animate([{offset:0,transform:"translateY(0em)"},{offset:s/D,transform:"translateY(0em)",easing:"cubic-bezier(.3,.55,.15,1)"},{offset:(s+d)/D,transform:y},{offset:1,transform:y}],{duration:D*1000,iterations:Infinity,fill:"both"});
+  if(n>0) stk.parentNode.animate([{offset:0,filter:"blur(0px)"},{offset:s/D,filter:"blur(0px)"},{offset:(s+d*.12)/D,filter:"blur(2px)"},{offset:(s+d*.55)/D,filter:"blur(1.2px)"},{offset:(s+d*.92)/D,filter:"blur(0px)"},{offset:1,filter:"blur(0px)"}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+/* card: smooth bounce in, hold, anticipation + bounce out */
+function animCard(c){
+  var o="translateY(110px) scale(.9)", x="translateY(90px) scale(.9)", z="translateY(0px) scale(1)";
+  c.animate([{offset:0,opacity:0,transform:o,easing:SB},{offset:.62/D,opacity:1,transform:z},{offset:5.8/D,opacity:1,transform:z,easing:BI},{offset:6.3/D,opacity:0,transform:x},{offset:1,opacity:0,transform:x}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animate(root){
+  root.querySelectorAll(".comp").forEach(function(c){
+    animCard(c.querySelector(".card"));
+    c.querySelectorAll("[data-a],[data-to],[data-b]").forEach(animEl);
+    c.querySelectorAll(".cnt").forEach(function(cn){cn.querySelectorAll(".stk").forEach(function(s){animCnt(s,cn);});});
+  });
+}
+
+/* ---------- board chrome ---------- */
+function fit(st){
+  var u=st.clientWidth/1080; st.style.height=(H*u)+"px";
+  var c=st.querySelector(".comp"); c.style.setProperty("--u",u); c.style.setProperty("--H",H+"px");
+  var dark=theme==="dark"||(theme==="preset"&&c.dataset.theme==="dark"); c.classList.toggle("dark",dark);
+  var ch=c.querySelector(".card").offsetHeight; c.style.setProperty("--ps",Math.min(1,(H-150)/ch).toFixed(3));
+}
+function all(){document.querySelectorAll(".stage").forEach(fit)}
+build();
+document.querySelectorAll(".stage").forEach(function(st){
+  var b=st.dataset.bg.split(","); var f=document.createElement("div"); f.className="foot";
+  f.style.background="radial-gradient(circle at 30% 25%,"+b[0]+",transparent 55%),radial-gradient(circle at 75% 70%,"+b[1]+",transparent 60%),"+b[2];
+  st.insertBefore(f,st.firstChild);
+});
+function wire(id,fn){document.getElementById(id).addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  this.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b)});fn(b.dataset.v);all();});}
+wire("fmt",function(v){H=+v}); wire("thm",function(v){theme=v});
+var modal=document.getElementById("modal");
+document.querySelectorAll(".cardx").forEach(function(cx){cx.addEventListener("click",function(){
+  modal.innerHTML=""; var st=cx.querySelector(".stage").cloneNode(true); modal.appendChild(st); modal.classList.add("on"); fit(st); animate(st);});});
+modal.addEventListener("click",function(){modal.classList.remove("on");modal.innerHTML=""});
+window.addEventListener("resize",all); all(); animate(document.getElementById("grid"));
+var m=location.hash.match(/t=([\d.]+)/); if(m){document.getAnimations().forEach(function(a){a.pause();a.currentTime=parseFloat(m[1])*1000;});}
+var f=location.hash.match(/f=(\d+)/); if(f){H=+f[1]; document.querySelectorAll("#fmt button").forEach(function(x){x.classList.toggle("on",x.dataset.v===f[1])}); all();}
+var th=location.hash.match(/th=(\w+)/); if(th){theme=th[1]; document.querySelectorAll("#thm button").forEach(function(x){x.classList.toggle("on",x.dataset.v===th[1])}); all();}
+</script>
+</body>
+</html>
