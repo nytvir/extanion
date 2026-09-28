@@ -23824,6 +23824,50 @@ function _s54Reasons() {
 // Lime #B0FC0A, Bold neo-grotesk (Inter Display > SF Pro > Segoe UI).
 // ============================================================
 
+// Icons: Lucide v0.460.0 (https://lucide.dev), ISC License, Copyright (c) Lucide Contributors.
+// Converted to AE bezier data on a 24 grid centred on 0,0: [closed, verts, inTangents, outTangents] (flat x,y).
+var S55_ICO = {
+    "heart": [[1,[7,2,10,-3.5,4.5,-9,0,-7,-4.5,-9,-10,-3.5,-7,2,0,9],[0,0,0,2.29,3.038,0,1.5,-1.5,1.76,0,0,-3.038,-1.5,-1.45,0,0],[1.49,-1.46,0,-3.038,-1.76,0,-1.5,-1.5,-3.038,0,0,2.3,0,0,0,0]]],
+    "message-circle": [[1,[-4.1,8,7.282,5.292,6.372,-6.372,-5.292,-7.282,-8,4.1,-10,10],[0,0,-2.61,3.582,3.134,3.134,3.582,-2.61,-2.023,-3.943,0,0],[3.943,2.023,2.61,-3.582,-3.134,-3.134,-3.582,2.61,0,0,0,0]]],
+    "send": [[1,[2.536,9.686,3.013,10,3.473,9.662,9.973,-9.338,9.857,-9.857,9.338,-9.973,-9.662,-3.473,-10,-3.013,-9.686,-2.536,-1.756,0.644,-0.644,1.754],[0,0,-0.209,0.005,-0.068,0.198,0,0,0.136,0.136,0.181,-0.065,0,0,0.005,-0.209,-0.194,-0.078,0,0,-0.204,-0.506],[0.078,0.194,0.209,-0.005,0,0,0.065,-0.181,-0.136,-0.136,0,0,-0.198,0.068,-0.005,0.209,0,-0,0.507,0.203,0,0]], [0,[9.854,-9.853,-1.086,1.086],[0,0,0,0],[0,0,0,0]]],
+    "bookmark": [[1,[7,9,0,5,-7,9,-7,-7,-5,-9,5,-9,7,-7],[0,0,0,0,0,0,0,0,-1.105,0,0,0,0,-1.105],[0,0,0,0,0,0,0,-1.105,0,0,1.105,0,0,0]]],
+    "badge-check": [[1,[-8.15,-3.38,-7.071,-7.078,-3.37,-8.15,0,-9.995,3.37,-8.15,7.076,-7.076,8.15,-3.37,9.995,0,8.15,3.37,7.078,7.071,3.38,8.15,0.005,10.003,-3.37,8.15,-7.071,7.078,-8.15,3.38,-10.011,0],[-1.159,0.733,-0.969,0.967,-1.336,-0.299,-1.365,0,-0.735,-1.15,-0.97,-0.97,0.301,-1.338,0,-1.365,1.15,-0.735,0.967,-0.969,1.336,0.297,1.368,0,0.734,1.154,0.969,0.967,-0.297,1.336,0,1.371],[-0.297,-1.336,0.969,-0.967,0.735,-1.15,1.365,0,1.338,-0.301,0.97,0.97,1.15,0.735,0,1.365,0.299,1.336,-0.967,0.969,-0.734,1.154,-1.368,0,-1.336,0.299,-0.969,-0.967,-1.159,-0.733,-0,-1.371]], [0,[-3,0,-1,2,3,-2],[0,0,0,0,0,0],[0,0,0,0,0,0]]],
+    "music": [[0,[-3,6,-3,-7,9,-9,9,4],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]], [1,[-3,6,-6,9,-9,6,-6,3],[0,-1.657,1.657,0,0,1.657,-1.657,0],[0,1.657,-1.657,0,0,-1.657,1.657,0]], [1,[9,4,6,7,3,4,6,1],[0,-1.657,1.657,0,0,1.657,-1.657,0],[0,1.657,-1.657,0,0,-1.657,1.657,0]]],
+    "user": [[0,[7,9,7,7,3,3,-3,3,-7,7,-7,9],[0,0,0,0,2.209,0,0,0,0,-2.209,0,0],[0,0,0,-2.209,0,0,-2.209,0,0,0,0,0]], [1,[4,-5,0,-1,-4,-5,0,-9],[0,-2.209,2.209,0,0,2.209,-2.209,0],[0,2.209,-2.209,0,0,-2.209,2.209,0]]],
+    "handshake": [[0,[-1,5,1,7,4,7,4,4],[0,0,0,0,-0.828,0.828,0.828,0.828],[0,0,0.828,0.828,0.828,-0.828,0,0]], [0,[2,2,4.5,4.5,7.5,4.5,7.5,1.5,3.62,-2.38,-0.62,-2.38,-1.5,-1.5,-4.5,-1.5,-4.5,-4.5,-1.69,-7.31,5.37,-8.18,5.84,-7.9,7.26,-7.65,9,-8],[0,0,0,0,-0.828,0.828,0.828,0.828,0,0,1.171,-1.17,0,0,0.828,0.828,-0.828,0.828,0,0,-2.275,-1.36,0,0,-0.488,0.096,0,0],[0,0,0.828,0.828,0.828,-0.828,0,0,-1.171,-1.17,0,0,-0.828,0.828,-0.828,-0.828,0,0,1.877,-1.872,0,0,0.426,0.257,0,0,0,0]], [0,[9,-9,10,2,8,2],[0,0,0,0,0,0],[0,0,0,0,0,0]], [0,[-9,-9,-10,2,-3.5,8.5,-0.5,8.5,-0.5,5.5],[0,0,0,0,0,0,-0.828,0.828,0.828,0.828],[0,0,0,0,0.828,0.828,0.828,-0.828,0,0]], [0,[-9,-8,-1,-8],[0,0,0,0],[0,0,0,0]]],
+    "shopping-cart": [[1,[-3,9,-4,10,-5,9,-4,8],[0,-0.552,0.552,0,0,0.552,-0.552,0],[0,0.552,-0.552,0,0,-0.552,0.552,0]], [1,[8,9,7,10,6,9,7,8],[0,-0.552,0.552,0,0,0.552,-0.552,0],[0,0.552,-0.552,0,0,-0.552,0.552,0]], [0,[-9.95,-9.95,-7.95,-9.95,-5.29,2.47,-3.29,4.05,6.49,4.05,8.44,2.48,10.09,-4.95,-6.88,-4.95],[0,0,0,0,0,0,-0.959,0.021,0,0,-0.202,0.916,0,0,0,0],[0,0,0,0,0.201,0.938,0,0,0.938,-0.002,-0,0,0,0,0,0]]],
+    "star": [[1,[-0.475,-9.705,0,-10,0.475,-9.705,2.785,-5.026,4.38,-3.866,9.546,-3.11,9.974,-2.749,9.84,-2.206,6.104,1.432,5.493,3.31,6.375,8.45,6.165,8.971,5.604,9.01,0.986,6.582,-0.987,6.582,-5.604,9.01,-6.164,8.97,-6.374,8.45,-5.493,3.311,-6.104,1.432,-9.84,-2.205,-9.976,-2.75,-9.546,-3.111,-4.381,-3.866,-2.784,-5.026],[0,0,-0.202,0,-0.089,-0.181,0,0,-0.69,-0.101,0,0,-0.062,-0.192,0.144,-0.141,0,0,-0.118,-0.688,0,0,0.164,-0.119,0.179,0.095,0,0,0.618,-0.324,0,0,0.164,0.119,-0.035,0.199,0,0,0.501,0.488,0,0,-0.063,0.193,-0.201,0.028,0,0,-0.309,0.626],[0.089,-0.181,0.202,0,0,0,0.309,0.625,0,0,0.2,0.029,0.062,0.192,0,0,-0.5,0.487,0,0,0.035,0.2,-0.164,0.119,0,0,-0.618,-0.324,0,0,-0.179,0.095,-0.164,-0.119,0,-0,0.118,-0.689,0,0,-0.146,-0.141,0.063,-0.193,-0,0,0.691,-0.1,0,0]]],
+    "zap": [[1,[-8,2,-8.905,1.432,-8.78,0.37,1.12,-9.83,1.734,-9.943,1.98,-9.37,0.06,-3.35,0.176,-2.429,1,-2,8,-2,8.905,-1.432,8.78,-0.37,-1.12,9.83,-1.734,9.943,-1.98,9.37,-0.06,3.35,-0.176,2.429,-1,2],[0,0,0.167,0.348,-0.243,0.3,0,0,-0.206,-0.11,0.062,-0.225,0,0,-0.188,-0.269,-0.328,0.001,0,0,-0.167,-0.348,0.243,-0.3,0,0,0.206,0.11,-0.062,0.225,0,0,0.188,0.269,0.328,-0.001],[-0.386,0.001,-0.167,-0.348,0,0,0.153,-0.177,0.206,0.11,0,0,-0.115,0.308,0.188,0.269,0,0,0.386,-0.001,0.167,0.348,0,0,-0.153,0.177,-0.206,-0.11,0,0,0.115,-0.308,-0.188,-0.269,0,0]]],
+    "chart-pie": [[1,[9,0,9.95,-0.998,0.997,-9.949,-0.001,-8.999,-0.001,-0.999,0.999,0.001],[0,0,0.055,0.549,4.734,0.474,0,-0.552,0,0,-0.552,0],[0.552,0,-0.475,-4.733,-0.55,-0.055,0,0,0,0.552,0,0]], [0,[9.21,3.89,-1.292,9.912,-9.901,1.4,-4,-9.17],[0,0,4.456,0.581,0.631,4.449,-4.119,1.797],[-1.75,4.139,-4.456,-0.581,-0.631,-4.449,0,0]]],
+    "gem": [[1,[-6,-9,6,-9,10,-3,0,10,-10,-3],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]], [0,[-1,-9,-4,-3,0,10,4,-3,1,-9],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]], [0,[-10,-3,10,-3],[0,0,0,0],[0,0,0,0]]],
+    "plus": [[0,[-7,0,7,0],[0,0,0,0],[0,0,0,0]], [0,[0,-7,0,7],[0,0,0,0],[0,0,0,0]]],
+    "search": [[1,[7,-1,-1,7,-9,-1,-1,-9],[0,-4.418,4.418,0,0,4.418,-4.418,0],[0,4.418,-4.418,0,0,-4.418,4.418,0]], [0,[9,9,4.7,4.7],[0,0,0,0],[0,0,0,0]]]
+};
+// icon shape layer: box = on-screen size of the 24 grid, sw = stroke width (0 = none),
+// o.fill = fill colour expr, o.only = subpath indices to use
+function _s55Ico(x, name, key, box, sw, col, pos, opExpr, o) {
+    o = o || {};
+    var D = S55_ICO[key], k = box / 24, i, j, L = x.comp.layers.addShape(); L.name = x.tag + " " + name;
+    var tr = L.property("ADBE Transform Group"); tr.property("ADBE Anchor Point").setValue([0, 0]);
+    _s47SetP(tr.property("ADBE Position"), x, pos);
+    var RG = L.property("ADBE Root Vectors Group");
+    for (i = 0; i < D.length; i++) {
+        if (o.only) { var ok = false; for (j = 0; j < o.only.length; j++) { if (o.only[j] === i) ok = true; } if (!ok) continue; }
+        var V = [], I = [], O = [], a = D[i];
+        for (j = 0; j < a[1].length; j += 2) { V.push([a[1][j] * k, a[1][j + 1] * k]); I.push([a[2][j] * k, a[2][j + 1] * k]); O.push([a[3][j] * k, a[3][j + 1] * k]); }
+        var shp = new Shape(); shp.vertices = V; shp.inTangents = I; shp.outTangents = O; shp.closed = a[0] === 1;
+        RG.addProperty("ADBE Vector Shape - Group").property("ADBE Vector Shape").setValue(shp);
+    }
+    if (o.fill) { var fl = RG.addProperty("ADBE Vector Graphic - Fill"); fl.property("ADBE Vector Fill Color").expression = _s47E(x, o.fill); }
+    if (sw > 0) {
+        var sk = RG.addProperty("ADBE Vector Graphic - Stroke");
+        sk.property("ADBE Vector Stroke Color").expression = _s47E(x, col); sk.property("ADBE Vector Stroke Width").setValue(sw);
+        sk.property("ADBE Vector Stroke Line Cap").setValue(2); sk.property("ADBE Vector Stroke Line Join").setValue(2);
+    }
+    tr.property("ADBE Opacity").expression = x.PRE + (opExpr || "op");
+    x.layers.push(L); return L;
+}
+
 // ---------- 353 GLITCH TITLE STACK (REF-003 0:00-0:03) ----------
 // Label chip revealed by a lime bar sweeping right->left, huge bold-italic word
 // typed letter by letter (newest letter lime + glow), [small word] typed, gradient
@@ -24015,17 +24059,6 @@ function _s55_354Pop(x, L, pos, d) {
     var tr = L.property("ADBE Transform Group"); tr.property("ADBE Position").setValue(pos);
     tr.property("ADBE Scale").expression = x.PRE + _s54Key(1) + 'var a=time-tk-' + d + '; var k=a<=0?0:(1-Math.exp(-a*12)*Math.cos(a*16)); [k*100,k*100]';
 }
-function _s55_354Heart(K) {
-    var p = [], i, t, mnY = 1e9, mxY = -1e9;
-    for (i = 0; i < 28; i++) { t = i / 28 * 2 * Math.PI; p.push([16 * Math.pow(Math.sin(t), 3), -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))]); mnY = Math.min(mnY, p[i][1]); mxY = Math.max(mxY, p[i][1]); }
-    for (i = 0; i < p.length; i++) p[i] = [p[i][0] * 1.5 * K, (p[i][1] - (mnY + mxY) / 2) * 1.5 * K];
-    return p;
-}
-function _s55_354Bubble(K) {
-    var p = [], i, r = 19.5 * K, a;
-    for (i = 0; i <= 22; i++) { a = (55 + 320 * i / 22) * Math.PI / 180; p.push([Math.cos(a) * r, Math.sin(a) * r]); }
-    p.push([21 * K, 21 * K]); return p;
-}
 function _s55PostFrame() {
     var ac = app.project.activeItem, sel = (ac instanceof CompItem) ? ac.selectedLayers : [];
     var PR = _s47Pick("Post Frame (354)", S55_P354); if (!PR) return;
@@ -24072,15 +24105,13 @@ function _s55PostFrame() {
     var nk = _s55_354T(x, A[0] || "nik", 24 * K, "b", "nik", [L0 + 148.5 * K, T0 + 79.5 * K], TX);
     _s55_354Type(x, nk, A[0], 0.15, 42);
     var BX = x.PRE + _s54Key(1) + 'var r=thisComp.layer("' + nk.name + '").sourceRectAtTime(tk+3,false); [' + (L0 + 148.5 * K) + '+r.left+r.width+' + (22 * K) + ', ' + (T0 + 72 * K) + ']';
-    var bd = _s47Ellipse(x, "belgi", [24 * K, 24 * K], [0, 0], _s47Col(x, "Belgi"));
+    var bd = _s55Ico(x, "belgi", "badge-check", 30 * K, 0, null, [0, 0], null, { fill: _s47Col(x, "Belgi"), only: [0] });
     _s55_354Pop(x, bd, [0, 0], 0.6); bd.property("ADBE Transform Group").property("ADBE Position").expression = BX;
-    var ck = _s47Path(x, "belgi check", [[-5 * K, 0], [-1.5 * K, 3.5 * K], [5 * K, -3.5 * K]], false, 2.6 * K, "[1,1,1,1]", [0, 0]);
+    var ck = _s55Ico(x, "belgi check", "badge-check", 30 * K, 2.6 * K, "[1,1,1,1]", [0, 0], null, { only: [1] });
     _s55_354Pop(x, ck, [0, 0], 0.6); ck.property("ADBE Transform Group").property("ADBE Position").expression = BX;
     var MF = _s54Key(1) + "op*cl((time-tk-0.15)/0.2)";
     var nx = L0 + 157 * K, ny = T0 + 103 * K;
-    _s47Ellipse(x, "musiqa nota 1", [7 * K, 6 * K], [nx - 4.5 * K, ny + 5.5 * K], TX, MF);
-    _s47Ellipse(x, "musiqa nota 2", [7 * K, 6 * K], [nx + 4.5 * K, ny + 4 * K], TX, MF);
-    _s47Path(x, "musiqa nota dum", [[-2 * K, 5 * K], [-2 * K, -6.5 * K], [7.5 * K, -8.5 * K], [7.5 * K, 3.5 * K]], false, 2.4 * K, TX, [nx, ny], MF);
+    _s55Ico(x, "musiqa nota", "music", 22 * K, 2.2 * K, TX, [nx + 1 * K, ny - 1 * K], MF);
     _s55_354T(x, A[1], 21 * K, "r", "musiqa", [L0 + 178.5 * K, T0 + 110 * K], TX, MF);
     var MN = _s54Key(1) + "op*cl((time-tk-0.1)/0.15)";
     _s47Rect(x, "menyu 1", [36 * K, 3.8 * K], [L0 + 733 * K, T0 + 75.75 * K], 2 * K, TX, MN);
@@ -24090,9 +24121,9 @@ function _s55PostFrame() {
     // icons + counters
     var iy = wB + 102 * K, SW = 3.6 * K, D = [0.45, 0.6, 0.8], IX = [90, 244, 403.5], NX = [129, 283.5, 442.5];
     var ic = [
-        _s47Path(x, "ikon like", _s55_354Heart(K), true, SW, TX, [0, 0]),
-        _s47Path(x, "ikon izoh", _s55_354Bubble(K), true, SW, TX, [0, 0]),
-        _s47Path(x, "ikon ulashish", [[-21 * K, -18 * K], [21 * K, -18 * K], [-1.5 * K, 19.5 * K]], true, SW, TX, [0, 0])];
+        _s55Ico(x, "ikon like", "heart", 52 * K, SW, TX, [0, 0]),
+        _s55Ico(x, "ikon izoh", "message-circle", 50 * K, SW, TX, [0, 0]),
+        _s55Ico(x, "ikon ulashish", "send", 48 * K, SW, TX, [0, 0])];
     for (i = 0; i < 3; i++) {
         _s55_354Pop(x, ic[i], [L0 + IX[i] * K, iy], D[i]);
         var se = String(CN[i]).split("-"), S0 = parseInt(se[0], 10) || 0, S1 = parseInt(se.length > 1 ? se[1] : se[0], 10) || S0;
@@ -24100,9 +24131,7 @@ function _s55PostFrame() {
         nt.property("Source Text").expression = x.PRE + _s54Key(1) + 'var a=time-tk, u=cl((a-' + D[i] + ')/' + (4.3 - D[i]) + '); var S=""+Math.round(lp(' + S0 + ',' + S1 + ',sm(u))); ' +
             'var n=Math.floor(cl((a-' + D[i] + ')/0.2)*S.length+0.0001); S.substr(0,n)';
     }
-    var sh2 = _s47Path(x, "ikon ulashish chiziq", [[21 * K, -18 * K], [-6 * K, 1.5 * K]], false, SW, TX, [0, 0]);
-    _s55_354Pop(x, sh2, [L0 + IX[2] * K, iy], D[2]);
-    var bm = _s47Path(x, "ikon saqlash", [[-17 * K, -17.5 * K], [17 * K, -17.5 * K], [17 * K, 17.5 * K], [0, 5 * K], [-17 * K, 17.5 * K]], true, SW, TX, [0, 0]);
+    var bm = _s55Ico(x, "ikon saqlash", "bookmark", 50 * K, SW, TX, [0, 0]);
     _s55_354Pop(x, bm, [L0 + 736.5 * K, iy], 1.0);
     // caption: nick typed, then caption typed (line 1 after the nick, line 2 below)
     var fn = _s55_354T(x, A[0] || "nik", 31 * K, "b", "izoh nik", [L0 + 63 * K, wB + 171 * K], TX);
@@ -24599,8 +24628,7 @@ function _s55Orbit() {
         var cd = a[3], cl0 = 30 * K, cw = 53 * K + vals[i].length * 9.4 * K;
         L = _s47Ellipse(x, "nuqta " + (i + 1), [8 * K, 8 * K], [0, 0], _s47Col(x, "Accent")); _s55_359Pop(x, L, px, py, 29 * K, -50 * K, 2, cd);
         L = _s47Rect(x, "chip " + (i + 1), [cw, 28.5 * K], [0, 0], 14.25 * K, _s47Col(x, "Accent")); _s46Shadow(L, 70, 3 * K, 10 * K); _s55_359Pop(x, L, px, py, cl0 + cw / 2, -70 * K, 2, cd);
-        L = _s47Ellipse(x, "ikonka bosh " + (i + 1), [8 * K, 8 * K], [0, 0], "[0.05,0.05,0.05,1]"); _s55_359Pop(x, L, px, py, cl0 + 25.5 * K, -74.5 * K, 2, cd);
-        L = _s47Rect(x, "ikonka tana " + (i + 1), [13 * K, 7 * K], [0, 0], 3.5 * K, "[0.05,0.05,0.05,1]"); _s55_359Pop(x, L, px, py, cl0 + 25.5 * K, -65.5 * K, 2, cd);
+        L = _s55Ico(x, "ikonka " + (i + 1), "user", 19 * K, 2.4 * K, "[0.05,0.05,0.05,1]", [0, 0]); _s55_359Pop(x, L, px, py, cl0 + 25.5 * K, -70 * K, 2, cd);
         L = _s54Txt(x, vals[i], 16 * K, "bold", "L", "raqam " + (i + 1), [0, 0], "[0.05,0.05,0.05,1]"); _s55_359Face(L, "bold"); _s55_359Pop(x, L, px, py, cl0 + 36 * K, -64.5 * K, 2, cd);
     }
     _s47Finish(x);
@@ -25038,19 +25066,15 @@ function _s55_364Bloom(x, L) {
     try { var d = L.property("ADBE Effect Parade").addProperty("ADBE Drop Shadow"); d.property("ADBE Drop Shadow-0001").setValue([1, 1, 1, 1]);
         d.property("ADBE Drop Shadow-0002").setValue(55); d.property("ADBE Drop Shadow-0004").setValue(0); d.property("ADBE Drop Shadow-0005").setValue(20 * x.K); } catch (e) {}
 }
-// simple line icon (units ~ K, centred on 0,0): qo'l (handshake), savat (cart), yurak, yulduz, chaqmoq
+// line icon (Lucide): qo'l (handshake), savat (cart), yurak, yulduz, chaqmoq
 function _s55_364Icon(x, kind, pos, opE, scE) {
-    var K = x.K, P = [], i, k = String(kind).toLowerCase().charAt(0), sa = String(kind).toLowerCase().charAt(1);
-    if (k === "s") P = [[[-27, -17], [-19, -17], [-11, 9], [19, 9], [26, -9], [-15, -9]], [[-6, 18], [-4, 16], [-6, 14], [-8, 16], [-6, 18]], [[15, 18], [17, 16], [15, 14], [13, 16], [15, 18]]];
-    else if (k === "y" && sa === "u" && String(kind).toLowerCase().charAt(2) === "r") P = [[[0, 17], [-19, -1], [-21, -11], [-14, -18], [-5, -17], [0, -9], [5, -17], [14, -18], [21, -11], [19, -1], [0, 17]]];
-    else if (k === "y") { for (i = 0; i <= 10; i++) { var a = (i * 36 - 90) * Math.PI / 180, r = (i % 2) ? 9 : 21; P.push([r * Math.cos(a), r * Math.sin(a) + 2]); } P = [P]; }
-    else if (k === "c") P = [[[5, -21], [-12, 3], [1, 3], [-4, 21], [13, -4], [0, -4], [5, -21]]];
-    else P = [[[-29, -4], [-19, -12], [-7, -8], [3, -12], [13, -4]], [[29, -4], [19, -12], [9, -10], [-3, -2], [3, 3], [11, -2]], [[-19, -4], [-7, 8], [1, 11], [9, 5], [19, -4]], [[-11, 2], [-5, 7]], [[-5, -2], [1, 3]]];
-    for (i = 0; i < P.length; i++) {
-        for (var j = 0; j < P[i].length; j++) P[i][j] = [P[i][j][0] * K, P[i][j][1] * K];
-        var L = _s47Path(x, "ikonka " + kind + " " + (i + 1), P[i], false, 4.5 * K, "[0.92,0.93,0.94,1]", pos, opE);
-        L.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + scE;
-    }
+    var K = x.K, k = String(kind).toLowerCase(), key = "handshake";
+    if (k.charAt(0) === "s") key = "shopping-cart";
+    else if (k.indexOf("yur") === 0) key = "heart";
+    else if (k.charAt(0) === "y") key = "star";
+    else if (k.charAt(0) === "c") key = "zap";
+    var L = _s55Ico(x, "ikonka " + kind, key, 62 * K, 4.5 * K, "[0.92,0.93,0.94,1]", pos, opE);
+    L.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + scE;
 }
 function _s55Battery() {
     var PR = _s47Pick("Glass Battery (364)", S55_P364); if (!PR) return;
@@ -25179,10 +25203,9 @@ function _s55Icons() {
     // Tab 1: icon chips around (white circle + simple glyph)
     var s1 = [-122 * K, -171 * K], s2 = [-248 * K, 147 * K], s3 = [202 * K, -88.5 * K];
     L = _s47Ellipse(x, "yuborish", [96 * K, 96 * K], [0, 0], OQ); _s54Shade(x, L); _s55_365Pop(x, L, px, py, s1[0], s1[1], 0, 5 * K, 0);
-    L = _s55_365Poly(x, "yuborish ikonka", [[20 * K, -17 * K], [-21 * K, -2 * K], [-3 * K, 1 * K], [3 * K, 20 * K]], true, IK, null); _s55_365Pop(x, L, px, py, s1[0], s1[1], 0, 5 * K, 0);
+    L = _s55Ico(x, "yuborish ikonka", "send", 46 * K, 3 * K, IK, [0, 0], null, { fill: IK, only: [0] }); _s55_365Pop(x, L, px, py, s1[0], s1[1], 0, 5 * K, 0);
     L = _s47Ellipse(x, "diagramma", [111 * K, 111 * K], [0, 0], OQ); _s54Shade(x, L); _s55_365Pop(x, L, px, py, s2[0], s2[1], 0.03, 5 * K, 2);
-    L = _s47Ellipse(x, "diagramma ikonka", [60 * K, 60 * K], [0, 0], IK); _s55_365Pop(x, L, px, py, s2[0], s2[1], 0.03, 5 * K, 2);
-    L = _s55_365Poly(x, "diagramma kesik", [[1 * K, -32 * K], [1 * K, 0], [31 * K, 11 * K]], false, null, { col: OQ, w: 4.5 * K }); _s55_365Pop(x, L, px, py, s2[0], s2[1], 0.03, 5 * K, 2);
+    L = _s55Ico(x, "diagramma ikonka", "chart-pie", 62 * K, 5 * K, IK, [0, 0]); _s55_365Pop(x, L, px, py, s2[0], s2[1], 0.03, 5 * K, 2);
     L = _s47Ellipse(x, "chaqmoq", [129 * K, 129 * K], [0, 0], OQ); _s54Shade(x, L); _s55_365Pop(x, L, px, py, s3[0], s3[1], 0.45, 5 * K, 4);
     L = _s47Ellipse(x, "chaqmoq halqa", [112 * K, 112 * K], [0, 0], null, "op", { col: "[0.45,0.45,0.45,1]", w: 3 * K });
     try { var dd = L.property("ADBE Root Vectors Group").property("ADBE Vector Graphic - Stroke").property("ADBE Vector Stroke Dashes");
@@ -25190,7 +25213,7 @@ function _s55Icons() {
         dd = L.property("ADBE Root Vectors Group").property("ADBE Vector Graphic - Stroke").property("ADBE Vector Stroke Dashes");
         dd.property("ADBE Vector Stroke Dash 1").setValue(8 * K); dd.property("ADBE Vector Stroke Gap 1").setValue(6 * K); } catch (eD) {}
     _s55_365Pop(x, L, px, py, s3[0], s3[1], 0.45, 5 * K, 4);
-    L = _s55_365Poly(x, "chaqmoq ikonka", [[6 * K, -27 * K], [-16 * K, 4 * K], [-1 * K, 4 * K], [-6 * K, 27 * K], [16 * K, -4 * K], [1 * K, -4 * K]], true, _s47Col(x, "Chaqmoq"), null);
+    L = _s55Ico(x, "chaqmoq ikonka", "zap", 66 * K, 2.5 * K, _s47Col(x, "Chaqmoq"), [0, 0], null, { fill: _s47Col(x, "Chaqmoq") });
     _s55_365Pop(x, L, px, py, s3[0], s3[1], 0.45, 5 * K, 4);
     // Tab 1: centre pill with avatar stack + dark person-icon circle
     L = _s47Rect(x, "pill", [430 * K, 150 * K], [0, 0], 75 * K, OQ); _s54Shade(x, L); _s55_365Pop(x, L, px, py, 0, 0, 0.15, 0, 0);
@@ -25203,8 +25226,7 @@ function _s55Icons() {
         _s55_365Pop(x, L, px, py, AX[i] * K, 13.5 * K, 0.22 + i * 0.07, 0, 0);
     }
     L = _s47Ellipse(x, "odam fon", [114 * K, 114 * K], [0, 0], "var c0=" + _s47Col(x, "Chip") + ".value; [c0[0],c0[1],c0[2],1]"); _s55_365Pop(x, L, px, py, 134 * K, 0, 0.5, 0, 0);
-    L = _s47Ellipse(x, "odam bosh", [28 * K, 28 * K], [0, 0], _s47Col(x, "Accent")); _s55_365Pop(x, L, px, py, 134 * K, -12 * K, 0.5, 0, 0);
-    L = _s47Rect(x, "odam tana", [46 * K, 22 * K], [0, 0], 9 * K, _s47Col(x, "Accent")); _s55_365Pop(x, L, px, py, 134 * K, 20 * K, 0.5, 0, 0);
+    L = _s55Ico(x, "odam ikonka", "user", 60 * K, 5 * K, _s47Col(x, "Accent"), [0, 0]); _s55_365Pop(x, L, px, py, 134 * K, 0, 0.5, 0, 0);
     // Tab 3: caption types in above the peak
     if (A[0]) {
         var cap = _s54Txt(x, A[0], 39 * K, "bold", "L", "matn", [px + 152 * K, py - 235.5 * K], OQ, "op", -10); _s55_365Face(cap);
