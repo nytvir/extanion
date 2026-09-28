@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board 33 · Clean Motion C — morf, kursor, yorug'lik (511-520)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0d;--panel:#121218;--line:#26262f;--txt:#e8e8ee;--dimb:#8a8a99;--mono:'SF Mono',ui-monospace,Menlo,monospace;--gold:#ffb454;
+    --sp:cubic-bezier(.34,1.56,.64,1);--sf:cubic-bezier(.75,0,.25,1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:14px/1.5 -apple-system,'Inter',sans-serif;padding:28px 20px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+  .kicker{font:11px var(--mono);letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+  .sub{color:var(--dimb);font-size:13px;max-width:800px}
+  .bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 6px}
+  .bar .lb{font:11px var(--mono);color:var(--dimb);letter-spacing:.08em;text-transform:uppercase}
+  .tg{display:inline-flex;background:#1c1c22;border-radius:10px;padding:3px;gap:2px}
+  .tg button{border:0;background:transparent;color:var(--dimb);font:600 12px -apple-system,sans-serif;padding:7px 13px;border-radius:8px;cursor:pointer}
+  .tg button.on{background:#3a3a44;color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:16px}
+  .cardx{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:zoom-in}
+  .cardx:hover{border-color:var(--gold)}
+  .meta{padding:11px 14px 14px}
+  .meta .n{font:700 11px var(--mono);color:var(--gold)}
+  .meta b{display:block;font-size:14px;margin:1px 0 1px}
+  .meta .br{font-size:11.5px;color:var(--gold);opacity:.8}
+  .meta p{font-size:12px;color:var(--dimb);margin-top:4px}
+  .meta code{display:block;margin-top:7px;font:10.5px/1.45 var(--mono);color:#b9b9c7;background:#0d0d12;border:1px solid var(--line);border-radius:7px;padding:6px 8px}
+  .stage{position:relative;overflow:hidden;background:#222}
+  .foot{position:absolute;inset:-20%;filter:blur(18px);animation:drift 14s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-4%,3%) scale(1.08)}}
+  .stage[data-lite].dk .foot{filter:blur(18px) brightness(.15) saturate(1.4)}
+  .modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+  .modal.on{display:flex}
+  .modal .stage{width:min(420px,90vw);border-radius:14px}
+
+  /* ---------- 1080-space comp ---------- */
+  .comp{position:absolute;left:0;top:0;width:1080px;height:var(--H,1920px);transform:scale(var(--u,.25));transform-origin:0 0;display:flex;align-items:center;justify-content:center;
+    --card:#fff;--row:#f2f2f7;--track:#e3e3e8;--thumb:#fff;--text:#111113;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.2);--tsh:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);
+    --hair:rgba(0,0,0,.08);--pill:#fff;--ink:#111113;--soft:0 40px 90px rgba(30,32,48,.13),0 6px 18px rgba(30,32,48,.06);
+    font:600 30px/1.2 'Inter',-apple-system,'SF Pro Display','Segoe UI',sans-serif;color:var(--text)}
+  .comp.dark{--card:#1c1c1e;--row:#2c2c2e;--track:#3a3a3c;--thumb:#636366;--text:#fff;--dim:#8e8e93;--sh:0 24px 70px rgba(0,0,0,.5);--tsh:none;
+    --hair:rgba(255,255,255,.1);--pill:#2c2c2e;--ink:#fff;--soft:0 40px 90px rgba(0,0,0,.55),0 6px 18px rgba(0,0,0,.3)}
+  .card{position:relative;width:760px;background:var(--card);border-radius:44px;padding:36px;box-shadow:var(--soft);scale:var(--ps,1)}
+  .card.bare{background:none;box-shadow:none;padding:0;border-radius:0}
+  .dim{color:var(--dim)}
+
+  /* ---------- shared ---------- */
+  .ic{width:1em;height:1em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  .av{flex:none;width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:29px;font-weight:700;font-style:normal;letter-spacing:.5px;background:linear-gradient(145deg,var(--g1,#64d2ff),var(--g2,#007aff))}
+  .dr{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 2}
+  .tp{white-space:pre}
+  .wd{display:inline-block;white-space:pre}
+  .cnt{display:inline-flex;line-height:1.1em;font-variant-numeric:tabular-nums;vertical-align:bottom}
+  .cnt .col{display:inline-block;height:1.1em;overflow:hidden}
+  .cnt .stk{display:block}
+  .cnt .stk i{display:block;height:1.1em;line-height:1.1em;font-style:normal;text-align:center}
+  .cnt .sep{display:inline-block;line-height:1.1em;white-space:pre}
+  /* cursor dot: .cur = position (moves), .dot = click squash, .rip = ripple */
+  .cur{position:absolute;width:0;height:0;z-index:30;pointer-events:none}
+  .cur .dot{position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;background:#111113;box-shadow:0 0 0 4px rgba(255,255,255,.95),0 10px 24px rgba(0,0,0,.28)}
+  .cur .rip{position:absolute;left:-55px;top:-55px;width:110px;height:110px;border-radius:50%;background:rgba(17,17,19,.14)}
+  .comp.dark .cur .dot{background:#fff;box-shadow:0 0 0 4px rgba(0,0,0,.55),0 10px 24px rgba(0,0,0,.5)}
+  .comp.dark .cur .rip{background:rgba(255,255,255,.22)}
+
+  /* 511 PILL TO APP WINDOW */
+  .c511 .win{position:absolute;inset:0;margin:auto;background:var(--card);box-shadow:var(--soft),0 0 0 1px var(--hair);overflow:hidden}
+  .c511 .pl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:16px;font-size:34px;font-weight:600;white-space:nowrap}
+  .c511 .pl .ic{font-size:38px}
+  .c511 .wc{position:absolute;left:50%;top:50%;width:880px;height:1000px;margin:-500px 0 0 -440px}
+  .c511 .tbar{position:absolute;left:0;right:0;top:0;height:92px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--hair);font-size:26px;color:var(--dim)}
+  .c511 .tl{position:absolute;left:34px;display:flex;gap:12px}
+  .c511 .tl i{width:18px;height:18px;border-radius:50%;background:var(--track)}
+  .c511 .tr{position:absolute;right:34px;font-size:32px;display:flex}
+  .c511 .side{position:absolute;left:0;top:92px;bottom:0;width:116px;border-right:1px solid var(--hair);display:flex;flex-direction:column;align-items:center;gap:18px;padding-top:36px}
+  .c511 .sbx{width:68px;height:68px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--dim)}
+  .c511 .sbx.on{background:var(--ink);color:var(--card)}
+  .c511 .main{position:absolute;left:116px;right:0;top:92px;bottom:0;padding:38px 44px}
+  .c511 .seg{display:inline-flex;background:var(--row);border-radius:40px;padding:6px}
+  .c511 .seg span{height:64px;padding:0 30px;border-radius:34px;display:flex;align-items:center;gap:10px;font-size:26px;color:var(--dim)}
+  .c511 .seg span.on{background:var(--card);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  .c511 .ph{position:relative;margin-top:30px;height:420px;border-radius:34px;background:var(--row);overflow:hidden;box-shadow:inset 0 0 0 1px var(--hair)}
+  .c511 .phe{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--dim);font-size:26px;font-weight:500}
+  .c511 .phe .ic{font-size:66px;stroke-width:1.6}
+  .c511 .shm{position:absolute;top:0;bottom:0;left:0;width:70%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0))}
+  .c511 .gen{position:absolute;inset:0;background:linear-gradient(135deg,#d4c6ff 0%,#a9c9ff 55%,#c6ece2 100%);padding:40px 44px;display:flex;flex-direction:column;justify-content:flex-end;color:#111113}
+  .c511 .gen small{font-size:22px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
+  .c511 .gen b{font-size:66px;font-weight:800;letter-spacing:-.03em;margin-top:6px}
+  .c511 .gen .gl{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;margin-top:16px;padding:9px 18px;border-radius:20px;background:rgba(255,255,255,.6);font-size:22px}
+  .c511 .gen svg.pie{position:absolute;right:44px;top:40px;width:170px;height:170px}
+  .c511 .ok{position:absolute;right:22px;bottom:22px;display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:22px;background:#fff;color:#1f9d4c;font-size:22px;box-shadow:0 6px 16px rgba(0,0,0,.1)}
+  .c511 .ok .ic{stroke-width:3}
+  .c511 .fld{margin-top:26px;height:96px;border-radius:48px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--hair);display:flex;align-items:center;gap:16px;padding:0 32px;font-size:28px;font-weight:500;white-space:nowrap}
+  .c511 .fld .ic{color:var(--dim)}
+  .c511 .acts{margin-top:22px;display:flex;justify-content:space-between}
+  .c511 .gh,.c511 .go{height:96px;border-radius:48px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:28px}
+  .c511 .gh{padding:0 34px;background:var(--row)}
+  .c511 .go{width:260px;background:var(--ink);color:var(--card);font-size:30px;font-weight:700}
+
+  /* 512 TEXT SELECT TOOLBAR */
+  .c512 .card{width:860px;padding:52px 56px 60px}
+  .c512 .dh{display:flex;align-items:center;gap:16px;font-size:26px;padding-bottom:28px;border-bottom:1px solid var(--hair)}
+  .c512 .lt{width:56px;height:56px;border-radius:17px;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800}
+  .c512 .dh .dim{font-weight:500}
+  .c512 .sv{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:22px;color:var(--dim)}
+  .c512 .dt{display:block;font-size:52px;font-weight:750;letter-spacing:-.03em;margin:36px 0 22px}
+  .c512 .tx{font-size:40px;line-height:1.62;font-weight:500;color:color-mix(in srgb,var(--text) 82%,transparent)}
+  .c512 .tx>div{white-space:nowrap}
+  .c512 .sel{position:relative;white-space:pre}
+  .c512 .hl{position:absolute;left:-6px;right:-6px;top:-3px;bottom:-3px;border-radius:8px;background:rgba(0,122,255,.22);transform-origin:0 50%}
+  .c512 .lk{position:absolute;left:0;top:0;line-height:normal;color:#007aff;white-space:pre}
+  .c512 .ul{position:absolute;left:0;right:0;bottom:2px;height:3px;border-radius:2px;background:#007aff;transform-origin:0 50%}
+  .c512 .pop{position:absolute;left:50%;bottom:calc(100% + 22px);height:84px;border-radius:42px;background:var(--pill);box-shadow:var(--soft),0 0 0 1px var(--hair);overflow:hidden;z-index:5;color:var(--text)}
+  .c512 .fm{position:absolute;left:0;top:0;height:84px;display:flex;align-items:center;padding:0 10px;gap:4px}
+  .c512 .fm span{width:68px;height:64px;border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:32px}
+  .c512 .fm span:first-child{background:var(--row)}
+  .c512 .fm .vs{width:2px;height:40px;margin:0 8px;background:var(--hair)}
+  .c512 .li{position:absolute;left:0;top:0;width:600px;height:84px;display:flex;align-items:center;gap:14px;padding:0 10px 0 28px;font-size:30px;font-weight:500;white-space:nowrap}
+  .c512 .li>.ic{font-size:30px;color:#007aff}
+  .c512 .li .en{margin-left:auto;width:64px;height:64px;border-radius:50%;background:#007aff;color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px}
+  .c512 .drag{position:absolute;inset:0;pointer-events:none}
+
+  /* 513 PORTHOLE REVEAL */
+  .c513 .po{position:absolute;left:30px;top:60px;width:400px;height:640px;border-radius:200px;background:linear-gradient(160deg,#ffffff,#e6e7ec);box-shadow:0 44px 90px rgba(40,44,80,.2),0 8px 20px rgba(40,44,80,.08),inset 0 2px 0 #fff,inset 0 -8px 18px rgba(0,0,0,.06)}
+  .comp.dark .c513 .po,.c513.dark .po{background:linear-gradient(160deg,#3a3a3e,#232326);box-shadow:0 44px 90px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12)}
+  .c513 .pw{position:absolute;inset:36px;border-radius:164px;overflow:hidden;background:#9fc3f5}
+  .c513 .pw::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 10px 26px rgba(0,0,0,.28),inset 0 0 0 3px rgba(0,0,0,.08);background:linear-gradient(125deg,rgba(255,255,255,.28),rgba(255,255,255,0) 38%);pointer-events:none}
+  .c513 .ls{position:absolute;inset:0}
+  .c513 .ls svg{display:block;width:100%;height:100%}
+  .c513 .sh{position:absolute;inset:0;background:linear-gradient(180deg,#f6f6f8,#e3e4e9);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+  .c513 .sh::before{content:"";position:absolute;left:0;right:0;top:0;bottom:0;background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0 46px,rgba(0,0,0,.035) 46px 48px)}
+  .c513 .sh i{position:absolute;left:50%;bottom:26px;width:96px;height:14px;margin-left:-48px;border-radius:7px;background:#c9cbd2}
+  .c513 .hx{position:absolute;left:490px;top:150px;width:470px}
+  .c513 .k{display:inline-flex;align-items:center;gap:10px;font-size:24px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+  .c513 .h{font-size:80px;font-weight:750;letter-spacing:-.035em;line-height:1.04;margin-top:20px}
+  .c513 .chp{display:inline-flex;align-items:center;gap:20px;margin-top:22px;height:128px;padding:0 48px 0 36px;border-radius:64px;background:var(--pill);box-shadow:var(--soft),0 0 0 1px var(--hair);font-size:80px;font-weight:750;letter-spacing:-.035em}
+  .c513 .chp .ic{font-size:58px;color:#0a84ff}
+  .c513 .hx p{font-size:30px;line-height:1.42;font-weight:500;color:var(--dim);margin-top:34px}
+  .c513 .dl{display:inline-flex;align-items:center;gap:10px;margin-top:26px;padding:12px 22px;border-radius:24px;background:var(--pill);box-shadow:0 0 0 1px var(--hair);font-size:24px}
+  .c513 .dl .ic{color:#ff9f0a}
+
+  /* 514 DARK MAP PINS */
+  .c514{--mp:#eceef2;--rd:#dcdfe5;--rd2:#cfd3da;--rv:#cadcf0;--pk:#dcebdc;--chp:#fff;--mt:#111113}
+  .c514.dark{--mp:#101013;--rd:#1e1e23;--rd2:#2a2a31;--rv:#12233a;--pk:#132019;--chp:#1f1f24;--mt:#fff}
+  .c514 .card{width:900px;height:1000px;padding:0;overflow:hidden;background:var(--mp);border-radius:52px}
+  .c514 .mv{position:absolute;inset:0;transform-origin:50% 56%}
+  .c514 svg.mp{position:absolute;inset:0;width:100%;height:100%}
+  .c514 .rd path{fill:none;stroke:var(--rd);stroke-width:5;stroke-linecap:round}
+  .c514 .rd2 path{fill:none;stroke:var(--rd2);stroke-width:14;stroke-linecap:round}
+  .c514 .rt{stroke:#0a84ff;stroke-width:7;filter:drop-shadow(0 0 10px rgba(10,132,255,.7))}
+  .c514 .pn{position:absolute;width:0;height:0}
+  .c514 .pn b{position:absolute;left:-26px;top:-26px;width:52px;height:52px;border-radius:50%;background:rgba(10,132,255,.28)}
+  .c514 .pn b::after{content:"";position:absolute;left:13px;top:13px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px #0a84ff,0 6px 14px rgba(0,0,0,.4)}
+  .c514 .pn .rip2{position:absolute;left:-50px;top:-50px;width:100px;height:100px;border-radius:50%;border:3px solid #0a84ff}
+  .c514 .ch{position:absolute;display:flex;align-items:center;gap:14px;height:80px;padding:0 26px 0 9px;border-radius:40px;background:var(--chp);color:var(--mt);box-shadow:0 14px 34px rgba(0,0,0,.28),0 0 0 1px var(--hair);font-size:26px;font-weight:700;white-space:nowrap}
+  .c514 .ch .av{width:62px;height:62px;font-size:22px}
+  .c514 .ch em{font-style:normal;font-weight:500;color:var(--dim)}
+  .c514 .hd{position:absolute;left:54px;top:52px;color:var(--mt)}
+  .c514 .hd small{display:block;font-size:24px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  .c514 .hd b{display:block;font-size:58px;font-weight:750;letter-spacing:-.03em;margin-top:8px}
+  .c514 .sum{position:absolute;right:40px;bottom:40px;display:flex;align-items:center;gap:14px;height:84px;padding:0 30px;border-radius:42px;background:#0a84ff;color:#fff;font-size:27px;font-weight:700;box-shadow:0 14px 34px rgba(10,132,255,.4)}
+  .c514 .sum .ic{font-size:32px}
+
+  /* 515 TILTED PHONE CARDS */
+  .c515 .ph{position:absolute;left:270px;top:90px;width:400px;height:820px;border-radius:70px;background:#0d0d0f;padding:14px;box-shadow:60px 80px 120px rgba(30,30,70,.28),20px 20px 40px rgba(30,30,70,.12),inset 0 0 0 2px #333}
+  .c515 .scr{position:relative;width:100%;height:100%;border-radius:56px;background:var(--card);overflow:hidden;font-size:22px}
+  .c515 .sb{display:flex;justify-content:space-between;padding:22px 34px 0;font-size:20px;font-weight:700}
+  .c515 .sb i{width:34px;height:14px;border-radius:5px;border:2px solid currentColor;opacity:.8}
+  .c515 .chh{display:flex;align-items:center;gap:14px;padding:18px 22px 16px;border-bottom:1px solid var(--hair)}
+  .c515 .chh .av{width:54px;height:54px;font-size:19px}
+  .c515 .chh b{display:block;font-size:22px}
+  .c515 .chh small{display:block;font-size:17px;color:var(--dim);font-weight:500}
+  .c515 .msgs{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+  .c515 .bb{max-width:78%;padding:13px 18px;border-radius:24px;background:var(--row);font-size:20px;font-weight:500;line-height:1.3}
+  .c515 .bb.me{align-self:flex-end;background:#0a84ff;color:#fff}
+  .c515 .bi{width:220px;height:150px;border-radius:24px;background:linear-gradient(140deg,#ffd9b8,#f7b4c8 55%,#c7b8ff)}
+  .c515 .inp{position:absolute;left:18px;right:18px;bottom:24px;height:62px;border-radius:31px;background:var(--row);display:flex;align-items:center;padding:0 22px;color:var(--dim);font-size:19px;font-weight:500}
+  .c515 .fc{position:absolute;background:var(--pill);border-radius:34px;box-shadow:var(--soft),0 0 0 1px var(--hair);z-index:3}
+  .c515 .f1{left:0;top:170px;width:410px;padding:26px 28px}
+  .c515 .f1 .who{display:flex;align-items:center;gap:14px;font-size:25px}
+  .c515 .f1 .av{width:60px;height:60px;font-size:22px}
+  .c515 .f1 .who small{display:block;font-size:19px;color:var(--dim);font-weight:500}
+  .c515 .f1 p{font-size:27px;font-weight:500;line-height:1.35;margin-top:16px}
+  .c515 .f2{left:620px;top:330px;width:320px;padding:16px}
+  .c515 .f2 .im{height:190px;border-radius:22px;background:linear-gradient(150deg,#bfe3ff,#9fb8ff 50%,#e2c7ff);display:flex;align-items:flex-end;padding:16px;color:#fff;font-size:22px;font-weight:700}
+  .c515 .f2 .im span{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:16px;background:rgba(0,0,0,.28)}
+  .c515 .f2 p{display:flex;justify-content:space-between;padding:14px 8px 4px;font-size:22px}
+  .c515 .f3{left:40px;top:650px;width:360px;padding:26px 28px;display:flex;align-items:center;gap:20px}
+  .c515 .f3 .ib{width:84px;height:84px;border-radius:26px;background:#ff9f0a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:42px}
+  .c515 .f3 b{display:block;font-size:48px;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .c515 .f3 small{display:block;font-size:21px;color:var(--dim);font-weight:500;margin-top:6px}
+  .c515 .f4{left:560px;top:120px;height:88px;padding:0 30px 0 12px;border-radius:44px;display:flex;align-items:center;gap:14px;font-size:25px;white-space:nowrap}
+  .c515 .f4 i{width:64px;height:64px;border-radius:50%;background:#34c759;color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px}
+  .c515 .f5{left:600px;top:800px;height:80px;padding:0 30px;border-radius:40px;display:flex;align-items:center;gap:12px;font-size:25px;white-space:nowrap}
+  .c515 .f5 i{width:16px;height:16px;border-radius:50%;background:#34c759;box-shadow:0 0 0 6px rgba(52,199,89,.2)}
+
+  /* 516 DICTATION PILL */
+  .c516 .doc{position:absolute;left:20px;top:0;width:860px;height:640px;background:var(--card);border-radius:44px;padding:48px 54px;box-shadow:var(--soft),0 0 0 1px var(--hair)}
+  .c516 .dh{display:flex;align-items:center;gap:16px;font-size:26px;padding-bottom:26px;border-bottom:1px solid var(--hair)}
+  .c516 .dh .ti{width:56px;height:56px;border-radius:17px;background:var(--row);display:flex;align-items:center;justify-content:center;font-size:28px}
+  .c516 .dh .dim{font-weight:500}
+  .c516 .rec{margin-left:auto;position:relative;width:200px;height:48px}
+  .c516 .rec span{position:absolute;right:0;top:0;height:48px;display:flex;align-items:center;gap:10px;padding:0 18px;border-radius:24px;font-size:21px;white-space:nowrap}
+  .c516 .rec .r1{background:rgba(255,59,48,.1);color:#ff3b30}
+  .c516 .rec .r1 i{width:12px;height:12px;border-radius:50%;background:#ff3b30;animation:blink 1s ease-in-out infinite}
+  .c516 .rec .r2{background:rgba(52,199,89,.12);color:#1f9d4c}
+  @keyframes blink{50%{opacity:.25}}
+  .c516 .dtx{font-size:42px;line-height:1.5;font-weight:500;margin-top:32px;letter-spacing:-.01em}
+  .c516 .brow{position:absolute;left:0;right:0;top:720px;height:160px;display:flex;align-items:center;justify-content:center;gap:34px}
+  .c516 .ky{position:relative;flex:none;width:150px;height:150px}
+  .c516 .gr{position:absolute;inset:-34px;border-radius:70px}
+  .c516 .gr i{position:absolute;inset:0;border-radius:inherit;background:conic-gradient(from 0deg,#a78bfa,#60a5fa,#34d399,#fbbf24,#f472b6,#a78bfa);filter:blur(22px);animation:spin 3.2s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .c516 .kb{position:absolute;inset:0;border-radius:36px;background:var(--card);box-shadow:0 18px 40px rgba(0,0,0,.14),0 0 0 1px var(--hair),inset 0 -5px 0 rgba(0,0,0,.05)}
+  .c516 .kb b{position:absolute;left:26px;top:20px;font-size:38px;font-weight:600}
+  .c516 .kb .ic{position:absolute;right:24px;bottom:22px;font-size:34px;color:var(--dim)}
+  .c516 .vp{position:relative;flex:none;height:110px;border-radius:55px;background:#111113;overflow:hidden;box-shadow:0 20px 44px rgba(0,0,0,.22)}
+  .comp.dark.c516 .vp{background:#2c2c2e}
+  .c516 .wv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px}
+  .c516 .wv i{width:12px;height:12px;border-radius:6px;background:#fff;animation:wv .5s ease-in-out infinite alternate}
+  .c516 .wv i:nth-child(2n){animation-duration:.42s;--a:4.2}
+  .c516 .wv i:nth-child(3n){animation-duration:.61s;--a:2.4}
+  .c516 .wv i:nth-child(4n+1){animation-delay:-.2s}
+  .c516 .wv i:nth-child(5n){animation-duration:.37s;--a:3.6}
+  @keyframes wv{from{transform:scaleY(1)}to{transform:scaleY(var(--a,3))}}
+  .c516 .dn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;font-size:30px;white-space:nowrap}
+  .c516 .dn .ic{color:#34c759;stroke-width:3}
+
+  /* 517 ORBIT STICKERS */
+  .c517 .rw{position:absolute;left:90px;font-size:86px;font-weight:750;letter-spacing:-.035em;line-height:110px;white-space:nowrap}
+  .c517 .r1{top:250px} .c517 .r2{top:360px;left:228px} .c517 .r3{top:470px}
+  .c517 .ava{position:absolute;left:90px;top:360px;width:110px;height:110px;z-index:4}
+  .c517 .ava .av{position:relative;width:110px;height:110px;font-size:38px;box-shadow:0 0 0 5px var(--card),0 10px 24px rgba(0,0,0,.18)}
+  .c517 .gw{position:absolute;inset:-46px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,120,.9),rgba(255,160,200,.45) 55%,rgba(160,140,255,0))}
+  .c517 .orb{position:absolute;left:140px;top:150px;width:600px;height:600px;z-index:3}
+  .c517 .st{position:absolute;width:96px;height:96px}
+  .c517 .st span{position:absolute;inset:0;border-radius:30px;background:var(--pill);box-shadow:0 14px 30px rgba(0,0,0,.14),0 0 0 1px var(--hair);display:flex;align-items:center;justify-content:center;font-size:44px;color:var(--c)}
+  .c517 .pw{position:absolute;inset:0;margin:auto;background:var(--card);box-shadow:var(--soft),0 0 0 1px var(--hair)}
+  .c517 .nm{position:absolute;left:310px;top:222px;white-space:nowrap}
+  .c517 .nm b{display:block;font-size:46px;font-weight:750;letter-spacing:-.03em}
+  .c517 .nm small{display:block;font-size:28px;font-weight:500;color:var(--dim);margin-top:8px}
+  .c517 .sts{position:absolute;left:130px;top:392px;width:620px;display:flex;gap:16px}
+  .c517 .sts div{flex:1;height:142px;border-radius:28px;background:var(--row);display:flex;flex-direction:column;justify-content:center;padding:0 26px}
+  .c517 .sts b{display:flex;align-items:center;gap:8px;font-size:44px;font-weight:800;letter-spacing:-.03em}
+  .c517 .sts b .ic{font-size:32px;color:#ff9f0a;fill:#ff9f0a}
+  .c517 .sts small{font-size:22px;font-weight:500;color:var(--dim);margin-top:4px}
+  .c517 .bt{position:absolute;left:130px;top:566px;width:620px;height:106px;border-radius:53px;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center;gap:14px;font-size:32px;font-weight:700}
+
+  /* 518 SPLIT AROUND DEVICE */
+  .c518 .wl,.c518 .wr{position:absolute;top:410px;font-size:66px;font-weight:750;letter-spacing:-.035em;white-space:nowrap;line-height:80px}
+  .c518 .wl{right:672px} .c518 .wr{left:672px}
+  .c518 .ph{position:absolute;left:350px;top:110px;width:300px;height:680px;border-radius:54px;background:#0d0d0f;padding:12px;z-index:2;box-shadow:0 40px 80px rgba(30,30,60,.25),inset 0 0 0 2px #333}
+  .c518 .scr{position:relative;width:100%;height:100%;border-radius:43px;background:var(--card);overflow:hidden;padding:24px 22px;font-size:18px}
+  .c518 .scr .sb{display:flex;justify-content:space-between;font-size:15px;font-weight:700;padding:0 8px}
+  .c518 .scr .cp{display:inline-flex;align-items:center;gap:6px;margin-top:26px;padding:6px 12px;border-radius:12px;background:var(--row);font-size:15px}
+  .c518 .scr .lb{font-size:16px;color:var(--dim);font-weight:500;margin-top:22px}
+  .c518 .scr .big{font-size:70px;font-weight:800;letter-spacing:-.04em;line-height:1}
+  .c518 .scr .of{font-size:16px;color:var(--dim);font-weight:500;margin-top:4px}
+  .c518 .scr .pb{height:10px;border-radius:5px;background:var(--track);margin-top:18px;overflow:hidden}
+  .c518 .scr .pb i{display:block;height:100%;width:94%;border-radius:5px;background:#34c759}
+  .c518 .scr .rr{display:flex;justify-content:space-between;align-items:center;height:48px;border-radius:14px;background:var(--row);padding:0 14px;margin-top:10px;font-size:15px}
+  .c518 .scr .rr:first-of-type{margin-top:20px}
+  .c518 .scr .gt{display:flex;align-items:center;justify-content:center;gap:6px;height:48px;border-radius:24px;background:#34c759;color:#fff;margin-top:18px;font-size:16px}
+  .c518 .fl{position:absolute;inset:12px;border-radius:43px;background:#fff;z-index:3}
+  .c518 .fs{position:absolute;inset:0;z-index:5;background:var(--card);display:flex;align-items:center;justify-content:center}
+  .c518 .fsi{width:820px;display:flex;flex-direction:column;align-items:center;text-align:center}
+  .c518 .fsi .cp{display:inline-flex;align-items:center;gap:12px;height:66px;padding:0 26px;border-radius:33px;background:var(--row);font-size:26px}
+  .c518 .fsi .lb{font-size:34px;color:var(--dim);font-weight:500;margin-top:40px}
+  .c518 .fsi .big{font-size:200px;font-weight:800;letter-spacing:-.05em;line-height:1;margin-top:10px}
+  .c518 .fsi .big .col{-webkit-mask-image:linear-gradient(180deg,transparent,#000 24%,#000 76%,transparent);mask-image:linear-gradient(180deg,transparent,#000 24%,#000 76%,transparent)}
+  .c518 .fsi .of{font-size:34px;color:var(--dim);font-weight:500;margin-top:6px}
+  .c518 .fsi .rows{width:100%;margin-top:40px;display:flex;flex-direction:column;gap:14px}
+  .c518 .fsi .rr{display:flex;align-items:center;justify-content:space-between;height:92px;border-radius:26px;background:var(--row);padding:0 32px;font-size:30px}
+  .c518 .fsi .rr em{font-style:normal;display:flex;align-items:center;gap:10px}
+  .c518 .fsi .rr .ic{color:#34c759;stroke-width:3}
+  .c518 .fsi .gt{display:inline-flex;align-items:center;gap:12px;height:88px;padding:0 40px;border-radius:44px;background:#34c759;color:#fff;margin-top:30px;font-size:32px;font-weight:700;box-shadow:0 14px 30px rgba(52,199,89,.35)}
+
+  /* 519 DOTS GATHER LOGO */
+  .c519 .dg{position:absolute;left:0;top:130px;width:960px;height:300px}
+  .c519 .dg i{position:absolute;width:11px;height:11px;border-radius:50%;background:var(--ink)}
+  .c519 .tgl{position:absolute;left:0;right:0;top:462px;text-align:center;font-size:30px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--dim)}
+  .c519 .pp{position:absolute;left:170px;top:568px;width:620px;height:112px;border-radius:56px;background:var(--pill);box-shadow:var(--soft),0 0 0 1px var(--hair);overflow:hidden}
+  .c519 .pp .p{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:16px;font-size:44px;font-weight:650;letter-spacing:-.02em;white-space:nowrap}
+  .c519 .pp .p .ic{font-size:40px;color:var(--c)}
+
+  /* 520 LIGHT RAY CTA */
+  .c520{--pb:#111113;--pt:#fff}
+  .c520.dark{--pb:#fff;--pt:#111113}
+  .c520 .ry{position:absolute;left:-200px;top:-165px;width:1300px;height:1300px;border-radius:50%;
+    background:repeating-conic-gradient(from 0deg,rgba(255,200,140,0) 0deg,rgba(255,206,150,.6) 3.5deg,rgba(255,200,140,0) 7deg,rgba(255,200,140,0) 15deg);
+    -webkit-mask-image:radial-gradient(circle,#000 6%,rgba(0,0,0,.55) 28%,transparent 62%);mask-image:radial-gradient(circle,#000 6%,rgba(0,0,0,.55) 28%,transparent 62%)}
+  .c520 .cg{position:absolute;left:50px;top:275px;width:800px;height:420px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,196,130,.95),rgba(255,140,100,.4) 48%,rgba(255,120,90,0))}
+  .c520 .tp2{position:absolute;left:0;right:0;top:170px;display:flex;flex-direction:column;align-items:center}
+  .c520 .tc{display:inline-flex;align-items:center;gap:10px;height:56px;padding:0 22px;border-radius:28px;background:var(--pill);box-shadow:0 0 0 1px var(--hair);font-size:23px;color:var(--text)}
+  .c520 .tc .ic{color:#ff9f0a}
+  .c520 .hh{font-size:74px;font-weight:750;letter-spacing:-.035em;margin-top:22px;white-space:nowrap}
+  .c520 .ctw{position:absolute;left:450px;top:485px;width:0;height:0;z-index:4}
+  .c520 .ct{position:absolute;top:-65px;height:130px;border-radius:65px;background:var(--pb);color:var(--pt);box-shadow:0 24px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.3);overflow:hidden}
+  .c520 .ct .t{position:absolute;inset:0;display:flex;align-items:center;gap:18px;padding:0 13px 0 44px;font-size:34px;font-weight:700;white-space:nowrap}
+  .c520 .ct .t i{margin-left:auto;flex:none;width:104px;height:104px;border-radius:50%;background:#ff9f0a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:44px}
+  .c520 .ct .t2 i{background:#34c759}
+  .c520 .ct .t2 .ic{stroke-width:3}
+  .c520 .lf{position:absolute;left:0;right:0;top:600px;height:50px}
+  .c520 .lf span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px;font-size:28px;font-weight:600;color:var(--dim)}
+  .c520 .lf span i{width:14px;height:14px;border-radius:50%;background:#ff3b30;box-shadow:0 0 0 6px rgba(255,59,48,.2)}
+  .c520 .ava{position:absolute;left:0;right:0;top:690px;display:flex;align-items:center;justify-content:center;gap:0;font-size:26px;color:var(--dim);font-weight:500}
+  .c520 .ava .av{width:58px;height:58px;font-size:20px;margin-left:-14px;box-shadow:0 0 0 4px var(--card)}
+  .c520 .ava .av:first-child{margin-left:0}
+  .c520 .ava span{margin-left:18px}
+</style>
+</head>
+<body><div class="wrap">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0l1.58 6.14A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+  <symbol id="i-bold" viewBox="0 0 24 24"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></symbol>
+  <symbol id="i-italic" viewBox="0 0 24 24"><path d="M19 4h-9M14 20H5M15 4 9 20"/></symbol>
+  <symbol id="i-under" viewBox="0 0 24 24"><path d="M6 4v6a6 6 0 0 0 12 0V4M4 20h16"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-enter" viewBox="0 0 24 24"><path d="m9 10-5 5 5 5"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M16 14v4M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-chevl" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></symbol>
+  <symbol id="i-uplus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+</defs></svg>
+<header>
+  <div class="kicker">Board 33 · Nytvir Motion · 511-520 · Clean Motion C</div>
+  <h1>Clean motion C — morf, kursor, yorug'lik</h1>
+  <p class="sub">SaaS / product-promo uslubidagi toza UI animatsiyalar: och kulrang yoki pastel sahna, oq pill'lar, 1px chiziqlar, katta yumshoq soya. Harakat — prujinali morf, blur-in / blur-out, kamera yaqinlashuvi va "bosadigan" qora kursor nuqtasi. Har karta = bitta qayta ishlatiladigan texnika, keyin tahrirlanadigan AE tool bo'ladi. Namuna matnlar o'quv markaz mavzusida. Kartani bossangiz kattalashadi.</p>
+</header>
+<div class="bar">
+  <span class="lb">Format</span><div class="tg" id="fmt"><button data-v="1920" class="on">9:16 Reel</button><button data-v="1350">4:5 Feed</button><button data-v="1080">1:1</button></div>
+  <span class="lb">Tema</span><div class="tg" id="thm"><button data-v="preset" class="on">Preset</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+</div>
+<div class="grid" id="grid">
+
+<!-- 511 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#ffffff,#dcdee4,#ebecee"><div class="comp c511"><div class="card bare" style="width:880px;height:1000px">
+  <div class="win" data-b="width=330px&height=108px&border-radius=54px" data-a="bi@.3/.55" data-to="1.05/.85/s width=880px&height=1000px&border-radius=46px">
+    <div class="wc">
+      <div class="tbar" data-a="fade@1.3"><span class="tl"><i></i><i></i><i></i></span>Ilm Ziyo Studio<span class="tr"><svg class="ic"><use href="#i-bell"/></svg></span></div>
+      <div class="side">
+        <span class="sbx on" data-a="bi@1.4"><svg class="ic"><use href="#i-home"/></svg></span>
+        <span class="sbx" data-a="bi@1.47"><svg class="ic"><use href="#i-book"/></svg></span>
+        <span class="sbx" data-a="bi@1.54"><svg class="ic"><use href="#i-users"/></svg></span>
+        <span class="sbx" data-a="bi@1.61"><svg class="ic"><use href="#i-cal"/></svg></span>
+        <span class="sbx" data-a="bi@1.68"><svg class="ic"><use href="#i-sliders"/></svg></span>
+      </div>
+      <div class="main">
+        <div class="seg" data-a="bi@1.48"><span class="on"><svg class="ic"><use href="#i-spark"/></svg>Yaratish</span><span><svg class="ic"><use href="#i-msg"/></svg>Chat</span></div>
+        <div class="ph" data-a="bi@1.58">
+          <div class="phe"><svg class="ic"><use href="#i-image"/></svg><span>Dars muqovasi</span></div>
+          <i class="shm" data-b="opacity=0&transform=translateX(-110%)" data-to="3.45/.05/l opacity=1; 3.5/.75/i transform=translateX(160%); 4.25/.05/l opacity=0"></i>
+          <div class="gen" data-b="opacity=0&filter=blur(14px)&transform=scale(1.08)" data-to="4.15/.6/s opacity=1&filter=blur(0px)&transform=scale(1)">
+            <svg class="pie" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="rgba(255,255,255,.45)"/><path d="M50 50V6a44 44 0 1 1-44 44z" fill="rgba(255,255,255,.9)"/><path d="M50 50V6M50 50H6" stroke="#fff" stroke-width="3" fill="none"/></svg>
+            <small>5-sinf · Matematika</small><b>Kasrlar olami</b><span class="gl"><svg class="ic"><use href="#i-book"/></svg>12 dars · 3/4 tayyor</span>
+          </div>
+          <span class="ok" data-a="pop@4.6"><svg class="ic"><use href="#i-check"/></svg>Tayyor</span>
+        </div>
+        <div class="fld" data-a="bi@1.68"><svg class="ic"><use href="#i-pen"/></svg><span data-split="type@2.0/.034">Mavzu: Kasrlar, 5-sinf</span></div>
+        <div class="acts" data-a="bi@1.78"><span class="gh"><svg class="ic"><use href="#i-sliders"/></svg>Uslub</span><span class="go" data-to="3.35/.1/e transform=scale(.92); 3.45/.45/b transform=scale(1)"><svg class="ic"><use href="#i-spark"/></svg>Yaratish</span></div>
+      </div>
+    </div>
+    <div class="pl" data-a="fade@.45" data-to="0.95/.22/n opacity=0&filter=blur(10px)&transform=scale(.92)"><svg class="ic"><use href="#i-home"/></svg>Bosh sahifa</div>
+  </div>
+  <i class="cur" style="left:706px;top:848px" data-b="opacity=0&transform=translate(250px~230px)" data-to="2.45/.8/i opacity=1&transform=translate(0px~0px); 4.05/.6/i opacity=0&transform=translate(150px~190px)"><i class="dot" data-to="3.33/.09/e transform=scale(.8); 3.42/.45/b transform=scale(1)"></i><i class="rip" data-a="echo@3.34/.6"></i></i>
+</div></div></div><div class="meta"><div class="n">511</div><b>Pill To App Window</b><div class="br">IT / o'quv platforma · ilova tanishtiruvi</div><p>Kichik "Bosh sahifa" pill prujina bilan kengayib to'liq ilova oynasiga aylanadi. Oyna ichida yon panel ikonlari, "Yaratish / Chat" segmenti, rasm joyi, maydon va tugmalar ketma-ket blur-in bo'ladi. Maydonga matn yoziladi, qora kursor nuqtasi "Yaratish"ni bosadi, rasm joyida yaltirash yuradi va tayyor muqova blur bilan ochiladi.</p><code>prompt: "pill matni+ikon | oyna nomi | yon panel ikonlari (3-6) | segment 2 so'z | yoziladigan matn | tugma matni | natija rasmi/rangi"</code></div></div>
+
+<!-- 512 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#f7f8fb,#d9e2f2,#ebecef"><div class="comp c512"><div class="card">
+  <div class="dh" data-a="up@.35"><span class="lt">I</span><span class="dim">Insho · 9-B sinf</span><span class="sv"><svg class="ic"><use href="#i-clock"/></svg>2 daq oldin</span></div>
+  <b class="dt" data-a="up@.45">Kitob — eng yaxshi do'st</b>
+  <div class="tx" data-a="up@.55">
+    <div>Kitob o'qish odati bolalikdan</div>
+    <div>boshlanadi. <span class="sel"><i class="hl" data-a="growx@1.4/.6" data-to="4.42/.3/e opacity=0"></i><span class="lk" data-b="opacity=0" data-to="4.45/.3/e opacity=1"><i class="ul" data-a="growx@4.55/.45"></i>Kuniga 20 bet</span><span data-to="4.45/.3/e opacity=0">Kuniga 20 bet</span><div class="pop" data-b="width=318px&margin-left=-159px" data-a="bi@2.15/.5" data-to="3.18/.55/s width=600px&margin-left=-300px; 4.38/.3/n opacity=0&filter=blur(12px)&transform=translateY(10px) scale(.94)"><div class="fm" data-to="3.14/.2/n opacity=0&filter=blur(8px)"><span><svg class="ic"><use href="#i-bold"/></svg></span><span><svg class="ic"><use href="#i-italic"/></svg></span><span><svg class="ic"><use href="#i-under"/></svg></span><i class="vs"></i><span><svg class="ic"><use href="#i-link"/></svg></span></div><div class="li" data-b="opacity=0&filter=blur(8px)" data-to="3.36/.35/e opacity=1&filter=blur(0px)"><svg class="ic"><use href="#i-link"/></svg><span data-split="type@3.5/.032">ilmziyo.uz/kutubxona</span><span class="en" data-to="4.24/.09/e transform=scale(.85); 4.33/.35/b transform=scale(1)"><svg class="ic"><use href="#i-enter"/></svg></span></div></div><i class="drag"><i class="cur" data-b="opacity=0&left=0%&top=50%" data-to="1.05/.3/e opacity=1; 1.4/.6/i left=100%; 2.5/.5/i left=calc(50% + 115px)&top=-64px; 3.3/.5/i left=calc(50% + 258px)&top=-64px; 4.5/.4/e opacity=0&left=calc(50% + 340px)&top=70px"><i class="dot" data-to="1.3/.08/e transform=scale(.8); 2.02/.4/b transform=scale(1); 3.02/.09/e transform=scale(.8); 3.11/.4/b transform=scale(1); 4.24/.09/e transform=scale(.8); 4.33/.4/b transform=scale(1)"></i><i class="rip" data-a="echo@3.03/.6"></i></i></i></span> o'qigan</div>
+    <div>o'quvchi bir yilda 30 dan ortiq</div>
+    <div>kitobni tugatadi.</div>
+  </div>
+</div></div></div><div class="meta"><div class="n">512</div><b>Text Select Toolbar</b><div class="br">Ona tili markazi · insho tahriri</div><p>Hujjat kartasi chiqadi, kursor nuqtasi so'zlar ustidan sudraladi va ular ko'k fon bilan tanlanadi. Tanlov ustida B / I / U / havola popover'i blur-in bo'ladi. Kursor havolani bosadi: popover kengayib havola maydoniga morf bo'ladi, manzil harfma-harf yoziladi, Enter bosilgach tanlangan so'zlar ko'k havolaga aylanadi.</p><code>prompt: "hujjat nomi | sarlavha | paragraf (4 qator) | tanlanadigan so'zlar | popover tugmalari | havola manzili | tanlov rangi"</code></div></div>
+
+<!-- 513 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#fde9d6,#d6e4fb,#eef0f6"><div class="comp c513"><div class="card bare" style="width:960px;height:760px">
+  <div class="po" data-a="bi@.3/.65" data-to="1.3/4.2/i transform=translateY(-16px) scale(1)">
+    <div class="pw">
+      <div class="ls" data-b="transform=scale(1.32)" data-to="1.1/3.4/e transform=scale(1.04)">
+        <svg viewBox="0 0 328 568" preserveAspectRatio="xMidYMid slice"><defs>
+          <linearGradient id="sky513" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5f96f0"/><stop offset=".45" stop-color="#9dc0f6"/><stop offset=".7" stop-color="#ffd7b5"/><stop offset="1" stop-color="#ffe9d6"/></linearGradient>
+          <radialGradient id="sun513"><stop offset="0" stop-color="#fffbe9"/><stop offset=".35" stop-color="#fff0c9" stop-opacity=".9"/><stop offset="1" stop-color="#ffd9a6" stop-opacity="0"/></radialGradient>
+          <linearGradient id="wing513" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8ebf0"/><stop offset="1" stop-color="#9aa2ae"/></linearGradient>
+        </defs>
+          <rect width="328" height="568" fill="url(#sky513)"/>
+          <circle cx="230" cy="345" r="120" fill="url(#sun513)"/>
+          <g data-b="transform=translateX(0px)" data-to="1.0/4.8/l transform=translateX(-46px)" fill="#fff" opacity=".85">
+            <ellipse cx="60" cy="190" rx="70" ry="16"/><ellipse cx="110" cy="182" rx="44" ry="18"/><ellipse cx="290" cy="240" rx="80" ry="14"/><ellipse cx="330" cy="232" rx="40" ry="16"/>
+          </g>
+          <g data-b="transform=translateX(0px)" data-to="1.0/4.8/l transform=translateX(-90px)" fill="#fff">
+            <path d="M-40 430 q40-40 80-10 q30-40 80-8 q40-36 90 0 q40-30 90 6 q40-20 80 10 V600 H-40z" opacity=".95"/>
+            <path d="M-40 470 q50-30 100-4 q40-34 100 0 q50-26 100 6 q50-24 110 8 V600 H-40z" fill="#fff7ef"/>
+          </g>
+          <path d="M-10 452 L230 530 L262 548 L250 560 L-10 568z" fill="url(#wing513)"/>
+          <path d="M-10 452 L230 530" stroke="#fff" stroke-width="3" opacity=".7"/>
+        </svg>
+      </div>
+      <div class="sh" data-to="1.05/.95/s transform=translateY(-104%)"><i></i></div>
+    </div>
+  </div>
+  <div class="hx">
+    <div class="k" data-a="in@1.45"><svg class="ic"><use href="#i-cap"/></svg>Xorijda o'qish · 2027</div>
+    <div class="h" data-split="words@1.62/.13">Keyingi bekat —</div>
+    <span class="chp" data-a="bi@2.1/.6"><svg class="ic"><use href="#i-plane"/></svg>Seul</span>
+    <p data-a="in@2.65">Koreya hukumati granti:<br>o'qish, yotoqxona va stipendiya.</p>
+    <span class="dl" data-a="in@2.9"><svg class="ic"><use href="#i-cal"/></svg>Hujjatlar 15-noyabrgacha</span>
+  </div>
+</div></div></div><div class="meta"><div class="n">513</div><b>Porthole Reveal</b><div class="br">Xorijda o'qish markazi · grant</div><p>Samolyot illyuminatori (oval ramka) blur bilan paydo bo'ladi, ichidagi parda prujina bilan yuqoriga ko'tarilib manzarani ochadi. Manzara sekin yaqinlashadi, bulutlar suzadi, qanot ko'rinadi. Yonida sarlavha so'zma-so'z blur-in bo'ladi, asosiy so'z oq chip ichida zarb bilan chiqadi.</p><code>prompt: "manzara rasmi (yoki rang) | kicker | sarlavha | chip so'zi+ikon | izoh (2 qator) | sana chip | parda on/off"</code></div></div>
+
+<!-- 514 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#e8eaee,#c9ccd4,#dadce1"><div class="comp c514" data-theme="dark"><div class="card">
+  <div class="mv" data-to="1.0/4.8/l transform=scale(1.1)">
+    <svg class="mp" viewBox="0 0 900 1000">
+      <rect x="560" y="120" width="220" height="150" rx="30" fill="var(--pk)"/><rect x="60" y="560" width="200" height="130" rx="30" fill="var(--pk)"/>
+      <path d="M-40 1010 C 180 850, 320 930, 520 790 S 800 590, 960 560" fill="none" stroke="var(--rv)" stroke-width="54" stroke-linecap="round"/>
+      <g class="rd"><path d="M-20 150 L920 240"/><path d="M-20 520 L920 470"/><path d="M-20 900 L920 960"/><path d="M120 -20 L60 1020"/><path d="M470 -20 L520 1020"/><path d="M800 -20 L760 1020"/><path d="M-20 300 Q 450 390 920 330"/><path d="M200 -20 Q 260 500 150 1020"/><path d="M640 -20 L610 1020"/><path d="M-20 760 L920 700"/></g>
+      <g class="rd2"><path d="M-20 640 L920 590"/><path d="M340 -20 L390 1020"/></g>
+      <path class="dr rt" pathLength="1" d="M230 430 C 360 300, 520 290, 640 360 S 780 580, 700 700 S 400 860, 260 760" data-a="draw@2.4/1.3"/>
+    </svg>
+    <div class="pn" style="left:230px;top:430px" data-a="pop@1.15"><i class="rip2" data-a="echo@1.3/.8"></i><b></b></div>
+    <div class="pn" style="left:640px;top:360px" data-a="pop@1.5"><i class="rip2" data-a="echo@1.65/.8"></i><b></b></div>
+    <div class="pn" style="left:700px;top:700px" data-a="pop@1.85"><i class="rip2" data-a="echo@2.0/.8"></i><b></b></div>
+    <div class="pn" style="left:260px;top:760px" data-a="pop@2.2"><i class="rip2" data-a="echo@2.35/.8"></i><b></b></div>
+    <div class="ch" style="left:90px;top:474px" data-a="in@1.35"><i class="av" style="--g1:#64d2ff;--g2:#007aff">CH</i>Chilonzor <em>· 420</em></div>
+    <div class="ch" style="left:420px;top:246px" data-a="in@1.7"><i class="av" style="--g1:#8ee6a0;--g2:#34c759">YU</i>Yunusobod <em>· 310</em></div>
+    <div class="ch" style="left:430px;top:744px" data-a="in@2.05"><i class="av" style="--g1:#ffd60a;--g2:#ff9500">MU</i>M. Ulug'bek <em>· 290</em></div>
+    <div class="ch" style="left:70px;top:806px" data-a="in@2.4"><i class="av" style="--g1:#ff6482;--g2:#ff2d55">SE</i>Sergeli <em>· 220</em></div>
+  </div>
+  <div class="hd" data-a="in@.55"><small>Ilm Ziyo · Toshkent</small><b>4 filial — bitta tizim</b></div>
+  <div class="sum" data-a="bi@3.85/.6"><svg class="ic"><use href="#i-users"/></svg>1 240 o'quvchi</div>
+</div></div></div><div class="meta"><div class="n">514</div><b>Dark Map Pins</b><div class="br">O'quv markaz · filiallar xaritasi</div><p>Qora xarita (yo'l chiziqlari, daryo, park) sekin yaqinlashib turadi. Filial pinlari birin-ketin to'lqin halqasi bilan pop bo'ladi, yonida avatar chiplar (hudud va o'quvchi soni) blur-in. So'ng pinlar orqali egri ko'k yo'l chiziladi, oxirida jami o'quvchilar pill'i chiqadi. Light temada xarita och kulrang bo'ladi.</p><code>prompt: "sarlavha, kicker | pinlar (2-8): x,y=nom=son=rang | yo'l on/off, rangi | jami pill matni | xarita temasi"</code></div></div>
+
+<!-- 515 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#efe6ff,#d9ecff,#eef0f5"><div class="comp c515"><div class="card bare" style="width:940px;height:1000px">
+  <div class="ph" data-b="opacity=0&transform=perspective(1800px) rotateY(-38deg) rotateX(16deg) rotateZ(9deg) translateY(90px) scale(.88)" data-to="0.3/1.0/s opacity=1&transform=perspective(1800px) rotateY(-20deg) rotateX(9deg) rotateZ(4deg) translateY(0px) scale(1); 1.3/4.4/l transform=perspective(1800px) rotateY(-11deg) rotateX(6deg) rotateZ(3deg) translateY(-12px) scale(1)">
+    <div class="scr">
+      <div class="sb"><span>9:41</span><i></i></div>
+      <div class="chh"><svg class="ic" style="font-size:28px;color:#0a84ff"><use href="#i-chevl"/></svg><i class="av" style="--g1:#d8b4fe;--g2:#af52de">7G</i><div><b>7-guruh · Ingliz tili</b><small>24 a'zo · online</small></div></div>
+      <div class="msgs">
+        <div class="bb">Bugun 18:00 da speaking club</div>
+        <div class="bi"></div>
+        <div class="bb me">Men boraman!</div>
+        <div class="bb">Mavzu: Travel &amp; Hobbies</div>
+        <div class="bb me">Tayyorlanib kelaman</div>
+      </div>
+      <div class="inp">Xabar yozing...</div>
+    </div>
+  </div>
+  <div class="fc f4" data-b="opacity=0&filter=blur(14px)&transform=translate(-220px~240px) scale(.5) rotate(4deg)" data-to="1.15/.8/s opacity=1&filter=blur(0px)&transform=translate(0px~0px) scale(1) rotate(4deg); 1.95/3.5/i transform=translate(0px~-14px) scale(1) rotate(4deg)"><i><svg class="ic"><use href="#i-uplus"/></svg></i>+12 yangi o'quvchi</div>
+  <div class="fc f1" data-b="opacity=0&filter=blur(14px)&transform=translate(300px~180px) scale(.5) rotate(-4deg)" data-to="1.4/.8/s opacity=1&filter=blur(0px)&transform=translate(0px~0px) scale(1) rotate(-4deg); 2.2/3.3/i transform=translate(0px~-18px) scale(1) rotate(-4deg)"><div class="who"><i class="av" style="--g1:#64d2ff;--g2:#007aff">DK</i><div>Dilnoza opa<small>Ustoz · hozir</small></div></div><p>Uy vazifasi: 40 ta yangi so'z va 1 ta essay.</p></div>
+  <div class="fc f2" data-b="opacity=0&filter=blur(14px)&transform=translate(-260px~100px) scale(.5) rotate(5deg)" data-to="1.65/.8/s opacity=1&filter=blur(0px)&transform=translate(0px~0px) scale(1) rotate(5deg); 2.45/3.1/i transform=translate(0px~-12px) scale(1) rotate(5deg)"><div class="im"><span><svg class="ic"><use href="#i-image"/></svg>Speaking club</span></div><p><b>Juma · 18:00</b><span class="dim">3-xona</span></p></div>
+  <div class="fc f3" data-b="opacity=0&filter=blur(14px)&transform=translate(260px~-140px) scale(.5) rotate(-3deg)" data-to="1.9/.8/s opacity=1&filter=blur(0px)&transform=translate(0px~0px) scale(1) rotate(-3deg); 2.7/2.9/i transform=translate(0px~-16px) scale(1) rotate(-3deg)"><span class="ib"><svg class="ic"><use href="#i-award"/></svg></span><div><b>IELTS 7.5</b><small>Madina R. · yangi natija</small></div></div>
+  <div class="fc f5" data-b="opacity=0&filter=blur(14px)&transform=translate(-200px~-160px) scale(.5) rotate(3deg)" data-to="2.15/.8/s opacity=1&filter=blur(0px)&transform=translate(0px~0px) scale(1) rotate(3deg); 2.95/2.6/i transform=translate(0px~-10px) scale(1) rotate(3deg)"><i></i>Qabul ochiq</div>
+</div></div></div><div class="meta"><div class="n">515</div><b>Tilted Phone Cards</b><div class="br">Ingliz tili markazi · guruh chati</div><p>Telefon maketi 3D burchakdan prujina bilan kelib biroz qiyshiq holatda to'xtaydi va sekin buriladi. Ekranda guruh chati. Telefon ortidan kartalar (ustoz xabari, rasm, natija, bildirishnoma) blur bilan suzib chiqadi, har biri o'z burchagida yengil tebranadi, katta yumshoq soya bilan.</p><code>prompt: "ekran rasmi yoki chat matnlari | kartalar (2-6): tur=matn=ikon=joy | telefon burchagi | soya kuchi | tebranish on/off"</code></div></div>
+
+<!-- 516 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#ffffff,#e0e2ea,#ecedf0"><div class="comp c516"><div class="card bare" style="width:900px;height:900px">
+  <div class="doc" data-a="up@.3">
+    <div class="dh"><span class="ti"><svg class="ic"><use href="#i-file"/></svg></span><span class="dim">Insho · Mening orzuim</span><span class="rec"><span class="r1" data-b="opacity=0" data-to="1.05/.3/e opacity=1; 4.45/.25/n opacity=0&filter=blur(8px)"><i></i>Yozilmoqda</span><span class="r2" data-b="opacity=0&filter=blur(8px)" data-to="4.65/.4/e opacity=1&filter=blur(0px)"><svg class="ic"><use href="#i-check"/></svg>Saqlandi</span></span></div>
+    <div class="dtx" data-split="words@1.45/.16">Men katta bo'lsam, qishlog'imizda bolalar uchun bepul o'quv markaz ochaman. Chunki hunar — boylik otasi, ilm esa tuganmas boylik.</div>
+  </div>
+  <div class="brow">
+    <div class="ky" data-a="bi@.55/.5" data-to="1.0/.12/e transform=scale(.9); 4.45/.45/b transform=scale(1)">
+      <div class="gr" data-b="opacity=0&transform=scale(.7)" data-to="1.0/.45/e opacity=1&transform=scale(1); 4.45/.4/e opacity=0&transform=scale(.8)"><i></i></div>
+      <div class="kb"><b>fn</b><svg class="ic"><use href="#i-globe"/></svg></div>
+    </div>
+    <div class="vp" data-b="width=110px" data-a="bi@.7/.5" data-to="1.1/.6/s width=440px; 4.5/.55/s width=320px">
+      <div class="wv" data-b="opacity=0&filter=blur(8px)" data-to="1.3/.3/e opacity=1&filter=blur(0px); 4.4/.25/n opacity=0&filter=blur(8px)"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="dn" data-b="opacity=0&filter=blur(10px)&transform=scale(.9)" data-to="4.7/.45/s opacity=1&filter=blur(0px)&transform=scale(1)"><svg class="ic"><use href="#i-check"/></svg>17 so'z</div>
+      <div class="dn" data-b="opacity=1" data-to="0.95/.2/n opacity=0"><svg class="ic" style="color:#fff"><use href="#i-mic"/></svg></div>
+    </div>
+  </div>
+</div></div></div><div class="meta"><div class="n">516</div><b>Dictation Pill</b><div class="br">Til markazi · ovozli insho</div><p>Hujjat kartasi ostida "fn" klavishi chiqadi va bosiladi, atrofida rang-barang nur halqasi aylanadi. Mikrofon nuqtasi qora ovoz pill'iga kengayadi, ichida to'lqin nuqtalari tebranadi, aytilgan so'zlar hujjatga birin-ketin blur bilan yoziladi. Klavish qo'yib yuborilgach pill qisqarib "17 so'z" natijasiga, sarlavhada "Saqlandi"ga o'tadi.</p><code>prompt: "hujjat nomi | aytiladigan matn | klavish yozuvi (fn / space) | nur halqasi ranglari | pill rangi | yakuniy yozuv"</code></div></div>
+
+<!-- 517 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#fff3dc,#e9ddff,#eeeef3"><div class="comp c517"><div class="card bare" style="width:880px;height:900px">
+  <div class="pw" data-b="opacity=0&width=242px&height=242px&border-radius=121px" data-to="3.95/.05/l opacity=1; 4.0/.62/s width=720px&height=580px&border-radius=50px"></div>
+  <div class="orb" data-b="transform=rotate(-30deg)" data-to="2.0/1.95/l transform=rotate(120deg); 3.95/.4/n transform=rotate(140deg) scale(.3)&opacity=0&filter=blur(10px)">
+    <div class="st" style="left:252px;top:-48px;--c:#0a84ff" data-a="pop@2.1"><span data-b="transform=rotate(30deg)" data-to="2.0/1.95/l transform=rotate(-120deg)"><svg class="ic"><use href="#i-book"/></svg></span></div>
+    <div class="st" style="left:512px;top:102px;--c:#34c759" data-a="pop@2.18"><span data-b="transform=rotate(30deg)" data-to="2.0/1.95/l transform=rotate(-120deg)"><svg class="ic"><use href="#i-globe"/></svg></span></div>
+    <div class="st" style="left:512px;top:402px;--c:#ff9f0a" data-a="pop@2.26"><span data-b="transform=rotate(30deg)" data-to="2.0/1.95/l transform=rotate(-120deg)"><svg class="ic"><use href="#i-award"/></svg></span></div>
+    <div class="st" style="left:252px;top:552px;--c:#ff2d55" data-a="pop@2.34"><span data-b="transform=rotate(30deg)" data-to="2.0/1.95/l transform=rotate(-120deg)"><svg class="ic"><use href="#i-mic"/></svg></span></div>
+    <div class="st" style="left:-8px;top:402px;--c:#af52de" data-a="pop@2.42"><span data-b="transform=rotate(30deg)" data-to="2.0/1.95/l transform=rotate(-120deg)"><svg class="ic"><use href="#i-pen"/></svg></span></div>
+    <div class="st" style="left:-8px;top:102px;--c:#ffcc00" data-a="pop@2.5"><span data-b="transform=rotate(30deg)" data-to="2.0/1.95/l transform=rotate(-120deg)"><svg class="ic"><use href="#i-star"/></svg></span></div>
+  </div>
+  <div class="rw r1" data-split="words@.5/.1" data-to="1.85/.35/n opacity=0&filter=blur(14px)&transform=translateY(-20px)">Ustozingiz —</div>
+  <div class="rw r2" data-split="words@.8/.1" data-to="1.9/.35/n opacity=0&filter=blur(14px)&transform=translateX(40px)">Dilnoza opa</div>
+  <div class="rw r3" data-split="words@1.0/.1" data-to="1.95/.35/n opacity=0&filter=blur(14px)&transform=translateY(20px)">bilan tanishing</div>
+  <div class="ava" data-a="bi@.72/.55" data-to="1.95/.7/s transform=translate(295px~35px) scale(2.2); 4.0/.62/s transform=translate(60px~-130px) scale(1.36)">
+    <i class="gw" data-b="opacity=0&transform=scale(.6)" data-to="1.95/.6/e opacity=1&transform=scale(1); 3.95/.4/e opacity=0&transform=scale(.8)"></i>
+    <i class="av" style="--g1:#ffb38a;--g2:#ff5e7e">DK</i>
+  </div>
+  <div class="nm" data-a="in@4.4"><b>Dilnoza Karimova</b><small>Ingliz tili · IELTS 8.5</small></div>
+  <div class="sts">
+    <div data-a="bi@4.5"><b>7 yil</b><small>tajriba</small></div>
+    <div data-a="bi@4.57"><b>320+</b><small>bitiruvchi</small></div>
+    <div data-a="bi@4.64"><b><svg class="ic"><use href="#i-star"/></svg>4.9</b><small>reyting</small></div>
+  </div>
+  <div class="bt" data-a="bi@4.72">Darsga yozilish<svg class="ic"><use href="#i-arrow"/></svg></div>
+</div></div></div><div class="meta"><div class="n">517</div><b>Orbit Stickers</b><div class="br">O'quv markaz · ustoz tanishtiruvi</div><p>Gap so'zma-so'z chiqadi, ichida kichik ustoz avatari. So'zlar blur bilan so'nadi, avatar markazga suzib kattalashadi va orqasidan iliq nur yonadi. Atrofida 6 ta ikon stiker orbitada aylanadi, keyin markazga so'riladi va avatar doira shaklidan profil vidjeti kartasiga morf bo'ladi: ism, fan, 3 ta statistika va tugma.</p><code>prompt: "gap (3 qator) + avatar rasmi | stikerlar (3-8): ikon=rang | ism, fan | statistika (3): son=izoh | tugma matni"</code></div></div>
+
+<!-- 518 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#ffffff,#dfe3ea,#eaebee"><div class="comp c518"><div class="card bare" style="width:1000px;height:900px">
+  <div class="wl" data-b="opacity=0&filter=blur(12px)&transform=translateX(200px)" data-to="1.0/.75/s opacity=1&filter=blur(0px)&transform=translateX(0px); 2.7/.4/n opacity=0&filter=blur(14px)&transform=translateX(-90px)">Skrinshot</div>
+  <div class="wr" data-b="opacity=0&filter=blur(12px)&transform=translateX(-200px)" data-to="1.1/.75/s opacity=1&filter=blur(0px)&transform=translateX(0px); 2.7/.4/n opacity=0&filter=blur(14px)&transform=translateX(90px)">oling</div>
+  <div class="ph" data-a="up@.3/.7" data-to="1.95/.1/e transform=scale(.96); 2.05/.45/b transform=scale(1); 2.8/.7/s transform=scale(1.25)&opacity=0">
+    <div class="scr">
+      <div class="sb"><span>9:41</span><span>DTM</span></div>
+      <span class="cp"><svg class="ic"><use href="#i-cap"/></svg>DTM 2026 · natija</span>
+      <div class="lb">Umumiy ball</div>
+      <div class="big">178.6</div>
+      <div class="of">189 balldan</div>
+      <div class="pb"><i></i></div>
+      <div class="rr"><span>Matematika</span><b>30/30</b></div>
+      <div class="rr"><span>Ona tili</span><b>28/30</b></div>
+      <div class="rr"><span>Tarix</span><b>27/30</b></div>
+      <div class="gt"><svg class="ic"><use href="#i-check"/></svg>Davlat granti</div>
+    </div>
+    <i class="fl" data-b="opacity=0" data-to="1.95/.07/e opacity=.95; 2.02/.45/e opacity=0"></i>
+  </div>
+</div>
+<div class="fs" data-b="opacity=0&clip-path=inset(calc(50% - 340px) calc(50% - 150px) round 46px)" data-to="2.78/.05/l opacity=1; 2.83/.8/s clip-path=inset(0px 0px round 0px); 5.8/.5/k opacity=0&filter=blur(12px)&transform=translateY(80px) scale(.92)">
+  <div class="fsi">
+    <span class="cp" data-a="in@3.15"><svg class="ic"><use href="#i-cap"/></svg>DTM 2026 · Aziza N. natijasi</span>
+    <div class="lb" data-a="in@3.25">Umumiy ball</div>
+    <div class="big" data-a="bi@3.3/.6"><span class="cnt" data-c0="0.0" data-c1="178.6" data-roll="3.35/1.05"></span></div>
+    <div class="of" data-a="in@3.45">189 balldan · 94%</div>
+    <div class="rows">
+      <div class="rr" data-a="up@3.8"><span>Matematika</span><em>30/30<svg class="ic"><use href="#i-check"/></svg></em></div>
+      <div class="rr" data-a="up@3.9"><span>Ona tili va adabiyot</span><em>28/30<svg class="ic"><use href="#i-check"/></svg></em></div>
+    </div>
+    <span class="gt" data-a="pop@4.4"><svg class="ic"><use href="#i-award"/></svg>Davlat granti</span>
+  </div>
+</div>
+</div></div><div class="meta"><div class="n">518</div><b>Split Around Device</b><div class="br">Abituriyent markazi · DTM natija</div><p>Telefon maketi markazda chiqadi, ikki so'z uning ortidan chap va o'ng tomonga blur bilan sirg'alib chiqadi ("Skrinshot ... oling"). Ekranda oq chaqnash (skrinshot), telefon bir bosiladi. So'ng so'zlar yon tomonga so'nadi, telefon ekrani kengayib butun kadrni egallaydi va natija katta holda qayta yig'iladi: ball aylanib sanaladi, qatorlar va grant belgisi chiqadi.</p><code>prompt: "chap so'z | o'ng so'z | telefon ekrani rasmi yoki natija matnlari | katta raqam | qatorlar (2-4) | belgi matni | chaqnash on/off"</code></div></div>
+
+<!-- 519 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#eadfff,#dcecff,#f1eef6"><div class="comp c519"><div class="card bare" style="width:960px;height:800px">
+  <div class="dg" data-word="ILM ZIYO"></div>
+  <div class="tgl" data-a="in@2.35">o'quv markazi</div>
+  <div class="pp" data-a="bi@2.7/.6">
+    <div class="p" style="--c:#0a84ff" data-a="in@2.95" data-to="3.7/.25/n opacity=0&filter=blur(12px)&transform=translateY(-30px)"><svg class="ic"><use href="#i-calc"/></svg>Matematika · DTM</div>
+    <div class="p" style="--c:#34c759" data-a="in@3.8" data-to="4.55/.25/n opacity=0&filter=blur(12px)&transform=translateY(-30px)"><svg class="ic"><use href="#i-globe"/></svg>Ingliz tili · IELTS</div>
+    <div class="p" style="--c:#af52de" data-a="in@4.65"><svg class="ic"><use href="#i-code"/></svg>IT · dasturlash</div>
+  </div>
+</div></div></div><div class="meta"><div class="n">519</div><b>Dots Gather Logo</b><div class="br">O'quv markaz · brend intro</div><p>Butun kadr bo'ylab tarqoq nuqtalar paydo bo'ladi va prujina bilan markazga yig'ilib nomni (logotipni) nuqtali yozuv qilib hosil qiladi. Yig'ilgach nuqtalar chapdan o'ngga to'lqin bo'lib bir "nafas oladi". Ostida shior chiqadi, oq pill ichida qisqa iboralar (yo'nalishlar) blur bilan navbatma-navbat almashadi.</p><code>prompt: "nom yoki logo (matn/rasm) | nuqta o'lchami va zichligi | nuqta rangi | shior | iboralar (2-5): ikon=matn | to'lqin on/off"</code></div></div>
+
+<!-- 520 -->
+<div class="cardx"><div class="stage" data-lite data-bg="#ffe0c2,#f1dcff,#eef0f4"><div class="comp c520" data-theme="dark"><div class="card bare" style="width:900px;height:800px">
+  <div class="ry" data-b="opacity=0&transform=scale(.2) rotate(0deg)" data-to="1.05/.9/s opacity=1&transform=scale(1) rotate(22deg); 1.95/1.25/l transform=scale(1) rotate(36deg); 3.2/.3/e transform=scale(1.32) rotate(42deg); 3.5/1.9/e transform=scale(1.08) rotate(64deg)"></div>
+  <div class="cg" data-b="opacity=0&transform=scale(.5)" data-to="1.0/.6/e opacity=.85&transform=scale(1); 3.2/.2/e opacity=1&transform=scale(1.3); 3.4/.8/e opacity=.85&transform=scale(1)"></div>
+  <div class="tp2">
+    <span class="tc" data-a="in@.45"><svg class="ic"><use href="#i-cal"/></svg>Yangi guruh · 1-oktabr</span>
+    <div class="hh" data-a="in@.6">IELTS intensiv 7.0+</div>
+  </div>
+  <div class="ctw" data-a="bi@.75/.6" data-to="3.2/.1/e transform=scale(.93); 3.3/.5/b transform=scale(1)">
+    <div class="ct" data-b="width=640px&margin-left=-320px" data-to="3.45/.6/s width=500px&margin-left=-250px">
+      <div class="t t1" data-to="3.32/.22/n opacity=0&filter=blur(10px)&transform=translateY(-16px)">Joylar kam qoldi — yoziling<i><svg class="ic"><use href="#i-arrow"/></svg></i></div>
+      <div class="t t2" data-b="opacity=0&filter=blur(10px)&transform=translateY(16px)" data-to="3.52/.45/e opacity=1&filter=blur(0px)&transform=translateY(0px)">Joy band qilindi<i><svg class="ic"><use href="#i-check"/></svg></i></div>
+    </div>
+  </div>
+  <div class="lf">
+    <span data-a="in@1.3" data-to="3.4/.25/n opacity=0&filter=blur(8px)&transform=translateY(-14px)"><i></i>15 joydan 3 tasi qoldi</span>
+    <span data-b="opacity=0&filter=blur(8px)&transform=translateY(14px)" data-to="3.6/.4/e opacity=1&filter=blur(0px)&transform=translateY(0px)"><i></i>15 joydan 2 tasi qoldi</span>
+  </div>
+  <div class="ava" data-a="in@1.55"><i class="av" style="--g1:#64d2ff;--g2:#007aff">SA</i><i class="av" style="--g1:#8ee6a0;--g2:#34c759">MR</i><i class="av" style="--g1:#ffd60a;--g2:#ff9500">JT</i><i class="av" style="--g1:#d8b4fe;--g2:#af52de">KY</i><span>86 kishi yozildi</span></div>
+  <i class="cur" style="left:690px;top:490px" data-b="opacity=0&transform=translate(210px~260px)" data-to="2.35/.8/i opacity=1&transform=translate(0px~0px); 4.1/.6/i opacity=0&transform=translate(170px~220px)"><i class="dot" data-to="3.18/.09/e transform=scale(.8); 3.27/.45/b transform=scale(1)"></i><i class="rip" data-a="echo@3.19/.6"></i></i>
+</div></div></div><div class="meta"><div class="n">520</div><b>Light Ray CTA</b><div class="br">IELTS markazi · qabul chaqiruvi</div><p>CTA pill blur bilan pop bo'ladi, orqasidan radial yorug'lik nurlari portlab ochiladi va sekin aylanadi, markazda iliq nur. Kursor nuqtasi kelib pill'ni bosadi: nurlar ikkinchi marta chaqnaydi, pill qisqarib "Joy band qilindi"ga morf bo'ladi, ostidagi qolgan joylar soni kamayadi.</p><code>prompt: "kicker chip | sarlavha | CTA matni | bosilgandan keyingi matn | nur rangi | joylar: jami=qolgan | avatar soni matni"</code></div></div>
+
+</div></div>
+<div class="modal" id="modal"></div>
+<script>
+var H=1920, theme="preset", D=6.5;
+var OB="cubic-bezier(.34,1.56,.64,1)", SB="cubic-bezier(.3,1.3,.6,1)", IO="cubic-bezier(.65,0,.35,1)", EO="cubic-bezier(.2,.8,.2,1)", EI="cubic-bezier(.55,0,1,.45)", BI="cubic-bezier(.5,-0.4,.75,.25)";
+var EZ={l:"linear",b:OB,s:SB,i:IO,e:EO,n:EI,k:BI};
+
+/* ---------- DOM build ---------- */
+/* data-split="type@t0/step" (chars) or "words@t0/step"; children with data-ns are skipped */
+function splitEl(el){
+  var a=el.dataset.split.split("@"), mode=a[0], sp=a[1].split("/"), t0=+sp[0], st=+(sp[1]||.05), i=0, ty=mode==="words"?"wd":"tp";
+  (function walk(node){
+    Array.prototype.slice.call(node.childNodes).forEach(function(n){
+      if(n.nodeType===3){
+        var t=n.textContent; if(/^\s*$/.test(t)&&/\n/.test(t)){n.parentNode.removeChild(n);return;}
+        var frag=document.createDocumentFragment(), parts=mode==="words"?t.split(/(\s+)/):Array.from(t);
+        parts.forEach(function(w){ if(!w)return;
+          if(mode==="words"&&/^\s+$/.test(w)){frag.appendChild(document.createTextNode(w));return;}
+          var s=document.createElement("span"); s.className=ty; s.textContent=w; s.dataset.a=ty+"@"+(t0+i*st).toFixed(3); i++; frag.appendChild(s); });
+        n.parentNode.replaceChild(frag,n);
+      } else if(n.nodeType===1&&!n.hasAttribute("data-ns")) walk(n);
+    });
+  })(el);
+  delete el.dataset.split;
+}
+/* odometer counter: .cnt data-c0 data-c1 data-roll="t/dur" */
+function buildCnt(el){
+  var from=el.dataset.c0, to=el.dataset.c1, A=+from.replace(/\D/g,""), B=+to.replace(/\D/g,""), fd=from.replace(/\D/g,"").length, digs=to.replace(/\D/g,"").length, pos=0, html="";
+  Array.from(to).forEach(function(c){
+    if(!/\d/.test(c)){html+='<span class="sep">'+c+'</span>';return;}
+    var p=digs-1-pos; pos++; var P=Math.pow(10,p), a0=Math.floor(A/P), b0=Math.floor(B/P), inc=b0-a0, cap=p===0?20:(p===1?14:10), seq=[], k;
+    if(inc<=cap){for(k=0;k<=inc;k++)seq.push((a0+k)%10);}
+    else {seq.push(a0%10); for(k=cap-1;k>=0;k--)seq.push((((b0-k)%10)+10)%10);}
+    if(p>=fd&&a0===0) seq[0]="";
+    html+='<span class="col"><span class="stk" data-n="'+(seq.length-1)+'">'+seq.map(function(x){return "<i>"+(x===""?"&nbsp;":x)+"</i>";}).join("")+"</span></span>";
+  });
+  el.innerHTML=html;
+}
+/* dots gather: .dg[data-word] -> canvas-sampled dot grid, each dot flies in from a scattered start */
+function genDots(){
+  document.querySelectorAll(".dg[data-word]").forEach(function(g){
+    var w=960, h=300, st=+(g.dataset.step||15), cv=document.createElement("canvas"); cv.width=w; cv.height=h;
+    var x=cv.getContext("2d"), fs=210, word=g.dataset.word;
+    x.font="900 "+fs+"px Helvetica, Arial, sans-serif"; var mw=x.measureText(word).width;
+    if(mw>w*.94){fs=Math.floor(fs*w*.94/mw); x.font="900 "+fs+"px Helvetica, Arial, sans-serif";}
+    x.textAlign="center"; x.textBaseline="middle"; x.fillStyle="#000"; x.fillText(word,w/2,h/2+6);
+    var d=x.getImageData(0,0,w,h).data, s=11, R=function(){s=(s*9301+49297)%233280;return s/233280;}, html="";
+    for(var yy=st/2;yy<h;yy+=st) for(var xx=st/2;xx<w;xx+=st){
+      var hit=0; for(var oy=-3;oy<=3;oy+=3) for(var ox=-3;ox<=3;ox+=3){ if(d[((Math.floor(yy+oy)*w+Math.floor(xx+ox))*4)+3]>128) hit++; } if(hit<6) continue;
+      var dx=((R()-.5)*1300).toFixed(0), dy=((R()-.5)*1700).toFixed(0), sc=(.5+R()*1.4).toFixed(2), t0=(.95+R()*.55).toFixed(2), pw=(2.25+xx/w*.55).toFixed(2), pe=(+pw+.16).toFixed(2);
+      html+='<i style="left:'+(xx-5.5).toFixed(1)+'px;top:'+(yy-5.5).toFixed(1)+'px" data-b="opacity=0&transform=translate('+dx+'px~'+dy+'px) scale('+sc+')" data-to="0.3/.45/e opacity=1; '+t0+'/1.0/s transform=translate(0px~0px) scale(1); '+pw+'/.16/e transform=translate(0px~0px) scale(1.5); '+pe+'/.45/b transform=translate(0px~0px) scale(1)"></i>';
+    }
+    g.innerHTML=html; g.removeAttribute("data-word");
+  });
+}
+function build(){
+  genDots();
+  document.querySelectorAll("[data-split]").forEach(splitEl);
+  document.querySelectorAll(".cnt").forEach(buildCnt);
+}
+
+/* ---------- WAAPI timeline (6.5 s loop) ---------- */
+function T(tf,x){var s=((tf||"")+" "+(x||"")).trim(); return s||"none";}
+function camel(k){return k.trim().replace(/-([a-z])/g,function(m,c){return c.toUpperCase();});}
+function props(str){var o={}; str.split("&").forEach(function(p){var i=p.indexOf("="); if(i<0)return; o[camel(p.slice(0,i))]=p.slice(i+1).trim().replace(/~/g,",");}); return o;}
+function types(tf){return {
+  pop:{d:.5,e:OB,f:[{opacity:0,transform:T(tf,"scale(.4)")},{opacity:1,transform:T(tf,"scale(1)")}]},
+  up:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateY(48px)")},{opacity:1,transform:T(tf,"translateY(0px)")}]},
+  dn:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateY(-48px)")},{opacity:1,transform:T(tf,"translateY(0px)")}]},
+  lt:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateX(-64px)")},{opacity:1,transform:T(tf,"translateX(0px)")}]},
+  rt:{d:.6,e:SB,f:[{opacity:0,transform:T(tf,"translateX(64px)")},{opacity:1,transform:T(tf,"translateX(0px)")}]},
+  fade:{d:.35,e:"linear",f:[{opacity:0},{opacity:1}]},
+  tp:{d:.001,e:"linear",f:[{opacity:0},{opacity:1}]},
+  wd:{d:.4,e:EO,f:[{opacity:0,filter:"blur(8px)",transform:"translateY(12px)"},{opacity:1,filter:"blur(0px)",transform:"translateY(0px)"}]},
+  "in":{d:.45,e:EO,f:[{opacity:0,filter:"blur(12px)",transform:T(tf,"translateY(34px)")},{opacity:1,filter:"blur(0px)",transform:T(tf,"translateY(0px)")}]},
+  bi:{d:.55,e:SB,f:[{opacity:0,filter:"blur(14px)",transform:T(tf,"scale(.88)")},{opacity:1,filter:"blur(0px)",transform:T(tf,"scale(1)")}]},
+  inl:{d:.45,e:SB,f:[{opacity:0,filter:"blur(12px)",transform:T(tf,"translateX(-60px)")},{opacity:1,filter:"blur(0px)",transform:T(tf,"translateX(0px)")}]},
+  wipe:{d:.35,e:IO,f:[{clipPath:"inset(-50% 100% -50% -50%)"},{clipPath:"inset(-50% -50% -50% -50%)"}]},
+  growy:{d:.5,e:SB,f:[{transform:T(tf,"scaleY(0)")},{transform:T(tf,"scaleY(1)")}]},
+  stamp:{d:.55,e:EI,f:[{opacity:0,transform:T(tf,"scale(2.6)")},{opacity:1,transform:T(tf,"scale(.88)"),o:.42,ez:OB},{opacity:1,transform:T(tf,"scale(1)")}]},
+  growx:{d:.6,e:IO,f:[{transform:T(tf,"scaleX(0)")},{transform:T(tf,"scaleX(1)")}]},
+  draw:{d:.6,e:IO,f:[{strokeDashoffset:1.05,opacity:0},{strokeDashoffset:.99,opacity:1,o:.05},{strokeDashoffset:0,opacity:1}]},
+  unfold:{d:.8,e:SB,f:[{opacity:0,transform:"perspective(1600px) rotateX(-75deg) scale(.92)"},{opacity:1,transform:"perspective(1600px) rotateX(0deg) scale(1)"}]},
+  echo:{d:.7,e:EO,f:[{opacity:0,transform:"scale(.92)"},{opacity:.9,transform:"scale(1)",o:.08},{opacity:0,transform:"scale(1.45)"}]}
+};}
+function DF(tf){return {opacity:1,filter:"blur(0px)",transform:T(tf,""),strokeDashoffset:0,clipPath:"inset(-50% -50% -50% -50%)",color:"#ffffff"};}
+function A(){var r={}; for(var i=0;i<arguments.length;i++){var s=arguments[i]; for(var k in s) if(k!=="o"&&k!=="ez") r[k]=s[k];} return r;}
+function run(el,frames,tf){
+  var keys={}, df=DF(tf); frames.forEach(function(f){for(var k in f) if(k!=="offset"&&k!=="easing") keys[k]=1;});
+  var last={}; for(var k in keys){ for(var i=0;i<frames.length;i++){ if(frames[i][k]!==undefined){ last[k]=frames[i][k]; break; } } if(last[k]===undefined) last[k]=df[k]; }
+  var prev=0;
+  frames.forEach(function(f){ for(var k in keys){ if(f[k]===undefined) f[k]=last[k]; else last[k]=f[k]; } f.offset=Math.min(1,Math.max(prev,f.offset)); prev=f.offset; });
+  el.animate(frames,{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animEl(el){
+  var ds=el.dataset, tf=ds.tf||"", fr=[], cur={}, B=ds.b?props(ds.b):null;
+  if(ds.a){
+    var a=ds.a.split("@"), ty=types(tf)[a[0]], sp=a[1].split("/"), s=+sp[0], d=sp[1]?+sp[1]:ty.d, H0=ty.f[0], S=ty.f[ty.f.length-1];
+    fr.push(A({offset:0},B||{},H0)); fr.push(A({offset:s/D,easing:ty.e0||ty.e},B||{},H0));
+    ty.f.slice(1,-1).forEach(function(m){fr.push(A({offset:(s+d*m.o)/D,easing:m.ez||ty.e},B||{},m));});
+    cur=A(B||{},S); fr.push(A({offset:(s+d)/D},cur));
+  } else if(B){ cur=B; fr.push(A({offset:0},cur)); }
+  else { fr.push({offset:0}); }
+  if(ds.to){ ds.to.split(";").forEach(function(step){ step=step.trim(); if(!step)return;
+    var i=step.indexOf(" "), td=step.slice(0,i).split("/"), t=+td[0], dd=+(td[1]||.4), ez=EZ[td[2]]||SB, pr=props(step.slice(i+1));
+    var base=A(cur); for(var k in pr) if(base[k]===undefined) base[k]=DF(tf)[k];
+    fr.push(A({offset:t/D,easing:ez},base)); cur=A(base,pr); fr.push(A({offset:(t+dd)/D},cur)); }); }
+  fr.push(A({offset:1},cur));
+  run(el,fr,tf);
+}
+function animCnt(stk,cnt){
+  var r=cnt.dataset.roll.split("/"), s=+r[0], d=+r[1], n=+stk.dataset.n, y="translateY(-"+(n*1.1).toFixed(2)+"em)";
+  stk.animate([{offset:0,transform:"translateY(0em)"},{offset:s/D,transform:"translateY(0em)",easing:"cubic-bezier(.3,.55,.15,1)"},{offset:(s+d)/D,transform:y},{offset:1,transform:y}],{duration:D*1000,iterations:Infinity,fill:"both"});
+  if(n>0) stk.parentNode.animate([{offset:0,filter:"blur(0px)"},{offset:s/D,filter:"blur(0px)"},{offset:(s+d*.12)/D,filter:"blur(2px)"},{offset:(s+d*.55)/D,filter:"blur(1.2px)"},{offset:(s+d*.92)/D,filter:"blur(0px)"},{offset:1,filter:"blur(0px)"}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+/* card: smooth bounce + blur in, hold, anticipation + bounce + blur out */
+function animCard(c){
+  var o="translateY(110px) scale(.9)", x="translateY(90px) scale(.9)", z="translateY(0px) scale(1)";
+  c.animate([{offset:0,opacity:0,filter:"blur(14px)",transform:o,easing:SB},{offset:.62/D,opacity:1,filter:"blur(0px)",transform:z},{offset:5.8/D,opacity:1,filter:"blur(0px)",transform:z,easing:BI},{offset:6.3/D,opacity:0,filter:"blur(12px)",transform:x},{offset:1,opacity:0,filter:"blur(12px)",transform:x}],{duration:D*1000,iterations:Infinity,fill:"both"});
+}
+function animate(root){
+  root.querySelectorAll(".comp").forEach(function(c){
+    c.querySelectorAll(".card").forEach(animCard);
+    c.querySelectorAll("[data-a],[data-to],[data-b]").forEach(animEl);
+    c.querySelectorAll(".cnt").forEach(function(cn){cn.querySelectorAll(".stk").forEach(function(s){animCnt(s,cn);});});
+  });
+}
+
+/* ---------- board chrome ---------- */
+function fit(st){
+  var u=st.clientWidth/1080; st.style.height=(H*u)+"px";
+  var c=st.querySelector(".comp"); c.style.setProperty("--u",u); c.style.setProperty("--H",H+"px");
+  var dark=theme==="dark"||(theme==="preset"&&c.dataset.theme==="dark"); c.classList.toggle("dark",dark); st.classList.toggle("dk",dark);
+  var ch=c.querySelector(".card:not(.tb)").offsetHeight, av=H-150; c.style.setProperty("--ps",Math.min(1,av/ch).toFixed(3));
+}
+function all(){document.querySelectorAll(".stage").forEach(fit)}
+build();
+document.querySelectorAll(".stage").forEach(function(st){
+  var b=st.dataset.bg.split(","); var f=document.createElement("div"); f.className="foot";
+  f.style.background="radial-gradient(circle at 30% 25%,"+b[0]+",transparent 55%),radial-gradient(circle at 75% 70%,"+b[1]+",transparent 60%),"+b[2];
+  st.insertBefore(f,st.firstChild);
+});
+function wire(id,fn){document.getElementById(id).addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  this.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b)});fn(b.dataset.v);all();});}
+wire("fmt",function(v){H=+v}); wire("thm",function(v){theme=v});
+var modal=document.getElementById("modal");
+document.querySelectorAll(".cardx").forEach(function(cx){cx.addEventListener("click",function(){
+  modal.innerHTML=""; var st=cx.querySelector(".stage").cloneNode(true); modal.appendChild(st); modal.classList.add("on"); fit(st); animate(st);});});
+modal.addEventListener("click",function(){modal.classList.remove("on");modal.innerHTML=""});
+window.addEventListener("resize",all); all(); animate(document.getElementById("grid"));
+var m=location.hash.match(/t=([\d.]+)/); if(m){document.getAnimations().forEach(function(a){a.pause();a.currentTime=parseFloat(m[1])*1000;});}
+var f=location.hash.match(/f=(\d+)/); if(f){H=+f[1]; document.querySelectorAll("#fmt button").forEach(function(x){x.classList.toggle("on",x.dataset.v===f[1])}); all();}
+var th=location.hash.match(/th=(\w+)/); if(th){theme=th[1]; document.querySelectorAll("#thm button").forEach(function(x){x.classList.toggle("on",x.dataset.v===th[1])}); all();}
+</script>
+</body>
+</html>
