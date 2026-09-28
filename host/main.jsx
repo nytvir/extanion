@@ -279,6 +279,26 @@ function nytvir_execute(cmd) {
         else if (cmd === "s56Stars") { _s56Stars(); }
         else if (cmd === "s56PhoneCta") { _s56PhoneCta(); }
         else if (cmd === "s56EndCard") { _s56EndCard(); }
+        else if (cmd === "s57Myth") { _s57Myth(); }
+        else if (cmd === "s57Tips") { _s57Tips(); }
+        else if (cmd === "s57DoDont") { _s57DoDont(); }
+        else if (cmd === "s57Journey") { _s57Journey(); }
+        else if (cmd === "s57KpiTrio") { _s57KpiTrio(); }
+        else if (cmd === "s57Testimonial") { _s57Testimonial(); }
+        else if (cmd === "s57Value") { _s57Value(); }
+        else if (cmd === "s57Answer") { _s57Answer(); }
+        else if (cmd === "s57Compare") { _s57Compare(); }
+        else if (cmd === "s57Process") { _s57Process(); }
+        else if (cmd === "s57Bonus") { _s57Bonus(); }
+        else if (cmd === "s57Waitlist") { _s57Waitlist(); }
+        else if (cmd === "s57Proof") { _s57Proof(); }
+        else if (cmd === "s57Faq") { _s57Faq(); }
+        else if (cmd === "s57Webinar") { _s57Webinar(); }
+        else if (cmd === "s57BadgeWall") { _s57BadgeWall(); }
+        else if (cmd === "s57GuaranteeSeal") { _s57GuaranteeSeal(); }
+        else if (cmd === "s57PortfolioFlip") { _s57PortfolioFlip(); }
+        else if (cmd === "s57Contact") { _s57Contact(); }
+        else if (cmd === "s57Tiers") { _s57Tiers(); }
         else if (cmd.indexOf("sfx_") === 0) { _sfxPlace(cmd); }
         else if (cmd === "msScreenshot") { _msScreenshot(); }
         else if (cmd === "msTapback") { _msTapback(); }
@@ -23870,7 +23890,22 @@ var S55_ICO = {
     "at-sign": [[1,[4,0,0,4,-4,0,0,-4],[0,-2.209,2.209,0,0,2.209,-2.209,0],[0,2.209,-2.209,0,0,-2.209,2.209,0]], [0,[4,-4,4,1,7,4,10,1,10,0,2.298,-9.732,-8.944,-4.472,-6.407,7.678,6,8],[0,0,0,0,-1.657,0,0,1.657,0,0,4.514,1.066,2.074,-4.148,-3.561,-2.972,-3.71,2.783],[0,0,0,1.657,1.657,0,0,0,0,-4.638,-4.514,-1.066,-2.074,4.148,3.561,2.972,0,0]]],
     "users": [[0,[4,9,4,7,0,3,-6,3,-10,7,-10,9],[0,0,0,0,2.209,0,0,0,0,-2.209,0,0],[0,0,0,-2.209,0,0,-2.209,0,0,0,0,0]], [1,[1,-5,-3,-1,-7,-5,-3,-9],[0,-2.209,2.209,0,0,2.209,-2.209,0],[0,2.209,-2.209,0,0,-2.209,2.209,0]], [0,[10,9,10,7,7,3.13],[0,0,0,0,1.765,0.456],[0,0,-0.001,-1.823,0,0]], [0,[4,-8.87,7.008,-4.995,4,-1.12],[0,0,0,-1.827,1.77,-0.453],[1.77,0.453,0,1.827,0,0]]],
     "message-circle-question": [[1,[-4.1,8,7.282,5.292,6.372,-6.372,-5.292,-7.282,-8,4.1,-10,10],[0,0,-2.61,3.582,3.134,3.134,3.582,-2.61,-2.023,-3.943,0,0],[3.943,2.023,2.61,-3.582,-3.134,-3.134,-3.582,2.61,0,0,0,0]], [0,[-2.91,-3,0.427,-4.961,2.92,-2,-0.08,1],[0,0,-1.442,-0.247,0.002,-1.463,0,0],[0.485,-1.38,1.442,0.247,0,2,0,0]], [0,[0,5,0.01,5],[0,0,0,0],[0,0,0,0]]],
-    "chevrons-left-right": [[0,[-3,-5,-8,0,-3,5],[0,0,0,0,0,0],[0,0,0,0,0,0]], [0,[3,-5,8,0,3,5],[0,0,0,0,0,0],[0,0,0,0,0,0]]]
+    "chevrons-left-right": [[0,[-3,-5,-8,0,-3,5],[0,0,0,0,0,0],[0,0,0,0,0,0]], [0,[3,-5,8,0,3,5],[0,0,0,0,0,0],[0,0,0,0,0,0]]],
+    "x": [[0,[6,-6,-6,6],[0,0,0,0],[0,0,0,0]], [0,[-6,-6,6,6],[0,0,0,0],[0,0,0,0]]],
+    "circle-x": [[1,[10,0,0,10,-10,0,0,-10],[0,-5.523,5.523,0,0,5.523,-5.523,0],[0,5.523,-5.523,0,0,-5.523,5.523,0]], [0,[3,-3,-3,3],[0,0,0,0],[0,0,0,0]], [0,[-3,-3,3,3],[0,0,0,0],[0,0,0,0]]],
+    "gift": [[1,[-8,-4,8,-4,9,-3,9,-1,8,0,-8,0,-9,-1,-9,-3],[-0.552,0,0,0,0,-0.552,0,0,0.552,0,0,0,0,0.552,0,0],[0,0,0.552,0,0,0,0,0.552,0,0,-0.552,0,0,0,0,-0.552]], [0,[0,-4,0,9],[0,0,0,0],[0,0,0,0]], [0,[7,0,7,7,5,9,-5,9,-7,7,-7,0],[0,0,0,0,1.105,0,0,0,0,1.105,0,0],[0,0,0,1.105,0,0,-1.105,0,0,0,0,0]], [0,[-4.5,-4,-7,-6.5,-4.5,-9,0,-4,4.5,-9,7,-6.5,4.5,-4],[0,0,0,1.381,-1.381,0,-0.74,-3.051,-1.974,-0.034,0,-1.381,1.381,0],[-1.381,0,0,-1.381,1.974,-0.034,0.74,-3.051,1.381,0,0,1.381,0,0]]],
+    "lock": [[1,[-7,-1,7,-1,9,1,9,8,7,10,-7,10,-9,8,-9,1],[-1.105,0,0,0,0,-1.105,0,0,1.105,0,0,0,0,1.105,0,0],[0,0,1.105,0,0,0,0,1.105,0,0,-1.105,0,0,0,0,-1.105]], [0,[-5,-1,-5,-5,-0,-10,5,-5,5,-1],[0,0,0,0,-2.761,0,0,-2.761,0,0],[0,0,0,-2.761,2.761,-0,0,0,0,0]]],
+    "lock-open": [[1,[-7,-1,7,-1,9,1,9,8,7,10,-7,10,-9,8,-9,1],[-1.105,0,0,0,0,-1.105,0,0,1.105,0,0,0,0,1.105,0,0],[0,0,1.105,0,0,0,0,1.105,0,0,-1.105,0,0,0,0,-1.105]], [0,[-5,-1,-5,-5,-0.502,-9.98,4.9,-6],[0,0,0,0,-2.556,0.258,-0.511,-2.517],[0,0,-0.003,-2.569,2.556,-0.258,0,0]]],
+    "bell": [[0,[-6,-4,-0,-10,6,-4,9,5,-9,5,-6,-4],[0,0,-3.314,0,0,-3.314,0,0,0,0,0,7],[0,-3.314,3.314,-0,0,7,0,0,0,0,0,0]], [0,[-1.7,9,0,10.005,1.7,9],[0,0,-0.708,0,-0.341,0.62],[0.341,0.62,0.708,0,0,0]]],
+    "chevron-down": [[0,[-6,-3,0,3,6,-3],[0,0,0,0,0,0],[0,0,0,0,0,0]]],
+    "chevron-up": [[0,[6,3,0,-3,-6,3],[0,0,0,0,0,0],[0,0,0,0,0,0]]],
+    "award": [[0,[3.477,0.89,4.992,9.416,4.75,9.932,4.182,9.886,0.602,7.199,-0.595,7.199,-4.181,9.885,-4.748,9.931,-4.991,9.416,-3.477,0.89],[0,0,0,0,0.18,-0.105,0.161,0.132,0,0,0.355,-0.265,0,0,0.18,0.104,-0.034,0.205,0,0],[0,0,0.035,0.206,-0.18,0.105,0,0,-0.355,-0.265,-0,0,-0.161,0.132,-0.18,-0.104,0,0,0,0]], [1,[6,-4,0,2,-6,-4,0,-10],[0,-3.314,3.314,0,0,3.314,-3.314,0],[0,3.314,-3.314,0,0,-3.314,3.314,0]]],
+    "shield-check": [[1,[8,1,0.34,9.95,-0.33,9.94,-8,1,-8,-6,-7,-7,-0.76,-9.72,0.76,-9.72,7,-7,8,-6],[0,0,4.16,-1.45,0.216,0.08,0,5,0,0,-0.552,0,-1.74,1.52,-0.438,-0.374,-2,0,0,-0.552],[0,5,-0.218,0.074,-4.17,-1.44,0,0,0,-0.552,2,0,0.438,-0.374,1.75,1.53,0.552,0,0,0]], [0,[-3,0,-1,2,3,-2],[0,0,0,0,0,0],[0,0,0,0,0,0]]],
+    "rotate-ccw": [[0,[-9,0,0,9,9,0,0,-9,-6.74,-6.26,-9,-4],[0,0,-4.971,0,0,4.971,4.971,0,1.809,-1.749,0,0],[0,4.971,4.971,0,0,-4.971,-2.516,0.009,0,-0,0,0]], [0,[-9,-9,-9,-4,-4,-4],[0,0,0,0,0,0],[0,0,0,0,0,0]]],
+    "calendar": [[0,[-4,-10,-4,-6],[0,0,0,0],[0,0,0,0]], [0,[4,-10,4,-6],[0,0,0,0],[0,0,0,0]], [1,[-7,-8,7,-8,9,-6,9,8,7,10,-7,10,-9,8,-9,-6],[-1.105,0,0,0,0,-1.105,0,0,1.105,0,0,0,0,1.105,0,0],[0,0,1.105,0,0,0,0,1.105,0,0,-1.105,0,0,0,0,-1.105]], [0,[-9,-2,9,-2],[0,0,0,0],[0,0,0,0]]],
+    "loader-circle": [[0,[9,0,2.781,8.559,-7.281,5.29,-7.281,-5.291,2.781,-8.56],[0,0,3.708,-1.205,2.292,3.154,-2.292,3.154,-3.708,-1.205],[-0,3.899,-3.708,1.205,-2.292,-3.154,2.292,-3.154,0,0]]],
+    "image": [[1,[-7,-9,7,-9,9,-7,9,7,7,9,-7,9,-9,7,-9,-7],[-1.105,0,0,0,0,-1.105,0,0,1.105,0,0,0,0,1.105,0,0],[0,0,1.105,0,0,0,0,1.105,0,0,-1.105,0,0,0,0,-1.105]], [1,[-1,-3,-3,-1,-5,-3,-3,-5],[0,-1.105,1.105,0,0,1.105,-1.105,0],[0,1.105,-1.105,0,0,-1.105,1.105,0]], [0,[9,3,5.914,-0.086,3.086,-0.086,-6,9],[0,0,0,0,0.781,-0.781,0,0],[0,0,-0.781,-0.781,0,0,0,0]]],
+    "play": [[1,[-6,-9,8,0,-6,9],[0,0,0,0,0,0],[0,0,0,0,0,0]]]
 };
 // icon shape layer: box = on-screen size of the 24 grid, sw = stroke width (0 = none),
 // o.fill = fill colour expr, o.only = subpath indices to use
@@ -27544,4 +27579,2128 @@ function _s56EndCard() {
     _s56_390Grp(x, "tugma pop", [bb, bt, ba], bp, { p: EZ + BB + _s56_390Out(0) + P(bp, 0, 'by-' + (16 * K) + '*xo'), s: EZ + _s54Key(3) + _s56_390Out(0) + 'var k=lp(60,100,ob((time-tk)/0.42))*(1-0.03*xo); [k,k]' });
     _s47Finish(x);
     for (i = 0; i < x.kids.length; i++) { x.kids[i].inPoint = x.t0; x.kids[i].outPoint = Math.min(x.comp.duration, x.t1); }
+}
+
+// ============================================================
+// S57 UNIVERSAL SHAXSIY BREND (v2.53) - boards 16-17 (333-352): Apple cards
+// for any expert, light/dark, Lucide icons, bounce in/out.
+// ============================================================
+
+// ---------- 333 MYTH VS FACT (S57, board 16) ----------
+// Tab 2: red "Noto'g'ri" stamp slams onto the myth face (face shakes). Tab 3: the face flips
+// (0 -> 194 -> 180 deg as scaleX) to the green fact side, check badge pops, key phrase gets a marker.
+var S57_P333 = [
+    ["Dietolog", "Mif yoki haqiqat? | Shifokor-dietolog \u00B7 Dr. Aziza Karimova", "Kechki ovqatni soat 18:00 dan keyin yesangiz, albatta semirasiz. | Vazn ovqat soatiga emas, kun bo'yi olingan jami kaloriyaga bog'liq. | jami kaloriyaga", "Mif | Haqiqat | Noto'g'ri | Mif 1 / 5 | light | blue"],
+    ["Psixolog", "Mif yoki haqiqat? | Psixolog \u00B7 Nilufar Saidova", "Kuchli odam hech qachon psixologga bormaydi. | Yordam so'rash zaiflik emas, o'zingizga g'amxo'rlik belgisi. | o'zingizga g'amxo'rlik", "Mif | Haqiqat | Noto'g'ri | Mif 2 / 5 | light | purple"],
+    ["Fitnes murabbiy", "Mashg'ulot miflari | Fitnes murabbiy \u00B7 Sardor Aliyev", "Qorin mashqlari qorindagi yog'ni yoqadi. | Yog' nuqtaviy ketmaydi: kaloriya taqchilligi va umumiy harakat kerak. | kaloriya taqchilligi", "Mif | Haqiqat | Noto'g'ri | Mif 1 / 4 | dark | orange"],
+    ["Advokat", "Huquqiy miflar | Advokat \u00B7 Jasur Rahimov", "Og'zaki kelishuvning hech qanday kuchi yo'q. | Ko'p hollarda og'zaki bitim ham kuchli, lekin nizoda uni isbotlash qiyin. | isbotlash qiyin", "Mif | Haqiqat | Noto'g'ri | Mif 3 / 5 | light | indigo"],
+    ["Stomatolog", "Tish haqida miflar | Stomatolog \u00B7 Dr. Bekzod Nazarov", "Tishni qattiq ishqalasangiz, yaxshiroq tozalanadi. | Qattiq bosim milkni shikastlaydi. Yumshoq cho'tka va 2 daqiqa yetarli. | Yumshoq cho'tka", "Mif | Haqiqat | Noto'g'ri | Mif 1 / 3 | light | teal"],
+    ["Dizayner", "Dizayn miflari | Grafik dizayner \u00B7 Madina Yusupova", "Yaxshi dizayn uchun qimmat dastur kerak. | Dizaynni dastur emas, kompozitsiya va rang hissi yaratadi. | kompozitsiya va rang hissi", "Mif | Haqiqat | Noto'g'ri | Mif 2 / 5 | light | pink"],
+    ["Marketolog", "Marketing miflari | Marketolog \u00B7 Aziz Tursunov", "Obunachi ko'p bo'lsa, sotuv o'zi keladi. | Sotuvni obunachi soni emas, auditoriya ishonchi va aniq taklif olib keladi. | aniq taklif", "Mif | Haqiqat | Noto'g'ri | Mif 1 / 5 | light | blue"],
+    ["Fotograf", "Suratga olish miflari | Fotograf \u00B7 Otabek Karimov", "Yaxshi surat faqat qimmat kamera bilan chiqadi. | Suratni yorug'lik va kompozitsiya yaratadi, telefon ham yetarli. | yorug'lik va kompozitsiya", "Mif | Haqiqat | Noto'g'ri | Mif 4 / 5 | dark | blue"],
+    ["Pediatr", "Ota-onalar uchun | Pediatr \u00B7 Dr. Shahnoza Ergasheva", "Bolaning isitmasi chiqsa, darhol antibiotik berish kerak. | Antibiotik faqat bakterial infeksiyada, shifokor tavsiyasi bilan beriladi. | shifokor tavsiyasi bilan", "Mif | Haqiqat | Noto'g'ri | Mif 1 / 5 | light | green"],
+    ["Til o'qituvchisi", "Til o'rganish miflari | Ingliz tili ustozi \u00B7 Kamola Rashidova", "Gapirishdan oldin grammatikani to'liq yodlash kerak. | Til muloqotda o'rganiladi: har kuni tinglash va gapirish eng muhimi. | tinglash va gapirish", "Mif | Haqiqat | Noto'g'ri | Mif 2 / 6 | light | orange"]
+];
+function _s57_333Trk(L, v) { var p = L.property("Source Text"), td = p.value; td.tracking = v; p.setValue(td); }
+function _s57_333Wrap(x, str, fs, maxW) {
+    var w = String(str).split(" "), R = [], cur = "", i, t;
+    for (i = 0; i < w.length; i++) {
+        if (!w[i]) continue;
+        t = cur ? cur + " " + w[i] : w[i];
+        if (cur && _s55_353W(x, null, t, fs) > maxW) { R.push(cur); cur = w[i]; } else cur = t;
+    }
+    if (cur) R.push(cur);
+    return R;
+}
+// every face layer pivots on the shared face centre: AE = anchor expr, G = {F pre, P pos, S scale, O opacity}
+function _s57_333Put(x, L, AE, G, oMul) {
+    var tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Anchor Point").expression = x.PRE + AE;
+    tr.property("ADBE Position").expression = x.PRE + G.F + G.P;
+    tr.property("ADBE Scale").expression = x.PRE + G.F + G.S;
+    tr.property("ADBE Opacity").expression = x.PRE + G.F + G.O + (oMul ? "*" + oMul : "");
+}
+function _s57_333W(x, nm) { return 'thisComp.layer("' + x.tag + ' ' + nm + '").sourceRectAtTime(time,false).width'; }
+// one face: D = {nm, col, ico, lab, txt, hl, fcx, fcy, left, top}
+function _s57_333Face(x, D, G, KTS) {
+    var K = x.K, FC = "var a=" + _s47Col(x, D.col) + ".value, b=" + _s47Col(x, "Card") + ".value; ", A0 = "[" + D.fcx + "," + D.fcy + "]", i, j;
+    _s57_333Put(x, _s47Rect(x, D.nm + " fon", [688 * K - 3 * K, 370 * K - 3 * K], [D.fcx, D.fcy], 33 * K, FC + "add(b, mul(sub(a,b)," + (D.nm === "mif" ? 0.09 : 0.11) + "))", "op",
+        { col: FC + "add(b, mul(sub(a,b)," + (D.nm === "mif" ? 0.3 : 0.37) + "))", w: 3 * K }), A0, G);
+    var tl = D.left + 34 * K, tcy = D.top + 56 * K, tn = D.nm + " yozuv";
+    _s57_333Put(x, _s47Rect(x, D.nm + " yozuv fon", "var w=" + _s57_333W(x, tn) + "+" + (72 * K) + "; [w, " + (48 * K) + "]", "var w=" + _s57_333W(x, tn) + "+" + (72 * K) + "; [" + tl + "+w/2, " + tcy + "]", 24 * K, _s47Col(x, D.col)), A0, G);
+    _s57_333Put(x, _s47Ellipse(x, D.nm + " yozuv doira", [30 * K, 30 * K], [tl + 25 * K, tcy], _s47Col(x, "Oq")), A0, G, "0.28");
+    _s57_333Put(x, _s55Ico(x, D.nm + " yozuv belgi", D.ico, (D.ico === "x" ? 20 : 22) * K, 3.4 * K, _s47Col(x, "Oq"), [0, 0]), "[" + (D.fcx - tl - 25 * K) + "," + (D.fcy - tcy) + "]", G);
+    var lb = _s47Txt(x, String(D.lab).toUpperCase(), 23 * K, "bold", "L", tn, [0, 0], _s47Col(x, "Oq")); _s57_333Trk(lb, 80);
+    _s57_333Put(x, lb, "[" + (D.fcx - tl - 52 * K) + "," + (D.fcy - tcy - 8 * K) + "]", G);
+    // paragraph: one layer per line; the highlighted phrase is its own piece with a marker behind
+    var fs = 34 * K, mw = 600 * K, lines = _s57_333Wrap(x, D.txt, fs, mw);
+    if (lines.length > 3) { fs = 30 * K; mw = 620 * K; lines = _s57_333Wrap(x, D.txt, fs, mw); }
+    if (lines.length > 4) { fs = 26 * K; lines = _s57_333Wrap(x, D.txt, fs, mw); }
+    var lh = fs * 1.32, full = lines.join(" "), a = -1, b = -1, off = 0, SP = fs * 0.26;
+    if (D.hl) { a = full.toLowerCase().indexOf(String(D.hl).toLowerCase()); b = a >= 0 ? a + String(D.hl).length : -1; }
+    for (i = 0; i < lines.length; i++) {
+        var ln = lines[i], py = D.top + 108 * K + i * lh + lh / 2 + fs * 0.35;
+        var s0 = Math.max(0, Math.min(ln.length, a - off)), s1 = Math.max(0, Math.min(ln.length, b - off));
+        var sg = (a >= 0 && s1 > s0) ? [ln.substring(0, s0), ln.substring(s0, s1), ln.substring(s1)] : [ln, "", ""], XO = "0", prev = "";
+        for (j = 0; j < 3; j++) {
+            var st = _s45Trim(sg[j]), nm = D.nm + " qator " + (i + 1) + "." + (j + 1); if (!st) continue;
+            if (prev && (sg[j].charAt(0) === " " || prev.charAt(prev.length - 1) === " ")) XO += "+" + SP;
+            if (j === 1) {
+                var HE = KTS + "var w=" + _s57_333W(x, nm) + ", h=io((time-KT(3)-1.19)/0.56), xo=" + XO + "; ";
+                _s57_333Put(x, _s47Rect(x, D.nm + " marker " + (i + 1), HE + "[Math.max(0.1,w*h), " + (18.8 * K) + "]", HE + "[" + tl + "+xo+w*h/2, " + (py - 1.8 * K) + "]", 3 * K,
+                    FC + "add(b, mul(sub(a,b),0.45))"), A0, G);
+            }
+            _s57_333Put(x, _s47Txt(x, st, fs, "semi", "L", nm, [0, 0], _s47Col(x, "Text")), "var xo=" + XO + "; [" + (D.fcx - tl) + "-xo, " + (D.fcy - py) + "]", G);
+            XO += "+" + _s57_333W(x, nm); prev = sg[j];
+        }
+        off += ln.length + 1;
+    }
+}
+function _s57Myth() {
+    var PR = _s47Pick("Myth vs Fact (333)", S57_P333); if (!PR) return;
+    var q1 = prompt("Sarlavha | muallif", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Mif matni | haqiqat matni | belgilanadigan ibora (haqiqat ichidan)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Mif yozuvi | Haqiqat yozuvi | muhr matni | pastki yozuv (Mif 1 / 5) | light/dark | rang", PR[3]); if (q3 === null) return;
+    var T = _s47Split(q1, 2), B = _s47Split(q2, 3), M = _s47Split(q3, 6), i;
+    var x = _s47Begin("MYTH", { states: 3, look: _s47Look(M[4], M[5]), first: 0.91, hold: 1.4, extraEnd: 3.0,
+        colors: { "Mif": [1, 0.231, 0.188], "Haqiqat": [0.204, 0.78, 0.349], "Oq": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, cx = x.cx, left = cx - 344 * K, right = cx + 344 * K;
+    var hd = (T[0] ? 48 : 0) + (T[0] && T[1] ? 8 : 0) + (T[1] ? 59 : (T[0] ? 26 : 0)), H = (hd + 497) * K, top = x.cy - H / 2, y = top + 36 * K;
+    _s47Card(x, 760 * K, H, [cx, x.cy]);
+    if (T[0]) { _s47Txt(x, T[0], 40 * K, "bold", "L", "sarlavha", [left, y + 38 * K], _s47Col(x, "Text")); y += (T[1] ? 56 : 74) * K; }
+    if (T[1]) { _s47Txt(x, T[1], 26 * K, "reg", "L", "muallif", [left, y + 24.7 * K], _s47Col(x, "Dim")); y += 59 * K; }
+    var ftop = y, fcx = cx, fcy = ftop + 185 * K;
+    var KTS = 'var tb=c.effect("Tab")("Slider"); function KT(n){return tb.numKeys>=n?tb.key(n).time:1e9;} ' +
+        'function bk(t){t=cl(t);var q=t-1;return 1+2.70158*q*q*q+1.70158*q*q;} function io(t){t=cl(t);return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;} ';
+    var FX = KTS + 'var u=time-KT(3), A=0; if(u>0){ if(u<0.63){ A=194*io(u/0.63); } else { var g=cl((u-0.63)/0.28); A=194-14*(1-(1-g)*(1-g)); } } ' +
+        'var KX=Math.abs(Math.cos(A*Math.PI/180)); var d=time-KT(2)-0.315, SX=0, SY=0, SS=1; ' +
+        'if(d>0&&d<0.28){ var f; if(d<0.07){ f=d/0.07; SX=' + (3 * K) + '*f; SY=' + (7 * K) + '*f; SS=1-0.01*f; } else if(d<0.175){ f=(d-0.07)/0.105; SX=' + (3 * K) + '-' + (5 * K) + '*f; SY=' + (7 * K) + '-' + (9 * K) + '*f; SS=0.99+0.01*f; } ' +
+        'else { f=(d-0.175)/0.105; SX=' + (-2 * K) + '*(1-f); SY=' + (-2 * K) + '*(1-f); } } ';
+    var GF = { F: FX, P: "[" + fcx + "+SX, " + fcy + "+SY]", S: "[100*KX*SS, 100*SS]", O: "op*(A<90?1:0)" };
+    var GB = { F: FX, P: "[" + fcx + ", " + fcy + "]", S: "[100*KX, 100]", O: "op*(A>=90?1:0)" };
+    _s57_333Face(x, { nm: "mif", col: "Mif", ico: "x", lab: M[0] || "Mif", txt: B[0], hl: "", fcx: fcx, fcy: fcy, left: left, top: ftop }, GF, KTS);
+    // stamp: 2.3 -> 0.9 (ease-in) -> 1 (back-out) from Tab 2, tilted -9, rides the shake + flip
+    var sw = String(M[2] || "Noto'g'ri").toUpperCase(), tw = _s55_353W(x, null, sw, 25 * K) + sw.length * 3 * K, SWd = tw + 92 * K;
+    var sR = right - 34 * K, sl = sR - SWd, scx = sR - SWd / 2, scy = ftop + 370 * K - 67 * K;
+    var GS = { F: FX + "var dt=time-KT(2), f=cl(dt/0.35); var k=dt<0.35?2.3-1.4*f*f:0.9+0.1*bk((dt-0.35)/0.35); ",
+        P: "[" + fcx + "+(" + (scx - fcx) + ")*KX+SX, " + scy + "+SY]", S: "[k*100*KX*SS, k*100*SS]", O: "op*(A<90?1:0)*Math.min(1,f*f*1.3)" }, SA = "[" + scx + "," + scy + "]";
+    var stN = "muhr matni", SL = [];
+    SL.push(_s47Rect(x, "muhr ramka", "var w=" + _s57_333W(x, stN) + "+" + (87 * K) + "; [w, " + (61 * K) + "]", "var w=" + _s57_333W(x, stN) + "+" + (87 * K) + "; [" + (sl + 2.5 * K) + "+w/2, " + scy + "]", 16 * K, null, "op", { col: _s47Col(x, "Mif"), w: 5 * K }));
+    SL.push(_s47Ellipse(x, "muhr doira", [36 * K, 36 * K], [sl + 35 * K, scy], _s47Col(x, "Mif")));
+    for (i = 0; i < 2; i++) _s57_333Put(x, SL[i], SA, GS);
+    _s57_333Put(x, _s55Ico(x, "muhr belgi", "x", 20 * K, 3.5 * K, _s47Col(x, "Oq"), [0, 0]), "[" + (scx - sl - 35 * K) + ",0]", GS);
+    var stt = _s47Txt(x, sw, 25 * K, "bold", "L", stN, [0, 0], _s47Col(x, "Mif")); _s57_333Trk(stt, 120);
+    _s57_333Put(x, stt, "[" + (scx - sl - 65 * K) + "," + (-8.75 * K) + "]", GS);
+    for (i = x.layers.length - 4; i < x.layers.length; i++) x.layers[i].property("ADBE Transform Group").property("ADBE Rotate Z").setValue(-9);
+    _s57_333Face(x, { nm: "haqiqat", col: "Haqiqat", ico: "check", lab: M[1] || "Haqiqat", txt: B[1], hl: B[2], fcx: fcx, fcy: fcy, left: left, top: ftop }, GB, KTS);
+    // check badge pops (scale 0, -40 deg -> 1) 0.91 s after the flip key
+    var ocx = right - 80 * K, ocy = ftop + 290 * K, QB = "var qq=time-KT(3)-0.91, q=bk(qq/0.35); ";
+    var GO = { F: FX + QB, P: "[" + fcx + "+(" + (ocx - fcx) + ")*KX, " + ocy + "]", S: "[100*q*KX, 100*q]", O: "op*(A>=90?1:0)*(qq>0?1:0)" };
+    var ob = _s47Ellipse(x, "tasdiq doira", [92 * K, 92 * K], [ocx, ocy], _s47Col(x, "Haqiqat")); _s46Shadow(ob, 90, 10 * K, 24 * K);
+    _s57_333Put(x, ob, "[" + ocx + "," + ocy + "]", GO);
+    _s57_333Put(x, _s55Ico(x, "tasdiq belgi", "check", 52 * K, 7 * K, _s47Col(x, "Oq"), [0, 0]), "[0,0]", GO);
+    for (i = x.layers.length - 2; i < x.layers.length; i++) x.layers[i].property("ADBE Transform Group").property("ADBE Rotate Z").expression = x.PRE + KTS + QB + "-40*(1-cl(q))";
+    // footer: "Mif 1 / 5" + page dots (current one wide, accent)
+    var fy = ftop + 396 * K + 14.5 * K, fm = String(M[3]).match(/(\d+)\s*\/\s*(\d+)/), n = fm ? Math.max(1, Math.min(8, parseInt(fm[2], 10))) : 5, ac = fm ? Math.max(1, Math.min(n, parseInt(fm[1], 10))) - 1 : 0;
+    if (M[3]) _s47Txt(x, M[3], 24 * K, "reg", "L", "pastki yozuv", [left + 6 * K, fy + 8.4 * K], _s47Col(x, "Dim"));
+    var dx = right - 6 * K - (34 + (n - 1) * 22) * K;
+    for (i = 0; i < n; i++) { var dw = (i === ac ? 34 : 12) * K; _s47Rect(x, "nuqta " + (i + 1), [dw, 12 * K], [dx + dw / 2, fy], 6 * K, _s47Col(x, i === ac ? "Accent" : "Track")); dx += dw + 10 * K; }
+    _s47Finish(x);
+    _s46Sfx(x.comp, "thud_neg.wav", -9, x.switchT[0] + 0.33, x.tag);
+    _s46Sfx(x.comp, "swoosh_in.wav", -12, x.switchT[1], x.tag);
+}
+
+// ---------- 334 TIPS STACK (S57, board 16) ----------
+// Each Tab state throws one numbered tip card onto the pile (flies in from top-right, back-out,
+// alternate tilt), progress bar + counter roll; last state drops a bookmark and pops "Saqlab qo'ying".
+var S57_P334 = [
+    ["Dizayner", "Logotip: 5 ta qoida | Grafik dizayner \u00B7 Madina Yusupova", "Ko'pi bilan 2 xil shrift ishlating.; Ranglar: bitta asosiy, bitta urg'u.; Bo'sh joydan qo'rqmang, u nafas beradi.; Eng kichik o'lchamda ham sinab ko'ring.; Oq-qora variantda ham o'qilsin.", "Maslahat | Saqlab qo'ying | light | purple"],
+    ["Psixolog", "Stressni kamaytirish | Psixolog \u00B7 Nilufar Saidova", "Har kuni 10 daqiqa telefonsiz yuring.; Xavotirni qog'ozga yozib chiqaring.; Uxlashdan oldin ekrandan uzoqlashing.; Sekin nafas oling: 4 soniya olib, 6 soniyada chiqaring.; Yordam so'rashdan uyalmang.", "Maslahat | Saqlab qo'ying | light | teal"],
+    ["Fitnes murabbiy", "Zalga yangi kelganlar uchun | Fitnes murabbiy \u00B7 Sardor Aliyev", "Avval texnika, keyin og'irlik.; Haftasiga 3 marta yetarli.; Mashqdan oldin 10 daqiqa qizing.; Suvni kun bo'yi ichib boring.; Dam olish ham mashg'ulotning bir qismi.", "Qoida | Saqlab qo'ying | dark | orange"],
+    ["Advokat", "Ijara shartnomasi | Advokat \u00B7 Jasur Rahimov", "Mulk egasining hujjatini tekshiring.; To'lov sanasini aniq yozing.; Jihozlar ro'yxatini ilova qiling.; Har bir to'lovga tilxat oling.", "Maslahat | Saqlab oling | light | indigo"],
+    ["Stomatolog", "Tish salomatligi | Stomatolog \u00B7 Dr. Bekzod Nazarov", "Kuniga 2 marta, 2 daqiqadan tozalang.; Tish ipini har kuni ishlating.; Shirinlikdan keyin og'izni chayqang.; Yiliga 2 marta ko'rikdan o'ting.", "Maslahat | Saqlab qo'ying | light | blue"],
+    ["Marketolog", "Reels uchun 5 qoida | Marketolog \u00B7 Aziz Tursunov", "Birinchi 2 soniyada qiziqtiring.; Bitta video - bitta fikr.; Subtitr qo'shing, ko'pchilik ovozsiz ko'radi.; Oxirida aniq chaqiriq bering.; Muntazam joylang, har hafta.", "Qoida | Saqlab qo'ying | light | pink"],
+    ["Fotograf", "Telefonda portret | Fotograf \u00B7 Otabek Karimov", "Deraza yorug'ligidan foydalaning.; Kamerani ko'z darajasida tuting.; Fonni sodda qoldiring.; Portret rejimini yoqing.; Linzani artib oling.", "Maslahat | Saqlab qo'ying | dark | blue"],
+    ["Stilist", "Kapsula garderob | Stilist \u00B7 Malika Tursunova", "3 ta asosiy rang tanlang.; Har kiyim kamida 3 narsaga mos kelsin.; Sifatli poyabzalga pul ayamang.; Mavsumda bir marta saralab chiqing.", "Maslahat | Saqlab qo'ying | light | brown"],
+    ["Moliya", "Oilaviy byudjet | Moliya maslahatchisi \u00B7 Dilshod Ahmedov", "Daromadni kelgan kuni taqsimlang.; Avval jamg'armaga, keyin xarajatga.; Har bir xarajatni yozib boring.; Kreditni faqat zarurat uchun oling.; Zaxira 3 oylik xarajatga teng bo'lsin.", "Tavsiya | Saqlab qo'ying | light | green"],
+    ["Til o'qituvchisi", "IELTS Speaking | Ingliz tili ustozi \u00B7 Kamola Rashidova", "Javobni 2-3 gap bilan kengaytiring.; Yodlangan matnni aytmang.; Xato qilsangiz, to'xtamay davom eting.; Har kuni ovozingizni yozib tinglang.; Sinonimlardan foydalaning.", "Maslahat | Saqlab qo'ying | light | orange"]
+];
+function _s57_334Trk(L, v) { var p = L.property("Source Text"), td = p.value; td.tracking = v; p.setValue(td); }
+function _s57_334Wrap(x, str, fs, maxW) {
+    var w = String(str).split(" "), R = [], cur = "", i, t;
+    for (i = 0; i < w.length; i++) {
+        if (!w[i]) continue;
+        t = cur ? cur + " " + w[i] : w[i];
+        if (cur && _s55_353W(x, null, t, fs) > maxW) { R.push(cur); cur = w[i]; } else cur = t;
+    }
+    if (cur) R.push(cur);
+    return R;
+}
+function _s57_334W(x, nm) { return 'thisComp.layer("' + x.tag + ' ' + nm + '").sourceRectAtTime(time,false).width'; }
+// group transform around a pivot: AE anchor expr, G = {F, P, R, S, O}
+function _s57_334Put(x, L, AE, G) {
+    var tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Anchor Point").expression = x.PRE + G.F + AE;
+    tr.property("ADBE Position").expression = x.PRE + G.F + G.P;
+    if (G.R) tr.property("ADBE Rotate Z").expression = x.PRE + G.F + G.R;
+    if (G.S) tr.property("ADBE Scale").expression = x.PRE + G.F + G.S;
+    tr.property("ADBE Opacity").expression = x.PRE + G.F + G.O;
+}
+function _s57Tips() {
+    var PR = _s47Pick("Tips Stack (334)", S57_P334); if (!PR) return;
+    var q1 = prompt("Mavzu (sarlavha) | muallif", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Maslahatlar (3-6 ta, nuqtali vergul ; bilan)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Yorliq | saqlash tugmasi matni | light/dark | rang", PR[3]); if (q3 === null) return;
+    var T = _s47Split(q1, 2), M = _s47Split(q3, 4), R = [], a = String(q2).split(";"), i, j;
+    for (i = 0; i < a.length; i++) if (_s45Trim(a[i])) R.push(_s45Trim(a[i]));
+    if (R.length > 6) R = R.slice(0, 6);
+    if (R.length < 2) { alert("Kamida 2 ta maslahat kerak"); return; }
+    var N = R.length;
+    var x = _s47Begin("TIPS", { states: N + 1, look: _s47Look(M[2], M[3]), first: 0.63, hold: 0.63, extraEnd: Math.max(1.2, 5.3 - 0.63 * N),
+        colors: { "Oq": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, cx = x.cx, left = cx - 344 * K, right = cx + 344 * K;
+    var hd = (T[0] ? 48 : 0) + (T[0] && T[1] ? 8 : 0) + (T[1] ? 59 : (T[0] ? 26 : 0)), H = (hd + 562) * K, top = x.cy - H / 2, y = top + 36 * K;
+    _s47Card(x, 760 * K, H, [cx, x.cy]);
+    if (T[0]) { _s47Txt(x, T[0], 40 * K, "bold", "L", "sarlavha", [left, y + 38 * K], _s47Col(x, "Text")); y += (T[1] ? 56 : 74) * K; }
+    if (T[1]) { _s47Txt(x, T[1], 26 * K, "reg", "L", "muallif", [left, y + 24.7 * K], _s47Col(x, "Dim")); y += 59 * K; }
+    var KTS = 'var tb=c.effect("Tab")("Slider"); function KT(n){return tb.numKeys>=n?tb.key(n).time:1e9;} ' +
+        'function bk(t,k){t=cl(t);var q=t-1;return 1+(k+1)*q*q*q+k*q*q;} ';
+    var AC = "var a=" + _s47Col(x, "Accent") + ".value, b=" + _s47Col(x, "Row") + ".value; ";
+    var tcx = cx, tcy = y + 172 * K, tL = cx - 316 * K, tT = y + 22 * K, tR = cx + 316 * K, tB = tT + 300 * K, ROT = [-4, 3, -2, 4, -1, 2];
+    var lab = String(M[0] || "Maslahat").toUpperCase(), c0 = "[" + tcx + "," + tcy + "]";
+    function A(px, py) { return "[" + (tcx - px) + "," + (tcy - py) + "]"; }
+    for (i = 0; i < N; i++) {
+        var G = { F: KTS + "var e=cl((time-KT(" + (i + 1) + "))/0.42), q=bk(e,1.3); ", P: "[" + tcx + "+" + (560 * K) + "*(1-q), " + tcy + "-" + (90 * K) + "*(1-q)]",
+            R: "lp(32," + ROT[i] + ",q)", O: "op*cl(e*2.2)" }, nm = "maslahat " + (i + 1) + " ";
+        var bg = _s47Rect(x, nm + "fon", [632 * K, 300 * K], [tcx, tcy], 32 * K, _s47Col(x, "Row")); _s46Shadow(bg, 41, 14 * K, 34 * K); _s57_334Put(x, bg, c0, G);
+        var num = (i + 1 < 10 ? "0" : "") + (i + 1), big = _s47Txt(x, num, 170 * K, "bold", "R", nm + "raqam", [0, 0], AC + "add(b, mul(sub(a,b),0.16))");
+        _s57_334Trk(big, -35); _s57_334Put(x, big, A(tR - 30 * K, tB - 6 * K), G);
+        var bn = nm + "belgi matni", bw = "(" + _s57_334W(x, bn) + "+" + (28 * K) + ")";
+        _s57_334Put(x, _s47Rect(x, nm + "belgi", "[" + bw + ", " + (36 * K) + "]", "[" + (tL + 32 * K) + "+" + bw + "/2, " + (tT + 46 * K) + "]", 14 * K, _s47Col(x, "Accent")), c0, G);
+        _s57_334Put(x, _s47Txt(x, (i + 1) + "/" + N, 22 * K, "bold", "C", bn, [0, 0], _s47Col(x, "Oq")), "[" + tcx + "-" + (tL + 32 * K) + "-" + bw + "/2, " + (tcy - tT - 53.7 * K) + "]", G);
+        var lt = _s47Txt(x, lab, 20 * K, "semi", "L", nm + "yorliq", [0, 0], _s47Col(x, "Dim")); _s57_334Trk(lt, 120);
+        _s57_334Put(x, lt, "[" + tcx + "-" + (tL + 46 * K) + "-" + bw + ", " + (tcy - tT - 53 * K) + "]", G);
+        var fs = 33 * K, ln = _s57_334Wrap(x, R[i], fs, 490 * K);
+        if (ln.length > 4) { fs = 28 * K; ln = _s57_334Wrap(x, R[i], fs, 520 * K); }
+        for (j = 0; j < ln.length && j < 5; j++) _s57_334Put(x, _s47Txt(x, ln[j], fs, "semi", "L", nm + "qator " + (j + 1), [0, 0], _s47Col(x, "Text")), A(tL + 32 * K, tT + 88 * K + j * fs * 1.28 + fs * 0.99), G);
+    }
+    // bookmark ribbon drops onto the last tip at the final Tab state
+    var GB = { F: KTS + "var e=cl((time-KT(" + N + "))/0.42), q=bk(e,1.3), d=cl((time-KT(" + (N + 1) + "))/0.35), g=bk(d,1.7); ",
+        P: "[" + tcx + "+" + (560 * K) + "*(1-q), " + tcy + "-" + (90 * K) + "*(1-q)]", R: "lp(32," + ROT[N - 1] + ",q)", O: "op*cl(d*3)" };
+    var bmx = tR - 58 * K, bmy = tT + 27 * K;
+    _s57_334Put(x, _s55Ico(x, "xatcho'p", "bookmark", 72 * K, 2 * K, _s47Col(x, "Accent"), [0, 0], "op", { fill: _s47Col(x, "Accent") }),
+        "[" + (tcx - bmx) + "," + (tcy - bmy) + "+" + (72 * K) + "*(1-g)]", GB);
+    // progress: track + fill + rolling counter "n / N"
+    var py = y + 383 * K, PE = KTS + "var P=Math.min(" + N + ", sp.valueAtTime(time-0.21)+bk((time-KT(1)-0.21)/0.21,1.7)); ";
+    var sl = _s47Txt(x, "/ " + N, 25 * K, "semi", "R", "hisob jami", [right, py + 8.75 * K], _s47Col(x, "Text"));
+    var TW = "(" + (688 * K) + "-" + _s57_334W(x, "hisob jami") + "-" + (46 * K) + ")";
+    _s47Rect(x, "progress fon", "[" + TW + ", " + (10 * K) + "]", "[" + left + "+" + TW + "/2, " + py + "]", 5 * K, _s47Col(x, "Row"));
+    _s47Rect(x, "progress", PE + "var w=" + TW + "*cl(P/" + N + "); [Math.max(0.1,w), " + (10 * K) + "]", PE + "var w=" + TW + "*cl(P/" + N + "); [" + left + "+w/2, " + py + "]", 5 * K, _s47Col(x, "Accent"), PE + "op*cl(P*4)");
+    for (i = 0; i <= N; i++) _s47Txt(x, String(i), 25 * K, "semi", "R", "hisob " + i, PE + "var w=" + _s57_334W(x, "hisob jami") + "; [" + (right - 7 * K) + "-w, " + (py + 8.75 * K) + "+(" + i + "-P)*" + (30 * K) + "]",
+        _s47Col(x, "Text"), PE + "op*sm(1-Math.abs(P-" + i + ")*1.6)");
+    // save pill: dark (Text colour) capsule, bookmark + label; pops 0.28 s after the last key
+    var pcy = py + 15 * K + 28 * K + 32 * K, sn = "saqlash matni", PW = "(" + _s57_334W(x, sn) + "+" + (90 * K) + ")";
+    var GP = { F: KTS + "var d=cl((time-KT(" + (N + 1) + ")-0.28)/0.35), g=bk(d,1.7); ", P: "[" + cx + ", " + pcy + "+" + (24 * K) + "*(1-g)]", S: "var k=80+20*g; [k,k]", O: "op*cl(d*2.5)" };
+    _s57_334Put(x, _s47Rect(x, "saqlash", "[" + PW + ", " + (64 * K) + "]", [cx, pcy], 32 * K, _s47Col(x, "Text")), "[" + cx + "," + pcy + "]", GP);
+    _s57_334Put(x, _s55Ico(x, "saqlash belgi", "bookmark", 36 * K, 1.5 * K, _s47Col(x, "Accent"), [0, 0], "op", { fill: _s47Col(x, "Accent") }), "[" + PW + "/2-" + (35 * K) + ", 0]", GP);
+    _s57_334Put(x, _s47Txt(x, M[1] || "Saqlab qo'ying", 27 * K, "semi", "L", sn, [0, 0], _s47Col(x, "Card")), "[" + PW + "/2-" + (60 * K) + ", " + (-9.45 * K) + "]", GP);
+    _s47Finish(x);
+    for (i = 1; i < N; i++) _s46Sfx(x.comp, "swoosh_in.wav", -14, x.switchT[i - 1], x.tag);
+    _s46Sfx(x.comp, "ding_pos.wav", -12, x.switchT[N - 1] + 0.28, x.tag);
+}
+
+// ---------- 335 DO / DON'T (S57, board 16) ----------
+// Two tinted columns "Qiling" / "Qilmang". Each Tab state drops the next item (alternating columns,
+// back-out), its green check / red cross pops and draws (trim). Last state springs up the verdict row.
+var S57_P335 = [
+    ["Advokat", "Shartnoma imzolashda | Advokat \u00B7 Jasur Rahimov", "Qiling | Qilmang | 10 daqiqa o'qish \u2014 yillar xotirjamligi | light | blue", "Har sahifani oxirigacha o'qing; Summani so'z bilan ham yozing; O'z nusxangizni oling | Bo'sh qator qoldirish; Og'zaki va'daga ishonish; Shoshib imzo qo'yish"],
+    ["Dietolog", "Kechki ovqatda | Dietolog \u00B7 Dr. Aziza Karimova", "Qiling | Qilmang | Yengil kechki ovqat \u2014 tetik tong | light | green", "Oqsil va sabzavot tanlang; Uxlashdan 3 soat oldin yeng; Suvni unutmang | Shirin ichimlik ichish; Telefonga qarab ovqatlanish; Och qolib, keyin to'yib yeyish"],
+    ["Psixolog", "Bola yig'laganda | Bolalar psixologi \u00B7 Nilufar Saidova", "Qiling | Qilmang | Tinch ota-ona \u2014 tinch bola | light | purple", "Tinch ovozda gapiring; Uning hissini nomlab bering; Yoniga o'tirib, quchoqlang | Yig'lama, deb baqirish; Boshqa bolaga solishtirish; E'tiborsiz qoldirish"],
+    ["Fitnes murabbiy", "Yugurishni boshlaganda | Fitnes murabbiy \u00B7 Sardor Aliyev", "Qiling | Qilmang | Sekin, lekin har hafta \u2014 natija shunda | dark | orange", "Sekin sur'atdan boshlang; Qulay krossovka tanlang; Haftasiga 3 marta yuguring | Birinchi kuni 10 km yugurish; Qizishsiz boshlash; Og'riqqa e'tibor bermaslik"],
+    ["Dizayner", "Instagram post dizayni | Grafik dizayner \u00B7 Madina Yusupova", "Qiling | Qilmang | Oddiylik \u2014 eng kuchli dizayn | light | pink", "Bitta asosiy fikr qoldiring; 2 ta shrift yetarli; Kontrastni tekshiring | Har joyga matn tiqish; 5 xil rang ishlatish; Xira rasm qo'yish"],
+    ["Stomatolog", "Tish tozalashda | Stomatolog \u00B7 Dr. Bekzod Nazarov", "Qiling | Qilmang | Kuniga 4 daqiqa \u2014 umrbod tabassum | light | teal", "Yumshoq cho'tka tanlang; 2 daqiqa tozalang; Tilni ham tozalang | Qattiq bosib ishqalash; Cho'tkani yillab almashtirmaslik; Tish ipini unutish"],
+    ["Marketolog", "Reklama berishdan oldin | Marketolog \u00B7 Aziz Tursunov", "Qiling | Qilmang | Avval sinov, keyin byudjet | light | indigo", "Mijozingizni aniq biling; Kichik byudjetda sinang; Natijani har kuni kuzating | Hammaga birdan ko'rsatish; Bitta reklamaga ishonish; Sahifani tayyorlamay boshlash"],
+    ["Fotograf", "To'yni suratga olishda | To'y fotografi \u00B7 Otabek Karimov", "Qiling | Qilmang | Tayyorgarlik \u2014 suratning yarmi | dark | blue", "Rejani oldindan kelishing; Zaxira batareya oling; Yaqinlar ro'yxatini so'rang | Chaqnoqni yuzga to'g'ri urish; Bitta xotira kartaga ishonish; Kechikib kelish"],
+    ["Stilist", "Ish suhbatiga kiyinish | Stilist \u00B7 Malika Tursunova", "Kiying | Kiymang | Kiyim gapirmasin, siz gapiring | light | brown", "Toza, dazmollangan kiyim; Sodda aksessuar; Qulay, sinalgan poyabzal | Juda yorqin ranglar; O'tkir hidli atir; Yangi, sinalmagan tufli"],
+    ["Moliya", "Kredit olishdan oldin | Moliya maslahatchisi \u00B7 Dilshod Ahmedov", "Qiling | Qilmang | Qarz reja bilan olinadi | light | teal", "Yillik foizni solishtiring; To'lov jadvalini o'qing; Oylik to'lovni hisoblang | Birinchi taklifga rozi bo'lish; Daromaddan ortiq qarz olish; Jarima bandini o'qimaslik"]
+];
+function _s57_335Wrap(x, str, fs, maxW) {
+    var w = String(str).split(" "), R = [], cur = "", i, t;
+    for (i = 0; i < w.length; i++) {
+        if (!w[i]) continue;
+        t = cur ? cur + " " + w[i] : w[i];
+        if (cur && _s55_353W(x, null, t, fs) > maxW) { R.push(cur); cur = w[i]; } else cur = t;
+    }
+    if (cur) R.push(cur);
+    return R;
+}
+function _s57_335Put(x, L, AE, G) {
+    var tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Anchor Point").expression = x.PRE + G.F + AE;
+    tr.property("ADBE Position").expression = x.PRE + G.F + G.P;
+    tr.property("ADBE Scale").expression = x.PRE + G.F + G.S;
+    tr.property("ADBE Opacity").expression = x.PRE + G.F + G.O;
+}
+function _s57DoDont() {
+    var PR = _s47Pick("Do / Don't (335)", S57_P335); if (!PR) return;
+    var q1 = prompt("Sarlavha | muallif", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Qiling sarlavhasi | Qilmang sarlavhasi | xulosa | light/dark | rang", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Qiling bandlari (; bilan) | Qilmang bandlari (; bilan), 1-4 tadan", PR[3]); if (q3 === null) return;
+    var T = _s47Split(q1, 2), M = _s47Split(q2, 5), P3 = _s47Split(q3, 2), C = [[], []], i, j, k;
+    for (k = 0; k < 2; k++) { var a = String(P3[k]).split(";"); for (i = 0; i < a.length; i++) if (_s45Trim(a[i]) && C[k].length < 4) C[k].push(_s45Trim(a[i])); }
+    if (!C[0].length || !C[1].length) { alert("Har ustunda kamida 1 ta band kerak"); return; }
+    var ORD = []; for (i = 0; i < 4; i++) for (k = 0; k < 2; k++) if (i < C[k].length) ORD.push([k, i]);
+    var NI = ORD.length, look = _s47Look(M[3], M[4]), dk = look.theme === "dark";
+    var x = _s47Begin("DODONT", { states: NI + 1, look: look, first: 0.42, hold: 0.42, extraEnd: Math.max(1.5, 5.37 - 0.42 * NI),
+        colors: { "Yashil": [0.204, 0.78, 0.349], "Qizil": [1, 0.231, 0.188], "Oq": [1, 1, 1],
+            "Qiling": dk ? [0.188, 0.82, 0.345] : [0.141, 0.541, 0.239], "Qilmang": dk ? [1, 0.271, 0.227] : [0.843, 0, 0.082] } }); if (!x) return;
+    var K = x.K, cx = x.cx, left = cx - 344 * K;
+    // measure items: text 212 wide, 25 px, line 32, min height 100
+    var LN = [[], []], IH = [[], []], colH = 0;
+    for (k = 0; k < 2; k++) {
+        var h = 79.6 * K;
+        for (i = 0; i < C[k].length; i++) { LN[k].push(_s57_335Wrap(x, C[k][i], 25 * K, 222 * K)); IH[k].push(Math.max(100 * K, (LN[k][i].length * 32 + 32) * K)); h += IH[k][i] + 10 * K; }
+        colH = Math.max(colH, h);
+    }
+    var hd = (T[0] ? 48 : 0) + (T[0] && T[1] ? 8 : 0) + (T[1] ? 59 : (T[0] ? 26 : 0)), H = (hd + 182) * K + colH, top = x.cy - H / 2, y = top + 36 * K;
+    _s47Card(x, 760 * K, H, [cx, x.cy]);
+    if (T[0]) { _s47Txt(x, T[0], 40 * K, "bold", "L", "sarlavha", [left, y + 38 * K], _s47Col(x, "Text")); y += (T[1] ? 56 : 74) * K; }
+    if (T[1]) { _s47Txt(x, T[1], 26 * K, "reg", "L", "muallif", [left, y + 24.7 * K], _s47Col(x, "Dim")); y += 59 * K; }
+    var KTS = 'var tb=c.effect("Tab")("Slider"); function KT(n){return tb.numKeys>=n?tb.key(n).time:1e9;} ' +
+        'function bk(t,k){t=cl(t);var q=t-1;return 1+(k+1)*q*q*q+k*q*q;} function io(t){t=cl(t);return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;} ';
+    var CN = [["Yashil", "Qiling", 0.11, "check", 28], ["Qizil", "Qilmang", 0.09, "x", 24]], HL = [M[0] || "Qiling", M[1] || "Qilmang"];
+    for (k = 0; k < 2; k++) {
+        var cl0 = left + k * 352 * K, cn = k ? "qilmang" : "qiling";
+        _s47Rect(x, cn + " ustun", [336 * K, colH], [cl0 + 168 * K, y + colH / 2], 30 * K, "var a=" + _s47Col(x, CN[k][0]) + ".value, b=" + _s47Col(x, "Card") + ".value; add(b, mul(sub(a,b)," + CN[k][2] + "))");
+        _s47Ellipse(x, cn + " nuqta", [14 * K, 14 * K], [cl0 + 31 * K, y + 38.8 * K], _s47Col(x, CN[k][1]));
+        _s47Txt(x, HL[k], 28 * K, "bold", "L", cn + " sarlavha", [cl0 + 50 * K, y + 48.6 * K], _s47Col(x, CN[k][1]));
+    }
+    for (j = 0; j < NI; j++) {
+        k = ORD[j][0]; i = ORD[j][1];
+        var il = left + k * 352 * K + 18 * K, it = y + 71.6 * K, ih = IH[k][i], nm = (k ? "qilmang " : "qiling ") + (i + 1);
+        for (var m = 0; m < i; m++) it += IH[k][m] + 10 * K;
+        var icx = il + 150 * K, icy = it + ih / 2, mcx = il + 36 * K, mcy = it + 38 * K;
+        var EF = KTS + "var e=cl((time-KT(" + (j + 1) + ")-0.21)/0.35), q=bk(e,1.7); ";
+        var G = { F: EF, P: "[" + icx + ", " + icy + "-" + (44 * K) + "*(1-q)]", S: "var k=92+8*q; [k,k]", O: "op*cl(e*2.5)" };
+        var GM = { F: EF + "var mm=bk((time-KT(" + (j + 1) + ")-0.35)/0.35,1.7); ", P: "[" + mcx + ", " + mcy + "-" + (44 * K) + "*(1-q)]", S: "[100*mm, 100*mm]", O: "op*cl(e*2.5)*(mm>0.001?1:0)" };
+        var bg = _s47Rect(x, nm + " fon", [300 * K, ih], [icx, icy], 22 * K, _s47Col(x, "Card")); _s46Shadow(bg, 15, 4 * K, 12 * K);
+        _s57_335Put(x, bg, "[" + icx + "," + icy + "]", G);
+        for (m = 0; m < LN[k][i].length; m++)
+            _s57_335Put(x, _s47Txt(x, LN[k][i][m], 25 * K, "semi", "L", nm + " qator " + (m + 1), [0, 0], _s47Col(x, "Text")), "[" + (icx - il - 72 * K) + "," + (icy - it - (40.75 + 32 * m) * K) + "]", G);
+        _s57_335Put(x, _s47Ellipse(x, nm + " doira", [44 * K, 44 * K], [mcx, mcy], _s47Col(x, CN[k][0])), "[" + mcx + "," + mcy + "]", GM);
+        var ic = _s55Ico(x, nm + " belgi", CN[k][3], CN[k][4] * K, 4.5 * K, _s47Col(x, "Oq"), [0, 0]);
+        _s57_335Put(x, ic, "[0,0]", GM);
+        var tm = ic.property("ADBE Root Vectors Group").addProperty("ADBE Vector Filter - Trim");
+        tm.property("ADBE Vector Trim End").expression = x.PRE + KTS + "100*io((time-KT(" + (j + 1) + ")-0.7)/0.35)";
+    }
+    // verdict row: accent check disc + summary, springs up 0.63 s after the last key
+    var vt = y + colH + 20 * K, vcy = vt + 45 * K, vs = M[2] || "", vf = Math.min(27 * K, 27 * K * 560 * K / Math.max(1, _s55_353W(x, null, vs, 27 * K)));
+    var GV = { F: KTS + "var e=cl((time-KT(" + (NI + 1) + ")-0.63)/0.35), q=bk(e,1.7); ", P: "[" + cx + ", " + vcy + "+" + (26 * K) + "*(1-q)]", S: "var k=90+10*q; [k,k]", O: "op*cl(e*2.5)" };
+    _s57_335Put(x, _s47Rect(x, "xulosa fon", [688 * K, 90 * K], [cx, vcy], 26 * K, _s47Col(x, "Row")), "[" + cx + "," + vcy + "]", GV);
+    _s57_335Put(x, _s47Ellipse(x, "xulosa doira", [50 * K, 50 * K], [left + 49 * K, vcy], _s47Col(x, "Accent")), "[" + cx + "," + vcy + "]", GV);
+    _s57_335Put(x, _s55Ico(x, "xulosa belgi", "check", 32 * K, 4.5 * K, _s47Col(x, "Tugma matni"), [0, 0]), "[" + (cx - left - 49 * K) + ",0]", GV);
+    _s57_335Put(x, _s47Txt(x, vs, vf, "semi", "L", "xulosa", [0, 0], _s47Col(x, "Text")), "[" + (cx - left - 92 * K) + "," + (-vf * 0.35) + "]", GV);
+    _s47Finish(x);
+    _s46Sfx(x.comp, "ding_pos.wav", -12, x.switchT[NI - 1] + 0.63, x.tag);
+}
+
+// ---------- 336 MY JOURNEY (S57, board 16) ----------
+// A dot walks the years line (Tab = milestone), each milestone card pops above/below its node,
+// the experience row rolls up, the last (current) card is accent-filled and its node pulses.
+var S57_P336 = [
+    ["Fitnes murabbiy", "Mening yo'lim | Fitnes murabbiy \u00B7 Sardor Aliyev", "2019=Birinchi shogird; 2021=Xalqaro sertifikat; 2023=O'z studiyam; 2025=500+ shogird; 2026 \u00B7 hozir=Onlayn dastur", "Tajriba | yil |  | dark | #FF9F0A"],
+    ["Psixolog", "Mening yo'lim | Psixolog \u00B7 Dilfuza Nazarova", "2016=Psixologiya fakulteti; 2018=Klinikada amaliyot; 2020=Shaxsiy kabinet; 2023=KBT sertifikati; 2026 \u00B7 hozir=Onlayn seanslar", "Tajriba | yil |  | light | #5E5CE6"],
+    ["Dizayner", "Mening yo'lim | Grafik dizayner \u00B7 Aziz Karimov", "2017=Birinchi logotip; 2019=Agentlikda ish; 2021=Xorijiy mijozlar; 2024=O'z studiyam; 2026 \u00B7 hozir=Dizayn kursi", "Tajriba | yil |  | light | #007AFF"],
+    ["Yurist", "Mening yo'lim | Yurist \u00B7 Bekzod Rahimov", "2012=Yuridik fakultet; 2015=Advokatlik litsenziyasi; 2018=Birinchi katta ish; 2021=O'z byuroim; 2026 \u00B7 hozir=Biznes huquqi", "Tajriba | yil |  | dark | #0A84FF"],
+    ["Stomatolog", "Mening yo'lim | Stomatolog \u00B7 Malika Sobirova", "2010=Tibbiyot instituti; 2016=Ordinatura; 2019=O'z klinikam; 2023=Implant sertifikati; 2026 \u00B7 hozir=Ikkinchi filial", "Tajriba | yil |  | light | #30B0C7"],
+    ["Marketolog", "Mening yo'lim | Marketolog \u00B7 Kamola Ergasheva", "2018=Birinchi loyiha; 2020=Agentlikka o'tdim; 2022=100+ brend; 2024=Konferensiya spikeri; 2026 \u00B7 hozir=Marketing kursi", "Tajriba | yil |  | light | #FF2D55"],
+    ["Fotograf", "Mening yo'lim | Fotograf \u00B7 Anvar Qodirov", "2015=Birinchi kamera; 2017=To'y suratlari; 2020=O'z studiyam; 2023=Shaxsiy ko'rgazma; 2026 \u00B7 hozir=Foto kurs", "Tajriba | yil |  | dark | #FFD60A"],
+    ["Sartarosh", "Mening yo'lim | Barber \u00B7 Otabek Nazarov", "2016=Shogirdlikdan boshladim; 2018=Birinchi kreslo; 2021=O'z barbershopim; 2026 \u00B7 hozir=Barber akademiya", "Tajriba | yil |  | dark | #FF453A"],
+    ["Stilist", "Mening yo'lim | Stilist \u00B7 Sevara Xolmatova", "2017=Moda kolleji; 2019=Birinchi mijoz; 2022=Stilist sertifikati; 2024=Shaxsiy brend; 2026 \u00B7 hozir=Stil kursi", "Tajriba | yil |  | light | #AF52DE"],
+    ["Biznes kouch", "Mening yo'lim | Biznes kouch \u00B7 Jahongir Usmonov", "2014=Birinchi biznesim; 2017=ICF sertifikati; 2020=Kouchlik amaliyoti; 2023=300+ mijoz; 2026 \u00B7 hozir=Mentorlik dasturi", "Tajriba | yil |  | light | #34C759"]
+];
+function _s57_336Wrap(s, mx) {
+    var w = _s45Trim(s).split(/\s+/), r = [], cur = "", i;
+    for (i = 0; i < w.length; i++) { if (cur && (cur + " " + w[i]).length > mx) { r.push(cur); cur = w[i]; } else cur = cur ? cur + " " + w[i] : w[i]; }
+    if (cur) r.push(cur);
+    return r;
+}
+function _s57Journey() {
+    var PR = _s47Pick("My Journey (336)", S57_P336); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik sarlavha (kasb, ism)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Yutuqlar 3-6 ta, ; bilan:  yil=yutuq   (oxirgisi = hozir)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Pastki qator | birlik | qiymatlar (vergul; bo'sh = yillardan) | light/dark | rang", PR[3]); if (q3 === null) return;
+    var T = _s47Split(q1, 2), M = _s47Split(q3, 5), ms = [], a = String(q2).split(";"), i, k;
+    for (i = 0; i < a.length && ms.length < 6; i++) {
+        var r = _s45Trim(a[i]); if (!r) continue; var e = r.indexOf("=");
+        ms.push(e >= 0 ? [_s45Trim(r.substring(0, e)), _s45Trim(r.substring(e + 1))] : ["", r]);
+    }
+    if (ms.length < 3) { alert("Kamida 3 ta yutuq kerak:  yil=yutuq; ..."); return; }
+    var n = ms.length, vals = _s47List(M[2]), y0 = parseInt(ms[0][0], 10);
+    if (vals.length < n) { vals = []; for (i = 0; i < n; i++) { var yy = parseInt(ms[i][0], 10); vals.push(String((isNaN(yy) || isNaN(y0)) ? i : yy - y0)); } }
+    var x = _s47Begin("JOURNEY", { states: n, look: _s47Look(M[3], M[4]), first: 0.7, hold: 0.7, extraEnd: 2.5,
+        colors: { "Hozir matni": [0.11, 0.11, 0.118], "Nuqta": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, cx = x.cx, CH = 715.2 * K, L0 = cx - 344 * K, T0 = x.cy - CH / 2 + 36 * K, oy = T0 + 115.2 * K, sp = 628 / (n - 1);
+    var TX = _s47Col(x, "Text"), DM = _s47Col(x, "Dim"), AC = _s47Col(x, "Accent"), NW = _s47Col(x, "Hozir matni");
+    _s47Card(x, 760 * K, CH, [cx, x.cy]);
+    _s47Txt(x, T[0], 40 * K, "bold", "L", "sarlavha", [L0, T0 + 38 * K], TX);
+    if (T[1]) _s47Txt(x, T[1], 26 * K, "reg", "L", "kichik sarlavha", [L0, T0 + 80.7 * K], DM);
+    // ---- years line: track + accent fill that follows the spring s ----
+    var lx = L0 + 30 * K, ly = oy + 210 * K, FW = "var w=" + (628 * K) + "*cl(s/" + (n - 1) + "); ";
+    _s47Rect(x, "chiziq", [628 * K, 8 * K], [lx + 314 * K, ly], 4 * K, _s47Col(x, "Track"));
+    _s47Rect(x, "chiziq to'la", FW + "[w, " + (8 * K) + "]", FW + "[" + lx + "+w/2, " + ly + "]", 4 * K, AC);
+    // ---- nodes: card-coloured ring, track dot, accent fill pops when the dot arrives ----
+    for (i = 0; i < n; i++) {
+        var np = [lx + i * sp * K, ly], NE = _s56_375In(i + 1, 0.07, 0.3);
+        _s47Ellipse(x, "tugun " + (i + 1) + " halqa", [44 * K, 44 * K], np, _s47Col(x, "Card"));
+        _s47Ellipse(x, "tugun " + (i + 1), [30 * K, 30 * K], np, _s47Col(x, "Track"));
+        _s47Ellipse(x, "tugun " + (i + 1) + " to'la", NE + "var d=" + (30 * K) + "*Math.max(0,bo); [d,d]", np, AC);
+    }
+    // current-year pulse: 3 rings after the dot reaches the last node
+    var PU = _s54Key(n) + "var a=time-tk-0.42, ph=a-Math.floor(a/0.84)*0.84, on=(a>=0&&a<2.52)?1:0, g=1+1.6*ph/0.84; ";
+    _s47Ellipse(x, "puls", PU + "[" + (42 * K) + "*g, " + (42 * K) + "*g]", [lx + 628 * K, ly], null, PU + "op*on*0.9*(1-ph/0.84)", { col: AC, w: PU + (4 * K) + "*g" });
+    // ---- milestone cards: alternate up/down, pop from the stem end with a bounce ----
+    for (i = 0; i < n; i++) {
+        var nx = 30 + i * sp, up = (i % 2 === 0), now = (i === n - 1), ln = _s57_336Wrap(ms[i][1], 13), lg = 0;
+        for (k = 0; k < ln.length; k++) lg = Math.max(lg, ln[k].length);
+        var fs = 23 * Math.min(1, 14 / Math.max(1, lg)), ch = 59 + 28.75 * ln.length, cl0 = Math.min(Math.max(nx - 100, 0), 488), top = up ? 170 - ch : 252;
+        var px = L0 + nx * K, py = oy + (up ? 170 : 252) * K, E = _s56_375In(i + 1, 0.07, 0.35), OE = E + "op*cl(u*2.5)";
+        var PE = E + "[" + px + ", " + py + "+(1-bo)*" + ((up ? 24 : -24) * K) + "]", SE = E + "var z=60+40*bo; [z,z]", nm = "yutuq " + (i + 1), L;
+        var parts = [];
+        parts.push(_s47Rect(x, nm + " oyoq", [3 * K, (up ? 31 : 30) * K], [px, oy + (up ? 185.5 : 237) * K], 0, now ? AC : _s47Col(x, "Track"), OE));
+        parts.push(_s47Rect(x, nm + " karta", [200 * K, ch * K], [L0 + (cl0 + 100) * K, oy + (top + ch / 2) * K], 22 * K, now ? AC : _s47Col(x, "Row"), OE));
+        for (k = 0; k < parts.length; k++) _s51_303Piv(x, parts[k], px, py, 0, 0, PE, SE);
+        var tp = [L0 + (cl0 + 18) * K, oy + (top + 34.5) * K];
+        L = _s47Txt(x, ms[i][0], 20 * K, "bold", "L", nm + " yil", tp, now ? NW : AC, E + "op*cl(u*2.5)" + (now ? "*0.7" : ""));
+        _s51_303Piv(x, L, px, py, tp[0], tp[1], PE, SE);
+        for (k = 0; k < ln.length; k++) {
+            tp = [L0 + (cl0 + 18) * K, oy + (top + 44 + k * 28.75 + 14.4 + fs * 0.35) * K];
+            L = _s47Txt(x, ln[k], fs * K, "semi", "L", nm + " matn " + (k + 1), tp, now ? NW : TX, OE);
+            _s51_303Piv(x, L, px, py, tp[0], tp[1], PE, SE);
+        }
+    }
+    // ---- walking dot (white core + accent ring) ----
+    var DP = "[" + lx + "+s*" + (sp * K) + ", " + ly + "]";
+    var dr = _s47Ellipse(x, "nuqta halqa", [60 * K, 60 * K], DP, AC);
+    _s46Shadow(dr, 90, 6 * K, 16 * K); dr.motionBlur = true;
+    _s47Ellipse(x, "nuqta", [44 * K, 44 * K], DP, _s47Col(x, "Nuqta")).motionBlur = true;
+    // ---- experience row: number rolls with the spring, unit stays ----
+    var ry = oy + 482 * K, rb = ry + 10.5 * K, un = x.tag + " birlik";
+    _s47Rect(x, "qator", [688 * K, 92 * K], [cx, ry], 22 * K, _s47Col(x, "Row"));
+    _s47Txt(x, M[0] || "Tajriba", 30 * K, "reg", "L", "qator nomi", [L0 + 28 * K, rb], DM);
+    _s47Txt(x, M[1] || " ", 30 * K, "semi", "R", "birlik", [L0 + 660 * K, rb], TX);
+    for (i = 0; i < n; i++) {
+        _s47Txt(x, vals[i], 30 * K, "semi", "R", "raqam " + (i + 1),
+            "var uw=thisComp.layer(\"" + un + "\").sourceRectAtTime().width; [" + (L0 + 660 * K) + "-uw-" + (8 * K) + ", " + rb + "+(" + i + "-s)*" + (36 * K) + "]",
+            TX, "op*sm(1-Math.abs(s-" + i + ")*1.4)");
+    }
+    _s47Finish(x);
+}
+
+// ---------- 337 KPI TRIO (S57, board 16) ----------
+// Tiles activate one by one (Tab = tile, accent ring): the number rolls up in 3 bouncy steps,
+// a mini line chart draws underneath, the area fades up and a green growth badge pops.
+var S57_P337 = [
+    ["Marketolog", "Raqamlarda | Marketolog \u00B7 Kamola Ergasheva", "Mijozlar=350+=+42% bu yil; Yil tajriba=9=2017 dan; Loyihalar=120=+36 bu yil", "Ma'lumotlar 2026-yil sentabr holatiga | light | #FF2D55"],
+    ["Psixolog", "Raqamlarda | Psixolog \u00B7 Dilfuza Nazarova", "Mijozlar=800+=+120 bu yil; Seanslar=4 500=+18% bu yil; Yil tajriba=10=2016 dan", "Ma'lumotlar 2026-yil sentabr holatiga | dark | #64D2FF"],
+    ["Fitnes murabbiy", "Raqamlarda | Fitnes murabbiy \u00B7 Sardor Aliyev", "Shogirdlar=500+=+80 bu yil; Yil tajriba=7=2019 dan; Dasturlar=12=+3 yangi", "Ma'lumotlar 2026-yil sentabr holatiga | dark | #FF9F0A"],
+    ["Yurist", "Raqamlarda | Yurist \u00B7 Bekzod Rahimov", "Ishlar=240+=+30 bu yil; Mijozlar=180=+25 bu yil; Yil tajriba=14=2012 dan", "Ma'lumotlar 2026-yil sentabr holatiga | light | #0A84FF"],
+    ["Stomatolog", "Raqamlarda | Stomatolog \u00B7 Malika Sobirova", "Bemorlar=3 200+=+450 bu yil; Implantlar=610=+95 bu yil; Yil tajriba=16=2010 dan", "Ma'lumotlar 2026-yil sentabr holatiga | light | #30B0C7"],
+    ["Dizayner", "Raqamlarda | Grafik dizayner \u00B7 Aziz Karimov", "Loyihalar=150+=+28 bu yil; Brendlar=60=+12 bu yil; Yil tajriba=9=2017 dan", "Ma'lumotlar 2026-yil sentabr holatiga | light | #5E5CE6"],
+    ["Fotograf", "Raqamlarda | Fotograf \u00B7 Anvar Qodirov", "To'ylar=300+=+45 bu yil; Portretlar=900=+160 bu yil; Yil tajriba=11=2015 dan", "Ma'lumotlar 2026-yil sentabr holatiga | dark | #FFD60A"],
+    ["Sartarosh", "Raqamlarda | Barber \u00B7 Otabek Nazarov", "Mijozlar=1 200+=+200 bu yil; Ustalar=14=+5 bu yil; Filiallar=3=2021 dan", "Ma'lumotlar 2026-yil sentabr holatiga | dark | #FF453A"],
+    ["Til ustozi", "Raqamlarda | Ingliz tili ustozi \u00B7 Kamron Yusupov", "O'quvchilar=900+=+150 bu yil; IELTS 7+=210=+40 bu yil; Yil tajriba=8=2018 dan", "Ma'lumotlar 2026-yil sentabr holatiga | light | #34C759"],
+    ["Biznes kouch", "Raqamlarda | Biznes kouch \u00B7 Jahongir Usmonov", "Mijozlar=420+=+70 bu yil; Treninglar=85=+15 bu yil; Yil tajriba=12=2014 dan", "Ma'lumotlar 2026-yil sentabr holatiga | light | #AF52DE"]
+];
+// mini charts from the board (180 x 78 box): polyline points
+var S57_337G = [[4, 66, 34, 58, 62, 62, 92, 42, 122, 46, 150, 24, 176, 10], [4, 64, 30, 60, 58, 50, 86, 52, 114, 36, 144, 28, 176, 12], [4, 68, 32, 54, 60, 58, 90, 44, 118, 32, 148, 36, 176, 8]];
+// "3 200+" -> ["0", "1 100", "2 100", "3 200"], suffix "+"
+function _s57_337Num(str) {
+    var m = String(str).match(/^\s*([0-9][0-9 ]*(?:[.,][0-9]+)?)(.*)$/), r = [], k;
+    if (!m) return { v: [str, str, str, str], suf: "" };
+    var raw = m[1].replace(/\s+$/, ""), dec = raw.match(/[.,]([0-9]+)$/), nd = dec ? dec[1].length : 0, v = parseFloat(raw.replace(/ /g, "").replace(",", "."));
+    for (k = 0; k <= 3; k++) {
+        var a = v * k / 3, q = nd ? Math.pow(10, nd) : (v >= 3000 ? 0.01 : v >= 30 ? 0.1 : 1);
+        a = k === 3 ? v : Math.round(a * q) / q;
+        r.push(nd ? a.toFixed(nd) : (raw.indexOf(" ") >= 0 || a >= 10000 ? _s48_267Fmt(a) : String(Math.round(a))));
+    }
+    return { v: r, suf: _s45Trim(m[2]) };
+}
+function _s57_337Poly(x, name, pts, closed, fill, stroke, opE, posE) {
+    var L = x.comp.layers.addShape(); L.name = x.tag + " " + name;
+    var RG = L.property("ADBE Root Vectors Group"), tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Anchor Point").setValue([0, 0]); tr.property("ADBE Position").expression = x.PRE + (posE || "[0, 0]");
+    var shp = new Shape(); shp.vertices = pts; shp.closed = closed; RG.addProperty("ADBE Vector Shape - Group").property("ADBE Vector Shape").setValue(shp);
+    if (fill) RG.addProperty("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").expression = x.PRE + fill;
+    if (stroke) {
+        var sk = RG.addProperty("ADBE Vector Graphic - Stroke");
+        sk.property("ADBE Vector Stroke Color").expression = x.PRE + stroke.col; sk.property("ADBE Vector Stroke Width").setValue(stroke.w);
+        sk.property("ADBE Vector Stroke Line Cap").setValue(2); sk.property("ADBE Vector Stroke Line Join").setValue(2);
+        RG.addProperty("ADBE Vector Filter - Trim").property("ADBE Vector Trim End").expression = x.PRE + stroke.trim;
+    }
+    tr.property("ADBE Opacity").expression = x.PRE + opE;
+    x.layers.push(L); return L;
+}
+function _s57KpiTrio() {
+    var PR = _s47Pick("KPI Trio (337)", S57_P337); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik sarlavha (kasb, ism)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("2-3 plitka, ; bilan:  nom=raqam=o'sish belgisi  (raqamdan keyingi + yoki % rangli)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Pastki izoh (bo'sh = yo'q) | light/dark | rang", PR[3]); if (q3 === null) return;
+    var T = _s47Split(q1, 2), M = _s47Split(q3, 3), tl = [], a = String(q2).split(";"), i, j;
+    for (i = 0; i < a.length && tl.length < 3; i++) { if (_s45Trim(a[i])) tl.push(_s47Split(a[i], 3, "=")); }
+    if (tl.length < 2) { alert("Kamida 2 ta plitka kerak:  nom=raqam=belgi; ..."); return; }
+    var n = tl.length, dk = String(M[1]).toLowerCase() === "dark";
+    var x = _s47Begin("KPI", { states: n, look: _s47Look(M[1], M[2]), first: 1.45, hold: 1.12, extraEnd: 2.8,
+        colors: { "O'sish": dk ? [0.188, 0.82, 0.345] : [0.141, 0.541, 0.239], "O'sish fon": [0.204, 0.78, 0.349] } }); if (!x) return;
+    var K = x.K, cx = x.cx, CH = (M[0] ? 555.6 : 507.2) * K, L0 = cx - 344 * K, T0 = x.cy - CH / 2 + 36 * K, TW = (688 - 14 * (n - 1)) / n;
+    var TX = _s47Col(x, "Text"), DM = _s47Col(x, "Dim"), AC = _s47Col(x, "Accent"), RW = _s47Col(x, "Row");
+    _s47Card(x, 760 * K, CH, [cx, x.cy]);
+    _s47Txt(x, T[0], 40 * K, "bold", "L", "sarlavha", [L0, T0 + 38 * K], TX);
+    if (T[1]) _s47Txt(x, T[1], 26 * K, "reg", "L", "kichik sarlavha", [L0, T0 + 80.7 * K], DM);
+    for (i = 0; i < n; i++) {
+        var tx = L0 + i * (TW + 14) * K, ty = T0 + 115.2 * K, nm = "plitka " + (i + 1);
+        // tile activation time: first tile right after the entrance, others on their Tab key
+        var AK = _s54Key(i + 1) + "var T=tk+" + (i ? 0 : 0.35) + "; ", G = S57_337G[i % 3];
+        _s47Rect(x, nm, [TW * K, 320 * K], [tx + TW * K / 2, ty + 160 * K], 30 * K, RW);
+        _s47Rect(x, nm + " halqa", [(TW - 3) * K, 317 * K], [tx + TW * K / 2, ty + 160 * K], 28.5 * K, null, "op*st(" + i + ")", { col: AC, w: 3 * K });
+        _s47Txt(x, tl[i][0], 22 * K, "semi", "L", nm + " nom", [tx + 20 * K, ty + 44.9 * K], DM);
+        // number roll: 4 values, 3 back-eased steps
+        var NU = _s57_337Num(tl[i][1]), lw = 0;
+        for (j = 0; j < 4; j++) lw = Math.max(lw, NU.v[j].length);
+        var fs = Math.min(58, (TW - 40) / Math.max(1, lw * 0.6 + NU.suf.length * 0.4)), nb = ty + 111.5 * K;
+        var RO = AK + "var r=0; for(var k=0;k<3;k++){ var u=cl((time-T-" + (i ? 0.17 : 0.035) + "-k*0.245)/0.2), q=u-1; r+=u>=1?1:1+2.2*q*q*q+1.2*q*q; } ";
+        var last = null;
+        for (j = 0; j < 4; j++) {
+            var NL = _s47Txt(x, NU.v[j], fs * K, "bold", "L", nm + " raqam " + (j + 1), RO + "[" + (tx + 20 * K) + ", " + nb + "+(" + j + "-r)*" + (fs * 1.2 * K) + "]", TX, RO + "op*sm(1-Math.abs(r-" + j + ")*1.5)");
+            try { var sd = NL.property("Source Text").value; sd.tracking = -35; NL.property("Source Text").setValue(sd); } catch (e) {}
+            last = NL;
+        }
+        if (NU.suf) _s47Txt(x, NU.suf, fs * 0.62 * K, "bold", "L", nm + " belgi",
+            "[" + (tx + 22 * K) + "+thisComp.layer(\"" + last.name + "\").sourceRectAtTime().width, " + nb + "]", AC);
+        // chart: area (accent 16% over the tile) rises + fades, line draws with trim paths
+        var gx = tx + 20 * K, gy = ty + 170.8 * K, sx = (TW - 40) / 180 * K, P = [], AR = [];
+        for (j = 0; j < G.length; j += 2) P.push([gx + G[j] * sx, gy + G[j + 1] * K]);
+        AR = P.concat([[gx + 176 * sx, gy + 78 * K], [gx + 4 * sx, gy + 78 * K]]);
+        var AE = AK + "var u=cl((time-T-0.84)/0.35); u=u*u*(3-2*u); ";
+        _s57_337Poly(x, nm + " grafik fon", AR, true, "var a=" + AC + ".value, b=" + RW + ".value; add(b, mul(sub(a,b), 0.16))", null, AE + "op*u", AE + "[0, " + (10 * K) + "*(1-u)]");
+        _s57_337Poly(x, nm + " grafik", P, false, null, { col: AC, w: 5 * K, trim: AK + "var u=cl((time-T-0.7)/0.42); 100*u*u*(3-2*u)" }, AK + "op*cl((time-T-0.7)*50)");
+        // growth badge pops (scale from its centre)
+        if (tl[i][2]) {
+            var bw = tl[i][2].length * 21 * 0.56 + 24, bc = [tx + (20 + bw / 2) * K, ty + 281.4 * K], BE = AK + "var u=cl((time-T-0.98)/0.35), q=u-1, bo=u>=1?1:1+2.2*q*q*q+1.2*q*q; ";
+            var btn = x.tag + " " + nm + " o'sish";
+            var bg = _s47Rect(x, nm + " o'sish fon", "[thisComp.layer(\"" + btn + "\").sourceRectAtTime().width+" + (24 * K) + ", " + (37.2 * K) + "]",
+                "[" + (tx + 20 * K) + "+(thisComp.layer(\"" + btn + "\").sourceRectAtTime().width+" + (24 * K) + ")/2, " + bc[1] + "]", 12 * K,
+                "var g=" + _s47Col(x, "O'sish fon") + ".value, b=" + RW + ".value; add(b, mul(sub(g,b), 0.18))", BE + "op*cl(u*3)");
+            _s51_303Piv(x, bg, bc[0], bc[1], 0, 0, null, BE + "var z=100*Math.max(0,bo); [z,z]");
+            var tp = [tx + 32 * K, bc[1] + 7.35 * K], BT = _s47Txt(x, tl[i][2], 21 * K, "bold", "L", nm + " o'sish", tp, _s47Col(x, "O'sish"), BE + "op*cl(u*3)");
+            _s51_303Piv(x, BT, bc[0], bc[1], tp[0], tp[1], null, BE + "var z=100*Math.max(0,bo); [z,z]");
+        }
+    }
+    if (M[0]) _s47Txt(x, M[0], 22 * K, "reg", "C", "izoh", [cx, T0 + 478.1 * K], DM);
+    _s47Finish(x);
+}
+
+// ---------- 338 TESTIMONIAL QUOTE (S57, board 16) ----------
+// Big quote marks pop in, the quote appears word by word (text animator), then (Tab 2) the
+// author row slides in from the left and the rating stars fill one by one with a spin.
+var S57_P338 = [
+    ["Psixolog", "Mijoz fikri | Psixolog \u00B7 Dilfuza Nazarova", "Uch oy oldin kechalari uxlay olmasdim. Hozir xavotirni o'zim boshqaraman.", "Nodira K. | 3 oylik terapiya | 5 | dark | #64D2FF"],
+    ["Fitnes murabbiy", "Mijoz fikri | Fitnes murabbiy \u00B7 Sardor Aliyev", "Olti oyda 14 kilo tashladim. Eng muhimi, sportni yaxshi ko'rib qoldim.", "Jasur T. | 6 oylik dastur | 5 | dark | #FF9F0A"],
+    ["Dizayner", "Mijoz fikri | Grafik dizayner \u00B7 Aziz Karimov", "Yangi logotipdan keyin mijozlar bizni ko'chada ham taniy boshladi.", "Aziza M. | Kafe egasi | 5 | light | #007AFF"],
+    ["Yurist", "Mijoz fikri | Yurist \u00B7 Bekzod Rahimov", "Uch yil cho'zilgan nizo ikki oyda hal bo'ldi. Har bir qadamni tushuntirib berdi.", "Bekzod R. | Biznes egasi | 5 | light | #5E5CE6"],
+    ["Stomatolog", "Mijoz fikri | Stomatolog \u00B7 Malika Sobirova", "Tish shifokoridan qo'rqardim. Bu yerda birinchi marta og'riqsiz davolandim.", "Malika S. | Implant bemori | 5 | light | #30B0C7"],
+    ["Marketolog", "Mijoz fikri | Marketolog \u00B7 Kamola Ergasheva", "Reklama byudjeti o'sha, lekin arizalar ikki barobar ko'paydi.", "Sherzod A. | Onlayn do'kon egasi | 5 | light | #FF2D55"],
+    ["Fotograf", "Mijoz fikri | Fotograf \u00B7 Anvar Qodirov", "To'y suratlarini har ko'rganimda o'sha kunni qayta yashayman.", "Dilnoza va Anvar | To'y, 2025 | 5 | dark | #FFD60A"],
+    ["Sartarosh", "Mijoz fikri | Barber \u00B7 Otabek Nazarov", "Shahar bo'ylab usta qidirib yurardim. Endi faqat shu yerga kelaman.", "Otabek N. | Doimiy mijoz | 5 | dark | #FF453A"],
+    ["Til ustozi", "Mijoz fikri | Ingliz tili ustozi \u00B7 Kamron Yusupov", "Ikki marta 6.0 olgandim. Uch oylik darsdan keyin IELTS 7.5 bo'ldi.", "Kamron Y. | IELTS 7.5 | 5 | light | #34C759"],
+    ["Stilist", "Mijoz fikri | Stilist \u00B7 Sevara Xolmatova", "Garderobim yarmiga qisqardi, lekin endi har kuni nima kiyishni bilaman.", "Sevara X. | Stil konsultatsiyasi | 4 | light | #AF52DE"]
+];
+function _s57_338Wrap(s, mx) {
+    var w = _s45Trim(s).split(/\s+/), r = [], cur = "", i;
+    for (i = 0; i < w.length; i++) { if (cur && (cur + " " + w[i]).length > mx) { r.push(cur); cur = w[i]; } else cur = cur ? cur + " " + w[i] : w[i]; }
+    if (cur) r.push(cur);
+    return r;
+}
+function _s57_338Ini(s) { var w = _s45Trim(s).split(/\s+/), a = w[0].charAt(0), b = w.length > 1 ? w[w.length - 1].charAt(0) : w[0].charAt(1); return (a + b).toUpperCase(); }
+function _s57Testimonial() {
+    var PR = _s47Pick("Testimonial Quote (338)", S57_P338); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik sarlavha (kasb, ism)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Iqtibos matni (mijoz so'zlari)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Mijoz ismi | izoh | yulduz 0-5 | light/dark | rang", PR[3]); if (q3 === null) return;
+    var T = _s47Split(q1, 2), M = _s47Split(q3, 5), ln = _s57_338Wrap(q2, 38), i, k, L;
+    if (!ln.length) { alert("Iqtibos matni bo'sh"); return; }
+    if (ln.length > 5) ln.length = 5;
+    var nw = 0; for (i = 0; i < ln.length; i++) nw += ln[i].split(" ").length;
+    var iv = Math.min(0.168, 1.45 / Math.max(1, nw)), stars = Math.max(0, Math.min(5, parseInt(M[2], 10) || 0));
+    var x = _s47Begin("QUOTE", { states: 2, look: _s47Look(M[3], M[4]), first: 2.2, extraEnd: 3.1,
+        colors: { "Avatar": [0.357, 0.8, 0.737], "Oq": [1, 1, 1], "Yulduz": [1, 0.8, 0] } }); if (!x) return;
+    var K = x.K, cx = x.cx, bY = 219.2 + ln.length * 49.7 + 34, CH = (bY + 178) * K, L0 = cx - 344 * K, T0 = x.cy - CH / 2 + 36 * K;
+    var TX = _s47Col(x, "Text"), DM = _s47Col(x, "Dim"), AC = _s47Col(x, "Accent");
+    _s47Card(x, 760 * K, CH, [cx, x.cy]);
+    _s47Txt(x, T[0], 40 * K, "bold", "L", "sarlavha", [L0, T0 + 38 * K], TX);
+    if (T[1]) _s47Txt(x, T[1], 26 * K, "reg", "L", "kichik sarlavha", [L0, T0 + 80.7 * K], DM);
+    // ---- quote marks: Lucide "quote" turned 180 deg (opening marks), each glyph pops ----
+    var qc = [L0 + 47 * K, T0 + 157.2 * K], gk = 96 * K / 24;
+    for (i = 0; i < 2; i++) {
+        var PO = _s56_375In(1, i ? 0.3 : 0.15, 0.4), ax = (i ? -5.5 : 5.5) * gk;
+        L = _s55Ico(x, "qo'shtirnoq " + (i + 1), "quote", 96 * K, 8 * K / 3, AC, [qc[0] - ax, qc[1]], PO + "op*cl(u*4)", { fill: AC, only: [i] });
+        var tr = L.property("ADBE Transform Group");
+        tr.property("ADBE Anchor Point").setValue([ax, 0]);
+        tr.property("ADBE Scale").expression = x.PRE + PO + "var z=100*Math.max(0,bo); [z,z]";
+        tr.property("ADBE Rotate Z").expression = x.PRE + PO + "180-25*(1-bo)";
+    }
+    // ---- quote lines: words rise in one by one (line layer fades in with its first word) ----
+    var w0 = 0;
+    for (i = 0; i < ln.length; i++) {
+        var t0 = 0.63 + w0 * iv;
+        L = _s47Txt(x, ln[i], 36 * K, "bold", "L", "iqtibos " + (i + 1), [L0, T0 + (256.65 + i * 49.7) * K], TX, _s54Key(1) + "op*cl((time-tk-" + t0 + ")*10)");
+        try { var td = L.property("Source Text").value; td.tracking = -8; L.property("Source Text").setValue(td); } catch (e) {}
+        _s56_375Words(x, L, 1, t0, iv);
+        L.property("ADBE Transform Group").property("ADBE Scale").expression = "var r=thisLayer.sourceRectAtTime(time,false); var k=Math.min(100," + (688 * K) + "/Math.max(1,r.width)*100); [k,k]";
+        w0 += ln[i].split(" ").length;
+    }
+    // ---- author row (Tab 2): divider, avatar, name, note, stars; slides in from the left ----
+    var SL = _s56_375In(2, 0.04, 0.4), DX = SL + "var dx=-" + (60 * K) + "*(1-bo); ", SO = SL + "op*cl(u*2)", ry = T0 + (bY + 32) * K;
+    function slide(Ly, px, py) { Ly.property("ADBE Transform Group").property("ADBE Position").expression = x.PRE + DX + "[" + px + "+dx, " + py + "]"; return Ly; }
+    slide(_s47Rect(x, "chiziq", [688 * K, 2 * K], [cx, T0 + (bY + 1) * K], 0, _s47Col(x, "Row"), SO), 0, 0);
+    slide(_s47Ellipse(x, "avatar", [74 * K, 74 * K], [L0 + 37 * K, ry + 37 * K], _s47Col(x, "Avatar"), SO), 0, 0);
+    var ini = _s57_338Ini(M[0] || "A");
+    slide(_s47Txt(x, ini, 26 * K, "bold", "C", "avatar harflar", [0, 0], _s47Col(x, "Oq"), SO), L0 + 37 * K, ry + 46.1 * K);
+    slide(_s47Txt(x, M[0], 28 * K, "bold", "L", "mijoz ismi", [0, 0], TX, SO), L0 + 94 * K, ry + 32.6 * K);
+    if (M[1]) slide(_s47Txt(x, M[1], 22 * K, "reg", "L", "mijoz izoh", [0, 0], DM, SO), L0 + 94 * K, ry + 62.5 * K);
+    if (stars > 0) {
+        var SB = 38.4 * K;
+        for (k = 0; k < 5; k++) {
+            var sp = DX + "[" + (L0 + (520 + k * 38) * K) + "+dx, " + (ry + 37 * K) + "]";
+            _s55Ico(x, "yulduz fon " + (k + 1), "star", SB, SB / 24, _s47Col(x, "Track"), sp, SO, { fill: _s47Col(x, "Track") });
+            if (k >= stars) continue;
+            var SE = _s56_375In(2, 0.46 + k * 0.14, 0.3);
+            L = _s55Ico(x, "yulduz " + (k + 1), "star", SB, SB / 24, _s47Col(x, "Yulduz"), sp, SE + "op*cl(u*4)", { fill: _s47Col(x, "Yulduz") });
+            L.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + SE + "var z=100*Math.max(0,bo); [z,z]";
+            L.property("ADBE Transform Group").property("ADBE Rotate Z").expression = x.PRE + SE + "-72*(1-bo)";
+        }
+    }
+    _s47Finish(x);
+}
+
+// ---------- 339 VALUE STACK (S57, board 16) ----------
+// Offer items stack in one by one with their value, the total rolls up, then gets
+// struck through; the real price rolls in and a red discount badge pops.
+var S57_P339 = [
+    ["Biznes konsultant", "Mentorlik paketi | Biznes konsultant \u00B7 3 oylik dastur | light | green", "12 ta jonli sessiya = 2 400 000; Biznes audit = 1 500 000; Tayyor shablonlar = 600 000; Yopiq hamjamiyat = 900 000", "Umumiy qiymati | Siz uchun narx | 1 900 000 | so'm | auto"],
+    ["Psixolog", "Psixoterapiya kursi | Psixolog \u00B7 8 haftalik dastur | light | purple", "8 ta individual seans = 3 200 000; Diagnostik test = 400 000; Mashqlar daftari = 150 000; Telegramda yordam = 600 000", "Umumiy qiymati | Siz uchun narx | 2 400 000 | so'm | auto"],
+    ["Grafik dizayner", "Brend paketi | Grafik dizayner \u00B7 to'liq identika | dark | pink", "Logotip, 3 variant = 2 000 000; Brendbuk = 1 500 000; Vizitka va blank = 400 000; Instagram shablonlar = 800 000", "Umumiy qiymati | Siz uchun narx | 2 900 000 | so'm | auto"],
+    ["Advokat", "Biznes himoya paketi | Advokat \u00B7 yillik xizmat | light | indigo", "Shartnomalar ekspertizasi = 3 000 000; Oylik konsultatsiya = 2 400 000; Soliq tekshiruvida hamrohlik = 1 800 000; Hujjat shablonlari = 500 000", "Umumiy qiymati | Siz uchun narx | 4 500 000 | so'm | auto"],
+    ["Fitnes murabbiy", "Transformatsiya 12 hafta | Fitnes murabbiy \u00B7 shaxsiy dastur | dark | orange", "Mashg'ulot rejasi = 800 000; Ovqatlanish rejasi = 600 000; Haftalik nazorat = 1 200 000; Onlayn chat = 400 000", "Umumiy qiymati | Siz uchun narx | 1 500 000 | so'm | auto"],
+    ["Dietolog", "Sog'lom ovqatlanish | Dietolog \u00B7 1 oylik kuzatuv | light | teal", "Birinchi konsultatsiya = 300 000; Tahlillar sharhi = 200 000; Shaxsiy menyu = 500 000; 4 ta nazorat uchrashuvi = 800 000", "Umumiy qiymati | Siz uchun narx | 990 000 | so'm | auto"],
+    ["Marketolog", "Marketing strategiya | Marketolog \u00B7 1 oylik ish | light | blue", "Raqobatchilar tahlili = 300; Kontent reja = 250; Target sozlash = 400; Hisobot va maslahat = 150", "Umumiy qiymati | Siz uchun narx | 590 | $ | auto"],
+    ["Fotograf", "Portret sessiya | Fotograf \u00B7 studiyada | light | brown", "2 soatlik suratga olish = 800 000; 30 ta retush = 600 000; Vizajist = 400 000; Studiya ijarasi = 300 000", "Umumiy qiymati | Siz uchun narx | 1 200 000 | so'm | auto"],
+    ["Barber", "Kuyov paketi | Barber \u00B7 to'y kuni | dark | green", "Soch turmagi = 150 000; Soqol dizayni = 100 000; Yuz parvarishi = 120 000; Uyga chiqish = 200 000", "Umumiy qiymati | Siz uchun narx | 390 000 | so'm | auto"],
+    ["Stilist", "Garderob paketi | Stilist \u00B7 shaxsiy xizmat | light | pink", "Garderob tahlili = 700 000; Birga xarid = 900 000; 10 ta tayyor obraz = 1 000 000; Rang tipini aniqlash = 400 000", "Umumiy qiymati | Siz uchun narx | 1 700 000 | so'm | auto"]
+];
+function _s57_339Num(s) { var v = parseFloat(String(s).replace(",", ".").replace(/[^0-9.]/g, "")); return isNaN(v) ? 0 : v; }
+function _s57_339Money(v, cur) { var f = _s48_267Fmt(v); return cur === "$" ? "$" + f : f; }
+// key-based spring 0 -> 1 (overshoots), key k of Tab + delay d; sets p
+function _s57_339Pop(k, d) {
+    return _s54Key(k) + 'var R=Math.max(0.05,c.effect("Prujina (s)")("Slider").value), Z=Math.max(0.05,Math.min(0.95,c.effect("Damping")("Slider").value)); ' +
+        'var w=2*Math.PI/R, wd=w*Math.sqrt(1-Z*Z), dt=time-tk-(' + d + '); var p=dt<=0?0:1-Math.exp(-Z*w*dt)*(Math.cos(wd*dt)+(Z*w/wd)*Math.sin(wd*dt)); ';
+}
+function _s57Value() {
+    var PR = _s47Pick("Value Stack (339)", S57_P339); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv | light/dark | rang", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Bandlar (2-6), ; bilan:  Nom = qiymat", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Umumiy yozuvi | narx yozuvi | haqiqiy narx | valyuta | chegirma (auto = hisoblash, bo'sh = yo'q)", PR[3]); if (q3 === null) return;
+    var M = _s47Split(q1, 4), P = _s47Split(q3, 5), rows = [], rr = String(q2).split(";"), i, k;
+    for (i = 0; i < rr.length && rows.length < 6; i++) {
+        var r = _s45Trim(rr[i]); if (!r) continue; var eq = r.indexOf("=");
+        rows.push(eq >= 0 ? [_s45Trim(r.substring(0, eq)), _s57_339Num(r.substring(eq + 1))] : [r, 0]);
+    }
+    if (rows.length < 2) { alert("Kamida 2 ta band kerak (; bilan)"); return; }
+    var n = rows.length, cur = P[3], tots = [0], sum = 0;
+    for (i = 0; i < n; i++) { sum += rows[i][1]; tots.push(sum); }
+    var price = _s57_339Num(P[2]), badge = P[4];
+    if (String(badge).toLowerCase() === "auto") badge = (sum > 0 && price < sum) ? "\u2212" + Math.round((1 - price / sum) * 100) + "%" : "";
+    var TS = function (v) { return _s57_339Money(v, cur) + (cur && cur !== "$" ? " " + cur : ""); };
+    var x = _s47Begin("VALUE", { states: n + 3, look: _s47Look(M[2], M[3] || "green"), first: 0.2, hold: 0.56, extraEnd: 2.3, colors: { "Qizil": [1, 0.231, 0.188], "Oq": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IH = 82 * K;
+    var H = PAD + (M[0] ? 74 * K : 0) + (M[1] ? (M[0] ? 41 * K : 59 * K) : 0) + 8 * K + n * IH + 100 * K + 138 * K + PAD;
+    var top = x.cy - H / 2, left = cx - CW / 2 + PAD, right = cx + CW / 2 - PAD, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 38 * K], _s47Col(x, "Text")); y += 74 * K; }
+    if (M[1]) { if (M[0]) y -= 18 * K; _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 25 * K], _s47Col(x, "Dim")); y += 59 * K; }
+    // item list
+    _s47Rect(x, "royxat fon", [CW - 2 * PAD, 8 * K + n * IH], [cx, y + (8 * K + n * IH) / 2], 28 * K, _s47Col(x, "Row"));
+    for (i = 0; i < n; i++) {
+        var yc = y + 4 * K + IH * i + 40 * K, nm = "band " + (i + 1), PP = _s57_339Pop(i + 2, 0), OX = "(1-p)*" + (50 * K);
+        var OP = "op*cl(p*1.6)";
+        if (i < n - 1) _s47Rect(x, nm + " chiziq", [CW - 2 * PAD - 48 * K, 2 * K], [cx, y + 4 * K + IH * (i + 1) - 1 * K], 0, _s47Col(x, "Card"), PP + OP);
+        _s47Ellipse(x, nm + " doira", [36 * K, 36 * K], PP + "[" + (left + 42 * K) + "+" + OX + ", " + yc + "]", _s47Col(x, "Accent"), PP + OP);
+        _s55Ico(x, nm + " belgi", "check", 22 * K, 3.6 * K, _s47Col(x, "Oq"), PP + "[" + (left + 42 * K) + "+" + OX + ", " + yc + "]", PP + OP);
+        _s47Txt(x, rows[i][0], 27 * K, "semi", "L", nm + " nom", PP + "[" + (left + 76 * K) + "+" + OX + ", " + (yc + 9.5 * K) + "]", _s47Col(x, "Text"), PP + OP);
+        _s47Txt(x, _s57_339Money(rows[i][1], cur), 25 * K, "reg", "R", nm + " qiymat", PP + "[" + (right - 24 * K) + "+" + OX + ", " + (yc + 9 * K) + "]", _s47Col(x, "Dim"), PP + OP);
+    }
+    y += 8 * K + n * IH;
+    // total row: label + rolling total, then strike-through
+    var tb = y + 8 * K + 46 * K;
+    if (P[0]) _s47Txt(x, P[0], 28 * K, "reg", "L", "umumiy yozuv", [left + 24 * K, tb + 10 * K], _s47Col(x, "Dim"));
+    var DIMC = "var u=cl((s-" + n + "-0.1)/0.9); var a=" + _s47Col(x, "Text") + ".value, b=" + _s47Col(x, "Dim") + ".value; add(a, mul(sub(b,a), u))";
+    var lastT = null;
+    for (k = 0; k <= n; k++) {
+        var vis = k < n ? "op*sm(1-Math.abs(s-" + k + ")*1.6)" : "op*sm(1-Math.max(0," + n + "-s)*1.6)";
+        lastT = _s47Txt(x, TS(tots[k]), 32 * K, "bold", "R", "umumiy " + k, "[" + (right - 24 * K) + ", " + (tb + 11 * K) + "+(" + k + "-" + (k < n ? "s" : "Math.min(s," + n + ")") + ")*" + (40 * K) + "]", DIMC, vis);
+    }
+    var LW = 'var w=thisComp.layer("' + lastT.name + '").sourceRectAtTime(time,false).width+' + (12 * K) + '; var u=sm((s-' + n + '-0.1)/0.9); ';
+    _s47Rect(x, "chizish", LW + "[w*u, " + (4 * K) + "]", LW + "[" + (right - 18 * K) + "-w+w*u/2, " + (tb + 1 * K) + "]", 2 * K, _s47Col(x, "Qizil"), "op*(s>" + (n + 0.1) + "?1:0)");
+    y += 100 * K;
+    // price panel
+    var pc = y + 69 * K, pb = y + 101 * K, n1 = n + 1, n2 = n + 2;
+    _s47Rect(x, "narx fon", [CW - 2 * PAD, 138 * K], [cx, pc], 30 * K, "var a=" + _s47Col(x, "Accent") + ".value, b=" + _s47Col(x, "Card") + ".value; add(b, mul(sub(a,b), 0.14))");
+    if (P[1]) _s47Txt(x, P[1], 23 * K, "reg", "L", "narx yozuv", [left + 30 * K, y + 46 * K], _s47Col(x, "Dim"));
+    var PCOL = "var u=cl(s-" + n1 + "); var a=" + _s47Col(x, "Dim") + ".value, b=" + _s47Col(x, "Accent") + ".value; add(a, mul(sub(b,a), u))";
+    var pName = x.tag + " narx", PW = 'var pw=thisComp.layer("' + pName + '").sourceRectAtTime(time,false).width; ';
+    _s47Txt(x, "?", 52 * K, "bold", "R", "narx savol", PW + "[" + (left + 30 * K) + "+pw, " + pb + "+(" + n1 + "-Math.max(s," + n1 + "))*" + (60 * K) + "]", PCOL, "op*sm(1-Math.max(0,s-" + n1 + ")*1.6)");
+    _s47Txt(x, _s57_339Money(price, cur), 52 * K, "bold", "R", "narx", PW + "[" + (left + 30 * K) + "+pw, " + pb + "+(" + n2 + "-Math.max(s," + n1 + "))*" + (60 * K) + "]", PCOL, "op*sm(1-Math.max(0," + n2 + "-s)*1.6)");
+    if (cur && cur !== "$") _s47Txt(x, cur, 28 * K, "semi", "L", "valyuta", PW + "[" + (left + 43 * K) + "+pw, " + pb + "]", PCOL);
+    if (badge) {
+        var BP = _s57_339Pop(n + 3, 0.25), bx = right - 30 * K, bn = x.tag + " chegirma matni";
+        var BWE = 'var bw=thisComp.layer("' + bn + '").sourceRectAtTime(time,false).width+' + (40 * K) + '; ';
+        var bg = _s47Rect(x, "chegirma", BWE + "[bw, " + (60 * K) + "]", [0, 0], 20 * K, _s47Col(x, "Qizil"), BP + "op*cl(p*3)");
+        _s46Shadow(bg, 90, 10 * K, 24 * K);
+        var bt = _s47Txt(x, badge, 30 * K, "bold", "C", "chegirma matni", [0, 0], _s47Col(x, "Oq"), BP + "op*cl(p*3)");
+        bt.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, -10.5 * K]);
+        var BL = [bg, bt];
+        for (k = 0; k < 2; k++) {
+            var tr = BL[k].property("ADBE Transform Group");
+            tr.property("ADBE Position").expression = x.PRE + BWE + "[" + bx + "-bw/2, " + pc + "]";
+            tr.property("ADBE Scale").expression = x.PRE + BP + "var q=Math.max(0,p)*100; [q,q]";
+            tr.property("ADBE Rotate Z").expression = x.PRE + BP + "-20+14*p";
+        }
+    }
+    _s47Finish(x);
+}
+
+// ---------- 340 Q&A ANSWER (S57, board 16) ----------
+// Follower question pops in a bubble, the expert answer types out with a caret,
+// then the "Foydali" pill appears, gets pressed (accent) and its counter rolls +1.
+var S57_P340 = [
+    ["Ta'mirlash ustasi", "Savol-javob | Ta'mirlash ustasi \u00B7 Bahodir Usmonov | light | orange", "Obunachi savoli | Eski kafel ustidan yangisini yotqizsa bo'ladimi? | DY", "Usta javobi | Bo'ladi, agar eski kafel mahkam turgan bo'lsa. Avval taqillatib tekshiramiz: bo'sh ovoz chiqsa \u2014 ko'chirish shart. | Foydali | 248"],
+    ["Psixolog", "Savol-javob | Psixolog \u00B7 Dilnoza Nazarova | light | purple", "Obunachi savoli | Farzandim telefondan ajralmayapti, taqiqlasam bo'ladimi? | MA", "Psixolog javobi | Keskin taqiq odatda qarshilik uyg'otadi. Birga qoida tuzing: vaqt chegarasi va telefonsiz oilaviy soat. | Foydali | 312"],
+    ["Advokat", "Savol-javob | Advokat \u00B7 Jasur Rahimov | dark | indigo", "Obunachi savoli | Og'zaki kelishuv sudda dalil bo'ladimi? | SK", "Advokat javobi | Guvoh va yozishmalar bo'lsa, qisman bo'ladi. Lekin eng ishonchli yo'l \u2014 har kelishuvni yozma shartnoma qilish. | Foydali | 187"],
+    ["Dietolog", "Savol-javob | Dietolog \u00B7 Aziza Karimova | light | green", "Obunachi savoli | Kechqurun 18:00 dan keyin ovqat yeyish zararlimi? | NT", "Dietolog javobi | Vaqt emas, kunlik miqdor muhim. Uxlashdan 2-3 soat oldin yengil ovqatlaning: oqsil va sabzavot. | Foydali | 421"],
+    ["Fitnes murabbiy", "Savol-javob | Fitnes murabbiy \u00B7 Sardor Aliyev | dark | orange", "Obunachi savoli | Qorin mashqlari bilan qorindagi yog' ketadimi? | BO", "Murabbiy javobi | Yo'q, yog' bir joydan ketmaydi. Kaloriya defitsiti, kuch mashqlari va yetarli uyqu kerak. | Foydali | 356"],
+    ["Grafik dizayner", "Savol-javob | Grafik dizayner \u00B7 Madina Yusupova | light | pink", "Obunachi savoli | Logotipga nechta rang ishlatgan ma'qul? | IR", "Dizayner javobi | Ko'pincha 1-2 ta rang yetarli. Logotip oq-qora holatda ham tanilsa \u2014 demak u yaxshi ishlangan. | Foydali | 143"],
+    ["Marketolog", "Savol-javob | Marketolog \u00B7 Kamola Ergasheva | light | blue", "Obunachi savoli | Obunachi ko'p, lekin sotuv yo'q. Nima qilay? | AU", "Marketolog javobi | Kontent faqat qiziqarli emas, foydali bo'lsin. Har postda aniq taklif va bitta harakatga chaqiriq qoldiring. | Foydali | 509"],
+    ["Stomatolog", "Savol-javob | Stomatolog \u00B7 Dr. Otabek Nazarov | light | teal", "Obunachi savoli | Tishni kuniga necha marta yuvish kerak? | GS", "Shifokor javobi | Kuniga 2 marta, kamida 2 daqiqadan. Kechqurungisi eng muhimi, tish ipini ham unutmang. | Foydali | 274"],
+    ["Barber", "Savol-javob | Barber \u00B7 Akmal Tursunov | dark | brown", "Obunachi savoli | Soch to'kilsa, qisqa kestirish yordam beradimi? | JM", "Barber javobi | Kesish to'kilishni to'xtatmaydi, lekin soch qalinroq ko'rinadi. Sababini bilish uchun trixologga boring. | Foydali | 198"],
+    ["Fotograf", "Savol-javob | To'y fotografi \u00B7 Otabek Karimov | light | red", "Obunachi savoli | To'y suratlari qachon tayyor bo'ladi? | ZH", "Fotograf javobi | Tanlov 3 kunda, to'liq retush 2-3 haftada. Eng yaxshi 30 ta kadrni esa ertasi kuniyoq yuboraman. | Foydali | 233"]
+];
+// greedy word wrap by character count
+function _s57_340Wrap(str, mx) {
+    var w = String(str).split(" "), out = [], cur = "", i;
+    for (i = 0; i < w.length; i++) { if (!w[i]) continue; if (cur && (cur + " " + w[i]).length > mx) { out.push(cur); cur = w[i]; } else cur = cur ? cur + " " + w[i] : w[i]; }
+    if (cur) out.push(cur); if (!out.length) out.push(" "); return out;
+}
+// key-based spring (Tab key k + delay d) -> p
+function _s57_340Pop(k, d) {
+    return _s54Key(k) + 'var R=Math.max(0.05,c.effect("Prujina (s)")("Slider").value), Z=Math.max(0.05,Math.min(0.95,c.effect("Damping")("Slider").value)); ' +
+        'var w=2*Math.PI/R, wd=w*Math.sqrt(1-Z*Z), dt=time-tk-(' + d + '); var p=dt<=0?0:1-Math.exp(-Z*w*dt)*(Math.cos(wd*dt)+(Z*w/wd)*Math.sin(wd*dt)); ';
+}
+// group pop: scale k about pivot (px,py) + rise dy. Q = layer position expr (text/icon) or null (shape in comp space)
+function _s57_340G(x, L, pre, Q, dy) {
+    var tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Position").expression = x.PRE + pre + (Q ? 'var Q=' + Q + '; [px+(Q[0]-px)*k, py+(Q[1]-py)*k+(1-p)*' + dy + ']' : '[px*(1-k), py*(1-k)+(1-p)*' + dy + ']');
+    tr.property("ADBE Scale").expression = x.PRE + pre + '[k*100,k*100]';
+}
+function _s57Answer() {
+    var PR = _s47Pick("Q&A Answer (340)", S57_P340); if (!PR) return;
+    var q1 = prompt("Sarlavha | muallif | light/dark | rang", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Savol yozuvi | savol matni | savol egasi (initsial)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Javob yozuvi | javob matni | tugma | soni", PR[3]); if (q3 === null) return;
+    var M = _s47Split(q1, 4), Q = _s47Split(q2, 3), A = _s47Split(q3, 4), i;
+    var QL = _s57_340Wrap(Q[1] || "Savol?", 37), AL = _s57_340Wrap(A[1] || "Javob.", 38), nq = QL.length, na = AL.length;
+    var tot = 0, OFF = []; for (i = 0; i < na; i++) { OFF.push(tot); tot += AL[i].length + 1; }
+    var cps = Math.max(48, tot / 2.8), D = tot / cps, cnt = parseInt(A[3], 10);
+    var x = _s47Begin("QA", { states: 4, look: _s47Look(M[2], M[3] || "orange"), first: 0.55, hold: 1, colors: { "Avatar": [1, 0.72, 0.04], "Oq": [1, 1, 1] } }); if (!x) return;
+    x.switchT = [x.t0 + 0.55, x.t0 + 1.05 + D, x.t0 + 1.55 + D]; x.outS = x.switchT[2] + 2.4; x.t1 = x.outS + S47_TL.OUTD;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, LH = 37.7 * K, qh = 69.2 * K + nq * LH, ah = 69.2 * K + na * LH;
+    var H = PAD + (M[0] ? 74 * K : 0) + (M[1] ? (M[0] ? 41 * K : 59 * K) : 0) + qh + 22 * K + ah + (A[2] ? 76 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - CW / 2 + PAD, right = cx + CW / 2 - PAD, y = top + PAD, L, TX = _s47Col(x, "Text");
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 38 * K], TX); y += 74 * K; }
+    if (M[1]) { if (M[0]) y -= 18 * K; _s47Txt(x, M[1], 26 * K, "reg", "L", "muallif", [left, y + 25 * K], _s47Col(x, "Dim")); y += 59 * K; }
+    // question bubble (width from its own lines)
+    var qn = [], ql = left + 80 * K, qb = y + qh, G1 = _s57_340Pop(1, 0.05) + 'var px=' + cx + ', py=' + (y + qh / 2) + '; var k=0.9+0.1*p; ', O1 = G1 + "op*cl(p*2)";
+    for (i = 0; i < nq; i++) qn.push(x.tag + " savol " + (i + 1));
+    var QW = 'var bw=thisComp.layer("' + x.tag + ' savol yozuv").sourceRectAtTime(time,false).width; for(var j=0;j<' + nq + ';j++){ bw=Math.max(bw, thisComp.layer("' + x.tag + ' savol "+(j+1)).sourceRectAtTime(time,false).width); } bw+=' + (52 * K) + '; ';
+    _s57_340G(x, _s47Rect(x, "savol pufak", QW + "[bw, " + qh + "]", QW + "[" + ql + "+bw/2, " + (y + qh / 2) + "]", 32 * K, _s47Col(x, "Row"), O1), G1, null, 30 * K);
+    _s57_340G(x, _s47Rect(x, "savol burchak", [32 * K, 32 * K], [ql + 16 * K, qb - 16 * K], 10 * K, _s47Col(x, "Row"), O1), G1, null, 30 * K);
+    _s57_340G(x, _s47Ellipse(x, "avatar", [64 * K, 64 * K], [left + 32 * K, qb - 32 * K], _s47Col(x, "Avatar"), O1), G1, null, 30 * K);
+    _s57_340G(x, _s47Txt(x, Q[2] || "?", 23 * K, "bold", "C", "initsial", [0, 0], _s47Col(x, "Oq"), O1), G1, "[" + (left + 32 * K) + "," + (qb - 24 * K) + "]", 30 * K);
+    if (Q[0]) _s57_340G(x, _s47Txt(x, Q[0], 21 * K, "semi", "L", "savol yozuv", [0, 0], TX, O1 + "*0.6"), G1, "[" + (ql + 26 * K) + "," + (y + 38 * K) + "]", 30 * K);
+    for (i = 0; i < nq; i++) _s57_340G(x, _s47Txt(x, QL[i], 29 * K, "semi", "L", "savol " + (i + 1), [0, 0], TX, O1), G1, "[" + (ql + 26 * K) + "," + (y + 49.2 * K + i * LH + 29 * K) + "]", 30 * K);
+    y += qh + 22 * K;
+    // answer bubble: right aligned, width = widest fully typed line
+    var ab = y + ah, G2 = _s57_340Pop(2, 0) + 'var px=' + cx + ', py=' + (y + ah / 2) + '; var k=0.9+0.1*p; ', O2 = G2 + "op*cl(p*2)";
+    var AW = _s54Key(3) + 'var te=Math.min(tk+0.2, thisComp.duration); var bw=thisComp.layer("' + x.tag + ' javob yozuv").sourceRectAtTime(te,false).width; for(var j=0;j<' + na + ';j++){ bw=Math.max(bw, thisComp.layer("' + x.tag + ' javob "+(j+1)).sourceRectAtTime(te,false).width); } bw+=' + (52 * K) + '; ';
+    _s57_340G(x, _s47Rect(x, "javob pufak", AW + "[bw, " + ah + "]", AW + "[" + right + "-bw/2, " + (y + ah / 2) + "]", 32 * K, _s47Col(x, "Accent"), O2), G2, null, 30 * K);
+    _s57_340G(x, _s47Rect(x, "javob burchak", [32 * K, 32 * K], [right - 16 * K, ab - 16 * K], 10 * K, _s47Col(x, "Accent"), O2), G2, null, 30 * K);
+    if (A[0]) _s57_340G(x, _s47Txt(x, A[0], 21 * K, "semi", "L", "javob yozuv", [0, 0], _s47Col(x, "Tugma matni"), O2 + "*0.8"), G2 + AW, "[" + right + "-bw+" + (26 * K) + "," + (y + 38 * K) + "]", 30 * K);
+    var TY = _s54Key(2) + 'var nn=Math.floor((time-tk-0.5)*' + cps + '); ', names = [];
+    for (i = 0; i < na; i++) {
+        L = _s47Txt(x, AL[i], 29 * K, "semi", "L", "javob " + (i + 1), [0, 0], _s47Col(x, "Tugma matni"), O2); names.push('"' + L.name + '"');
+        L.property("Source Text").expression = x.PRE + TY + 'var S="' + _s54Esc(AL[i]) + '"; S.substr(0, Math.max(0, Math.min(S.length, nn-' + OFF[i] + ')))';
+        _s57_340G(x, L, G2 + AW, "[" + right + "-bw+" + (26 * K) + "," + (y + 49.2 * K + i * LH + 29 * K) + "]", 30 * K);
+    }
+    var CR = TY + 'var O=[' + OFF.join(",") + '], N=[' + names.join(",") + ']; var j=0; for(var q=0;q<O.length;q++){ if(nn>=O[q]) j=q; } var cw=thisComp.layer(N[j]).sourceRectAtTime(time,false).width; ';
+    _s57_340G(x, _s47Rect(x, "karetka", [3 * K, 35 * K], [0, 0], 1.5 * K, _s47Col(x, "Tugma matni"), G2 + TY + "op*cl(p*2)*((time-tk)%0.8<0.4?1:0)*(nn<" + (tot + 12) + "?1:0)"),
+        G2 + AW + CR, "[" + right + "-bw+" + (28 * K) + "+cw, " + (y + 49.2 * K + 18.85 * K) + "+j*" + LH + "]", 30 * K);
+    y += ah + 18 * K;
+    // "Foydali" pill: appears (key 3), pressed (s 2 -> 3), counter +1
+    if (A[2]) {
+        var pc = y + 29 * K, cn1 = x.tag + " soni 2", fn = x.tag + " tugma yozuv";
+        var PWE = 'var cw=thisComp.layer("' + cn1 + '").sourceRectAtTime(time,false).width, fw=thisComp.layer("' + fn + '").sourceRectAtTime(time,false).width; var pw=' + (88 * K) + '+fw+cw; ';
+        var u = "var u=s-2; ", G3 = _s57_340Pop(3, 0) + PWE + u + 'var px=' + right + '-pw/2, py=' + pc + '; var k=(0.8+0.2*p)*(1-0.14*Math.sin(Math.PI*cl(u))+0.8*Math.max(0,u-1)); ', O3 = G3 + "op*cl(p*2)";
+        var UC = function (a, b) { return u + "var a=" + a + ".value, b=" + b + ".value; add(a, mul(sub(b,a), cl(u)))"; };
+        var mixA = "var a0=" + _s47Col(x, "Accent") + ".value, c0=" + _s47Col(x, "Card") + ".value; var b=add(c0, mul(sub(a0,c0), 0.2))";
+        _s57_340G(x, _s47Rect(x, "tugma", PWE + "[pw, " + (58 * K) + "]", PWE + "[" + right + "-pw/2, " + pc + "]", 29 * K,
+            u + mixA + "; var a=" + _s47Col(x, "Row") + ".value; add(a, mul(sub(b,a), cl(u)))", O3), G3, null, 20 * K);
+        L = _s55Ico(x, "tugma belgi", "arrow-down", 28 * K, 3.4 * K, UC(TX, _s47Col(x, "Accent")), [0, 0], O3);
+        L.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(180);
+        _s57_340G(x, L, G3, "[" + right + "-pw+" + (31 * K) + "," + pc + "]", 20 * K);
+        _s57_340G(x, _s47Txt(x, A[2], 25 * K, "semi", "L", "tugma yozuv", [0, 0], UC(TX, _s47Col(x, "Accent")), O3), G3, "[" + right + "-pw+" + (56 * K) + "," + (pc + 9 * K) + "]", 20 * K);
+        for (i = 0; i < 2; i++) {
+            var cv = isNaN(cnt) ? A[3] : String(cnt + i), vis = i ? "sm(1-Math.max(0,3-s)*1.6)" : "sm(1-Math.max(0,s-2)*1.6)";
+            _s57_340G(x, _s47Txt(x, cv, 25 * K, "reg", "R", "soni " + (i + 1), [0, 0], _s47Col(x, "Dim"), O3 + "*" + vis), G3,
+                "[" + (right - 24 * K) + "," + (pc + 9 * K) + "+(" + (i + 2) + "-Math.max(2,s))*" + (26 * K) + "]", 20 * K);
+        }
+    }
+    _s47Finish(x);
+}
+
+// ---------- 341 ME VS OTHERS (S57, board 16) ----------
+// Comparison table opens row by row: green checks draw in the "Men" column, grey
+// crosses in "Boshqalar"; finally the "Men" column glows and the footer line pops.
+var S57_P341 = [
+    ["To'y fotografi", "Nega aynan men? | To'y fotografi \u00B7 Otabek Karimov | light | blue", "Tayyor suratlar 7 kunda; Har kadr qo'lda retush; Ikkinchi fotograf bepul; Shartnoma va kafolat; Arxiv 1 yil saqlanadi", "Men | Boshqalar | Farqi \u2014 | tafsilotlarda"],
+    ["Psixolog", "Nega aynan men? | Psixolog \u00B7 Dilnoza Nazarova | light | purple", "Xalqaro sertifikat; Seans 50 daqiqa, shoshilmay; Maxfiylik shartnomasi; Seansdan keyin kuzatuv; Onlayn va oflayn qabul", "Men | Boshqalar | Farqi \u2014 | natijada"],
+    ["Advokat", "Nega aynan men? | Advokat \u00B7 Jasur Rahimov | dark | indigo", "Birinchi maslahat bepul; Narx oldindan qat'iy; Har bosqich bo'yicha hisobot; 12 yillik sud amaliyoti; Hujjatlar 24 soatda", "Men | Boshqalar | Farqi \u2014 | ishonchda"],
+    ["Fitnes murabbiy", "Nega aynan men? | Fitnes murabbiy \u00B7 Sardor Aliyev | dark | orange", "Shaxsiy ovqat rejasi; Har hafta o'lchov; Telegramda doimiy aloqa; Jarohatsiz texnika; Uyda ham mashq rejasi", "Men | Boshqalar | Farqi \u2014 | intizomda"],
+    ["Grafik dizayner", "Nega aynan men? | Grafik dizayner \u00B7 Madina Yusupova | light | pink", "3 ta logotip varianti; 3 martagacha tuzatish; Brendbuk sovg'a; Manba fayllar sizda; Muddat shartnomada", "Men | Boshqalar | Farqi \u2014 | tizimda"],
+    ["Stomatolog", "Nega aynan men? | Stomatolog \u00B7 Dr. Otabek Nazarov | light | teal", "Og'riqsiz muolaja; Bir martalik steril asboblar; Davolash rejasi yozma; Narx oldindan aytiladi; 1 yil kafolat", "Men | Boshqalar | Farqi \u2014 | g'amxo'rlikda"],
+    ["Marketolog", "Nega aynan men? | Marketolog \u00B7 Kamola Ergasheva | light | blue", "Har oy aniq hisobot; Reklama byudjeti shaffof; Kontent reja 1 oyga; Raqobatchilar tahlili; Shaxsiy menejer", "Men | Boshqalar | Farqi \u2014 | raqamlarda"],
+    ["Barber", "Nega aynan men? | Barber \u00B7 Akmal Tursunov | dark | brown", "Vaqtida qabul, navbatsiz; Steril asboblar; Soqol parvarishi bepul; Uslub bo'yicha maslahat; Kofe yoki choy", "Men | Boshqalar | Farqi \u2014 | e'tiborda"],
+    ["Repetitor", "Nega aynan men? | Ingliz tili ustozi \u00B7 Nodira Qodirova | light | green", "Kichik guruh, 6 kishi; Har oy sinov imtihoni; Ota-onaga hisobot; Darsdan keyin savol-javob; Bepul sinov darsi", "Men | Boshqalar | Farqi \u2014 | natijada"],
+    ["Stilist", "Nega aynan men? | Stilist \u00B7 Malika Tursunova | light | pink", "Garderob tahlili uyda; Byudjetga mos xarid; 10 ta tayyor obraz; Rang tipi aniqlanadi; 30 kun qo'llab-quvvatlash", "Men | Boshqalar | Farqi \u2014 | tafsilotlarda"]
+];
+// key-based spring (Tab key k + delay d) -> p ; plus eased 0..1 draw q over 0.35s from delay d2
+function _s57_341Pop(k, d, d2) {
+    return _s54Key(k) + 'var R=Math.max(0.05,c.effect("Prujina (s)")("Slider").value), Z=Math.max(0.05,Math.min(0.95,c.effect("Damping")("Slider").value)); ' +
+        'var w=2*Math.PI/R, wd=w*Math.sqrt(1-Z*Z), dt=time-tk-(' + d + '); var p=dt<=0?0:1-Math.exp(-Z*w*dt)*(Math.cos(wd*dt)+(Z*w/wd)*Math.sin(wd*dt)); ' +
+        'var q=cl((time-tk-(' + (d2 || 0) + '))/0.35); q=q<0.5?4*q*q*q:1-Math.pow(-2*q+2,3)/2; ';
+}
+function _s57_341Trim(x, L, expr) {
+    var tm = L.property("ADBE Root Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    tm.property("ADBE Vector Trim End").expression = x.PRE + expr;
+}
+function _s57Compare() {
+    var PR = _s47Pick("Me vs Others (341)", S57_P341); if (!PR) return;
+    var q1 = prompt("Sarlavha | muallif | light/dark | rang", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Afzalliklar (2-6), ; bilan", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Men ustuni | Boshqalar ustuni | pastki yozuv | ajratilgan so'z (bo'sh = yo'q)", PR[3]); if (q3 === null) return;
+    var M = _s47Split(q1, 4), F = _s47Split(q3, 4), rows = [], rr = String(q2).split(";"), i;
+    for (i = 0; i < rr.length && rows.length < 6; i++) { var r = _s45Trim(rr[i]); if (r) rows.push(r); }
+    if (rows.length < 2) { alert("Kamida 2 ta afzallik kerak (; bilan)"); return; }
+    var n = rows.length, ft = !!(F[2] || F[3]);
+    var x = _s47Begin("VS", { states: n + 2, look: _s47Look(M[2], M[3] || "blue"), first: 0.21, hold: 0.49, colors: { "Yashil": [0.204, 0.78, 0.349], "Oq": [1, 1, 1] } }); if (!x) return;
+    x.switchT[n] = x.switchT[n - 1] + 1.05; x.outS = x.switchT[n] + 3.1; x.t1 = x.outS + S47_TL.OUTD;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, RH = 84 * K, TX = _s47Col(x, "Text"), DM = _s47Col(x, "Dim");
+    var H = PAD + (M[0] ? 74 * K : 0) + (M[1] ? (M[0] ? 41 * K : 59 * K) : 0) + 80 * K + n * RH + (ft ? 56 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - CW / 2 + PAD, right = cx + CW / 2 - PAD, y = top + PAD, L;
+    var c1 = left + 463 * K, c2 = left + 613 * K, U = "var u=cl(s-" + n + "); ";
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 38 * K], TX); y += 74 * K; }
+    if (M[1]) { if (M[0]) y -= 18 * K; _s47Txt(x, M[1], 26 * K, "reg", "L", "muallif", [left, y + 25 * K], DM); y += 59 * K; }
+    // highlighted "Men" column (glows on the last beat)
+    var th = 80 * K + n * RH, MIX = "var a0=" + _s47Col(x, "Accent") + ".value, c0=" + _s47Col(x, "Card") + ".value; ";
+    L = _s47Rect(x, "ustun", [150 * K, th], [c1, y + th / 2], 26 * K, MIX + "add(c0, mul(sub(a0,c0), 0.08))", null,
+        { col: U + MIX + "var b=add(c0, mul(sub(a0,c0), 0.22)); add(b, mul(sub(a0,b), u))", w: U + "(2+u+2*Math.sin(Math.PI*u))*" + K });
+    _s54Glow(x, L, 50 * K, 0);
+    L.property("ADBE Effect Parade").property(L.property("ADBE Effect Parade").numProperties).property("ADBE Drop Shadow-0002").expression = x.PRE + U + "255*(0.55*Math.sin(Math.PI*u)+0.34*u)";
+    // header: "Men" pill fills with accent + pops, "Boshqalar" dim
+    var hy = y + 40 * K, mn = x.tag + " men yozuv", MW = 'var mw=thisComp.layer("' + mn + '").sourceRectAtTime(time,false).width+' + (48 * K) + '; var k=1+0.14*Math.sin(Math.PI*u); ';
+    _s47Rect(x, "men fon", U + MW + "[mw*k, " + (45 * K) + "*k]", [c1, hy], 20 * K, _s47Col(x, "Accent"), U + "op*u");
+    L = _s47Txt(x, F[0] || "Men", 24 * K, "bold", "C", "men yozuv", [c1, hy], U + "var a=" + _s47Col(x, "Accent") + ".value, b=" + _s47Col(x, "Tugma matni") + ".value; add(a, mul(sub(b,a), u))");
+    L.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, -8.4 * K]);
+    L.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + U + "var k=100+14*Math.sin(Math.PI*u); [k,k]";
+    _s47Txt(x, F[1] || "Boshqalar", 24 * K, "semi", "C", "boshqalar yozuv", [c2, hy + 8.4 * K], DM);
+    y += 80 * K;
+    for (i = 0; i < n; i++) {
+        var yc = y + RH * i + RH / 2 + 1 * K, nm = "qator " + (i + 1), k = i + 2, fs = Math.min(26 * K, 380 * K / Math.max(1, rows[i].length * 0.55));
+        _s47Rect(x, nm + " chiziq", [CW - 2 * PAD, 2 * K], [cx, y + RH * i + 1 * K], 0, _s47Col(x, "Row"));
+        var PL = _s57_341Pop(k, 0, 0), PY = _s57_341Pop(k, 0.21, 0.49), PN = _s57_341Pop(k, 0.315, 0.6), PN2 = _s57_341Pop(k, 0.315, 0.775);
+        _s47Txt(x, rows[i], fs, "semi", "L", nm + " nom", PL + "[" + (left + 8 * K) + "-(1-p)*" + (36 * K) + ", " + (yc + fs * 0.35) + "]", TX, PL + "op*cl(p*1.6)");
+        _s47Ellipse(x, nm + " ha doira", PY + "var d=" + (46 * K) + "*Math.max(0,p); [d,d]", [c1, yc], _s47Col(x, "Yashil"), PY + "op*cl(p*4)");
+        L = _s55Ico(x, nm + " ha belgi", "check", 28 * K, 4.7 * K, _s47Col(x, "Oq"), [c1, yc + 1 * K], PY + "op*cl(p*4)");
+        _s57_341Trim(x, L, PY + "q*100");
+        _s47Ellipse(x, nm + " yo'q doira", PN + "var d=" + (46 * K) + "*Math.max(0,p); [d,d]", [c2, yc], _s47Col(x, "Row"), PN + "op*cl(p*4)");
+        L = _s55Ico(x, nm + " yo'q 1", "x", 25 * K, 4.2 * K, DM, [c2, yc], PN + "op*cl(p*4)", { only: [1] }); _s57_341Trim(x, L, PN + "q*100");
+        L = _s55Ico(x, nm + " yo'q 2", "x", 25 * K, 4.2 * K, DM, [c2, yc], PN + "op*cl(p*4)", { only: [0] }); _s57_341Trim(x, L, PN2 + "q*100");
+    }
+    y += n * RH;
+    if (ft) {
+        var PF = _s57_341Pop(n + 2, 0.28, 0), fa = x.tag + " pastki 1", fb = x.tag + " pastki 2", fby = y + 26 * K + 24 * K;
+        var FW = 'var w1=thisComp.layer("' + fa + '").sourceRectAtTime(time,false).width, w2=thisComp.layer("' + fb + '").sourceRectAtTime(time,false).width; var x0=' + cx + '-(w1+w2+' + (F[2] && F[3] ? 8 * K : 0) + ')/2; ';
+        _s47Txt(x, F[2] || " ", 25 * K, "reg", "L", "pastki 1", PF + FW + "[x0, " + fby + "+(1-p)*" + (20 * K) + "]", DM, PF + "op*cl(p*1.6)");
+        _s47Txt(x, F[3] || " ", 25 * K, "bold", "L", "pastki 2", PF + FW + "[x0+w1+" + (F[2] && F[3] ? 8 * K : 0) + ", " + fby + "+(1-p)*" + (20 * K) + "]", TX, PF + "op*cl(p*1.6)");
+    }
+    _s47Finish(x);
+}
+
+// ---------- 342 3-STEP PROCESS (S57, board 16) ----------
+// Step nodes fill one by one (accent pop), the connector draws down to the next node,
+// each step's note fades in, then a green "Natija" badge springs up. Tab states:
+// 0 idle, 1..N = step N active, N+1 = result. S47 rig bounce in/out.
+var S57_P342 = [
+    ["Stilist", "Qanday ishlaymiz | Stilist \u00B7 Malika Tursunova", "Tanishuv = Turmush tarzingiz, didingiz va maqsadingizni bilib olaman. ; Garderob tahlili = Borini saralaymiz, yetishmaganini ro'yxat qilamiz. ; Xarid va obraz = Birga xarid qilamiz, 10 ta tayyor obraz yig'amiz.", "Natija | Har kunga tayyor obraz, 3 haftada | light | #30b0c7"],
+    ["Psixolog", "Qanday ishlaymiz | Psixolog \u00B7 Dilnoza Rahimova", "Tanishuv suhbati = Sizni tinglayman, maqsadni birga aniqlaymiz. ; Seanslar = Haftada bir marta, 50 daqiqalik suhbat. ; Mustaqil qadam = Kundalik mashqlar bilan natijani mustahkamlaymiz.", "Natija | Xotirjamlik va aniq reja, 8 haftada | light | #af52de"],
+    ["Dizayner", "Logo qanday tug'iladi | Dizayner \u00B7 Jasur Aliyev", "Brif = Biznesingiz, mijozingiz va raqobatchilarni o'rganaman. ; Eskizlar = 3 ta yo'nalish chizaman, birini tanlaymiz. ; Tayyor fayllar = Logo, ranglar va shriftlar to'plamini topshiraman.", "Natija | Tayyor brend-kit, 10 kunda | dark | #ff9500"],
+    ["Yurist", "Ish qanday boradi | Yurist \u00B7 Akmal Karimov", "Konsultatsiya = Hujjatlaringizni o'qib, vaziyatni baholayman. ; Hujjatlar = Da'vo yoki shartnomani to'liq tayyorlayman. ; Sud va nazorat = Sudda himoya qilaman, har bosqichni xabar beraman.", "Natija | Huquqingiz himoyada, har qadam shaffof | light | #007aff"],
+    ["Fitnes murabbiy", "Mashg'ulot tizimi | Fitnes murabbiy \u00B7 Sardor Olimov", "O'lchov = Vazn, hajm va chidamlilikni o'lchab olamiz. ; Dastur = Sizga mos mashq va ovqatlanish rejasi. ; Nazorat = Har hafta natijani tekshirib, rejani to'g'rilaymiz.", "Natija | Sog'lom odat va yaxshi forma, 2 oyda | dark | #34c759"],
+    ["Stomatolog", "Davolash bosqichlari | Stomatolog \u00B7 Nodira Qosimova", "Ko'rik = Tishlarni tekshiramiz, rentgen olamiz. ; Davolash = Og'riqsiz davolash, kelishilgan reja bo'yicha. ; Parvarish = Uyda to'g'ri parvarishni o'rgataman.", "Natija | Sog'lom tabassum, kafolat bilan | light | #30b0c7"],
+    ["Marketolog", "Qanday ishlaymiz | Marketolog \u00B7 Bekzod Yusupov", "Audit = Sahifa, reklama va raqobatchilarni tahlil qilaman. ; Strategiya = Auditoriya, kontent va byudjet rejasini tuzaman. ; Ishga tushirish = Reklamani yoqamiz, har hafta hisobot beraman.", "Natija | Aniq o'sish rejasi, 1 oyda | light | #ff2d55"],
+    ["Fotograf", "Suratga olish tartibi | Fotograf \u00B7 Aziza Nazarova", "Uchrashuv = Uslub, joy va kiyimlarni kelishib olamiz. ; Syomka = 2 soat, 3 xil joyda suratga olamiz. ; Retush = Eng yaxshi 40 ta suratni tahrirlab beraman.", "Natija | Tayyor fotoalbom, 7 kunda | dark | #5e5ce6"],
+    ["Barber", "Tashrif qanday o'tadi | Barber \u00B7 Rustam", "Maslahat = Yuz shakli va uslubingizga mos soch tanlaymiz. ; Soch olish = Qaychi va mashinka bilan aniq ishlov. ; Yakun = Yuvish, ukladka va parvarish bo'yicha maslahat.", "Natija | Yangi obraz, 45 daqiqada | dark | #ff9500"],
+    ["Ingliz tili ustozi", "O'qish yo'li | IELTS ustozi \u00B7 Madina Yusupova", "Daraja testi = Hozirgi darajangizni aniqlab olamiz. ; Darslar = Haftada 3 marta, 4 ko'nikma bo'yicha. ; Mock imtihon = Har oy haqiqiy formatdagi sinov.", "Natija | Imtihonga tayyor reja, 3 oyda | light | #007aff"]
+];
+// words -> lines no wider than maxW (real AE width via a scratch text layer; estimate elsewhere)
+function _s57_342Wrap(x, str, fs, maxW) {
+    var T = _s46Text(x.comp, " ", fs, "reg", ParagraphJustification.LEFT_JUSTIFY, "tmp"), w = String(str).split(" "), L = [], cur = "", i;
+    function wd(s) {
+        try { var sp = T.property("Source Text"), td = sp.value; td.text = s; sp.setValue(td); var r = T.sourceRectAtTime(x.t0, false); if (r && r.width > 0) return r.width; } catch (e) {}
+        return s.length * fs * 0.47;
+    }
+    for (i = 0; i < w.length; i++) {
+        if (!w[i]) continue;
+        if (cur && wd(cur + " " + w[i]) > maxW) { L.push(cur); cur = w[i]; } else cur = cur ? cur + " " + w[i] : w[i];
+    }
+    if (cur) L.push(cur);
+    try { T.remove(); } catch (e2) { T.enabled = false; }
+    return L.length > 3 ? L.slice(0, 3) : L;
+}
+// group transform: scale g (%) around pivot pv + vertical offset dy (E defines g, dy); (px, py) = layer position
+function _s57_342G(x, L, E, px, py, pv) {
+    var tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Position").expression = x.PRE + E + "[" + pv[0] + "+((" + px + ")-" + pv[0] + ")*g/100, " + pv[1] + "+((" + py + ")-" + pv[1] + ")*g/100+dy]";
+    tr.property("ADBE Scale").expression = x.PRE + E + "[g,g]";
+}
+// accent-tinted soft shadow under the filled node
+function _s57_342Glow(x, L) {
+    _s46Shadow(L, 115, 8 * x.K, 20 * x.K);
+    try { var fx = L.property("ADBE Effect Parade"); fx.property(fx.numProperties).property("ADBE Drop Shadow-0001").expression = _s47Col(x, "Accent"); } catch (e) {}
+}
+function _s57Process() {
+    var PR = _s47Pick("3-Step Process (342)", S57_P342); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv (muallif)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Bosqichlar (2-4), ; bilan:  Nom = izoh", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Natija yorlig'i | natija matni | light/dark | rang", PR[3]); if (q3 === null) return;
+    var A = _s47Split(q1, 2), M = _s47Split(q3, 4), R = [], rr = String(q2).split(";"), i, j;
+    for (i = 0; i < rr.length && R.length < 4; i++) { var t = _s45Trim(rr[i]); if (t) R.push(_s47Split(t, 2, "=")); }
+    if (R.length < 2) { alert("Kamida 2 ta bosqich kerak (; bilan)"); return; }
+    var N = R.length;
+    var x = _s47Begin("PROCESS", { states: N + 2, look: _s47Look(M[2], M[3] || "#30b0c7"), first: 0.2, hold: 1.2, extraEnd: 1.55,
+        colors: { "Natija": [0.204, 0.78, 0.349], "Belgi": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, y = 36;
+    var hy = [0, 0];
+    if (A[0]) { hy[0] = y + 38; y += 74; }
+    if (A[1]) { if (A[0]) y -= 18; hy[1] = y + 24; y += 59.2; }
+    var CH = y + N * 164 + 6 + 104.8 + 36, T0 = x.cy - CH * K / 2, L0 = x.cx - 380 * K;
+    function X(v) { return L0 + v * K; }
+    function Y(v) { return T0 + v * K; }
+    _s47Card(x, 760 * K, CH * K, [x.cx, x.cy]);
+    if (A[0]) _s47Txt(x, A[0], 40 * K, "bold", "L", "sarlavha", [X(36), Y(hy[0])], _s47Col(x, "Text"));
+    if (A[1]) _s47Txt(x, A[1], 26 * K, "reg", "L", "muallif", [X(36), Y(hy[1])], _s47Col(x, "Dim"));
+    for (i = 0; i < N; i++) {
+        var sy = y + i * 164, nm = "bosqich " + (i + 1), nc = [X(74), Y(sy + 38)];
+        var KE = "var k=s-" + i + "; ", PE = KE + "var g=100*(cl((k-0.35)/0.5)+0.18*Math.sin(Math.PI*cl((k-0.6)/0.4))), dy=0; ";
+        _s47Ellipse(x, nm + " tugun", [73 * K, 73 * K], nc, _s47Col(x, "Row"), "op", { col: _s47Col(x, "Track"), w: 3 * K });
+        _s47Txt(x, String(i + 1), 30 * K, "bold", "C", nm + " raqam", [nc[0], nc[1] + 10.8 * K], _s47Col(x, "Dim"));
+        var fn = _s47Ellipse(x, nm + " tugun to'la", [76 * K, 76 * K], [0, 0], _s47Col(x, "Accent"), KE + "op*(k>0.4?1:0)");
+        _s57_342Glow(x, fn); _s57_342G(x, fn, PE, nc[0], nc[1], nc);
+        var fw = _s47Txt(x, String(i + 1), 30 * K, "bold", "C", nm + " raqam oq", [0, 0], _s47Col(x, "Tugma matni"), KE + "op*(k>0.4?1:0)");
+        _s57_342G(x, fw, PE, nc[0], nc[1] + 10.8 * K, nc);
+        if (i < N - 1) {
+            var cy0 = Y(sy + 88), FE = "var h=" + (64 * K) + "*cl((s-" + (i + 1) + ")/0.6); ";
+            _s47Rect(x, nm + " chiziq", [6 * K, 64 * K], [nc[0], cy0 + 32 * K], 3 * K, _s47Col(x, "Track"));
+            _s47Rect(x, nm + " chiziq to'la", FE + "[" + (6 * K) + ", h]", FE + "[" + nc[0] + ", " + cy0 + "+h/2]", 3 * K, _s47Col(x, "Accent"), FE + "op*(h>0.5?1:0)");
+        }
+        _s47Txt(x, R[i][0], 31 * K, "bold", "L", nm + " nom", [X(138), Y(sy + 45)], _s47Col(x, "Text"), KE + "op*lp(0.4,1,cl((k-0.2)/0.6))");
+        var DL = R[i][1] ? _s57_342Wrap(x, R[i][1], 24 * K, 586 * K) : [];
+        for (j = 0; j < DL.length; j++) {
+            var DE = KE + "var e=cl((k-0.55)/0.45); ";
+            _s47Txt(x, DL[j], 24 * K, "reg", "L", nm + " izoh " + (j + 1), DE + "[" + X(138) + ", " + Y(sy + 84.2 + j * 31.2) + "-(1-e)*" + (12 * K) + "]", _s47Col(x, "Dim"), DE + "op*e");
+        }
+    }
+    // result badge: green-tinted row, check circle, caps label + text; springs up from 80%
+    var ry = y + N * 164 + 6, pv = [x.cx, Y(ry + 52.4)];
+    var RE = "var k=s-" + N + ", e=Math.max(0,k), g=80+20*e, dy=(1-Math.min(1,e))*" + (30 * K) + "; ", RO = RE + "op*cl(e*2)";
+    var bx = _s47Rect(x, "natija fon", [688 * K, 104.8 * K], pv, 28 * K, "var g0=" + _s47Col(x, "Natija") + ".value, c0=" + _s47Col(x, "Card") + ".value; [lp(c0[0],g0[0],0.14), lp(c0[1],g0[1],0.14), lp(c0[2],g0[2],0.14), 1]", RO);
+    _s57_342G(x, bx, RE, 0, 0, pv);
+    var ck = _s47Ellipse(x, "natija doira", [56 * K, 56 * K], [X(90), pv[1]], _s47Col(x, "Natija"), RO);
+    _s57_342G(x, ck, RE, 0, 0, pv);
+    var ci = _s55Ico(x, "natija belgi", "check", 36 * K, 4.5 * K, _s47Col(x, "Belgi"), [0, 0], RO);
+    _s57_342G(x, ci, RE, X(90), pv[1] + 1 * K, pv);
+    if (M[0]) {
+        var lb = _s47Txt(x, String(M[0]).toUpperCase(), 21 * K, "semi", "L", "natija yorliq", [0, 0], _s47Col(x, "Dim"), RO);
+        try { var sp = lb.property("Source Text"), td = sp.value; td.tracking = 80; sp.setValue(td); } catch (e) {}
+        _s57_342G(x, lb, RE, X(138), Y(ry + 41), pv);
+    }
+    var rt = _s47Txt(x, M[1] || "Natija", 28 * K, "bold", "L", "natija matn", [0, 0], _s47Col(x, "Text"), RO);
+    _s57_342G(x, rt, RE, X(138), Y(ry + (M[0] ? 75.2 : 62)), pv);
+    _s47Finish(x);
+}
+
+// ---------- 343 BONUS UNLOCK (S57, board 17) ----------
+// Gradient main offer on top; each Tab state slides a bonus row (gift tile, name, value)
+// into its dashed slot, the grey lock turns into a green check and "Jami bonus" rolls up.
+// Last state tints the total row with the accent and pulses it. S47 rig bounce in/out.
+var S57_P343 = [
+    ["Fitnes murabbiy", "Onlayn marafon | Fitnes murabbiy \u00B7 30 kunlik dastur | Asosiy dastur | 30 kun \u00B7 kunlik mashg'ulot | 490 000", "Ovqatlanish rejasi = 150 000 ; Uy mashqlari videolari = 120 000 ; Shaxsiy chat \u00B7 30 kun = 120 000", "Bonuslar | bugun yozilganlarga | qiymati | so'm | Jami bonus | light | #ff9500"],
+    ["Psixolog", "Stressdan chiqish kursi | Psixolog \u00B7 4 haftalik dastur | Video darslar | 12 dars \u00B7 amaliy mashqlar | 690 000", "Kundalik daftar shabloni = 90 000 ; Meditatsiya audiolari = 150 000 ; Jonli guruh efiri = 200 000", "Bonuslar | shu hafta yozilganlarga | qiymati | so'm | Jami bonus | light | #af52de"],
+    ["Dizayner", "Figma kursi | Dizayner \u00B7 noldan portfoliogacha | Asosiy kurs | 24 dars \u00B7 uy vazifalari | 1 200 000", "Tayyor UI kit = 250 000 ; Portfolio tahlili = 300 000 ; Yopiq chat \u00B7 3 oy = 200 000", "Bonuslar | birinchi 20 kishiga | qiymati | so'm | Jami bonus | dark | #5e5ce6"],
+    ["Yurist", "Biznes huquqi paketi | Yurist \u00B7 tadbirkorlar uchun | Konsultatsiya | 60 daqiqa \u00B7 onlayn | 500 000", "Shartnoma shablonlari = 300 000 ; Soliq bo'yicha checklist = 100 000 ; 1 oy savol-javob = 400 000", "Sovg'alar | shu oy murojaat qilganlarga | qiymati | so'm | Jami sovg'a | light | #007aff"],
+    ["Stilist", "Garderob kapsulasi | Stilist \u00B7 shaxsiy xizmat | Garderob tahlili | 3 soat \u00B7 uyingizda | 800 000", "Rang turini aniqlash = 200 000 ; Xaridlar ro'yxati = 150 000 ; Shopingda hamrohlik = 300 000", "Bonuslar | bugun yozilganlarga | qiymati | so'm | Jami bonus | light | #ff2d55"],
+    ["Ingliz tili ustozi", "IELTS intensiv | Ustoz \u00B7 2 oylik kurs | Guruh darslari | 24 dars \u00B7 haftada 3 marta | 900 000", "Mock imtihon = 150 000 ; Writing tekshiruvi \u00B7 5 ta = 250 000 ; Speaking klub = 200 000", "Bonuslar | erta yozilganlarga | qiymati | so'm | Jami bonus | light | #30b0c7"],
+    ["Marketolog", "Target reklama kursi | Marketolog \u00B7 amaliy kurs | Video kurs | 16 dars \u00B7 real kabinetda | 1 500 000", "Reklama shablonlari = 200 000 ; Kabinet auditi = 400 000 ; Yopiq hamjamiyat = 300 000", "Bonuslar | birinchi oqimga | qiymati | so'm | Jami bonus | dark | #ff2d55"],
+    ["Fotograf", "Mobil fotografiya | Fotograf \u00B7 telefon bilan suratga olish | Asosiy kurs | 10 dars \u00B7 amaliyot | 390 000", "Lightroom presetlar = 100 000 ; Kompozitsiya qo'llanmasi = 80 000 ; Ishlaringiz tahlili = 150 000", "Bonuslar | bugun yozilganlarga | qiymati | so'm | Jami bonus | light | #ff3b30"],
+    ["Barber", "Barber kursi | Barber \u00B7 1 oyda kasb | Amaliy kurs | 20 dars \u00B7 model bilan | 2 500 000", "Asboblar to'plami = 600 000 ; Ish joyida amaliyot = 500 000 ; Sertifikat = 150 000", "Bonuslar | guruh to'lguncha | qiymati | so'm | Jami bonus | dark | #ff9500"],
+    ["Dietolog", "Sog'lom ovqatlanish | Dietolog \u00B7 21 kunlik dastur | Shaxsiy menyu | 21 kun \u00B7 kunlik nazorat | 450 000", "Retseptlar kitobi = 90 000 ; Tahlillarni tushuntirish = 150 000 ; Haftalik qo'ng'iroq = 200 000", "Bonuslar | bugun yozilganlarga | qiymati | so'm | Jami bonus | light | #34c759"]
+];
+var S57_343ICO = [[1, 0.624, 0.039], [0.039, 0.518, 1], [1, 0.176, 0.333], [0.345, 0.337, 0.839]];
+function _s57_343Fmt(n) { var s = String(Math.round(n)), r = ""; while (s.length > 3) { r = " " + s.substr(s.length - 3) + r; s = s.substr(0, s.length - 3); } return s + r; }
+// group transform: scale g (%) around pivot pv + offsets dx, dy (E defines g, dx, dy); (px, py) = layer position
+function _s57_343G(x, L, E, px, py, pv) {
+    var tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Position").expression = x.PRE + E + "[" + pv[0] + "+((" + px + ")-" + pv[0] + ")*g/100+dx, " + pv[1] + "+((" + py + ")-" + pv[1] + ")*g/100+dy]";
+    tr.property("ADBE Scale").expression = x.PRE + E + "[g,g]";
+}
+function _s57Bonus() {
+    var PR = _s47Pick("Bonus Unlock (343)", S57_P343); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv | taklif | taklif izohi | narx", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Bonuslar (2-4), ; bilan:  Nom = qiymat", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Bonuslar yozuvi | o'ng yozuv | qiymati so'zi | valyuta | Jami yozuvi | light/dark | rang", PR[3]); if (q3 === null) return;
+    var A = _s47Split(q1, 5), B = _s47Split(q3, 7), R = [], rr = String(q2).split(";"), i;
+    for (i = 0; i < rr.length && R.length < 4; i++) { var t = _s45Trim(rr[i]); if (t) R.push(_s47Split(t, 2, "=")); }
+    if (R.length < 2) { alert("Kamida 2 ta bonus kerak (; bilan)"); return; }
+    var N = R.length, SUM = [0], cols = { "Natija": [0.204, 0.78, 0.349], "Oq": [1, 1, 1] };
+    for (i = 0; i < N; i++) { var v = parseInt(String(R[i][1]).replace(/[^0-9]/g, ""), 10); SUM.push(SUM[i] + (isNaN(v) ? 0 : v)); cols["Bonus " + (i + 1)] = S57_343ICO[i]; }
+    var x = _s47Begin("BONUS", { states: N + 2, look: _s47Look(B[5], B[6] || "#ff9500"), first: 0.55, hold: 1.12, extraEnd: 1.4, colors: cols }); if (!x) return;
+    var K = x.K, y = 36, hy = [0, 0];
+    if (A[0]) { hy[0] = y + 38; y += 74; }
+    if (A[1]) { if (A[0]) y -= 18; hy[1] = y + 24; y += 59.2; }
+    var CH = y + 124 + 28 + 28.8 + 14 + N * 114 - 14 + 22 + 92 + 36, T0 = x.cy - CH * K / 2, L0 = x.cx - 380 * K;
+    function X(v) { return L0 + v * K; }
+    function Y(v) { return T0 + v * K; }
+    var KT = 'var tb=c.effect("Tab")("Slider"); function KT(n){return tb.numKeys>=n?tb.key(n).time:1e9;} function io(t){t=cl(t);return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;} function bk(t){t=cl(t);var q=t-1;return 1+2.7*q*q*q+1.7*q*q;} ';
+    _s47Card(x, 760 * K, CH * K, [x.cx, x.cy]);
+    if (A[0]) _s47Txt(x, A[0], 40 * K, "bold", "L", "sarlavha", [X(36), Y(hy[0])], _s47Col(x, "Text"));
+    if (A[1]) _s47Txt(x, A[1], 26 * K, "reg", "L", "kichik yozuv", [X(36), Y(hy[1])], _s47Col(x, "Dim"));
+    // main offer: accent -> pink gradient (Gradient Ramp), tinted shadow, play tile
+    var of = _s47Rect(x, "taklif", [688 * K, 124 * K], [x.cx, Y(y + 62)], 30 * K, _s47Col(x, "Accent"));
+    try {
+        var rp = of.property("ADBE Effect Parade").addProperty("ADBE Ramp");
+        rp.property("ADBE Ramp-0001").setValue([X(36), Y(y)]); rp.property("ADBE Ramp-0003").setValue([X(724), Y(y + 124)]);
+        rp.property("ADBE Ramp-0002").expression = _s47Col(x, "Accent");
+        rp.property("ADBE Ramp-0004").expression = "var a=" + _s47Col(x, "Accent") + ".value; [a[0]*0.55+0.45, a[1]*0.55+0.079, a[2]*0.55+0.15, 1]";
+    } catch (e) {}
+    _s46Shadow(of, 90, 12 * K, 30 * K);
+    try { var ofx = of.property("ADBE Effect Parade"); ofx.property(ofx.numProperties).property("ADBE Drop Shadow-0001").expression = _s47Col(x, "Accent"); } catch (e2) {}
+    _s47Rect(x, "play fon", [76 * K, 76 * K], [X(98), Y(y + 62)], 22 * K, _s47Col(x, "Oq"), "op*0.22");
+    _s55Ico(x, "play", "play", 36 * K, 0, _s47Col(x, "Oq"), [X(99.5), Y(y + 62)], "op", { fill: _s47Col(x, "Oq") });
+    _s47Txt(x, A[2], 30 * K, "bold", "L", "taklif nom", [X(158), Y(y + 57.8)], _s47Col(x, "Oq"));
+    if (A[3]) _s47Txt(x, A[3], 22 * K, "reg", "L", "taklif izoh", [X(158), Y(y + 87.8)], _s47Col(x, "Oq"), "op*0.85");
+    if (A[4]) _s47Txt(x, A[4], 30 * K, "bold", "R", "narx", [X(696), Y(y + 72)], _s47Col(x, "Oq"));
+    y += 152;
+    if (B[0]) _s47Txt(x, B[0], 24 * K, "reg", "L", "bonuslar yozuv", [X(42), Y(y + 22)], _s47Col(x, "Dim"));
+    if (B[1]) _s47Txt(x, B[1], 24 * K, "reg", "R", "o'ng yozuv", [X(718), Y(y + 22)], _s47Col(x, "Dim"));
+    y += 42.8;
+    for (i = 0; i < N; i++) {
+        var sy = y + i * 114, rc = Y(sy + 50), nm = "bonus " + (i + 1), pv = [x.cx, rc];
+        var sl = _s47Rect(x, nm + " slot", [685 * K, 97 * K], pv, 26 * K, null, "op", { col: _s47Col(x, "Track"), w: 3 * K });
+        try {
+            var sk = sl.property("ADBE Root Vectors Group").property("ADBE Vector Graphic - Stroke");
+            sk.property("ADBE Vector Stroke Dashes").addProperty("ADBE Vector Stroke Dash 1").setValue(10 * K);
+            sl.property("ADBE Root Vectors Group").property("ADBE Vector Graphic - Stroke").property("ADBE Vector Stroke Dashes").addProperty("ADBE Vector Stroke Gap 1").setValue(8 * K);
+        } catch (e3) {}
+        // row slides in from the right (spring on s), check pops 0.45 s after the key
+        var E = "var k=s-" + i + ", e=cl(k), g=100, dy=0, dx=(1-e)*" + (160 * K) + "-" + (12 * K) + "*Math.sin(Math.PI*cl((k-0.55)/0.45)); ", RO = E + "op*cl((k-0.12)*2.5)";
+        var CE = KT + E + "var q=bk((time-KT(" + (i + 2) + ")-0.45)/0.3); g=100*q; ", CO = CE + "op*cl((k-0.12)*2.5)*(q>0.01?1:0)";
+        var parts = [
+            [_s47Rect(x, nm + " fon", [688 * K, 100 * K], pv, 26 * K, _s47Col(x, "Row"), RO), 0, 0],
+            [_s47Rect(x, nm + " ikon fon", [60 * K, 60 * K], [X(91), rc], 16 * K, _s47Col(x, "Bonus " + (i + 1)), RO), 0, 0],
+            [_s55Ico(x, nm + " ikon", "gift", 40 * K, 3.2 * K, _s47Col(x, "Oq"), [0, 0], RO), X(91), rc],
+            [_s47Txt(x, R[i][0], 28 * K, "bold", "L", nm + " nom", [0, 0], _s47Col(x, "Text"), RO), X(142), Y(sy + 45)],
+            [_s47Txt(x, _s45Trim(B[2] + " " + R[i][1] + " " + B[3]), 22 * K, "reg", "L", nm + " qiymat", [0, 0], _s47Col(x, "Dim"), RO), X(142), Y(sy + 74.6)],
+            [_s47Ellipse(x, nm + " qulf fon", [52 * K, 52 * K], [X(676), rc], _s47Col(x, "Track"), RO), 0, 0],
+            [_s55Ico(x, nm + " qulf", "lock", 30 * K, 0, _s47Col(x, "Dim"), [0, 0], RO, { fill: _s47Col(x, "Dim"), only: [0] }), X(676), rc + 1 * K],
+            [_s55Ico(x, nm + " qulf halqa", "lock", 30 * K, 2.8 * K, _s47Col(x, "Dim"), [0, 0], RO, { only: [1] }), X(676), rc + 1 * K]
+        ], j;
+        for (j = 0; j < parts.length; j++) _s57_343G(x, parts[j][0], E, parts[j][1], parts[j][2], pv);
+        var cc = [X(676), rc];
+        _s57_343G(x, _s47Ellipse(x, nm + " galochka fon", [52 * K, 52 * K], [0, 0], _s47Col(x, "Natija"), CO), CE, cc[0], cc[1], cc);
+        _s57_343G(x, _s55Ico(x, nm + " galochka", "check", 30 * K, 4 * K, _s47Col(x, "Oq"), [0, 0], CO), CE, cc[0], cc[1] + 0.8 * K, cc);
+    }
+    // total row: rolling sum, accent tint + pulse on the last state
+    var ty = y + N * 114 - 14 + 22, tp = [x.cx, Y(ty + 46)];
+    var TE = "var h=cl(s-" + N + "), g=100+4*Math.sin(Math.PI*h), dx=0, dy=0; ";
+    _s57_343G(x, _s47Rect(x, "jami fon", [688 * K, 92 * K], tp, 22 * K, TE + "var r0=" + _s47Col(x, "Row") + ".value, c0=" + _s47Col(x, "Card") + ".value, a0=" + _s47Col(x, "Accent") +
+        ".value; [lp(r0[0],lp(c0[0],a0[0],0.18),h), lp(r0[1],lp(c0[1],a0[1],0.18),h), lp(r0[2],lp(c0[2],a0[2],0.18),h), 1]"), TE, 0, 0, tp);
+    _s57_343G(x, _s47Txt(x, B[4] || "Jami bonus", 30 * K, "reg", "L", "jami yozuv", [0, 0], _s47Col(x, "Dim")), TE, X(64), Y(ty + 56), tp);
+    var cu = _s47Txt(x, B[3] || " ", 26 * K, "reg", "R", "jami valyuta", [0, 0], _s47Col(x, "Dim"));
+    _s57_343G(x, cu, TE, X(696), Y(ty + 56.6), tp);
+    var RL = KT + "var r=0; for(var n=2;n<=" + (N + 1) + ";n++) r+=io((time-KT(n)-0.45)/0.3); ";
+    var VX = 'var cw=thisComp.layer("' + cu.name + '").sourceRectAtTime(time,false).width; ';
+    for (i = 0; i <= N; i++) {
+        var vl = _s47Txt(x, _s57_343Fmt(SUM[i]), 34 * K, "bold", "R", "jami " + (i + 1), [0, 0], _s47Col(x, "Text"), RL + "op*cl(1-Math.abs(r-" + i + ")*1.6)");
+        _s57_343G(x, vl, TE + RL + VX, X(696) + "-cw-" + (9.5 * K), Y(ty + 56.6) + "+(" + i + "-r)*" + (40.8 * K), tp);
+    }
+    _s47Finish(x);
+}
+
+// ---------- 344 WAITLIST SIGNUP (S57, board 17) ----------
+// Live counter ticks up, the name is typed with a blinking caret, the button is tapped
+// (spinner), turns green "Yozildingiz", the counter clicks to the final number in green
+// and a dark toast "Siz N-chisiz" springs in. Tab states: 0 typing, 1 tap, 2 success.
+var S57_P344 = [
+    ["Dizayner", "Kutish ro'yxati | Grafik dizayn kursi \u00B7 3-oqim | Ro'yxatda | 1245 | kishi", "Ismingiz | Ismingizni yozing | Malika Karimova | Ro'yxatga yozilish | Yozildingiz", "Siz #-chisiz | ochilganda xabar beramiz | light | #5e5ce6"],
+    ["Psixolog", "Guruh terapiyasi | Psixolog \u00B7 yangi guruh | Navbatda | 86 | kishi", "Ismingiz | Ismingizni yozing | Aziz Tursunov | Navbatga yozilish | Yozildingiz", "Siz #-navbatdasiz | joy ochilsa qo'ng'iroq qilamiz | light | #af52de"],
+    ["Fitnes murabbiy", "Yozgi marafon | Fitnes murabbiy \u00B7 iyun oqimi | Ro'yxatda | 412 | kishi", "Ismingiz | Ismingizni yozing | Sardor Olimov | Joy band qilish | Band qilindi", "Siz #-ishtirokchisiz | start kuni xabar beramiz | dark | #34c759"],
+    ["Yurist", "Bepul vebinar | Yurist \u00B7 tadbirkorlar uchun | Ro'yxatda | 530 | kishi", "Ismingiz | Ismingizni yozing | Bekzod Rahimov | Qatnashaman | Ro'yxatdasiz", "Siz #-ishtirokchisiz | havolani yuboramiz | light | #007aff"],
+    ["Stilist", "Kapsula garderob kursi | Stilist \u00B7 2-oqim | Kutmoqda | 318 | kishi", "Ismingiz | Ismingizni yozing | Nilufar Saidova | Kutish ro'yxatiga | Yozildingiz", "Siz #-chisiz | chegirma sizga birinchi | light | #ff2d55"],
+    ["Barber", "Barber akademiya | Barber \u00B7 yangi guruh | Ro'yxatda | 64 | kishi", "Ismingiz | Ismingizni yozing | Jasur Qodirov | Joy olish | Joy olindi", "Siz #-o'quvchisiz | guruh to'lsa boshlaymiz | dark | #ff9500"],
+    ["Ingliz tili ustozi", "IELTS 7+ guruhi | Ustoz \u00B7 sentyabr oqimi | Ro'yxatda | 157 | kishi", "Ismingiz | Ismingizni yozing | Madina Yusupova | Ro'yxatga yozilish | Yozildingiz", "Siz #-chisiz | daraja testiga chaqiramiz | light | #30b0c7"],
+    ["Marketolog", "SMM intensiv | Marketolog \u00B7 3-oqim | Ro'yxatda | 890 | kishi", "Ismingiz | Ismingizni yozing | Otabek Nazarov | Ro'yxatga yozilish | Yozildingiz", "Siz #-chisiz | ochilganda birinchi bilasiz | dark | #ff3b30"],
+    ["Fotograf", "Foto sayr | Fotograf \u00B7 shanba, Toshkent | Ro'yxatda | 38 | kishi", "Ismingiz | Ismingizni yozing | Kamola Ergasheva | Joy band qilish | Band qilindi", "Siz #-ishtirokchisiz | joy va vaqtni yuboramiz | light | #ff9500"],
+    ["Stomatolog", "Bepul ko'rik kuni | Stomatolog \u00B7 shanba | Navbatda | 112 | kishi", "Ismingiz | Ismingizni yozing | Dilshod Karimov | Navbat olish | Navbat olindi", "Siz #-navbatdasiz | vaqtni SMS qilamiz | light | #30b0c7"]
+];
+function _s57_344Fmt(n) { var s = String(Math.round(n)), r = ""; while (s.length > 3) { r = " " + s.substr(s.length - 3) + r; s = s.substr(0, s.length - 3); } return s + r; }
+// group transform: scale g (%) around pivot pv + offset dy (E defines g, dy); (px, py) = layer position (numbers or exprs)
+function _s57_344G(x, L, E, px, py, pv) {
+    var tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Position").expression = x.PRE + E + "[" + pv[0] + "+((" + px + ")-" + pv[0] + ")*g/100, " + pv[1] + "+((" + py + ")-" + pv[1] + ")*g/100+dy]";
+    tr.property("ADBE Scale").expression = x.PRE + E + "[g,g]";
+}
+function _s57Waitlist() {
+    var PR = _s47Pick("Waitlist Signup (344)", S57_P344); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv | hisoblagich yozuvi | boshlang'ich son | birlik", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Maydon yozuvi | placeholder | yoziladigan ism | tugma | tayyor matni", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Toast (# = yakuniy son) | toast izohi | light/dark | rang", PR[3]); if (q3 === null) return;
+    var A = _s47Split(q1, 5), B = _s47Split(q2, 5), C = _s47Split(q3, 4), i;
+    var n0 = parseInt(String(A[3]).replace(/[^0-9]/g, ""), 10); if (isNaN(n0)) n0 = 1245;
+    var nm = B[2] || "Malika Karimova", F = Math.max(2.24, 0.63 + 0.08 * nm.length + 0.4);
+    var x = _s47Begin("WAITLIST", { states: 3, look: _s47Look(C[2], C[3] || "#5e5ce6"), first: F, hold: 1.05, extraEnd: 2.0,
+        colors: { "Natija": [0.204, 0.78, 0.349], "Oq": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, y = 36, hy = [0, 0];
+    if (A[0]) { hy[0] = y + 38; y += 74; }
+    if (A[1]) { if (A[0]) y -= 18; hy[1] = y + 24; y += 59.2; }
+    var CH = y + 546.4, T0 = x.cy - CH * K / 2, L0 = x.cx - 380 * K;
+    function X(v) { return L0 + v * K; }
+    function Y(v) { return T0 + v * K; }
+    var KT = 'var tb=c.effect("Tab")("Slider"); function KT(n){return tb.numKeys>=n?tb.key(n).time:1e9;} function io(t){t=cl(t);return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;} function bk(t){t=cl(t);var q=t-1;return 1+2.7*q*q*q+1.7*q*q;} ';
+    var Z = "var g=100, dy=0; ";
+    _s47Card(x, 760 * K, CH * K, [x.cx, x.cy]);
+    if (A[0]) _s47Txt(x, A[0], 40 * K, "bold", "L", "sarlavha", [X(36), Y(hy[0])], _s47Col(x, "Text"));
+    if (A[1]) _s47Txt(x, A[1], 26 * K, "reg", "L", "kichik yozuv", [X(36), Y(hy[1])], _s47Col(x, "Dim"));
+    // counter row: live dot pulse, label, rolling number (+2 ambient ticks, +1 on success)
+    _s47Rect(x, "hisob fon", [688 * K, 120 * K], [x.cx, Y(y + 60)], 30 * K, _s47Col(x, "Row"));
+    var dc = [X(73), Y(y + 60)];
+    var pl = _s47Ellipse(x, "jonli halqa", [14 * K, 14 * K], [0, 0], _s47Col(x, "Natija"), KT + "var p=((time-KT(1))%1.4)/1.4; op*0.7*(1-p)");
+    pl.property("ADBE Transform Group").property("ADBE Position").setValue(dc);
+    pl.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + KT + "var p=((time-KT(1))%1.4)/1.4, k=100+180*(1-Math.pow(1-p,2)); [k,k]";
+    _s47Ellipse(x, "jonli nuqta", [14 * K, 14 * K], dc, _s47Col(x, "Natija"));
+    if (A[2]) _s47Txt(x, A[2], 26 * K, "semi", "L", "hisob yozuv", [X(96), Y(y + 68.4)], _s47Col(x, "Dim"));
+    var CE = KT + "var r=io((time-KT(1)-0.7)/0.21)+io((time-KT(1)-1.61)/0.21)+io((time-KT(3)-0.15)/0.21), w=cl((time-KT(3)-0.15)/0.2); " +
+        "var g=100+12*Math.sin(Math.PI*cl((time-KT(3)-0.15)/0.4)), dy=0; ", cp = [X(694), Y(y + 66.2)];
+    var un = _s47Txt(x, A[4] || " ", 24 * K, "reg", "R", "birlik", [0, 0], _s47Col(x, "Dim"));
+    _s57_344G(x, un, CE, X(694), Y(y + 77.8), cp);
+    var UW = 'var uw=thisComp.layer("' + un.name + '").sourceRectAtTime(time,false).width; ';
+    for (i = 0; i < 4; i++) {
+        var cv = _s47Txt(x, _s57_344Fmt(n0 + i), 52 * K, "bold", "R", "son " + (i + 1), [0, 0],
+            i === 3 ? CE + "var a=" + _s47Col(x, "Text") + ".value, b=" + _s47Col(x, "Natija") + ".value; [lp(a[0],b[0],w), lp(a[1],b[1],w), lp(a[2],b[2],w), 1]" : _s47Col(x, "Text"), CE + "op*cl(1-Math.abs(r-" + i + ")*1.6)");
+        _s57_344G(x, cv, CE + UW, X(694) + "-uw-" + (10.3 * K), Y(y + 77.8) + "+(" + i + "-r)*" + (62.4 * K), cp);
+    }
+    y += 148;
+    if (B[0]) _s47Txt(x, B[0], 22 * K, "reg", "L", "maydon yozuv", [X(44), Y(y + 20)], _s47Col(x, "Dim"));
+    y += 38.4;
+    // input: focus ring, placeholder, typed name + blinking caret
+    _s47Rect(x, "maydon", [688 * K, 100 * K], [x.cx, Y(y + 50)], 26 * K, _s47Col(x, "Row"));
+    _s47Rect(x, "fokus", [685 * K, 97 * K], [x.cx, Y(y + 50)], 26 * K, null, KT + "op*cl((time-KT(1)-0.56)/0.14)*(1-cl((time-KT(2)+0.07)/0.2))", { col: _s47Col(x, "Accent"), w: 3 * K });
+    if (B[1]) _s47Txt(x, B[1], 30 * K, "reg", "L", "placeholder", [X(66), Y(y + 60)], _s47Col(x, "Dim"), KT + "op*(1-cl((time-KT(1)-0.6)/0.05))");
+    var ty = _s47Txt(x, nm, 32 * K, "semi", "L", "ism", [X(66), Y(y + 60.8)], _s47Col(x, "Text"));
+    ty.property("Source Text").expression = x.PRE + KT + 'var S="' + _s54Esc(nm) + '"; var n=Math.max(0,Math.min(S.length,Math.floor((time-KT(1)-0.63)/0.08)+1)); S.substr(0,n)';
+    var TW = 'var tw=thisComp.layer("' + ty.name + '").sourceRectAtTime(time,false).width; ';
+    _s47Rect(x, "karetka", [3 * K, 38 * K], KT + TW + "[" + X(66) + "+tw+" + (4.5 * K) + ", " + Y(y + 50) + "]", 1.5 * K, _s47Col(x, "Accent"),
+        KT + "var on=(time>KT(1)+0.56 && time<KT(2)+0.14)?1:0; op*on*(Math.floor((time-KT(1))*2)%2==0?1:0)");
+    y += 126;
+    // button: press, label lifts away, spinner, green + "done" row
+    var bp = [x.cx, Y(y + 50)];
+    var BE = KT + "var e=cl((s-1)*2), g=100-5*Math.sin(Math.PI*cl((time-KT(2)+0.14)/0.31))+4*Math.sin(Math.PI*e), dy=0; ";
+    _s57_344G(x, _s47Rect(x, "tugma", [688 * K, 100 * K], bp, 28 * K, BE + "var a=" + _s47Col(x, "Accent") + ".value, b=" + _s47Col(x, "Natija") + ".value; [lp(a[0],b[0],e), lp(a[1],b[1],e), lp(a[2],b[2],e), 1]"), BE, 0, 0, bp);
+    var LE = BE + "var u=sm((time-KT(2))/0.14); dy=-" + (30 * K) + "*u; ";
+    _s57_344G(x, _s47Txt(x, B[3] || "Yozilish", 32 * K, "semi", "C", "tugma matni", [0, 0], _s47Col(x, "Tugma matni"), LE + "op*(1-u)"), LE, bp[0], bp[1] + 11.5 * K, bp);
+    var spn = _s55Ico(x, "spinner", "loader-circle", 46 * K, 4.5 * K, _s47Col(x, "Tugma matni"), [0, 0], KT + "op*cl((time-KT(2)-0.07)/0.1)*(1-cl((time-KT(3)+0.12)/0.1))");
+    _s57_344G(x, spn, BE, bp[0], bp[1], bp);
+    spn.property("ADBE Transform Group").property("ADBE Rotate Z").expression = x.PRE + KT + "(time-KT(2))*514";
+    var DE = BE + "var d=Math.max(0,s-1); dy=(1-Math.min(1,d))*" + (30 * K) + "; ", DO = DE + "op*cl(d*2)";
+    var dt = _s47Txt(x, B[4] || "Tayyor", 32 * K, "semi", "L", "tayyor matni", [0, 0], _s47Col(x, "Oq"), DO);
+    var DW = 'var dw=thisComp.layer("' + dt.name + '").sourceRectAtTime(time,false).width, dl=' + bp[0] + '-(' + (62 * K) + '+dw)/2; ';
+    _s57_344G(x, dt, DE + DW, "dl+" + (62 * K), bp[1] + 11.5 * K, bp);
+    _s57_344G(x, _s47Ellipse(x, "tayyor doira", [44 * K, 44 * K], [0, 0], _s47Col(x, "Oq"), DE + "op*0.25*cl(d*2)"), DE + DW, "dl+" + (22 * K), bp[1], bp);
+    _s57_344G(x, _s55Ico(x, "tayyor belgi", "check", 28 * K, 3.5 * K, _s47Col(x, "Oq"), [0, 0], DO), DE + DW, "dl+" + (22 * K), bp[1] + 0.6 * K, bp);
+    y += 124;
+    // toast pill: green check, "Siz N-chisiz" + dim note; springs up with back-out
+    var tpv = [x.cx, Y(y + 37)], tt = String(C[0] || "Siz #-chisiz").replace("#", _s57_344Fmt(n0 + 3));
+    var PW = 'var w1=thisComp.layer("' + x.tag + ' toast").sourceRectAtTime(time,false).width, w2=' + (C[1] ? 'thisComp.layer("' + x.tag + ' toast izoh").sourceRectAtTime(time,false).width+' + (7 * K) : '0') +
+        ', pw=' + (106 * K) + '+w1+w2, pl=' + x.cx + '-pw/2; ';
+    var TE = KT + PW + "var q=bk((time-KT(3)-0.35)/0.42), g=90+10*q, dy=(1-q)*" + (24 * K) + "; ", TO = TE + "op*cl(q*3)";
+    var pill = _s47Rect(x, "toast fon", TE + "[pw, " + (74 * K) + "]", tpv, 37 * K, _s47Col(x, "Text"), TO);
+    _s57_344G(x, pill, TE, 0, 0, tpv);
+    _s57_344G(x, _s47Ellipse(x, "toast doira", [46 * K, 46 * K], [0, 0], _s47Col(x, "Natija"), TO), TE, "pl+" + (37 * K), tpv[1], tpv);
+    _s57_344G(x, _s55Ico(x, "toast belgi", "check", 28 * K, 3.5 * K, _s47Col(x, "Oq"), [0, 0], TO), TE, "pl+" + (37 * K), tpv[1] + 0.6 * K, tpv);
+    var t1 = _s47Txt(x, tt, 27 * K, "semi", "L", "toast", [0, 0], _s47Col(x, "Card"), TO);
+    var t2 = C[1] ? _s47Txt(x, "\u00B7 " + C[1], 22 * K, "reg", "L", "toast izoh", [0, 0], _s47Col(x, "Card"), TE + "op*0.6*cl(q*3)") : null;
+    _s57_344G(x, t1, TE, "pl+" + (76 * K), tpv[1] + 8.8 * K, tpv);
+    if (t2) {
+        _s57_344G(x, t2, TE, "pl+" + (76 * K) + "+w1+" + (7 * K), tpv[1] + 8.8 * K, tpv);
+    }
+    _s47Finish(x);
+}
+
+// ---------- 345 SOCIAL PROOF POP (S57, board 17) ----------
+// Live feed: notification pills slide in from the left edge one by one and stack (newest on top),
+// the weekly counter rolls +1 with each pill; on the last one it pops to the accent and a chip bounces in.
+var S57_P345 = [
+    ["Dietolog", "Bu hafta | Dietolog konsultatsiyasi \u00B7 jonli lenta | Yozilganlar | 127 | kishi | +4 bugun", "Dilnoza = hozir yozildi = plus = DI ; Sardor = to'lov qildi = check = SR ; Kamola = sharh qoldirdi = star = KA ; Bekzod = yana yozildi = plus = BN", "light | pink"],
+    ["Psixolog", "Bu hafta | Psixolog konsultatsiyasi \u00B7 onlayn seanslar | Yozilganlar | 38 | kishi | +4 bugun", "Malika = seansga yozildi = plus ; Jasur = to'lov qildi = check ; Nigora = fikr qoldirdi = star ; Aziz = ikkinchi seans oldi = plus", "light | teal"],
+    ["Dizayner", "Bu oy | Logo va brending buyurtmalari | Buyurtmalar | 21 | ta | +4 bugun", "Otabek = logo buyurtma qildi = plus ; Zarina = oldindan to'ladi = check ; Sherzod = baho qo'ydi = star ; Madina = brendbuk so'radi = plus", "dark | purple"],
+    ["Advokat", "Bu hafta | Yuridik maslahat \u00B7 qabulga yozilish | Murojaatlar | 54 | ta | +4 bugun", "Rustam = qabulga yozildi = plus ; Gulnora = shartnoma yubordi = check ; Anvar = sharh qoldirdi = star ; Feruza = maslahat so'radi = plus", "light | indigo"],
+    ["Murabbiy", "Bu hafta | Fitnes marafon \u00B7 jonli ro'yxat | Qatnashchilar | 212 | kishi | +4 bugun", "Sevara = marafonga qo'shildi = plus ; Doniyor = to'lov qildi = check ; Laylo = natija yubordi = star ; Timur = do'stini chaqirdi = plus", "dark | orange"],
+    ["Stomatolog", "Bugun | Stomatologiya klinikasi \u00B7 onlayn navbat | Navbatda | 17 | bemor | +4 bugun", "Umida = tozalashga yozildi = plus ; Behruz = oldindan to'ladi = check ; Kamila = rahmat yozdi = star ; Sardor = ko'rikka yozildi = plus", "light | blue"],
+    ["Fotograf", "Bu oy | To'y va portret suratlari \u00B7 bron | Bronlar | 9 | ta | +4 bugun", "Nilufar = to'y sanasini oldi = plus ; Akmal = avans to'ladi = check ; Dilfuza = albomni baholadi = star ; Javohir = portret bron qildi = plus", "dark | black"],
+    ["Sartarosh", "Bugun | Barbershop \u00B7 jonli navbat | Yozilganlar | 23 | mijoz | +4 bugun", "Bobur = 15:00 ga yozildi = plus ; Ulug'bek = oldindan to'ladi = check ; Sanjar = 5 yulduz qo'ydi = star ; Islom = soqolga yozildi = plus", "dark | brown"],
+    ["Stilist", "Bu hafta | Shaxsiy stilist \u00B7 garderob tahlili | Mijozlar | 46 | kishi | +4 bugun", "Shahnoza = tahlilga yozildi = plus ; Kamola = paket sotib oldi = check ; Mohira = fikr qoldirdi = star ; Zilola = xaridga yozildi = plus", "light | red"],
+    ["Marketolog", "Bu hafta | SMM audit \u00B7 bepul konsultatsiya | Arizalar | 64 | ta | +4 bugun", "Firdavs = audit so'radi = plus ; Nodira = shartnoma imzoladi = check ; Sherali = natijani baholadi = star ; Aziza = qo'ng'iroq so'radi = plus", "light | green"]
+];
+var S57_345AV = ["ffa62f", "37a6ff", "5fcf80", "8e74f3", "ff6b81"];
+function _s57_345Ini(nm, ini) {
+    if (ini) return ini.substr(0, 2).toUpperCase();
+    var w = _s45Trim(nm).split(/\s+/);
+    return (w.length > 1 ? w[0].charAt(0) + w[1].charAt(0) : w[0].substr(0, 2)).toUpperCase();
+}
+function _s57Proof() {
+    var PR = _s47Pick("Social Proof Pop (345)", S57_P345); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv | hisob yozuvi | boshlang'ich son | birlik | chip (bo'sh = chipsiz)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Lenta (2-5 ta), ; bilan:  Ism = harakat = ikonka (plus/check/star/heart...) = initsial (ixtiyoriy)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("light/dark | rang (blue green pink purple teal ... yoki #hex)", PR[3]); if (q3 === null) return;
+    var A = _s47Split(q1, 6), M = _s47Split(q3, 2), P = [], rr = String(q2).split(";"), i;
+    for (i = 0; i < rr.length && P.length < 5; i++) {
+        var f = _s47Split(rr[i], 4, "="); if (!f[0]) continue;
+        f[2] = String(f[2]).toLowerCase(); if (!S55_ICO[f[2]]) f[2] = "plus"; P.push(f);
+    }
+    if (P.length < 2) { alert("Kamida 2 ta qator kerak: Ism = harakat = ikonka ; ..."); return; }
+    var n = P.length, c0 = parseInt(A[3], 10); if (isNaN(c0)) c0 = 0;
+    var cols = { "Yulduz": _s47Hex("ffcc00"), "Tasdiq": _s47Hex("34c759"), "Chip": _s47Hex("34c759"), "Oq": [1, 1, 1] };
+    for (i = 0; i < n; i++) cols["Avatar " + (i + 1)] = _s47Hex(S57_345AV[i % 5]);
+    var x = _s47Begin("PROOF", { states: n + 1, look: _s47Look(M[0], M[1]), first: 0.55, hold: 0.98, extraEnd: 1.7, colors: cols }); if (!x) return;
+    var K = x.K, cx = x.cx, IW = 688 * K, PAD = 36 * K, LH = n * 112 * K + 4 * K, HD = 145.6 * K;
+    var CH = PAD + (A[1] ? 115.2 : 74) * K + HD + 4 * K + LH + PAD, top = x.cy - CH / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    var OQ = _s47Col(x, "Oq"), mats = [], L;
+    _s47Card(x, 760 * K, CH, [cx, x.cy]);
+    _s47Txt(x, A[0], 40 * K, "bold", "L", "sarlavha", [left, y + 38 * K], _s47Col(x, "Text"));
+    if (A[1]) { _s47Txt(x, A[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 80.7 * K], _s47Col(x, "Dim")); y += 115.2 * K; } else y += 74 * K;
+    // ---- head row: label, rolling counter (+1 per pill), unit, "+N" chip ----
+    var ht = y, G = "var g=cl(s-" + (n - 1) + "); ";
+    _s47Rect(x, "hisob fon", [IW, HD], [cx, ht + HD / 2], 30 * K, _s47Col(x, "Row"));
+    if (A[2]) _s47Txt(x, A[2], 24 * K, "reg", "L", "hisob yozuvi", [left + 28 * K, ht + 44.8 * K], _s47Col(x, "Dim"));
+    var nb = ht + 111.6 * K, nx = left + 28 * K, NL = [], WS = "var W=[";
+    var nm = _s47Rect(x, "raqam matte", [IW, 86 * K], [cx, ht + 45 * K + 43 * K], 0, OQ, "100");
+    for (i = 0; i <= n; i++) {
+        L = _s47Txt(x, String(c0 + i), 64 * K, "bold", "L", "raqam " + (i + 1), "[" + nx + ", " + nb + "+(" + i + "-s)*" + (76.8 * K) + "]",
+            G + "var t=" + _s47Col(x, "Text") + ".value, a=" + _s47Col(x, "Accent") + ".value; add(t, mul(sub(a,t), g))");
+        L.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + G + "var k=100+10*Math.sin(Math.PI*g); [k,k]";
+        _s57_345Trk(L, -31); NL.push(L); mats.push([L, nm]);
+        WS += (i ? "," : "") + 'thisComp.layer("' + L.name + '").sourceRectAtTime().width';
+    }
+    WS += "]; var q=Math.max(0,Math.min(" + n + ",s)), k0=Math.min(" + (n - 1) + ",Math.floor(q)), nw=lp(W[k0],W[k0+1],q-k0); ";
+    if (A[4]) {
+        L = _s47Txt(x, A[4], 26 * K, "reg", "L", "birlik", G + WS + "[" + nx + "+(nw+" + (10 * K) + ")*(1+0.1*Math.sin(Math.PI*g)), " + nb + "]", _s47Col(x, "Dim"));
+        L.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + G + "var k=100+10*Math.sin(Math.PI*g); [k,k]";
+    }
+    if (A[5]) {
+        var U = "var u=Math.max(0,sp.valueAtTime(time-0.1)-" + (n - 1) + "); ", cy2 = ht + 87.2 * K;
+        var ct = _s47Txt(x, A[5], 24 * K, "bold", "C", "chip matni", [0, 0], _s47Col(x, "Oq"), U + "op*cl(u*2)");
+        var CWX = 'var w=thisComp.layer("' + ct.name + '").sourceRectAtTime().width+' + (36 * K) + '; ';
+        var cb = _s47Rect(x, "chip", CWX + "[w, " + (48.8 * K) + "]", [0, 0], 20 * K, _s47Col(x, "Chip"), U + "op*cl(u*2)");
+        var cl2 = [cb, ct];
+        for (i = 0; i < 2; i++) {
+            var ctr = cl2[i].property("ADBE Transform Group");
+            if (i) ctr.property("ADBE Anchor Point").setValue([0, -8.4 * K]);
+            ctr.property("ADBE Position").expression = x.PRE + CWX + "[" + (right - 28 * K) + "-w/2, " + cy2 + "]";
+            ctr.property("ADBE Scale").expression = x.PRE + U + "var k=40+60*u; [k,k]";
+        }
+        ct.moveBefore(cb);
+    }
+    // ---- feed: pill j arrives on state j+1, sits above the older ones (clipped at the list edge) ----
+    var lt = ht + HD + 4 * K, pm = _s47Rect(x, "lenta matte", [IW, LH + 40 * K], [cx, lt + LH / 2], 0, OQ, "100");
+    for (var j = 0; j < n; j++) {
+        var p = P[j], nmj = "lenta " + (j + 1), ic = p[2];
+        var PJ = "var a=s-" + j + ", tg=c.effect(\"Tab\")(\"Slider\").value-1, hn=0; for(var m=" + (j + 1) + "; m<" + n + "; m++) hn+=sm(s-m); " +
+            "var u=Math.max(0, tg==" + (j + 1) + " ? a : Math.min(a,1)); var dx=-(1-u)*" + (1.05 * IW) + ", yc=" + (lt + 64 * K) + "+hn*" + (112 * K) + "; ";
+        var PO = PJ + "op*cl(a*2)", lay = [];
+        lay.push(_s47Rect(x, nmj + " fon", [IW, 96 * K], PJ + "[" + cx + "+dx, yc]", 48 * K, _s47Col(x, "Row"), PO));
+        lay.push(_s47Ellipse(x, nmj + " avatar", [64 * K, 64 * K], PJ + "[" + (left + 48 * K) + "+dx, yc]", _s47Col(x, "Avatar " + (j + 1)), PO));
+        lay.push(_s47Txt(x, _s57_345Ini(p[0], p[3]), 23 * K, "bold", "C", nmj + " initsial", PJ + "[" + (left + 48 * K) + "+dx, yc+" + (8.05 * K) + "]", OQ, PO));
+        var tn = _s47Txt(x, p[0], 27 * K, "semi", "L", nmj + " ism", PJ + "[" + (left + 98 * K) + "+dx, yc+" + (9.45 * K) + "]", _s47Col(x, "Text"), PO);
+        lay.push(tn);
+        if (p[1]) lay.push(_s47Txt(x, p[1], 27 * K, "reg", "L", nmj + " harakat",
+            PJ + "[" + (left + 98 * K + 7.5 * K) + "+dx+thisComp.layer(\"" + tn.name + "\").sourceRectAtTime().width, yc+" + (9.45 * K) + "]", _s47Col(x, "Dim"), PO));
+        var ec = /star|zap|award|gem/.test(ic) ? "Yulduz" : /check/.test(ic) ? "Tasdiq" : "Accent", ex = right - 42 * K, EP = PJ + "[" + ex + "+dx, yc]";
+        lay.push(_s47Ellipse(x, nmj + " belgi", [44 * K, 44 * K], EP, _s47Col(x, ec), PO));
+        var solid = /star|heart|zap|bookmark|play/.test(ic);
+        lay.push(_s55Ico(x, nmj + " ikonka", ic, solid ? 26 * K : 30 * K, solid ? 0 : (ic === "plus" ? 3.6 : 3.4) * K, OQ, EP, PO, solid ? { fill: OQ } : null));
+        for (i = 0; i < lay.length; i++) mats.push([lay[i], pm]);
+    }
+    for (i = 0; i < mats.length; i++) { try { mats[i][0].setTrackMatte(mats[i][1], TrackMatteType.ALPHA); } catch (eM) {} }
+    nm.enabled = false; pm.enabled = false;
+    _s47Finish(x);
+}
+function _s57_345Trk(L, v) { try { var sp = L.property("Source Text"), td = sp.value; td.tracking = v; sp.setValue(td); } catch (e) {} }
+
+// ---------- 346 FAQ ACCORDION (S57, board 17) ----------
+// Questions open one by one: the answer height grows smoothly (clipped), the chevron flips, the
+// question turns accent, the previous one closes, the card grows around its centre, counter k/N rolls.
+var S57_P346 = [
+    ["Advokat", "Ko'p beriladigan savollar | Advokat \u00B7 oilaviy va fuqarolik ishlari", "Konsultatsiya qancha turadi? = Birinchi uchrashuv bepul. Keyingisi 300 000 so'm, bir soat davom etadi. ; Onlayn maslahat berasizmi? = Ha, video qo'ng'iroq orqali. Hujjatlarni oldindan yuborib qo'yasiz. ; Hujjatlarni kim tayyorlaydi? = Barcha arizalarni o'zim tayyorlayman, siz faqat tekshirib imzolaysiz. ; Ish qancha vaqt oladi? = Oddiy ishlar ikki haftada, sud ishlari odatda 2-3 oyda yakunlanadi.", "light | teal"],
+    ["Psixolog", "Ko'p beriladigan savollar | Psixolog \u00B7 kattalar va o'smirlar", "Seans qancha davom etadi? = Bitta seans 50 daqiqa. Odatda haftada bir marta uchrashamiz. ; Suhbat sir saqlanadimi? = Ha, aytganlaringiz faqat ikkimizning oramizda qoladi. ; Onlayn seans ham bormi? = Bor, video qo'ng'iroq orqali. Tinch xonada o'tirsangiz kifoya. ; Nechta seans kerak bo'ladi? = Birinchi uchrashuvda birga reja tuzamiz, ko'pincha 6-10 seans yetadi.", "light | indigo"],
+    ["Dizayner", "Savol-javob | Grafik dizayner \u00B7 logo va brending", "Logo qancha vaqtda tayyor? = Odatda 7-10 ish kuni. Avval 3 ta eskiz ko'rsataman. ; Tuzatishlar soni cheklanganmi? = Paketga 3 marta tuzatish kiradi, keyingisi alohida kelishiladi. ; Qaysi fayllarni olaman? = PNG, SVG va PDF formatlar, hamda qisqa brendbuk. ; Oldindan to'lov kerakmi? = Ha, 50 foiz oldindan, qolgani ish topshirilganda.", "dark | purple"],
+    ["Fitnes murabbiy", "Ko'p so'raladi | Fitnes murabbiy \u00B7 shaxsiy mashg'ulotlar", "Yangi boshlovchi bo'lsam-chi? = Muammo emas. Dastur sizning darajangizdan boshlanadi. ; Haftada necha marta shug'ullanamiz? = Odatda 3 marta, har biri taxminan bir soat. ; Ovqatlanish rejasi ham bormi? = Ha, maqsadingizga qarab oddiy va tushunarli reja tuzib beraman. ; Natija qachon ko'rinadi? = Muntazam qatnashsangiz, birinchi o'zgarishlar 4-6 haftada seziladi.", "dark | orange"],
+    ["Stomatolog", "Ko'p beriladigan savollar | Stomatolog \u00B7 terapiya va gigiyena", "Birinchi ko'rik pullikmi? = Ko'rik va maslahat bepul, rentgen kerak bo'lsa alohida. ; Davolash og'riqlimi? = Zamonaviy og'riqsizlantirish ishlatamiz, deyarli sezmaysiz. ; Tozalash qancha turadi? = Professional tozalash 250 000 so'm, taxminan 40 daqiqa. ; Bolalarni ham qabul qilasizmi? = Ha, 5 yoshdan boshlab bolalarni ham davolaymiz.", "light | blue"],
+    ["Fotograf", "Savol-javob | Fotograf \u00B7 to'y va portret", "Suratlar qachon tayyor bo'ladi? = Portret 5 kunda, to'y suratlari odatda 3 haftada topshiriladi. ; Nechta surat olaman? = Portret uchun 30 ta, to'y uchun 300 tadan ortiq ishlangan surat. ; Sanani qanday band qilaman? = 30 foiz avans to'laysiz va sana siz uchun yopiladi. ; Boshqa shaharga borasizmi? = Ha, yo'l va turar joy xarajati alohida kelishiladi.", "dark | black"],
+    ["Sartarosh", "Ko'p so'raladi | Barber \u00B7 erkaklar soch turmagi", "Oldindan yozilish shartmi? = Shart emas, lekin yozilsangiz kutmasdan kirasiz. ; Soch olish qancha turadi? = Soch olish 80 000 so'm, soqol bilan birga 120 000 so'm. ; Bolalar ham kelsa bo'ladimi? = Albatta, 4 yoshdan kattalarni qabul qilamiz. ; Ish vaqtingiz qanday? = Har kuni 10:00 dan 21:00 gacha, dushanba dam olish.", "dark | brown"],
+    ["Stilist", "Savol-javob | Shaxsiy stilist \u00B7 garderob va xarid", "Garderob tahlili qanday o'tadi? = Uyingizga kelaman, kiyimlarni saralaymiz va yangi to'plamlar tuzamiz. ; Qancha vaqt oladi? = Odatda 3 soat atrofida, garderob kattaligiga bog'liq. ; Birga xaridga borasizmi? = Ha, byudjetingizga mos do'konlarni oldindan tanlab qo'yaman. ; Onlayn format bormi? = Bor, suratlar orqali tahlil qilib, tavsiyalarni yozib yuboraman.", "light | pink"],
+    ["Marketolog", "Ko'p beriladigan savollar | Marketolog \u00B7 SMM va reklama", "Natijani kafolatlaysizmi? = Aniq raqamni va'da qilmayman, lekin har hafta hisobot beraman. ; Reklama byudjeti qancha kerak? = Boshlash uchun oyiga 300-500 dollar yetarli bo'ladi. ; Qaysi tarmoqlar bilan ishlaysiz? = Instagram, Telegram va Facebook reklamalari bilan. ; Shartnoma tuzamizmi? = Ha, xizmatlar va muddatlar shartnomada aniq yoziladi.", "light | green"],
+    ["Ingliz tili", "Ko'p so'raladi | Ingliz tili o'qituvchisi \u00B7 IELTS", "Darajamni qanday bilaman? = Birinchi darsda bepul test o'tkazamiz va darajangizni aniqlaymiz. ; Guruhda necha kishi bo'ladi? = Guruhda 6-8 kishi, shaxsiy darslar ham bor. ; Kurs qancha davom etadi? = IELTS kursi 3 oy, haftasiga 3 marta dars. ; Uy vazifasi beriladimi? = Ha, har darsdan keyin qisqa vazifa va haftalik mock test.", "light | red"]
+];
+// greedy word wrap by an estimated glyph width (25px medium ~ 0.47em per char)
+function _s57_346Wrap(str, maxCh) {
+    var w = _s45Trim(str).split(/\s+/), out = [], cur = "", i;
+    for (i = 0; i < w.length; i++) {
+        if (cur && (cur + " " + w[i]).length > maxCh) { out.push(cur); cur = w[i]; } else cur = cur ? cur + " " + w[i] : w[i];
+    }
+    if (cur) out.push(cur);
+    if (out.length > 3) { out.length = 3; out[2] += "..."; }
+    return out;
+}
+function _s57Faq() {
+    var PR = _s47Pick("FAQ Accordion (346)", S57_P346); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv (bo'sh = yo'q)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Savollar (2-5 ta), ; bilan:  Savol = javob", PR[2]); if (q2 === null) return;
+    var q3 = prompt("light/dark | rang (blue green pink purple teal ... yoki #hex)", PR[3]); if (q3 === null) return;
+    var A = _s47Split(q1, 2), M = _s47Split(q3, 2), Q = [], rr = String(q2).split(";"), i, k;
+    for (i = 0; i < rr.length && Q.length < 5; i++) {
+        var r = _s45Trim(rr[i]); if (!r) continue; var eq = r.indexOf("=");
+        Q.push(eq >= 0 ? [_s45Trim(r.substring(0, eq)), _s57_346Wrap(r.substring(eq + 1), 50)] : [r, []]);
+    }
+    if (Q.length < 2) { alert("Kamida 2 ta savol kerak: Savol = javob ; ..."); return; }
+    var n = Q.length;
+    var x = _s47Begin("FAQ", { states: n + 1, look: _s47Look(M[0], M[1]), first: 0.5, hold: 1.14, extraEnd: 1.5, colors: { "Oq": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, cx = x.cx, IW = 688 * K, PAD = 36 * K, HT = (A[1] ? 115.2 : 74) * K, left = cx - IW / 2, right = cx + IW / 2, OQ = _s47Col(x, "Oq");
+    var AH = [], os = [];
+    for (i = 0; i < n; i++) { AH.push(Q[i][1].length ? Q[i][1].length * 36.25 * K + 30 * K : 0); os.push("st(" + (i + 1) + ")"); }
+    var base = 2 * PAD + HT + n * 94 * K + (n - 1) * 2 * K;
+    // shared: open amounts, extra height, card top T(s), header top Y(i)
+    var FX = "var o=[" + os.join(",") + "], AH=[" + AH.join(",") + "], ex=0; for(var q=0;q<" + n + ";q++) ex+=AH[q]*o[q]; " +
+        "var T=" + x.cy + "-(" + base + "+ex)/2; function Y(i){var r=T+" + (PAD + HT) + "+i*" + (96 * K) + "; for(var q=0;q<i;q++) r+=AH[q]*o[q]; return r;} ";
+    var cd = _s47Rect(x, "card", FX + "[" + (760 * K) + ", " + base + "+ex]", [cx, x.cy], 44 * K, _s47Col(x, "Card"));
+    _s46Shadow(cd, x.theme === "light" ? 46 : 115, 24 * K, 70 * K);
+    _s47Txt(x, A[0], 40 * K, "bold", "L", "sarlavha", FX + "[" + left + ", T+" + (PAD + 38 * K) + "]", _s47Col(x, "Text"));
+    if (A[1]) _s47Txt(x, A[1], 26 * K, "reg", "L", "kichik yozuv", FX + "[" + left + ", T+" + (PAD + 80.7 * K) + "]", _s47Col(x, "Dim"));
+    // ---- counter chip k/N (digit rolls inside the chip) ----
+    var CY = FX + "var cy=T+" + (PAD + 27.6 * K) + "; ";
+    var sl = _s47Txt(x, "/" + n, 26 * K, "bold", "R", "hisob /n", CY + "[" + (right - 18 * K) + ", cy+" + (9.1 * K) + "]", _s47Col(x, "Accent"));
+    var SW = 'var sw=thisComp.layer("' + sl.name + '").sourceRectAtTime().width; ', DG = [], mats = [];
+    var dm = _s47Rect(x, "hisob matte", [120 * K, 34 * K], CY + "[" + (right - 60 * K) + ", cy]", 0, OQ, "100");
+    for (k = 0; k <= n; k++) {
+        var dl = _s47Txt(x, String(k), 26 * K, "bold", "R", "hisob " + k, CY + SW + "[" + (right - 18 * K) + "-sw, cy+" + (9.1 * K) + "+(" + k + "-s)*" + (31.2 * K) + "]", _s47Col(x, "Accent"));
+        DG.push(dl); mats.push([dl, dm]);
+    }
+    var cb = _s47Rect(x, "hisob chip", CY + SW + 'var dw=thisComp.layer("' + DG[0].name + '").sourceRectAtTime().width; [sw+dw+' + (36 * K) + ', ' + (47.2 * K) + ']',
+        CY + SW + 'var dw=thisComp.layer("' + DG[0].name + '").sourceRectAtTime().width; [' + right + '-(sw+dw+' + (36 * K) + ')/2, cy]', 18 * K,
+        "var a=" + _s47Col(x, "Accent") + ".value, c=" + _s47Col(x, "Card") + ".value; add(c, mul(sub(a,c),0.16))");
+    cb.moveAfter(sl);
+    // ---- list: row block, separators, questions, chevrons, clipped answers ----
+    _s47Rect(x, "ro'yxat fon", FX + "[" + IW + ", " + (n * 94 * K + (n - 1) * 2 * K) + "+ex]", FX + "[" + cx + ", T+" + (PAD + HT) + "+(" + (n * 94 * K + (n - 1) * 2 * K) + "+ex)/2]", 30 * K, _s47Col(x, "Row"));
+    for (i = 0; i < n; i++) {
+        var nm = "savol " + (i + 1), YI = FX + "var y=Y(" + i + "), u=o[" + i + "]; ";
+        if (i) _s47Rect(x, nm + " chiziq", [IW, 2 * K], YI + "[" + cx + ", y-" + (1 * K) + "]", 0, _s47Col(x, "Card"));
+        _s47Txt(x, Q[i][0], 28 * K, "semi", "L", nm, YI + "[" + (left + 28 * K) + ", y+" + (56.8 * K) + "]",
+            YI + "var t=" + _s47Col(x, "Text") + ".value, a=" + _s47Col(x, "Accent") + ".value; add(t, mul(sub(a,t), u))");
+        var ccx = right - 51 * K;
+        _s47Ellipse(x, nm + " doira", [46 * K, 46 * K], YI + "[" + ccx + ", y+" + (47 * K) + "]", _s47Col(x, "Card"));
+        var ch = _s55Ico(x, nm + " strelka", "chevron-down", 40 * K, 3.8 * K, _s47Col(x, "Text"), YI + "[" + ccx + ", y+" + (48 * K) + "]");
+        ch.property("ADBE Transform Group").property("ADBE Rotate Z").expression = x.PRE + FX + "180*cl(1-Math.abs(s-" + (i + 1) + "))";
+        if (!AH[i]) continue;
+        var am = _s47Rect(x, nm + " javob matte", YI + "[" + IW + ", Math.max(0.1, AH[" + i + "]*u)]", YI + "[" + cx + ", y+" + (94 * K) + "+AH[" + i + "]*u/2]", 0, OQ, "100");
+        for (k = 0; k < Q[i][1].length; k++) {
+            var al = _s47Txt(x, Q[i][1][k], 25 * K, "reg", "L", nm + " javob " + (k + 1), YI + "[" + (left + 28 * K) + ", y+" + (94 * K + 26.9 * K + k * 36.25 * K) + "]", _s47Col(x, "Dim"), YI + "op*cl(u*1.5)");
+            mats.push([al, am]);
+        }
+    }
+    for (i = 0; i < mats.length; i++) { try { mats[i][0].setTrackMatte(mats[i][1], TrackMatteType.ALPHA); } catch (eM) {} mats[i][1].enabled = false; }
+    _s47Finish(x);
+}
+
+// ---------- 347 WEBINAR CARD (S57, board 17) ----------
+// Event card (calendar date, topic, speaker). Tab 2: reminder switch stretches on, the bell rings,
+// sign-ups roll +1. Tab 3: a dark "reminder set" toast bounces in under the card rows.
+var S57_P347 = [
+    ["Biznes maslahatchi", "OKT | 12 | Kichik biznesda sotuv tizimi | Shanba \u00B7 20:00 \u00B7 60 daqiqa", "Rustam Karimov | Biznes maslahatchi \u00B7 spiker | RK | Bepul vebinar", "Ro'yxatdan o'tganlar | 312 | 313 | kishi | Eslatma qo'yish | Eslatma qo'yildi | boshlanishdan 1 soat oldin", "light | purple"],
+    ["Psixolog", "NOY | 3 | Bolada xavotirni qanday yengish | Yakshanba \u00B7 19:00 \u00B7 90 daqiqa", "Malika Yusupova | Bolalar psixologi \u00B7 spiker | MY | Bepul vebinar", "Ro'yxatdan o'tganlar | 186 | 187 | kishi | Eslatma qo'yish | Eslatma qo'yildi | boshlanishdan 1 soat oldin", "light | teal"],
+    ["Dizayner", "SEN | 28 | Portfolio qanday yig'iladi | Payshanba \u00B7 21:00 \u00B7 60 daqiqa", "Otabek Nazarov | Grafik dizayner \u00B7 spiker | ON | Bepul efir", "Ro'yxatdan o'tganlar | 94 | 95 | kishi | Eslatma qo'yish | Eslatma qo'yildi | efirdan 30 daqiqa oldin", "dark | purple"],
+    ["Advokat", "DEK | 7 | Meros hujjatlarini rasmiylashtirish | Shanba \u00B7 11:00 \u00B7 60 daqiqa", "Anvar Qodirov | Advokat \u00B7 spiker | AQ | Bepul vebinar", "Ro'yxatdan o'tganlar | 142 | 143 | kishi | Eslatma qo'yish | Eslatma qo'yildi | boshlanishdan 1 soat oldin", "light | indigo"],
+    ["Fitnes murabbiy", "OKT | 20 | Uyda 20 daqiqalik mashg'ulot | Dushanba \u00B7 07:00 \u00B7 30 daqiqa", "Sevara Aliyeva | Fitnes murabbiy \u00B7 jonli efir | SA | Bepul efir", "Qatnashuvchilar | 428 | 429 | kishi | Eslatma qo'yish | Eslatma qo'yildi | efirdan 15 daqiqa oldin", "dark | orange"],
+    ["Dietolog", "NOY | 15 | Kuzda to'g'ri ovqatlanish | Chorshanba \u00B7 20:00 \u00B7 45 daqiqa", "Dilnoza Karimova | Dietolog \u00B7 spiker | DK | Bepul vebinar", "Ro'yxatdan o'tganlar | 257 | 258 | kishi | Eslatma qo'yish | Eslatma qo'yildi | boshlanishdan 1 soat oldin", "light | green"],
+    ["Fotograf", "SEN | 30 | Telefonda portret suratga olish | Seshanba \u00B7 19:30 \u00B7 60 daqiqa", "Akmal Rasulov | Fotograf \u00B7 master-klass | AR | Bepul dars", "Yozilganlar | 76 | 77 | kishi | Eslatma qo'yish | Eslatma qo'yildi | darsdan 1 soat oldin", "dark | black"],
+    ["Sartarosh", "OKT | 26 | Fade soch turmagi sirlari | Yakshanba \u00B7 15:00 \u00B7 90 daqiqa", "Javlon Usmonov | Barber \u00B7 master-klass | JU | Oflayn dars", "Joylar band | 18 | 19 | ta | Eslatma qo'yish | Eslatma qo'yildi | darsdan 1 kun oldin", "dark | brown"],
+    ["Stilist", "NOY | 9 | Kapsula garderob tuzish | Juma \u00B7 20:00 \u00B7 60 daqiqa", "Shahnoza Ergasheva | Shaxsiy stilist \u00B7 spiker | SE | Bepul vebinar", "Ro'yxatdan o'tganlar | 203 | 204 | kishi | Eslatma qo'yish | Eslatma qo'yildi | boshlanishdan 1 soat oldin", "light | pink"],
+    ["Marketolog", "DEK | 2 | Instagram reklamada birinchi mijoz | Seshanba \u00B7 20:00 \u00B7 75 daqiqa", "Firdavs Tursunov | Marketolog \u00B7 spiker | FT | Bepul vebinar", "Ro'yxatdan o'tganlar | 365 | 366 | kishi | Eslatma qo'yish | Eslatma qo'yildi | boshlanishdan 1 soat oldin", "light | blue"]
+];
+function _s57_347Trk(L, v) { try { var sp = L.property("Source Text"), td = sp.value; td.tracking = v; sp.setValue(td); } catch (e) {} }
+function _s57_347Wrap(str, maxCh) {
+    var w = _s45Trim(str).split(/\s+/), out = [], cur = "", i;
+    for (i = 0; i < w.length; i++) { if (cur && (cur + " " + w[i]).length > maxCh) { out.push(cur); cur = w[i]; } else cur = cur ? cur + " " + w[i] : w[i]; }
+    if (cur) out.push(cur); if (out.length > 2) { out.length = 2; out[1] += "..."; } return out;
+}
+// layer shown by expression pos/scale around a moving group centre (toast)
+function _s57_347Grp(L, x, G, dxE, dyE) {
+    var tr = L.property("ADBE Transform Group");
+    tr.property("ADBE Position").expression = x.PRE + G + "[gx+(" + dxE + ")*k, gy+(" + dyE + ")*k]";
+    tr.property("ADBE Scale").expression = x.PRE + G + "[k*100, k*100]";
+}
+function _s57Webinar() {
+    var PR = _s47Pick("Webinar Card (347)", S57_P347); if (!PR) return;
+    var q1 = prompt("Oy | kun | mavzu | vaqt qatori", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Spiker | kasbi | initsial | chip (bo'sh = chipsiz)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Qator yozuvi | son oldin | son keyin | birlik | eslatma yozuvi | toast | toast izohi", PR[3]); if (q3 === null) return;
+    var q4 = prompt("light/dark | rang (blue green pink purple teal ... yoki #hex)", PR[4]); if (q4 === null) return;
+    var A = _s47Split(q1, 4), B = _s47Split(q2, 4), C = _s47Split(q3, 7), M = _s47Split(q4, 2), i, L;
+    var TT = _s57_347Wrap(A[2], 29);
+    var x = _s47Begin("WEBINAR", { states: 3, look: _s47Look(M[0], M[1]), first: 1.65, hold: 1.6, extraEnd: 2.2,
+        colors: { "Sana": _s47Hex("ff3b30"), "Avatar": _s47Hex("b36ee0"), "Yoqildi": _s47Hex("34c759"), "Knob": [1, 1, 1], "Oq": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, cx = x.cx, IW = 688 * K, PAD = 36 * K, left = cx - IW / 2, right = cx + IW / 2;
+    var BH = TT.length * 41.3 * K + (A[3] ? 36.8 * K : 0), HH = Math.max(129.4 * K, BH);
+    var CH = 2 * PAD + HH + 428 * K, y0 = x.cy - CH / 2 + PAD, OQ = _s47Col(x, "Oq"), TX = _s47Col(x, "Text"), DM = _s47Col(x, "Dim"), AC = _s47Col(x, "Accent");
+    var TINT = "var a=" + AC + ".value, c=" + _s47Col(x, "Card") + ".value; add(c, mul(sub(a,c),0.16))";
+    _s47Card(x, 760 * K, CH, [cx, x.cy]);
+    // ---- date tile + topic ----
+    var dc = y0 + HH / 2, dt = dc - 64.7 * K;
+    _s47Rect(x, "sana fon", [124 * K, 129.4 * K], [left + 62 * K, dc], 26 * K, _s47Col(x, "Row"));
+    _s47Rect(x, "sana oy fon", [124 * K, 72.4 * K], [left + 62 * K, dt + 36.2 * K], 26 * K, _s47Col(x, "Sana"));
+    _s47Rect(x, "sana oy yopish", [124 * K, 30 * K], [left + 62 * K, dt + 57.4 * K], 0, _s47Col(x, "Row"));
+    _s57_347Trk(_s47Txt(x, A[0], 22 * K, "bold", "C", "sana oy", [left + 64.3 * K, dt + 28.9 * K], OQ), 120);
+    _s57_347Trk(_s47Txt(x, A[1], 58 * K, "bold", "C", "sana kun", [left + 61 * K, dt + 106.2 * K], TX), -34);
+    var bt = dc - BH / 2;
+    for (i = 0; i < TT.length; i++) _s47Txt(x, TT[i], 35 * K, "bold", "L", "mavzu " + (i + 1), [left + 152 * K, bt + 32.9 * K + i * 41.3 * K], TX);
+    if (A[3]) _s47Txt(x, A[3], 24 * K, "reg", "L", "vaqt", [left + 152 * K, bt + TT.length * 41.3 * K + 30.8 * K], DM);
+    // ---- speaker ----
+    var sy = y0 + HH + 62 * K;
+    _s47Ellipse(x, "spiker avatar", [64 * K, 64 * K], [left + 32 * K, sy], _s47Col(x, "Avatar"));
+    _s47Txt(x, B[2] || B[0].substr(0, 2).toUpperCase(), 23 * K, "bold", "C", "spiker initsial", [left + 32 * K, sy + 8.05 * K], OQ);
+    _s47Txt(x, B[0], 27 * K, "bold", "L", "spiker", [left + 82 * K, sy - 3.75 * K], TX);
+    if (B[1]) _s47Txt(x, B[1], 22 * K, "reg", "L", "spiker kasbi", [left + 82 * K, sy + 23.9 * K], DM);
+    if (B[3]) {
+        var ft = _s47Txt(x, B[3], 23 * K, "bold", "R", "chip matni", [right - 18 * K, sy + 8.05 * K], AC);
+        var FW = 'var w=thisComp.layer("' + ft.name + '").sourceRectAtTime().width+' + (36 * K) + '; ';
+        _s47Rect(x, "chip", FW + "[w, " + (43.6 * K) + "]", FW + "[" + right + "-w/2, " + sy + "]", 16 * K, TINT).moveAfter(ft);
+    }
+    // ---- sign-ups row: number rolls +1 when the reminder turns on ----
+    var ry = sy + 32 * K + 16 * K + 46 * K, Q = "var tg=c.effect(\"Tab\")(\"Slider\").value-1, q=tg>=2?1:sp.valueAtTime(time-0.3); ";
+    _s47Rect(x, "qator fon", [IW, 92 * K], [cx, ry], 22 * K, _s47Col(x, "Row"));
+    if (C[0]) _s47Txt(x, C[0], 30 * K, "reg", "L", "qator yozuvi", [left + 28 * K, ry + 10.5 * K], DM);
+    var un = _s47Txt(x, C[3], 30 * K, "semi", "R", "birlik", [right - 28 * K, ry + 10.5 * K], TX);
+    var UW = 'var uw=thisComp.layer("' + un.name + '").sourceRectAtTime().width' + (C[3] ? '+' + (7.5 * K) : '') + '; ';
+    var nm = _s47Rect(x, "son matte", [300 * K, 40 * K], [right - 150 * K, ry], 0, OQ, "100");
+    for (i = 0; i < 2; i++) {
+        L = _s47Txt(x, C[1 + i], 30 * K, "semi", "R", "son " + (i + 1), Q + UW + "[" + (right - 28 * K) + "-uw, " + (ry + 10.5 * K) + "+(" + i + "-q)*" + (36 * K) + "]", TX);
+        try { L.setTrackMatte(nm, TrackMatteType.ALPHA); } catch (eM) {}
+    }
+    nm.enabled = false;
+    // ---- reminder row: bell rings, iOS switch stretches on ----
+    var my = ry + 46 * K + 16 * K + 56 * K, U = "var u=cl(s); ";
+    _s47Rect(x, "eslatma fon", [IW, 112 * K], [cx, my], 22 * K, _s47Col(x, "Row"));
+    _s47Rect(x, "qo'ng'iroq fon", [68 * K, 68 * K], [left + 56 * K, my], 20 * K, TINT);
+    var bl = _s55Ico(x, "qo'ng'iroq", "bell", 46 * K, 2 * K, AC, [left + 56 * K, my - 19.2 * K], null, { fill: AC });
+    bl.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, -19.2 * K]);
+    bl.property("ADBE Transform Group").property("ADBE Rotate Z").expression = x.PRE + 'var tb=c.effect("Tab")("Slider"), tk=tb.numKeys>=2?tb.key(2).time+0.5:1e9, d=time-tk; ' +
+        'd<0?0:24*Math.exp(-1.3*d)*Math.sin(2*Math.PI*d/0.35)*cl((1.3-d)/0.3)';
+    if (C[4]) _s47Txt(x, C[4], 28 * K, "semi", "L", "eslatma", [left + 110 * K, my + 9.8 * K], TX);
+    var swL = right - 122 * K;
+    _s47Rect(x, "switch", [100 * K, 60 * K], [swL + 50 * K, my], 30 * K, U + "var a=" + _s47Col(x, "Track") + ".value, b=" + _s47Col(x, "Yoqildi") + ".value; add(a, mul(sub(b,a), u))");
+    var KW = U + "var w=" + (52 * K) + "+" + (12 * K) + "*Math.sin(Math.PI*u); ";
+    var kb = _s47Rect(x, "knob", KW + "[w, " + (52 * K) + "]", KW + "[" + (swL + 4 * K) + "+w/2+(" + (92 * K) + "-w)*u, " + my + "]", 26 * K, _s47Col(x, "Knob"));
+    _s46Shadow(kb, 38, 3 * K, 8 * K);
+    // ---- toast (Tab 3): dark pill, green check, text + faded note ----
+    if (C[5]) {
+        var gy = my + 56 * K + 24 * K + 37 * K, t1 = _s47Txt(x, C[5], 26 * K, "semi", "L", "toast", [0, 0], _s47Col(x, "Card"));
+        var t2 = C[6] ? _s47Txt(x, " \u00B7 " + C[6], 22 * K, "reg", "L", "toast izoh", [0, 0], _s47Col(x, "Card")) : null;
+        var G = "var tg=c.effect(\"Tab\")(\"Slider\").value-1, u=tg>=2?Math.max(0,s-1):0, k=0.9+0.1*Math.min(u,1.3), gx=" + cx + ", gy=" + gy + "+(1-Math.min(u,1))*" + (24 * K) + "; " +
+            'var w1=thisComp.layer("' + t1.name + '").sourceRectAtTime().width, w2=' + (t2 ? 'thisComp.layer("' + t2.name + '").sourceRectAtTime().width' : '0') + ', W=w1+w2+' + (106 * K) + '; ';
+        var TO = G + "op*cl(u*1.6)";
+        var tb2 = _s47Rect(x, "toast fon", G + "[W, " + (74 * K) + "]", [0, 0], 37 * K, TX, TO);
+        _s57_347Grp(tb2, x, G, "0", "0");
+        var tc = _s47Ellipse(x, "toast doira", [46 * K, 46 * K], [0, 0], _s47Col(x, "Yoqildi"), TO);
+        _s57_347Grp(tc, x, G, "-W/2+" + (37 * K), "0");
+        var tk2 = _s55Ico(x, "toast belgi", "check", 30 * K, 3.4 * K, OQ, [0, 0], TO);
+        _s57_347Grp(tk2, x, G, "-W/2+" + (37 * K), "0");
+        t1.property("ADBE Transform Group").property("ADBE Opacity").expression = x.PRE + TO; t1.moveToBeginning();
+        _s57_347Grp(t1, x, G, "-W/2+" + (76 * K), String(9.1 * K));
+        if (t2) {
+            t2.property("ADBE Transform Group").property("ADBE Opacity").expression = x.PRE + G + "op*cl(u*1.6)*0.6"; t2.moveToBeginning();
+            _s57_347Grp(t2, x, G, "-W/2+" + (76 * K) + "+w1", String(9.1 * K));
+        }
+    }
+    _s47Finish(x);
+}
+
+// ---------- 348 BADGE WALL (S57, board 17) ----------
+// 3-column grid of shaped badges (circle/hex/shield/star/oct/seal): one pops per Tab key with a
+// shine sweep, the row counter rolls 0..n, a green verify check pops, the row tints and all shine.
+var S57_P348 = [
+    ["Shifokor", "Malaka va yutuqlar | Kardiolog \u00B7 12 yillik amaliyot | Tasdiqlangan yutuqlar | dark | #ffcc00",
+        "12=yil tajriba ; PhD=Fan nomzodi ; A+=Oliy toifa ; 5K=5 000+ bemor ; 3=Xalqaro kurs ; TOP=Yil shifokori",
+        "gold, blue, green, red, purple, silver | circle, hex, shield, star, oct, seal"],
+    ["Psixolog", "Malaka va sertifikatlar | Psixolog \u00B7 8 yillik amaliyot | Tasdiqlangan hujjatlar | light | #5856d6",
+        "8=yil tajriba ; MA=Magistr ; KBT=KBT terapevt ; 2K=2 000+ seans ; 4=Xalqaro trening ; 100%=Maxfiylik",
+        "purple, blue, teal, pink, gold, silver | circle, hex, shield, star, oct, seal"],
+    ["Grafik dizayner", "Yutuqlarim | Grafik dizayner \u00B7 6 yil | Tasdiqlangan ishlar | dark | #ff2d55",
+        "6=yil tajriba ; 300=300+ loyiha ; UX=UX kursi ; 40=Brend logo ; 2=Konkurs g'olibi ; PRO=Behance tanlovi",
+        "pink, purple, blue, orange, gold, silver | circle, hex, shield, star, oct, seal"],
+    ["Advokat", "Malaka va tajriba | Advokat \u00B7 fuqarolik ishlari | Tasdiqlangan malaka | light | #0a84ff",
+        "15=yil amaliyot ; LLM=Huquq magistri ; LIC=Litsenziya ; 400=400+ ish ; EN=Ingliz tili ; TOP=Yil advokati",
+        "blue, gold, green, red, purple, silver | circle, hex, shield, star, oct, seal"],
+    ["Fitnes murabbiy", "Sertifikatlar | Fitnes murabbiy \u00B7 7 yil | Tasdiqlangan sertifikatlar | dark | #34c759",
+        "7=yil tajriba ; CPT=Shaxsiy murabbiy ; 500=500+ mijoz ; KMS=Sport ustaligi ; NUT=Ovqatlanish ; 1=Musobaqa 1-o'rin",
+        "green, blue, orange, red, purple, gold | circle, hex, shield, star, oct, seal"],
+    ["Ingliz tili ustozi", "Malakam | IELTS ustozi \u00B7 9 yil | Tasdiqlangan natijalar | light | #ff9500",
+        "8.5=IELTS ball ; C2=Til darajasi ; 9=yil tajriba ; 1K=1 000+ o'quvchi ; 120=7.0+ olganlar ; TOP=Yil ustozi",
+        "orange, blue, green, red, purple, gold | circle, hex, shield, star, oct, seal"],
+    ["Fotograf", "Portfolio yutuqlari | Fotograf \u00B7 to'y va portret | Tasdiqlangan yutuqlar | dark | #ffcc00",
+        "10=yil tajriba ; 250=250+ to'y ; 12=Ko'rgazma ; 3=Xalqaro mukofot ; 4K=Video ham ; TOP=Yil fotografi",
+        "gold, teal, blue, red, purple, silver | circle, hex, shield, star, oct, seal"],
+    ["Sartarosh", "Ustaning yutuqlari | Barber \u00B7 erkaklar soch turmagi | Tasdiqlangan yutuqlar | dark | #ff9500",
+        "9=yil tajriba ; 20K=20 000+ turmak ; 1=Barber batl g'olibi ; 3=Master-klass ; 50=Shogird ; PRO=Oliy toifa",
+        "orange, silver, gold, red, blue, purple | circle, hex, shield, star, oct, seal"],
+    ["Marketolog", "Kompetensiyalar | Marketolog \u00B7 6 yil | Tasdiqlangan natijalar | light | #af52de",
+        "6=yil tajriba ; 80=80+ brend ; GA=Analitika sertifikati ; 3x=O'rtacha ROI ; 2=Xalqaro kurs ; TOP=Agentlik reytingi",
+        "purple, blue, green, orange, teal, gold | circle, hex, shield, star, oct, seal"],
+    ["Stilist", "Stilist malakasi | Imij stilist \u00B7 7 yil | Tasdiqlangan yutuqlar | light | #ff2d55",
+        "7=yil tajriba ; 900=900+ obraz ; 2=Moda haftaligi ; 5=Xalqaro kurs ; 40=Brend bilan ish ; TOP=Yil stilisti",
+        "pink, gold, purple, red, teal, silver | circle, hex, shield, star, oct, seal"]
+];
+// badge palettes: outer ring gradient (a -> b), inner gradient (c -> d)
+var S57_348COL = {
+    gold: ["fff1b8", "c9971c", "ffd35c", "d18a00"], blue: ["bfe0ff", "2f6fd6", "64b5ff", "0a5ad6"], green: ["c8f5d4", "1f9a4a", "5fe08a", "16953f"],
+    red: ["ffc4cc", "d6243c", "ff6b81", "d11a36"], purple: ["e2cfff", "7a3fd0", "b98cff", "6a2fc9"], silver: ["f4f4f8", "8e8e96", "d8d8de", "7c7c86"],
+    orange: ["ffe0b8", "d9730a", "ffb35c", "e06a00"], teal: ["c4f1f4", "1b8c99", "5fd4de", "11849a"], pink: ["ffd1e6", "d63384", "ff85b8", "cc2f78"]
+};
+// polygon (1080 px, centred) for a badge shape; null = circle
+function _s57_348Pts(key, d) {
+    var P = { hex: [25, 3, 75, 3, 100, 50, 75, 97, 25, 97, 0, 50], shield: [50, 0, 96, 14, 96, 56, 50, 100, 4, 56, 4, 14], oct: [30, 0, 70, 0, 100, 30, 100, 70, 70, 100, 30, 100, 0, 70, 0, 30] };
+    var r = [], i, a, n, p = P[key];
+    if (key === "star" || key === "seal") {
+        n = key === "star" ? 12 : 20;
+        for (i = 0; i < 2 * n; i++) { a = Math.PI * i / n; var rr = (i % 2 ? (n === 12 ? 0.8 : 0.9) : 1) * d / 2; r.push([rr * Math.sin(a), -rr * Math.cos(a)]); }
+        return r;
+    }
+    if (!p) return null;
+    for (i = 0; i < p.length; i += 2) r.push([(p[i] / 100 - 0.5) * d, (p[i + 1] / 100 - 0.5) * d]);
+    return r;
+}
+function _s57_348Mix(a, b) { return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2, 1]; }
+// badge shape layer (fill expr), centred at 0 in layer space
+function _s57_348Sh(x, name, key, d, fill) {
+    var pts = _s57_348Pts(key, d);
+    if (!pts) return _s47Ellipse(x, name, [d * x.K, d * x.K], [0, 0], fill);
+    return _s50_302Poly(x, name, pts, 0, 0, fill, null);
+}
+// real gradient in AE (Gradient Ramp, 145deg like the board); shape-layer effect space origin = comp centre
+function _s57_348Ramp(x, L, c1, c2, r) {
+    try {
+        var e = L.property("ADBE Effect Parade").addProperty("ADBE Ramp");
+        e.property("ADBE Ramp-0001").setValue([x.W / 2 - 0.29 * r, x.H / 2 - 0.41 * r]); e.property("ADBE Ramp-0002").setValue([c1[0], c1[1], c1[2], 1]);
+        e.property("ADBE Ramp-0003").setValue([x.W / 2 + 0.29 * r, x.H / 2 + 0.41 * r]); e.property("ADBE Ramp-0004").setValue([c2[0], c2[1], c2[2], 1]);
+    } catch (eR) {}
+}
+// springy 0 -> 1 (with overshoot) from Tab key n, tuned by CTRL "Prujina (s)"
+function _s57_348Q(n) {
+    return _s54Key(n) + 'var dt=Math.max(0,time-tk), w=2*Math.PI/Math.max(0.05,c.effect("Prujina (s)")("Slider").value*1.15), wd=w*0.866; ' +
+        'var q=time<tk?0:1-Math.exp(-0.5*w*dt)*(Math.cos(wd*dt)+0.577*Math.sin(wd*dt)); ';
+}
+function _s57BadgeWall() {
+    var PR = _s47Pick("Badge Wall (348)", S57_P348); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv | qator yozuvi | light/dark | rang (#hex yoki so'z)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Nishonlar (1-6 ta): belgi=izoh ; belgi=izoh ; ...", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Ranglar: gold, blue, green, red, purple, silver, orange, teal, pink\n| shakllar: circle, hex, shield, star, oct, seal", PR[3]); if (q3 === null) return;
+    var M = _s47Split(q1, 5), R = String(q2).split(";"), CS = _s47Split(q3, 2), CL = _s47List(CS[0]), SH = _s47List(CS[1]), B = [], i;
+    var DC = ["gold", "blue", "green", "red", "purple", "silver"], DS = ["circle", "hex", "shield", "star", "oct", "seal"];
+    for (i = 0; i < R.length && B.length < 6; i++) {
+        var it = _s45Trim(R[i]); if (!it) continue;
+        var eq = it.indexOf("="), k = B.length, cw = String(CL[k] || DC[k]).toLowerCase();
+        B.push({ t: _s45Trim(eq >= 0 ? it.substring(0, eq) : it), l: eq >= 0 ? _s45Trim(it.substring(eq + 1)) : "",
+            c: S57_348COL[cw] || S57_348COL[DC[k]], s: String(SH[k] || DS[k]).toLowerCase() });
+    }
+    var n = B.length; if (!n) { alert("Kamida bitta nishon: 12=yil tajriba"); return; }
+    var x = _s47Begin("NISHON", { states: n + 2, look: _s47Look(M[3], M[4]), colors: { "Tasdiq": [0.204, 0.78, 0.349] } }); if (!x) return;
+    var t0 = x.t0; x.switchT = [];
+    for (i = 1; i <= n; i++) x.switchT.push(t0 + 0.3 + 0.42 * i);
+    x.switchT.push(t0 + 0.79 + 0.42 * n); x.outS = x.switchT[n] + 3.1; x.t1 = x.outS + S47_TL.OUTD;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, colW = IW / 3, rows = Math.ceil(n / 3);
+    var H = PAD + (M[0] ? 74 * K : 0) + (M[1] ? 41 * K : 0) + rows * 196 * K + (rows - 1) * 30 * K + 34 * K + 92 * K + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.85], _s47Col(x, "Text")); y += 74 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 26 * K * 0.85 - 18 * K], _s47Col(x, "Dim")); y += 41 * K; }
+    for (i = 0; i < n; i++) {
+        var b = B[i], bx = left + colW * (i % 3 + 0.5), by = y + Math.floor(i / 3) * 226 * K + 78 * K, Q = _s57_348Q(i + 2);
+        var SC = Q + "var k=30+70*q; [k,k]", OP = Q + "op*cl(q*2.5)", ca = _s47Hex(b.c[0]), cb = _s47Hex(b.c[1]), cc = _s47Hex(b.c[2]), cd = _s47Hex(b.c[3]);
+        var o = _s57_348Sh(x, "nishon " + (i + 1) + " hoshiya", b.s, 156, "[" + _s57_348Mix(ca, cb).join(",") + "]");
+        _s57_348Ramp(x, o, ca, cb, 156 * K);
+        var g = _s57_348Sh(x, "nishon " + (i + 1), b.s, 134, "[" + _s57_348Mix(cc, cd).join(",") + "]");
+        _s57_348Ramp(x, g, cc, cd, 134 * K);
+        var mt = _s57_348Sh(x, "nishon " + (i + 1) + " matte", b.s, 134, "[1,1,1,1]");
+        var sh = _s47Rect(x, "nishon " + (i + 1) + " yaltiroq", [46 * K, 187 * K], [0, 0], 0, "[1,1,1,1]");
+        var SW = _s54Key(i + 2) + "var g1=cl((time-tk-0.28)/0.56); " + _s54Key(n + 2) + "var g2=cl((time-tk-0.6)/0.6); var gg=g2>0?g2:g1; ";
+        sh.property("ADBE Root Vectors Group").property("ADBE Vector Shape - Rect").property("ADBE Vector Rect Position").expression = x.PRE + SW + "[lp(" + (-99 * K) + "," + (138 * K) + ",sm(gg)), 0]";
+        sh.property("ADBE Transform Group").property("ADBE Opacity").expression = x.PRE + SW + "op*0.55*(gg>0&&gg<1?1:0)";
+        sh.property("ADBE Transform Group").property("ADBE Rotate Z").setValue(18);
+        try { var bl = sh.property("ADBE Effect Parade").addProperty("ADBE Gaussian Blur 2"); bl.property("ADBE Gaussian Blur 2-0001").setValue(16 * K); } catch (eB) {}
+        var fs = 40 * K * Math.min(1, 3.4 / Math.max(1, b.t.length));
+        var tx = _s47Txt(x, b.t, fs, "bold", "C", "nishon " + (i + 1) + " belgi", [bx, by + fs * 0.35], "[1,1,1,1]");
+        var lb = b.l ? _s47Txt(x, b.l, 22 * K, "semi", "C", "nishon " + (i + 1) + " izoh", [bx, by + 78 * K + 14 * K + 21 * K], _s47Col(x, "Dim")) : null;
+        var LL = [o, g, mt, sh, tx], j;
+        if (lb) LL.push(lb);
+        for (j = 0; j < LL.length; j++) {
+            var oy = LL[j] === tx ? by + fs * 0.35 : LL[j] === lb ? by + 113 * K : by;
+            _s51_303Piv(x, LL[j], bx, by, bx, oy, null, SC);
+            if (LL[j] !== sh && LL[j] !== mt) LL[j].property("ADBE Transform Group").property("ADBE Opacity").expression = x.PRE + OP;
+        }
+        try { sh.setTrackMatte(mt, TrackMatteType.ALPHA); } catch (eM) {}
+        mt.moveBefore(sh); mt.enabled = false;
+    }
+    // counter row: rolls 0..n, verify check pops, row tints to the accent
+    var ry = y + rows * 196 * K + (rows - 1) * 30 * K + 34 * K + 46 * K, QV = _s57_348Q(n + 2);
+    _s47Rect(x, "qator", [IW, 92 * K], [cx, ry], 22 * K, QV + "var r=" + _s47Col(x, "Row") + ".value, cc=" + _s47Col(x, "Card") + ".value, a=" + _s47Col(x, "Accent") +
+        ".value, tt=add(cc, mul(sub(a,cc),0.2)); add(r, mul(sub(tt,r), cl(q)))");
+    if (M[2]) _s47Txt(x, M[2], 30 * K, "reg", "L", "qator yozuv", [left + 28 * K, ry + 10 * K], _s47Col(x, "Dim"));
+    var tr = right - 92 * K, sl = _s47Txt(x, "/ " + n, 34 * K, "bold", "R", "jami", [tr, ry + 12 * K], _s47Col(x, "Text"));
+    var DX = 'var dx=thisComp.layer("' + sl.name + '").sourceRectAtTime().width+' + (10 * K) + '; var m=Math.min(s,' + n + '); ';
+    for (i = 0; i <= n; i++) {
+        _s47Txt(x, String(i), 34 * K, "bold", "R", "son " + i, DX + "[" + tr + "-dx, " + (ry + 12 * K) + "+(" + i + "-m)*" + (42 * K) + "]",
+            _s47Col(x, "Text"), DX + "op*sm(1-Math.abs(m-" + i + ")*1.6)");
+    }
+    var kx = right - 52 * K, VS = QV + "var k=100*Math.max(0,q); [k,k]";
+    var vc = _s47Ellipse(x, "tasdiq", [48 * K, 48 * K], [0, 0], _s47Col(x, "Tasdiq"), QV + "op*cl(q*3)");
+    _s51_303Piv(x, vc, kx, ry, kx, ry, null, VS);
+    var vi = _s55Ico(x, "tasdiq ikon", "check", 30 * K, 4.4 * K, "[1,1,1,1]", [kx, ry], QV + "op*cl(q*3)");
+    _s51_303Piv(x, vi, kx, ry, kx, ry, null, VS);
+    _s47Finish(x);
+}
+
+// ---------- 349 GUARANTEE SEAL (S57, board 17) ----------
+// Starburst seal spins in, white ring draws while the value rolls 0 -> 100% in quarters, a white
+// check badge pops and its tick draws as the seal punches, then the terms rows slide up.
+var S57_P349 = [
+    ["Mebel ustasi", "Sifat kafolati | Mebel ustasi \u00B7 har bir buyurtmaga | 100% | kafolat | light | #34c759",
+        "Pulni qaytarish=14 kun ; Bepul tuzatish=1 yil"],
+    ["Onlayn kurs", "Natija kafolati | Ingliz tili kursi \u00B7 3 oylik dastur | 100% | kafolat | light | #007aff",
+        "Pulni qaytarish=7 kun ; Qayta o'qish=bepul"],
+    ["Avtoservis", "Ta'mir kafolati | Avtoservis \u00B7 dvigatel va xodovoy | 100% | kafolat | dark | #ff9500",
+        "Qayta tekshiruv=30 kun ; Ehtiyot qism kafolati=6 oy"],
+    ["Stomatolog", "Davolash kafolati | Stomatolog \u00B7 plomba va protez | 100% | kafolat | light | #30b0c7",
+        "Bepul ko'rik=6 oy ; Plomba kafolati=1 yil"],
+    ["Fitnes murabbiy", "Natija kafolati | Fitnes murabbiy \u00B7 8 haftalik dastur | 100% | kafolat | dark | #34c759",
+        "Pulni qaytarish=14 kun ; Qo'shimcha hafta=bepul"],
+    ["Ta'mirlash ustasi", "Ish sifati kafolati | Kvartira ta'miri \u00B7 kalit topshirish | 100% | kafolat | light | #af52de",
+        "Kamchilikni tuzatish=bepul ; Ish kafolati=2 yil"],
+    ["Dizayner", "Mamnuniyat kafolati | Logo dizayner \u00B7 brend uchun | 100% | kafolat | light | #ff2d55",
+        "Tuzatishlar=3 marta ; Pulni qaytarish=7 kun"],
+    ["Elektrik", "Xavfsizlik kafolati | Elektrik usta \u00B7 uy va ofis | 100% | kafolat | dark | #ffcc00",
+        "Bepul chaqiruv=30 kun ; Montaj kafolati=1 yil"],
+    ["Tikuvchi", "Bichim kafolati | Tikuvchi \u00B7 buyurtma kiyim | 100% | kafolat | light | #a2845e",
+        "Bepul moslash=2 marta ; Chok kafolati=6 oy"],
+    ["Kompyuter ustasi", "Servis kafolati | Kompyuter ustasi \u00B7 noutbuk ta'miri | 100% | kafolat | dark | #0a84ff",
+        "Qayta ta'mir=bepul ; Detal kafolati=3 oy"]
+];
+// springy 0 -> 1 (with overshoot) from Tab key n
+function _s57_349Q(n, nm) {
+    return _s54Key(n).replace(/tk/g, "tk" + nm) + 'var w' + nm + '=2*Math.PI/Math.max(0.05,c.effect("Prujina (s)")("Slider").value*1.15), d' + nm + '=Math.max(0,time-tk' + nm + '); ' +
+        'var ' + nm + '=time<tk' + nm + '?0:1-Math.exp(-0.5*w' + nm + '*d' + nm + ')*(Math.cos(0.866*w' + nm + '*d' + nm + ')+0.577*Math.sin(0.866*w' + nm + '*d' + nm + ')); ';
+}
+// "100%" -> [prefix, number, suffix]
+function _s57_349Num(s) { var m = String(s).match(/^(\D*)([0-9]+(?:[.,][0-9]+)?)(.*)$/); return m ? [m[1], parseFloat(m[2].replace(",", ".")), m[3]] : ["", 100, "%"]; }
+function _s57GuaranteeSeal() {
+    var PR = _s47Pick("Guarantee Seal (349)", S57_P349); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv | foiz (100%) | muhr so'zi | light/dark | rang (#hex yoki so'z)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Shartlar (0-2 ta): shart=muddat ; shart=muddat", PR[2]); if (q2 === null) return;
+    var M = _s47Split(q1, 6), R = String(q2).split(";"), T = [], i;
+    for (i = 0; i < R.length && T.length < 2; i++) {
+        var it = _s45Trim(R[i]), eq = it.indexOf("="); if (!it) continue;
+        T.push([_s45Trim(eq >= 0 ? it.substring(0, eq) : it), eq >= 0 ? _s45Trim(it.substring(eq + 1)) : ""]);
+    }
+    var NV = _s57_349Num(M[2] || "100%"), V = [];
+    for (i = 0; i <= 4; i++) { var vv = NV[1] * i / 4; V.push(NV[0] + (Math.round(vv) === vv || NV[1] >= 20 ? Math.round(vv) : Math.round(vv * 10) / 10) + NV[2]); }
+    var x = _s47Begin("KAFOLAT", { states: 8 + T.length, look: _s47Look(M[4], M[5]) }); if (!x) return;
+    var t0 = x.t0, TS = [0.45, 1.0, 1.33, 1.61, 1.89, 2.2, 2.6, 3.05, 3.45];
+    x.switchT = []; for (i = 0; i < 7 + T.length; i++) x.switchT.push(t0 + TS[i]);
+    x.outS = t0 + 6.3; x.t1 = x.outS + S47_TL.OUTD;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD;
+    var H = PAD + (M[0] ? 74 * K : 0) + (M[1] ? 41 * K : 0) + 404 * K + T.length * 116 * K + (T.length ? 14 * K : 0) + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.85], _s47Col(x, "Text")); y += 74 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 26 * K * 0.85 - 18 * K], _s47Col(x, "Dim")); y += 41 * K; }
+    // seal: spins in (key 2), punches when the tick draws (key 8)
+    var sy = y + 204 * K, S1 = _s57_349Q(2, "qa"), PU = _s54Key(8) + "var pu=1+0.07*Math.sin(Math.PI*cl((time-tk)/0.3)); ";
+    var FI = S1 + "var fi=cl(qa*2); ", SC = PU + "var k=100*pu; [k,k]";
+    var pts = [];
+    for (i = 0; i < 40; i++) { var a = Math.PI * i / 20, rr = (i % 2 ? 0.9 : 1) * 200; pts.push([rr * Math.sin(a), -rr * Math.cos(a)]); }
+    var bs = _s50_302Poly(x, "muhr", pts, 0, 0, _s47Col(x, "Accent"), null);
+    _s51_303Piv(x, bs, cx, sy, cx, sy, null, S1 + PU + "var k=100*Math.max(0,qa)*pu; [k,k]", S1 + "-60*(1-qa)");
+    bs.property("ADBE Transform Group").property("ADBE Opacity").expression = x.PRE + FI + "op*fi";
+    try {
+        var rp = bs.property("ADBE Effect Parade").addProperty("ADBE Ramp");
+        rp.property("ADBE Ramp-0001").setValue([x.W / 2 - 115 * K, x.H / 2 - 164 * K]); rp.property("ADBE Ramp-0003").setValue([x.W / 2 + 115 * K, x.H / 2 + 164 * K]);
+        rp.property("ADBE Ramp-0002").expression = x.PRE + "var a=" + _s47Col(x, "Accent") + ".value; [a[0]*0.65+0.35, a[1]*0.65+0.35, a[2]*0.65+0.35, 1]";
+        rp.property("ADBE Ramp-0004").expression = x.PRE + "var a=" + _s47Col(x, "Accent") + ".value; [a[0]*0.7, a[1]*0.7, a[2]*0.7, 1]";
+    } catch (eR) {}
+    var TX = S1 + "var tx=cl((time-tkqa-0.3)/0.3); ";
+    var rd = _s47Ellipse(x, "muhr nuqtalar", [256 * K, 256 * K], [0, 0], null, TX + "op*0.5*tx", { col: "[1,1,1,1]", w: 3 * K, cap: true });
+    _s50_294Dash(rd, 3 * K, 9 * K);
+    _s51_303Piv(x, rd, cx, sy, cx, sy, null, SC);
+    var rg = _s47Ellipse(x, "muhr halqa", [300 * K, 300 * K], [0, 0], null, TX + "op*tx", { col: "[1,1,1,1]", w: 7 * K, cap: true });
+    rg.property("ADBE Root Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    rg.property("ADBE Root Vectors Group").property(rg.property("ADBE Root Vectors Group").numProperties).property("ADBE Vector Trim End").expression = x.PRE + "cl((s-1)/4)*100";
+    _s51_303Piv(x, rg, cx, sy, cx, sy, null, SC);
+    // value rolls in quarters (states 2..5)
+    var fs = 88 * K * Math.min(1, 4.4 / Math.max(1, V[4].length)), RM = "var m=Math.max(0,Math.min(4,s-1)); ";
+    for (i = 0; i <= 4; i++) {
+        var vt = _s47Txt(x, V[i], fs, "bold", "C", "qiymat " + (i + 1), [cx, sy], "[1,1,1,1]", TX + RM + "op*tx*sm(1-Math.abs(m-" + i + ")*1.6)");
+        _s51_303Piv(x, vt, cx, sy, cx, sy + 17 * K, RM + "[" + cx + ", " + sy + "+(" + i + "-m)*" + (fs * 1.1) + "]", SC);
+    }
+    if (M[3]) {
+        var sw = _s47Txt(x, M[3].toUpperCase(), 26 * K, "bold", "C", "muhr so'zi", [cx, sy], "[1,1,1,1]", TX + "op*tx");
+        try { var sp = sw.property("Source Text"), td = sp.value; td.tracking = 160; sp.setValue(td); } catch (eT) {}
+        _s51_303Piv(x, sw, cx, sy, cx, sy + 62 * K, null, SC);
+    }
+    // check badge (key 7) + tick draw (key 8)
+    var bx = cx + 130 * K, by = sy + 130 * K, S2 = _s57_349Q(7, "qb"), BS = S2 + PU + "var k=100*Math.max(0,qb)*pu; [k,k]";
+    var cb = _s47Ellipse(x, "tasdiq doira", [104 * K, 104 * K], [0, 0], "[1,1,1,1]", S2 + "op*cl(qb*3)");
+    _s46Shadow(cb, 64, 8 * K, 20 * K);
+    _s51_303Piv(x, cb, bx, by, bx, by, null, BS);
+    var ck = _s55Ico(x, "tasdiq ikon", "check", 64 * K, 9 * K, _s47Col(x, "Accent"), [0, 0], S2 + "op*cl(qb*3)");
+    var ctm = ck.property("ADBE Root Vectors Group").addProperty("ADBE Vector Filter - Trim");
+    ctm = ck.property("ADBE Root Vectors Group").property(ck.property("ADBE Root Vectors Group").numProperties);
+    ctm.property("ADBE Vector Trim End").setValue(100);
+    ctm.property("ADBE Vector Trim Start").expression =
+        x.PRE + _s54Key(8) + "100-100*sm((time-tk)/0.35)";
+    _s51_303Piv(x, ck, bx, by, bx, by, null, BS);
+    // terms rows slide up (keys 9, 10)
+    var ICO = ["rotate-ccw", "clock"];
+    for (i = 0; i < T.length; i++) {
+        var ry = y + 404 * K + 30 * K + 50 * K + i * 116 * K, QR = _s57_349Q(9 + i, "qr"), DY = "+(1-qr)*" + (40 * K), OP = QR + "op*cl(qr*2)";
+        _s47Rect(x, "shart " + (i + 1), [IW, 100 * K], QR + "[" + cx + ", " + ry + DY + "]", 22 * K, _s47Col(x, "Row"), OP);
+        var ix = left + 56 * K;
+        _s47Rect(x, "shart " + (i + 1) + " ikon fon", [56 * K, 56 * K], QR + "[" + ix + ", " + ry + DY + "]", 17 * K,
+            "var cc=" + _s47Col(x, "Card") + ".value, a=" + _s47Col(x, "Accent") + ".value; add(cc, mul(sub(a,cc),0.18))", OP);
+        _s55Ico(x, "shart " + (i + 1) + " ikon", ICO[i], 32 * K, 2.8 * K, _s47Col(x, "Accent"), QR + "[" + ix + ", " + ry + DY + "]", OP);
+        _s47Txt(x, T[i][0], 28 * K, "semi", "L", "shart " + (i + 1) + " nom", QR + "[" + (left + 104 * K) + ", " + (ry + 10 * K) + DY + "]", _s47Col(x, "Text"), OP);
+        if (T[i][1]) _s47Txt(x, T[i][1], 30 * K, "bold", "R", "shart " + (i + 1) + " muddat", QR + "[" + (right - 28 * K) + ", " + (ry + 11 * K) + DY + "]", _s47Col(x, "Accent"), OP);
+    }
+    _s47Finish(x);
+}
+
+// ---------- 350 PORTFOLIO FLIP (S57, board 17) ----------
+// 2x3 grid of project tiles (coloured placeholder solids to replace with photos, auto-fit) flip in
+// one per Tab key with a category chip; the counter rolls 0..n and a "+24" accent chip pops.
+var S57_P350 = [
+    ["Interyer dizayner", "Portfolio | Interyer dizayner \u00B7 2019 yildan beri | loyiha ko'rsatildi | +24 loyiha | light | #a2845e",
+        "Oshxona=#efe4d6 ; Mehmonxona=#dfe7e2 ; Yotoqxona=#e8e0f0 ; Ofis=#dfe6ee ; Kafe=#f3dfd3 ; Bolalar xonasi=#fde8c8"],
+    ["Fotograf", "Portfolio | Fotograf \u00B7 to'y va portret | albom ko'rsatildi | +40 albom | dark | #ffcc00",
+        "To'y=#f3e3d3 ; Portret=#e3dcef ; Oila=#dcebe2 ; Bolalar=#fde8c8 ; Biznes=#dfe6ee ; Love story=#f6d9de"],
+    ["Grafik dizayner", "Ishlarim | Grafik dizayner \u00B7 brend va logo | loyiha ko'rsatildi | +60 loyiha | light | #ff2d55",
+        "Logo=#fde2e4 ; Qadoq=#e2ecf9 ; Brendbuk=#e8e0f0 ; Afisha=#fff1c9 ; Veb-sayt=#dff3ea ; SMM=#f3dfd3"],
+    ["Arxitektor", "Loyihalar | Arxitektor \u00B7 turar joy va ofis | loyiha ko'rsatildi | +18 loyiha | light | #30b0c7",
+        "Hovli uy=#e6e0d6 ; Kottej=#dfe7e2 ; Ofis=#dfe6ee ; Dacha=#e9efd9 ; Restoran=#f3dfd3 ; Fasad=#e3e3e8"],
+    ["Vizajist", "Ishlarim | Vizajist \u00B7 kelin va kechki obraz | obraz ko'rsatildi | +120 obraz | light | #ff2d55",
+        "Kelin=#fbe3ea ; Kechki=#e8e0f0 ; Fotosessiya=#f3e3d3 ; Nikoh=#fde8c8 ; Kundalik=#e2ecf9 ; Sahna=#f6d9de"],
+    ["Veb-dasturchi", "Loyihalar | Veb-dasturchi \u00B7 sayt va bot | loyiha ko'rsatildi | +35 loyiha | dark | #0a84ff",
+        "Onlayn do'kon=#dfe6ee ; Landing=#e2ecf9 ; Telegram bot=#dff3ea ; CRM=#e8e0f0 ; Mobil ilova=#fde8c8 ; Blog=#e3e3e8"],
+    ["Qandolatchi", "Tortlar | Qandolatchi \u00B7 buyurtma tortlar | tort ko'rsatildi | +200 tort | light | #ff9500",
+        "To'y torti=#fdf0e1 ; Bolalar=#fde2e4 ; Tug'ilgan kun=#e8e0f0 ; Bento=#dff3ea ; Kapkeyk=#fff1c9 ; Makaron=#e2ecf9"],
+    ["Landshaft dizayner", "Bog'lar | Landshaft dizayner \u00B7 hovli va park | loyiha ko'rsatildi | +30 loyiha | light | #34c759",
+        "Hovli=#e1efd9 ; Gulzor=#fbe3ea ; Maysazor=#dff3ea ; Hovuz=#dcebf5 ; Terrasa=#efe4d6 ; Park=#e9efd9"],
+    ["Mebel ustasi", "Buyurtmalar | Mebel ustasi \u00B7 oshxona va shkaf | buyurtma ko'rsatildi | +90 buyurtma | dark | #a2845e",
+        "Oshxona=#efe4d6 ; Shkaf-kupe=#e3e3e8 ; Yotoqxona=#e8e0f0 ; Ofis mebeli=#dfe6ee ; Bolalar=#fde8c8 ; Dahliz=#e6e0d6"],
+    ["Tikuvchi", "Kolleksiya | Tikuvchi \u00B7 buyurtma kiyim | model ko'rsatildi | +70 model | light | #af52de",
+        "Kechki ko'ylak=#e8e0f0 ; Milliy=#fde8c8 ; Kostyum=#e3e3e8 ; Bolalar=#fde2e4 ; Maktab formasi=#dfe6ee ; Kelin=#fbe3ea"]
+];
+// springy 0 -> 1 (with overshoot) from Tab key n
+function _s57_350Q(n) {
+    return _s54Key(n) + 'var dt=Math.max(0,time-tk), w=2*Math.PI/Math.max(0.05,c.effect("Prujina (s)")("Slider").value*1.15), wd=w*0.866; ' +
+        'var q=time<tk?0:1-Math.exp(-0.5*w*dt)*(Math.cos(wd*dt)+0.577*Math.sin(wd*dt)); ';
+}
+function _s57PortfolioFlip() {
+    var PR = _s47Pick("Portfolio Flip (350)", S57_P350); if (!PR) return;
+    var q1 = prompt("Sarlavha | kichik yozuv | hisob yozuvi | chip (+24 loyiha) | light/dark | rang (#hex yoki so'z)", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Loyihalar (1-6 ta): kategoriya=plitka rangi ; ...\n(plitka = surat o'rni, keyin rasm bilan almashtiring)", PR[2]); if (q2 === null) return;
+    var M = _s47Split(q1, 6), R = String(q2).split(";"), P = [], i;
+    for (i = 0; i < R.length && P.length < 6; i++) {
+        var it = _s45Trim(R[i]), eq = it.indexOf("="); if (!it) continue;
+        P.push([_s45Trim(eq >= 0 ? it.substring(0, eq) : it), _s47Hex(eq >= 0 ? it.substring(eq + 1) : "e3e3e8")]);
+    }
+    var n = P.length; if (!n) { alert("Kamida bitta loyiha: Oshxona=#efe4d6"); return; }
+    var x = _s47Begin("PORTFOLIO", { states: n + 2, look: _s47Look(M[4], M[5]) }); if (!x) return;
+    var t0 = x.t0; x.switchT = [];
+    for (i = 0; i < n; i++) x.switchT.push(t0 + 0.57 + 0.35 * i);
+    x.switchT.push(t0 + 0.57 + 0.35 * (n - 1) + 0.85); x.outS = t0 + 6.3; x.t1 = x.outS + S47_TL.OUTD;
+    var K = x.K, CW = 760 * K, PAD = 36 * K, cx = x.cx, IW = CW - 2 * PAD, TW = (IW - 32 * K) / 3, TH = 236 * K, rows = Math.ceil(n / 3);
+    var H = PAD + (M[0] ? 74 * K : 0) + (M[1] ? 41 * K : 0) + rows * TH + (rows - 1) * 16 * K + 16 * K + 92 * K + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    if (M[0]) { _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, y + 40 * K * 0.85], _s47Col(x, "Text")); y += 74 * K; }
+    if (M[1]) { _s47Txt(x, M[1], 26 * K, "reg", "L", "kichik yozuv", [left, y + 26 * K * 0.85 - 18 * K], _s47Col(x, "Dim")); y += 41 * K; }
+    for (i = 0; i < n; i++) {
+        var tl = left + (i % 3) * (TW + 16 * K), tt = y + Math.floor(i / 3) * (TH + 16 * K), tcx = tl + TW / 2, tcy = tt + TH / 2;
+        var Q = _s57_350Q(i + 2), FL = Q + "var fl=Math.cos((1-q)*Math.PI/2); ", SC = FL + "[100*fl, 100]", OP = Q + "op*(q>0.002?1:0)", nm = "loyiha " + (i + 1);
+        var mt = _s47Rect(x, nm + " matte", [TW, TH], [0, 0], 26 * K, "[1,1,1,1]", "100");
+        _s51_303Piv(x, mt, tcx, tcy, tcx, tcy, null, SC);
+        // placeholder photo: Alt+drag any footage onto it, anchor/scale expressions keep it centred and filling the tile
+        var ph = x.comp.layers.addSolid(P[i][1], x.tag + " " + nm + " surat (almashtiring)", Math.round(TW), Math.round(TH), x.comp.pixelAspect, x.comp.duration);
+        x.layers.push(ph);
+        var WH = "var w=thisLayer.width, h=thisLayer.height; if(!(w>0)){w=" + TW + "; h=" + TH + ";} ", ptr = ph.property("ADBE Transform Group");
+        ptr.property("ADBE Anchor Point").expression = WH + "[w/2, h/2]";
+        ptr.property("ADBE Position").setValue([tcx, tcy]);
+        ptr.property("ADBE Scale").expression = x.PRE + WH + FL + "var f=Math.max(" + TW + "/w, " + TH + "/h)*100; [f*fl, f]";
+        ptr.property("ADBE Opacity").expression = x.PRE + OP;
+        try { ph.setTrackMatte(mt, TrackMatteType.ALPHA); } catch (eM) {}
+        mt.moveBefore(ph); mt.enabled = false;
+        var ic = P[i][1], io = _s55Ico(x, nm + " ikon", "image", 64 * K, 4.4 * K, "[" + ic[0] * 0.72 + "," + ic[1] * 0.72 + "," + ic[2] * 0.72 + ",1]", [0, 0], OP);
+        _s51_303Piv(x, io, tcx, tcy, tcx, tcy + 8 * K, null, SC);
+        var ct = _s47Txt(x, P[i][0], 19 * K, "semi", "L", nm + " kategoriya", [tl + 25 * K, tt + 35 * K], "[0.11,0.11,0.118,1]", OP);
+        var CWX = 'var w=thisComp.layer("' + ct.name + '").sourceRectAtTime().width+' + (26 * K) + '; ';
+        var cb = _s47Rect(x, nm + " chip", CWX + "[w, " + (33 * K) + "]", CWX + "[" + (tl + 12 * K) + "+w/2, " + (tt + 28.5 * K) + "]", 13 * K, "[1,1,1,1]", Q + "op*0.9*(q>0.002?1:0)");
+        cb.moveAfter(ct);
+        _s51_303Piv(x, cb, tcx, tcy, 0, 0, null, SC);
+        _s51_303Piv(x, ct, tcx, tcy, tl + 25 * K, tt + 35 * K, null, SC);
+    }
+    // counter row: count rolls with each flip, accent chip pops last
+    var ry = y + rows * TH + (rows - 1) * 16 * K + 16 * K + 46 * K;
+    _s47Rect(x, "qator", [IW, 92 * K], [cx, ry], 22 * K, _s47Col(x, "Row"));
+    var RM = "var m=Math.min(s," + n + "); ";
+    for (i = 0; i <= n; i++) _s47Txt(x, String(i), 30 * K, "bold", "L", "son " + i, RM + "[" + (left + 28 * K) + ", " + (ry + 11 * K) + "+(" + i + "-m)*" + (36 * K) + "]",
+        _s47Col(x, "Text"), RM + "op*sm(1-Math.abs(m-" + i + ")*1.6)");
+    if (M[2]) _s47Txt(x, M[2], 30 * K, "reg", "L", "hisob yozuv", [left + 28 * K + (n > 9 ? 36 : 19) * K + 14 * K, ry + 11 * K], _s47Col(x, "Dim"));
+    if (M[3]) {
+        var QC = _s57_350Q(n + 2), cr = right - 28 * K, pw = M[3].length * 26 * K * 0.55 + 44 * K, CS = QC + "var k=30+70*q; [k,k]", CO = QC + "op*cl(q*2.5)";
+        var mt2 = _s47Txt(x, M[3], 26 * K, "bold", "R", "chip matni", [cr - 22 * K, ry + 9 * K], _s47Col(x, "Tugma matni"), CO);
+        var MW = 'var w=thisComp.layer("' + mt2.name + '").sourceRectAtTime().width+' + (44 * K) + '; ';
+        var mc = _s47Rect(x, "chip", MW + "[w, " + (55 * K) + "]", MW + "[" + cr + "-w/2, " + ry + "]", 22 * K, _s47Col(x, "Accent"), CO);
+        mc.moveAfter(mt2);
+        _s51_303Piv(x, mc, cr - pw / 2, ry, 0, 0, null, CS);
+        _s51_303Piv(x, mt2, cr - pw / 2, ry, cr - 22 * K, ry + 9 * K, null, CS);
+    }
+    _s47Finish(x);
+}
+
+// ---------- 351 OPEN / CLOSED CONTACT (S57, board 17) ----------
+// Clock rolls 08:59 -> 09:00, pill "Yopiq" -> "Ochiq" (live pulse dot), today's hours turn green,
+// the pin hops while the distance rolls in, then the call button is pressed -> "Ulanmoqda..." + ringing phone.
+var S57_P351 = [
+    ["Sartarosh", "Javlon usta | Sartarosh \u00b7 erkaklar soch turmagi | Chilonzor, 9-kvartal | 1.2 km",
+        "*Dushanba \u2013 Juma = 09:00 \u2013 20:00; Shanba = 10:00 \u2013 17:00; Yakshanba = Dam olish",
+        "Hozir | 08:59 | 09:00 | Yopiq | Ochiq | Qo'ng'iroq qilish | Ulanmoqda | light | blue"],
+    ["Psixolog", "Dilnoza Karimova | Psixolog - shaxsiy konsultatsiya | Yunusobod, 4-mavze | 2.8 km",
+        "*Dushanba - Juma = 10:00 - 19:00; Shanba = 10:00 - 15:00; Yakshanba = Dam olish",
+        "Hozir | 09:59 | 10:00 | Yopiq | Ochiq | Qo'ng'iroq qilish | Ulanmoqda | light | purple"],
+    ["Stomatolog", "Doktor Aziz Rahimov | Stomatolog - implant va davolash | Buyuk Ipak yo'li 15 | 3.4 km",
+        "*Dushanba - Shanba = 08:00 - 18:00; Yakshanba = 09:00 - 14:00",
+        "Hozir | 07:59 | 08:00 | Yopiq | Ochiq | Qabulga yozilish | Ulanmoqda | light | teal"],
+    ["Yurist", "Sardor Aliyev | Yurist - biznes va oila huquqi | Mirobod, Afrosiyob ko'chasi | 0.8 km",
+        "*Dushanba - Juma = 09:00 - 18:00; Shanba = Kelishuv bo'yicha; Yakshanba = Dam olish",
+        "Hozir | 08:59 | 09:00 | Yopiq | Ochiq | Maslahat olish | Ulanmoqda | dark | indigo"],
+    ["Fotograf", "Madina Studio | Fotograf - portret va oilaviy surat | Shayxontohur, Chorsu | 5.1 km",
+        "Dushanba - Juma = 11:00 - 20:00; *Shanba = 10:00 - 21:00; Yakshanba = 10:00 - 18:00",
+        "Hozir | 09:59 | 10:00 | Yopiq | Ochiq | Qo'ng'iroq qilish | Ulanmoqda | light | orange"],
+    ["Fitnes murabbiy", "Bekzod Tursunov | Fitnes murabbiy - shaxsiy mashg'ulot | Sergeli, Fitlife zal | 6.3 km",
+        "*Dushanba - Shanba = 07:00 - 22:00; Yakshanba = 08:00 - 14:00",
+        "Hozir | 06:59 | 07:00 | Yopiq | Ochiq | Qo'ng'iroq qilish | Ulanmoqda | dark | orange"],
+    ["Stilist", "Nigora Yusupova | Stilist - soch bo'yash va turmak | Yakkasaroy, Rustaveli 22 | 1.9 km",
+        "*Seshanba - Yakshanba = 10:00 - 20:00; Dushanba = Dam olish",
+        "Hozir | 09:59 | 10:00 | Yopiq | Ochiq | Navbat olish | Ulanmoqda | light | pink"],
+    ["Repetitor", "Ustoz Jahongir | Matematika repetitori - DTM tayyorlov | Chilonzor, 19-kvartal | 2.2 km",
+        "*Dushanba - Juma = 14:00 - 20:00; Shanba = 10:00 - 16:00; Yakshanba = Dam olish",
+        "Hozir | 13:59 | 14:00 | Yopiq | Ochiq | Darsga yozilish | Ulanmoqda | light | indigo"],
+    ["Avtoservis", "Rustam aka | Avtoelektrik - kompyuter diagnostika | Olmazor, Qorasuv 3 | 4.7 km",
+        "*Dushanba - Shanba = 08:30 - 19:00; Yakshanba = Dam olish",
+        "Hozir | 08:29 | 08:30 | Yopiq | Ochiq | Qo'ng'iroq qilish | Ulanmoqda | dark | red"],
+    ["Qandolatchi", "Shahnoza Tortlari | Qandolatchi - buyurtma tortlar | Yashnobod, Tuzel | 3.0 km",
+        "*Dushanba - Shanba = 09:00 - 21:00; Yakshanba = 10:00 - 18:00",
+        "Hozir | 08:59 | 09:00 | Yopiq | Ochiq | Buyurtma berish | Ulanmoqda | light | brown"]
+];
+// colour lerp expression: A -> B by u (u = expression)
+function _s57_351Mix(x, a, b, u) { return "var ca=" + _s47Col(x, a) + ".value, cb=" + _s47Col(x, b) + ".value; add(ca, mul(sub(cb,ca), cl(" + u + ")))"; }
+// move a layer's transform to (pos) so its scale/rotation pivot is the element centre
+function _s57_351Put(x, L, pos, sc, rot) {
+    var tr = L.property("ADBE Transform Group");
+    _s47SetP(tr.property("ADBE Position"), x, pos);
+    if (sc) tr.property("ADBE Scale").expression = x.PRE + sc;
+    if (rot) tr.property("ADBE Rotate Z").expression = x.PRE + rot;
+    return L;
+}
+function _s57Contact() {
+    var PR = _s47Pick("Open / Closed Contact (351)", S57_P351); if (!PR) return;
+    var q1 = prompt("Ism | kasb \u00b7 tavsif | manzil | masofa", PR[1]); if (q1 === null) return;
+    var q2 = prompt("Ish vaqti (1-4 qator, ; bilan):  kun = vaqt   (* = bugun, yashil bo'ladi)", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Hozir | vaqt oldin | vaqt keyin | Yopiq | Ochiq | tugma | ulanish matni | light/dark | rang", PR[3]); if (q3 === null) return;
+    var A = _s47Split(q1, 4), T = _s47Split(q3, 9), rr = String(q2).split(";"), rows = [], i;
+    for (i = 0; i < rr.length && rows.length < 4; i++) {
+        var r = _s45Trim(rr[i]); if (!r) continue;
+        var td = r.charAt(0) === "*"; if (td) r = r.substring(1);
+        var kv = _s50_300KV(r); rows.push([kv[0], kv[1], td]);
+    }
+    if (!rows.length) { alert("Kamida 1 ta ish vaqti qatori kerak: kun = vaqt"); return; }
+    var unit = _s45Trim(A[3].replace(/^[0-9.,\s]+/, "")), D0 = "\u2014" + (unit ? " " + unit : "");
+    var x = _s47Begin("CONTACT", { states: 3, look: _s47Look(T[7], T[8]), tap: true, first: 1.15, hold: 1.05, extraEnd: 2.0,
+        colors: { "Ochiq": [0.204, 0.78, 0.349], "Yopiq": [1, 0.231, 0.188], "Tugma": [0.204, 0.78, 0.349], "Pin": [1, 0.231, 0.188], "Oq": [1, 1, 1] } }); if (!x) return;
+    var K = x.K, cx = x.cx, CW = 760 * K, PAD = 36 * K, IW = CW - 2 * PAD, n = rows.length, HR = n * 72 * K + (n - 1) * 2 * K + 8 * K;
+    var H = PAD + 96 * K + 26 * K + 92 * K + 16 * K + HR + 16 * K + 92 * K + 26 * K + 100 * K + PAD;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, y = top + PAD, R = 36 * K;
+    var U = "var u=cl(s); ", U2 = "var u=cl(s-1); ", UP = "var u=cl(sp.valueAtTime(time-0.14)); ";
+    var TAP = 'var TP=c.effect("Tap")("Slider"); var tk=TP.numKeys>0?TP.key(1).time:1e9; ';
+    _s47Card(x, CW, H, [cx, x.cy]);
+    // header: avatar + initials, name, profession
+    _s47Ellipse(x, "avatar", [96 * K, 96 * K], [left + 48 * K, y + 48 * K], _s47Col(x, "Accent"));
+    _s47Txt(x, _s51_309Ini(A[0] || "U"), 34 * K, "bold", "C", "initsial", [left + 48 * K, y + 48 * K + 34 * K * 0.35], _s47Col(x, "Tugma matni"));
+    _s47Txt(x, A[0], 36 * K, "bold", "L", "ism", [left + 120 * K, y + 46 * K], _s47Col(x, "Text"));
+    if (A[1]) _s47Txt(x, A[1], 23 * K, "reg", "L", "kasb", [left + 120 * K, y + 79 * K], _s47Col(x, "Dim"));
+    y += 96 * K + 26 * K;
+    // "now" row: clock roll + status pill
+    var ym = y + 46 * K, bl = ym + 30 * K * 0.35;
+    _s47Rect(x, "hozir qator", [IW, 92 * K], [cx, ym], 22 * K, _s47Col(x, "Row"));
+    var hz = _s47Txt(x, T[0] || "Hozir", 30 * K, "reg", "L", "hozir", [left + 28 * K, bl], _s47Col(x, "Dim"));
+    var HX = 'var hx=' + (left + 28 * K) + '+thisComp.layer("' + hz.name + '").sourceRectAtTime().width+' + (9 * K) + '; ';
+    _s47Txt(x, T[1], 30 * K, "bold", "L", "vaqt 1", HX + U + "[hx, " + bl + "-u*" + R + "]", _s47Col(x, "Text"), U + "op*cl(1-1.6*u)");
+    _s47Txt(x, T[2], 30 * K, "bold", "L", "vaqt 2", HX + U + "[hx, " + bl + "+(1-u)*" + R + "]", _s47Col(x, "Text"), U + "op*cl(1.6*u-0.6)");
+    var nA = x.tag + " holat 1", nB = x.tag + " holat 2", PR0 = right - 28 * K;
+    var PW = UP + 'var w=lp(thisComp.layer("' + nA + '").sourceRectAtTime().width, thisComp.layer("' + nB + '").sourceRectAtTime().width, u)+' + (54 * K) + '; var pl=' + PR0 + '-w; ';
+    var BUMP = UP + "var k=100+12*Math.sin(Math.PI*u); [k,k]";
+    var pill = _s47Rect(x, "holat pill", PW + "[w, " + (56 * K) + "]", [0, 0], 28 * K,
+        UP + "var cd=" + _s47Col(x, "Card") + ".value; var cc=add(" + _s47Col(x, "Yopiq") + ".value, mul(sub(" + _s47Col(x, "Ochiq") + ".value," + _s47Col(x, "Yopiq") + ".value), u)); add(mul(cd,0.83), mul(cc,0.17))");
+    _s57_351Put(x, pill, PW + "[pl+w/2, " + ym + "]", BUMP);
+    var DX = PW + "[pl+" + (27 * K) + ", " + ym + "]";
+    var pr = _s47Ellipse(x, "holat puls", [14 * K, 14 * K], [0, 0], _s57_351Mix(x, "Yopiq", "Ochiq", "sp.valueAtTime(time-0.14)"),
+        UP + "var ph=(time%1.2)/1.2; op*0.7*(1-ph)*(u>0.55?1:0)");
+    _s57_351Put(x, pr, DX, "var ph=(time%1.2)/1.2; var k=100+180*(1-(1-ph)*(1-ph)); [k,k]");
+    _s57_351Put(x, _s47Ellipse(x, "holat nuqta", [14 * K, 14 * K], [0, 0], _s57_351Mix(x, "Yopiq", "Ochiq", "sp.valueAtTime(time-0.14)")), DX);
+    var tb = bl;
+    _s47Txt(x, T[3], 30 * K, "bold", "L", "holat 1", PW + "[pl+" + (46 * K) + ", " + tb + "-u*" + R + "]", _s47Col(x, "Yopiq"), UP + "op*cl(1-1.6*u)");
+    _s47Txt(x, T[4], 30 * K, "bold", "L", "holat 2", PW + "[pl+" + (46 * K) + ", " + tb + "+(1-u)*" + R + "]", _s47Col(x, "Ochiq"), UP + "op*cl(1.6*u-0.6)");
+    y += 92 * K + 16 * K;
+    // working hours block (today's row turns green when open)
+    _s47Rect(x, "jadval", [IW, HR], [cx, y + HR / 2], 26 * K, _s47Col(x, "Row"));
+    for (i = 0; i < n; i++) {
+        var rt = y + 4 * K + i * 74 * K, yb = rt + 36 * K + 27 * K * 0.35, nm = "jadval " + (i + 1);
+        if (i > 0) _s47Rect(x, nm + " chiziq", [IW - 56 * K, 2 * K], [cx, rt - K], 0, _s47Col(x, "Card"));
+        var dimV = !/[0-9]/.test(rows[i][1]) && !rows[i][2];
+        var C = rows[i][2] ? _s57_351Mix(x, "Text", "Ochiq", "(sp.valueAtTime(time-0.14)-0.1)/0.7") : _s47Col(x, "Text");
+        _s47Txt(x, rows[i][0], 27 * K, rows[i][2] ? "bold" : "reg", "L", nm + " kun", [left + 28 * K, yb], C);
+        _s47Txt(x, rows[i][1], 27 * K, rows[i][2] ? "bold" : "reg", "R", nm + " vaqt", [right - 28 * K, yb], dimV ? _s47Col(x, "Dim") : C);
+    }
+    y += HR + 16 * K;
+    // address row: hopping pin + distance roll
+    ym = y + 46 * K; bl = ym + 30 * K * 0.35;
+    _s47Rect(x, "manzil qator", [IW, 92 * K], [cx, ym], 22 * K, _s47Col(x, "Row"));
+    var HOP = _s54Key(3) + "var d=time-tk+0.18; var h=d<0?0:d<0.42?16*Math.sin(Math.PI*d/0.42):d<0.7?6*Math.sin(Math.PI*(d-0.42)/0.28):0; ";
+    var PP = HOP + "[" + (left + 51 * K) + ", " + (ym - 2 * K) + "-h*" + K + "]";
+    _s55Ico(x, "pin", "map-pin", 46 * K, 0, _s47Col(x, "Pin"), PP, null, { fill: _s47Col(x, "Pin"), only: [0] });
+    _s55Ico(x, "pin nuqta", "map-pin", 46 * K, 0, _s47Col(x, "Oq"), PP, null, { fill: _s47Col(x, "Oq"), only: [1] });
+    _s47Txt(x, A[2], 30 * K, "semi", "L", "manzil", [left + 90 * K, bl], _s47Col(x, "Text"));
+    _s47Txt(x, D0, 30 * K, "bold", "R", "masofa 1", U2 + "[" + (right - 28 * K) + ", " + bl + "-u*" + R + "]", _s47Col(x, "Text"), U2 + "op*cl(1-1.6*u)");
+    _s47Txt(x, A[3], 30 * K, "bold", "R", "masofa 2", U2 + "[" + (right - 28 * K) + ", " + bl + "+(1-u)*" + R + "]", _s47Col(x, "Text"), U2 + "op*cl(1.6*u-0.6)");
+    y += 92 * K + 26 * K;
+    // call button: press (Tap) -> ripple, label swaps to "connecting" with ringing phone + blinking dots
+    var yb2 = y + 50 * K, PRS = "var k=100-5*tp; [k,k]";
+    var bt = _s47Rect(x, "tugma", [IW, 100 * K], [0, 0], 28 * K, "var a=" + _s47Col(x, "Tugma") + ".value; var k=1-0.12*tp; [a[0]*k,a[1]*k,a[2]*k,1]");
+    _s57_351Put(x, bt, [cx, yb2], PRS);
+    var rp = _s47Rect(x, "tugma to'lqin", [IW, 100 * K], [0, 0], 28 * K, null, TAP + "var d=time-tk-0.07; d<0?0:op*0.8*(1-cl(d/0.9))", { col: _s47Col(x, "Tugma"), w: 4 * K });
+    _s57_351Put(x, rp, [cx, yb2], TAP + "var g=cl((time-tk-0.07)/0.9); var e=1-(1-g)*(1-g); [100+4*e, 100+30*e]");
+    var n1 = x.tag + " tugma matni", n2 = x.tag + " ulanish matni", tbl = yb2 + 32 * K * 0.35;
+    var G1 = TAP + "var g=cl((time-tk-0.14)/0.21); ", G2 = TAP + "var g=cl((time-tk-0.21)/0.35); var e=g>=1?1:1+2.7*Math.pow(g-1,3)+1.7*Math.pow(g-1,2); ";
+    var W1 = G1 + 'var gw=' + (58 * K) + '+thisComp.layer("' + n1 + '").sourceRectAtTime().width; var gl=' + cx + '-gw/2; var dy=-30*' + K + '*g; ';
+    var W2 = G2 + 'var gw=' + (100 * K) + '+thisComp.layer("' + n2 + '").sourceRectAtTime().width; var gl=' + cx + '-gw/2; var dy=30*' + K + '*(1-e); ';
+    _s55Ico(x, "tugma ikon", "phone", 40 * K, 0, _s47Col(x, "Oq"), W1 + "[gl+" + (20 * K) + ", " + yb2 + "+dy]", G1 + "op*(1-g)", { fill: _s47Col(x, "Oq") });
+    _s47Txt(x, T[5], 32 * K, "semi", "L", "tugma matni", W1 + "[gl+" + (58 * K) + ", " + tbl + "+dy]", _s47Col(x, "Oq"), G1 + "op*(1-g)");
+    var WOB = TAP + "var r=0; var q=[0.56,1.68]; for(var j=0;j<2;j++){ var dd=time-tk-q[j]; if(dd>0&&dd<0.63){ var am=dd<0.42?15:10*(1-(dd-0.42)/0.21); r=-am*Math.sin(Math.PI*dd/0.105); } } r";
+    _s57_351Put(x, _s55Ico(x, "ulanish ikon", "phone", 40 * K, 0, _s47Col(x, "Oq"), [0, 0], G2 + "op*g", { fill: _s47Col(x, "Oq") }),
+        W2 + "[gl+" + (20 * K) + ", " + yb2 + "+dy]", null, WOB);
+    _s47Txt(x, T[6], 32 * K, "semi", "L", "ulanish matni", W2 + "[gl+" + (58 * K) + ", " + tbl + "+dy]", _s47Col(x, "Oq"), G2 + "op*g");
+    for (i = 0; i < 3; i++) {
+        _s47Ellipse(x, "nuqta " + (i + 1), [8 * K, 8 * K], W2 + 'var tw=thisComp.layer("' + n2 + '").sourceRectAtTime().width; [gl+' + (58 * K) + '+tw+' + (12 * K + i * 14 * K) + ', ' + (tbl - 4 * K) + '+dy]',
+            _s47Col(x, "Oq"), G2 + "var ph=((time-" + (0.2 * i) + ")%1+1)%1; var b=ph<0.4?lp(0.3,1,ph/0.4):lp(1,0.3,(ph-0.4)/0.6); op*g*b");
+    }
+    _s47Finish(x);
+}
+
+// ---------- 352 EARLY BIRD TIERS (S57, board 17) ----------
+// Three course cohorts: tier 1 gets a "SOTILDI" stamp slam + strike, tier 2 lights up ("Faol"),
+// its seats roll 9 -> 3 while the bar shrinks and turns red (shake), then tier 3's higher price rises with a "+diff" chip.
+var S57_P352 = [
+    ["Notiqlik murabbiyi", "Notiqlik kursi | Notiqlik murabbiyi \u00b7 erta yozilish narxlari",
+        "1-oqim = 390 000 = sentyabr \u00b7 20 joy; 2-oqim = 490 000 = oktyabr \u00b7 20 joy; 3-oqim = 690 000 = noyabr \u00b7 20 joy",
+        "9, 7, 5, 3 | 20 tadan | so'm | SOTILDI | Faol | Qoldi: | joy |  | dark | #00c7be"],
+    ["SMM mutaxassis", "SMM kursi | SMM mutaxassis - erta yozilish narxlari",
+        "1-guruh = 1 200 000 = mart - 15 joy; 2-guruh = 1 500 000 = aprel - 15 joy; 3-guruh = 1 900 000 = may - 15 joy",
+        "6, 4, 3, 2 | 15 tadan | so'm | TUGADI | Faol | Qoldi: | joy |  | light | pink"],
+    ["Psixolog", "Stressni boshqarish treningi | Psixolog - guruh treninglari",
+        "1-guruh = 450 000 = 12-yanvar - 12 joy; 2-guruh = 550 000 = 26-yanvar - 12 joy; 3-guruh = 650 000 = 9-fevral - 12 joy",
+        "5, 4, 3 | 12 tadan | so'm | SOTILDI | Faol | Qoldi: | joy |  | light | purple"],
+    ["Fotograf", "Mobil fotografiya | Fotograf - masterklass oqimlari",
+        "1-oqim = 300 000 = iyun - 25 joy; 2-oqim = 350 000 = iyul - 25 joy; 3-oqim = 450 000 = avgust - 25 joy",
+        "10, 8, 6, 4 | 25 tadan | so'm | SOTILDI | Ochiq | Qoldi: | joy |  | light | orange"],
+    ["Ingliz tili ustozi", "IELTS 7.0 intensiv | Ingliz tili ustozi - guruhlar narxi",
+        "1-guruh = 800 000 = sentyabr - 10 joy; 2-guruh = 950 000 = oktyabr - 10 joy; 3-guruh = 1 100 000 = noyabr - 10 joy",
+        "5, 4, 3, 2 | 10 tadan | so'm | TO'LDI | Faol | Qoldi: | joy |  | light | blue"],
+    ["Dizayner", "UI/UX dizayn kursi | Dizayner - erta yozilish narxlari",
+        "1-oqim = $149 = fevral - 30 joy; 2-oqim = $199 = mart - 30 joy; 3-oqim = $249 = aprel - 30 joy",
+        "12, 9, 6, 4 | 30 tadan |  | SOTILDI | Faol | Qoldi: | joy |  | dark | indigo"],
+    ["Fitnes murabbiy", "30 kunlik marafon | Fitnes murabbiy - start narxlari",
+        "1-start = 250 000 = 1-mart - 40 joy; 2-start = 300 000 = 1-aprel - 40 joy; 3-start = 400 000 = 1-may - 40 joy",
+        "15, 11, 7, 4 | 40 tadan | so'm | YOPILDI | Faol | Qoldi: | joy |  | dark | orange"],
+    ["Yurist", "Biznes huquqi seminari | Yurist - tadbirkorlar uchun",
+        "1-seminar = 500 000 = 15-oktyabr - 30 o'rin; 2-seminar = 600 000 = 29-oktyabr - 30 o'rin; 3-seminar = 750 000 = 12-noyabr - 30 o'rin",
+        "12, 9, 6, 3 | 30 tadan | so'm | SOTILDI | Faol | Qoldi: | o'rin |  | light | teal"],
+    ["Sartarosh", "Barber kursi 0 dan | Sartarosh - o'quv oqimlari",
+        "1-oqim = 2 500 000 = yanvar - 8 joy; 2-oqim = 3 000 000 = fevral - 8 joy; 3-oqim = 3 500 000 = mart - 8 joy",
+        "4, 3, 2, 1 | 8 tadan | so'm | SOTILDI | Faol | Qoldi: | joy |  | dark | black"],
+    ["Qandolatchi", "Tort bezash masterklassi | Qandolatchi - guruh narxlari",
+        "1-guruh = 600 000 = may - 10 joy; 2-guruh = 700 000 = iyun - 10 joy; 3-guruh = 850 000 = iyul - 10 joy",
+        "6, 5, 4, 3 | 10 tadan | so'm | SOTILDI | Faol | Qoldi: | joy |  | light | brown"]
+];
+function _s57_352Num(s) { var v = parseFloat(String(s).replace(/[^0-9.]/g, "")); return isNaN(v) ? 0 : v; }
+// q = spring progress of state i (0 -> 1 with overshoot), frozen once the next state starts
+function _s57_352Loc(i) { return 'var tb=c.effect("Tab")("Slider"); var te=tb.numKeys>' + (i + 1) + '?tb.key(' + (i + 2) + ').time-0.001:time; var ts=tb.numKeys>' + i + '?tb.key(' + (i + 1) + ').time:1e9; var q=time<ts?0:sp.valueAtTime(Math.min(time,te))-' + (i - 1) + '; '; }
+// price = number + small currency, right-aligned at R; P defines dx,dy (+ anything used in col/op/sc). returns number layer
+function _s57_352Price(x, nm, num, cur, R, base, P, col, opE, sc) {
+    var K = x.K, en = x.tag + " " + nm + " valyuta";
+    if (cur) _s47Txt(x, cur, 22 * K, "reg", "R", nm + " valyuta", P + "[" + R + "+dx, " + base + "+dy]", _s47Col(x, "Dim"), opE);
+    var EW = cur ? 'var ew=thisComp.layer("' + en + '").sourceRectAtTime().width+' + (6 * K) + '; ' : "var ew=0; ";
+    var L = _s47Txt(x, num, 36 * K, "bold", "R", nm, P + EW + "[" + R + "-ew+dx, " + base + "+dy]", col, opE);
+    if (sc) L.property("ADBE Transform Group").property("ADBE Scale").expression = x.PRE + P + sc;
+    return L;
+}
+// place a layer at pos so its scale/rotation pivot is the element centre
+function _s57_352Put(x, L, pos, sc, rot) {
+    var tr = L.property("ADBE Transform Group");
+    _s47SetP(tr.property("ADBE Position"), x, pos);
+    if (sc) tr.property("ADBE Scale").expression = x.PRE + sc;
+    if (rot) tr.property("ADBE Rotate Z").expression = x.PRE + rot;
+    return L;
+}
+function _s57Tiers() {
+    var PR = _s47Pick("Early Bird Tiers (352)", S57_P352); if (!PR) return;
+    var q1 = prompt("Sarlavha | tavsif", PR[1]); if (q1 === null) return;
+    var q2 = prompt("3 ta oqim (; bilan):  nom = narx = izoh", PR[2]); if (q2 === null) return;
+    var q3 = prompt("Qoldiq joylar (vergul, 2-5) | jami yozuvi | valyuta | SOTILDI | Faol | Qoldi: | joy | farq (bo'sh = avto) | light/dark | rang", PR[3]); if (q3 === null) return;
+    var M = _s47Split(q1, 2), T = _s47Split(q3, 10), tr = String(q2).split(";"), TR = [], i;
+    for (i = 0; i < tr.length && TR.length < 3; i++) { if (_s45Trim(tr[i])) TR.push(_s47Split(tr[i], 3, "=")); }
+    if (TR.length < 3) { alert("3 ta oqim kerak:  nom = narx = izoh ; ..."); return; }
+    var seats = _s47List(T[0]); if (seats.length > 5) seats.length = 5; if (!seats.length) seats = ["3"]; if (seats.length < 2) seats.push(seats[0]);
+    var n = seats.length, tot = _s57_352Num(T[1]) || _s57_352Num(seats[0]) * 2.2 || 1, pct = [];
+    for (i = 0; i < n; i++) pct.push(Math.max(0.02, Math.min(1, _s57_352Num(seats[i]) / tot)));
+    var dl = _s57_352Num(TR[2][1]) - _s57_352Num(TR[1][1]), usd = TR[2][1].indexOf("$") >= 0;
+    var DF = T[7] || ((dl >= 0 ? "+" : "-") + (usd ? "$" : "") + _s48_267Fmt(Math.abs(dl)));
+    var look = _s47Look(T[8], T[9]), a = look.acc, lum = a[0] * 0.3 + a[1] * 0.59 + a[2] * 0.11;
+    var x = _s47Begin("TIERS", { states: n + 3, look: look, first: 0.56, hold: 0.7, extraEnd: 1.3,
+        colors: { "Sotildi": [1, 0.271, 0.227], "Oshish": [1, 0.624, 0.039], "Faol matni": lum > 0.45 ? [0.11, 0.11, 0.118] : [1, 1, 1] } }); if (!x) return;
+    var K = x.K, cx = x.cx, CW = 760 * K, PAD = 36 * K, IW = CW - 2 * PAD, H = 602 * K;
+    var top = x.cy - H / 2, left = cx - IW / 2, right = cx + IW / 2, L0 = left + 28 * K, R0 = right - 28 * K;
+    _s47Card(x, CW, H, [cx, x.cy]);
+    _s47Txt(x, M[0], 40 * K, "bold", "L", "sarlavha", [left, top + 38 * K], _s47Col(x, "Text"));
+    if (M[1]) _s47Txt(x, M[1], 26 * K, "reg", "L", "tavsif", [left, top + 81 * K], _s47Col(x, "Dim"));
+    // ---- tier 1: stamp slam (Tab key 2), impact shake, dim + strike
+    var r1 = top + 131 * K, c1 = r1 + 56 * K;
+    var SH = _s54Key(2) + "var dd=time-tk-0.28; var PX=[0,3,-2,0], PY=[0,6,-2,0], TT=[0,0.035,0.14,0.245]; var dx=0, dy=0; " +
+        "for(var j=0;j<3;j++){ if(dd>=TT[j]&&dd<TT[j+1]){ var f=(dd-TT[j])/(TT[j+1]-TT[j]); dx=lp(PX[j],PX[j+1],f)*" + K + "; dy=lp(PY[j],PY[j+1],f)*" + K + "; } } ";
+    var DIM = "op*(1-0.55*cl(s))";
+    _s47Rect(x, "oqim 1", [IW, 112 * K], SH + "[" + cx + "+dx, " + c1 + "+dy]", 28 * K, _s47Col(x, "Row"));
+    _s47Txt(x, TR[0][0], 30 * K, "bold", "L", "oqim 1 nom", SH + "[" + L0 + "+dx, " + (r1 + 52 * K) + "+dy]", _s47Col(x, "Text"), DIM);
+    _s47Txt(x, TR[0][2], 22 * K, "reg", "L", "oqim 1 izoh", SH + "[" + L0 + "+dx, " + (r1 + 83 * K) + "+dy]", _s47Col(x, "Dim"), DIM);
+    var p1 = _s57_352Price(x, "oqim 1 narx", TR[0][1], T[2], R0, c1 + 12.6 * K, SH, _s47Col(x, "Text"), DIM);
+    var STK = _s54Key(2) + SH + 'var nw=thisComp.layer("' + p1.name + '").sourceRectAtTime().width; var ew=' + (T[2] ? 'thisComp.layer("' + x.tag + ' oqim 1 narx valyuta").sourceRectAtTime().width+' + (6 * K) : "0") + '; ' +
+        'var g=cl((time-tk-0.35)/0.35); g=g*g*(3-2*g); var w=(nw+ew+' + (8 * K) + ')*g; ';
+    _s47Rect(x, "oqim 1 chiziq", STK + "[w, " + (4 * K) + "]", STK + "[" + (R0 + 4 * K) + "-nw-ew-" + (8 * K) + "+w/2+dx, " + (c1 + 1.6 * K) + "+dy]", 2 * K, _s47Col(x, "Dim"), STK + "op*(g>0?1:0)");
+    var SL = _s54Key(2) + "var d=time-tk; var g=cl(d/0.28); var h=cl((d-0.28)/0.28); var hb=h>=1?1:1+2.7*Math.pow(h-1,3)+1.7*Math.pow(h-1,2); ";
+    var SC = SL + "var k=d<0.28?240-150*g*g*g:90+10*hb; [k,k]", SP = SL + SH + "[" + (left + 337 * K) + "+dx, " + c1 + "+dy]", SO = SL + "op*g*g";
+    var sw = _s47Rect(x, "muhr ramka", 'var tw=thisComp.layer("' + x.tag + ' muhr").sourceRectAtTime().width; [tw+' + (46 * K) + ', ' + (60 * K) + ']', [0, 0], 14 * K, null, SO, { col: _s47Col(x, "Sotildi"), w: 5 * K });
+    _s57_352Put(x, sw, SP, SC, "-12");
+    var sm = _s54Txt(x, T[3] || "SOTILDI", 28 * K, "heavy", "C", "muhr", [0, 0], _s47Col(x, "Sotildi"), SO, 140);
+    sm.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, -28 * K * 0.36]);
+    _s57_352Put(x, sm, SP, SC, "-12");
+    // ---- tier 2: active ring + price pop + "Faol" chip, seat roll + shrinking bar
+    var r2 = r1 + 128 * K, c2 = r2 + 89.5 * K, L2 = _s57_352Loc(2), Z = "var dx=0, dy=0; ";
+    var bg2 = _s47Rect(x, "oqim 2", [IW, 179 * K], [0, 0], 28 * K, _s47Col(x, "Row"));
+    _s57_352Put(x, bg2, [cx, c2], L2 + "var k=100+3*Math.sin(Math.PI*cl(q)); [k,k]");
+    var rg = _s47Rect(x, "oqim 2 halqa", [IW - 3 * K, 176 * K], [0, 0], 26.5 * K, null, L2 + "op*cl(q)", { col: _s47Col(x, "Accent"), w: 3 * K });
+    _s57_352Put(x, rg, [cx, c2], L2 + "var k=100+3*Math.sin(Math.PI*cl(q)); [k,k]");
+    var n2 = _s47Txt(x, TR[1][0], 30 * K, "bold", "L", "oqim 2 nom", [L0, r2 + 50.5 * K], _s47Col(x, "Text"));
+    _s47Txt(x, TR[1][2], 22 * K, "reg", "L", "oqim 2 izoh", [L0, r2 + 81.5 * K], _s47Col(x, "Dim"));
+    _s57_352Price(x, "oqim 2 narx", TR[1][1], T[2], R0, r2 + 66.8 * K, Z + L2, L2 + "var ca=" + _s47Col(x, "Text") + ".value, cb=" + _s47Col(x, "Accent") + ".value; add(ca, mul(sub(cb,ca), cl(q)))", null,
+        "var k=100+14*Math.sin(Math.PI*cl(q)); [k,k]");
+    var FX = L2 + 'var fw=thisComp.layer("' + x.tag + ' faol").sourceRectAtTime().width+' + (24 * K) + '; var fx=' + L0 + '+thisComp.layer("' + n2.name + '").sourceRectAtTime().width+' + (12 * K) + '; ';
+    var fb = _s47Rect(x, "faol chip", FX + "[fw, " + (32 * K) + "]", [0, 0], 12 * K, _s47Col(x, "Accent"), L2 + "op*cl(q*2)");
+    _s57_352Put(x, fb, FX + "[fx+fw/2, " + (r2 + 40 * K) + "]", L2 + "var k=Math.max(0,30+70*q); [k,k]");
+    var ft = _s54Txt(x, T[4] || "Faol", 20 * K, "bold", "C", "faol", [0, 0], _s47Col(x, "Faol matni"), L2 + "op*cl(q*2)");
+    ft.property("ADBE Transform Group").property("ADBE Anchor Point").setValue([0, -20 * K * 0.36]);
+    _s57_352Put(x, ft, FX + "[fx+fw/2, " + (r2 + 40 * K) + "]", L2 + "var k=Math.max(0,30+70*q); [k,k]");
+    var sb = r2 + 127 * K, lb = _s47Txt(x, T[5], 24 * K, "reg", "L", "qoldi", [L0, sb], _s47Col(x, "Dim"));
+    if (T[1]) _s47Txt(x, T[1], 24 * K, "reg", "R", "jami", [R0, sb], _s47Col(x, "Dim"));
+    var RED = _s54Key(n + 2) + "var dr=time-tk-0.56; var ur=cl(dr/0.14); var SX=[0,-10,10,-6,3,0]; var jj=Math.floor(dr/0.14); var sx=(dr<0||jj>=5)?0:lp(SX[jj],SX[jj+1],dr/0.14-jj)*" + K + "; ";
+    var QX = RED + "var qs=Math.max(0,Math.min(" + (n - 1) + ",s-2)); var nx=" + L0 + '+thisComp.layer("' + lb.name + '").sourceRectAtTime().width+' + (7 * K) + '; ';
+    var NC = QX + "var ca=" + _s47Col(x, "Text") + ".value, cb=" + _s47Col(x, "Sotildi") + ".value; add(ca, mul(sub(cb,ca), ur))";
+    var WS = "var W=[";
+    for (i = 0; i < n; i++) {
+        var sl = _s47Txt(x, seats[i], 24 * K, "bold", "L", "joy son " + (i + 1), QX + "[nx+sx, " + sb + "+(" + i + "-qs)*" + (29 * K) + "]", NC, QX + "op*sm(1-Math.abs(qs-" + i + ")*1.6)");
+        WS += (i ? "," : "") + 'thisComp.layer("' + sl.name + '").sourceRectAtTime().width';
+    }
+    WS += "]; var kq=Math.max(0,Math.min(" + (n - 2) + ",Math.floor(qs))); var jw=lp(W[kq],W[kq+1],qs-kq); ";
+    _s47Txt(x, T[6], 24 * K, "bold", "L", "joy", QX + WS + "[nx+jw+" + (7 * K) + "+sx, " + sb + "]", NC);
+    var BW = IW - 56 * K, by = r2 + 151 * K;
+    _s47Rect(x, "joy chiziq", [BW, 12 * K], [cx, by], 6 * K, _s47Col(x, "Track"));
+    var BX = "var P=[" + pct.join(",") + "]; var qs=Math.max(0,Math.min(" + (n - 1) + ",s-2)); var kq=Math.max(0,Math.min(" + (n - 2) + ",Math.floor(qs))); var bw=" + BW + "*Math.max(0.02,lp(P[kq],P[kq+1],qs-kq)); ";
+    _s47Rect(x, "joy chiziq to'la", BX + "[bw, " + (12 * K) + "]", BX + "[" + (cx - BW / 2) + "+bw/2, " + by + "]", 6 * K,
+        BX + "var ca=" + _s47Col(x, "Accent") + ".value, cb=" + _s47Col(x, "Sotildi") + ".value; add(ca, mul(sub(cb,ca), cl(qs-" + (n - 2) + ")))");
+    // ---- tier 3: locked, price rises to full opacity + "+diff" chip (last state)
+    var r3 = r2 + 195 * K, c3 = r3 + 56 * K, L3 = _s57_352Loc(n + 2);
+    _s47Rect(x, "oqim 3", [IW, 112 * K], [cx, c3], 28 * K, _s47Col(x, "Row"));
+    _s55Ico(x, "qulf", "lock", 26 * K, 26 * K / 12, _s47Col(x, "Dim"), [L0 + 12 * K, r3 + 41 * K], "op*0.6");
+    _s47Txt(x, TR[2][0], 30 * K, "bold", "L", "oqim 3 nom", [L0 + 36 * K, r3 + 52 * K], _s47Col(x, "Text"), "op*0.6");
+    _s47Txt(x, TR[2][2], 22 * K, "reg", "L", "oqim 3 izoh", [L0, r3 + 83 * K], _s47Col(x, "Dim"), "op*0.6");
+    var P3 = L3 + "var dx=0, dy=-8*" + K + "*Math.sin(Math.PI*cl(q)); ";
+    var p3 = _s57_352Price(x, "oqim 3 narx", TR[2][1], T[2], R0, c3 + 12.6 * K, P3, _s47Col(x, "Text"), P3 + "op*(0.6+0.4*cl(q))");
+    var AX = L3 + 'var aw=thisComp.layer("' + x.tag + ' farq").sourceRectAtTime().width+' + (48 * K) + '; var ar=' + R0 + '-thisComp.layer("' + p3.name + '").sourceRectAtTime().width-' +
+        (T[2] ? 'thisComp.layer("' + x.tag + ' oqim 3 narx valyuta").sourceRectAtTime().width-' + (6 * K) : "0") + '-' + (14 * K) + '; var ak=Math.max(0,30+70*q); ';
+    var ab = _s47Rect(x, "farq chip", AX + "[aw, " + (37 * K) + "]", [0, 0], 12 * K, "var cd=" + _s47Col(x, "Card") + ".value, co=" + _s47Col(x, "Oshish") + ".value; add(mul(cd,0.8), mul(co,0.2))", L3 + "op*cl(q*2)");
+    _s57_352Put(x, ab, AX + "[ar-aw/2, " + c3 + "]", AX + "[ak,ak]");
+    _s57_352Put(x, _s55Ico(x, "farq strelka", "chevron-up", 26 * K, 3.4 * K, _s47Col(x, "Oshish"), [0, 0], L3 + "op*cl(q*2)"), AX + "[ar-aw+" + (21 * K) + ", " + (c3 - 1 * K) + "]", AX + "[ak,ak]");
+    _s47Txt(x, DF, 21 * K, "bold", "L", "farq", AX + "[ar-aw+" + (36 * K) + ", " + (c3 + 21 * K * 0.36) + "]", _s47Col(x, "Oshish"), L3 + "op*cl(q*2)");
+    _s47Finish(x);
 }
